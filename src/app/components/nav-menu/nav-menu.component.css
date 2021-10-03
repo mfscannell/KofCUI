@@ -1,0 +1,27 @@
+#navigationLogo {
+    width: 33%;
+}
+
+#menuNavBar {
+    background-color: rgb(17, 40, 102);
+    color: rgb(255, 255, 255);
+}
+
+.nav-link {
+    color: rgb(255, 255, 255);
+}
+
+.dropdown-item:hover {
+    background-color: rgb(17, 40, 102);
+    color: rgb(255, 255, 255);
+}
+
+#navigationButton {
+    color: rgb(255, 255, 255);
+}
+
+/* @media only screen and (max-width: 400px) {
+    #navigationLogo {
+        width: 200px;
+    }
+} */

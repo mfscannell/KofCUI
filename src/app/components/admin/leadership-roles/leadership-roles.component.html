@@ -1,0 +1,35 @@
+<div class="container">
+  <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
+    <ngb-panel *ngFor='let leadershipRoleCategory of leadershipRoleCategories'>
+      <ng-template ngbPanelHeader>
+        <div class="d-flex align-items-center justify-content-between">
+          <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory.categoryName}}</button>
+          <button type="button" class="btn btn-primary" (click)="openEditLeadershipRoleCategoryModal(leadershipRoleCategory)">Edit</button>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="container">
+          <div class="row" *ngFor='let leadershipRole of filterLeadershipRolesByCategory(leadershipRoleCategory.leadershipRoleCategoryId)'>
+            <div class="col-md-10">
+              {{leadershipRole.title}}
+            </div>
+            <div class="col-md-2">
+              <div class="btn-toolbar text-center mt-1">
+                <button type="button" class="btn btn-primary mr-1" (click)="openEditLeadershipRoleModal(leadershipRole)">Edit</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+  <div class="row">
+    <div class="col-md-12 mt-1">
+      <div class="btn-toolbar text-center mt-1">
+        <button type="button" class="btn btn-primary mr-1" (click)="openCreateLeadershipRoleCategoryModal()">Add Category</button>
+        <button type="button" *ngIf="leadershipRoleCategories.length > 0" class="btn btn-primary" (click)="openCreateLeadershipRoleModal()">Add Leadership Role</button>
+      </div>
+    </div>
+  </div>
+</div>

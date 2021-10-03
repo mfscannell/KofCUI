@@ -1,0 +1,35 @@
+<div class="container">
+  <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
+    <ngb-panel *ngFor='let activityCategory of activityCategories'>
+      <ng-template ngbPanelHeader>
+        <div class="d-flex align-items-center justify-content-between">
+          <button ngbPanelToggle class="btn btn-link">{{activityCategory.categoryName}}</button>
+          <button type="button" class="btn btn-primary" (click)="openEditActivityCategoryModal(activityCategory)">Edit</button>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="container">
+          <div class="row" *ngFor='let activity of filterActivitiesByCategory(activityCategory.activityCategoryId)'>
+            <div class="col-md-6">
+              {{activity.activityName}}
+            </div>
+            <div class="col-md-4">
+              <div class="btn-toolbar text-center mt-1">
+                <button type="button" class="btn btn-primary mr-1" (click)="openEditActivityModal(activity)">Edit</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+  <div class="row">
+    <div class="col-md-12 mt-1">
+      <div class="btn-toolbar text-center mt-1">
+        <button type="button" class="btn btn-primary mr-1" (click)="openCreateActivityCategoryModal()">Add Category</button>
+        <button type="button" *ngIf="activityCategories.length > 0" class="btn btn-primary" (click)="openCreateActivityModal()">Add Activity</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<!-- <ng-template #editActivityCategoryContent let-modal> -->
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editActivityCategoryForm" (ngSubmit)="onSubmitEditActivityCategory()">
+      <div class="form-group row">
+        <label for="activityCategoryName" class="col-sm-4 col-form-label">Activity Category Name</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" formControlName="categoryName" id="activityCategoryName" autocomplete="off">
+          <div *ngIf="editActivityCategoryForm.get('categoryName')?.invalid && editActivityCategoryForm.get('categoryName')?.errors && (editActivityCategoryForm.get('categoryName')?.dirty || editActivityCategoryForm.get('categoryName')?.touched)">
+            <small class="text-danger" *ngIf="editActivityCategoryForm.get('categoryName')?.hasError('required')">
+              This field is required.
+            </small>
+            <small class="text-danger" *ngIf="editActivityCategoryForm.get('categoryName')?.hasError('maxlength')">
+              The maxinum length for this field is {{editActivityCategoryForm.get('categoryName')?.errors?.maxlength.requiredLength}} characters.
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveActivityCategory" type="submit" class="btn btn-primary" [disabled]="editActivityCategoryForm.invalid">Save</button>
+        <button id="cancelActivityCategoryChanges" type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+      </div>
+    </form>
+  </div>
+<!-- </ng-template> -->

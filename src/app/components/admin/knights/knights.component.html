@@ -1,0 +1,42 @@
+<div class="container">
+  <form>
+    <div class="form-group form-inline" *ngIf="knightsLoaded">
+      <label for="nameSearch" class="col-form-label">Name Search:</label>
+      <input class="form-control ml-2" id="nameSearch" type="text" (input)=searchPartialName($event)/>
+    </div>
+  </form>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
+        <td>{{knight.firstName}}</td>
+        <td>{{knight.lastName}}</td>
+        <td>
+          <button type="button" class="btn btn-primary" (click)="openEditKnightModal(knight)">Edit</button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <ngb-pagination [collectionSize]="displayedKnights.length" [(page)]="page" [maxSize]="maxSize" [pageSize]="pageSize" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+  </ngb-pagination>
+  <div class="form-group row">
+    <div class="col-md-12">
+      <button type="button" class="btn btn-primary" (click)="openCreateKnightModal()">Add</button>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-12">
+      <button type="button" class="btn btn-primary" (click)="openUploadKnightsModal()">Upload</button>
+    </div>
+  </div>
+</div>

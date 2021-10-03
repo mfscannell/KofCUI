@@ -1,0 +1,176 @@
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
+import { Activity } from 'src/app/models/activity';
+import { ActivityCategory } from 'src/app/models/activityCategory';
+import { Knight } from 'src/app/models/knight';
+import { ActivitiesService } from 'src/app/services/activities.service';
+import { KnightsService } from 'src/app/services/knights.service';
+import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
+
+@Component({
+  selector: 'app-edit-activity-modal',
+  templateUrl: './edit-activity-modal.component.html',
+  styleUrls: ['./edit-activity-modal.component.css']
+})
+export class EditActivityModalComponent implements OnInit, OnDestroy {
+  @Input() modalHeaderText: string = '';
+  @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
+  @Input() activity?: Activity;
+  @Input() activityCategories?: ActivityCategory[];
+  allKnights: Knight[] = [];
+  updateActivitySubscription?: Subscription;
+  createActivitySubscription?: Subscription;
+  getAllKnightsSubscription?: Subscription;
+  editActivityForm: FormGroup;
+
+  constructor(public activeModal: NgbActiveModal,
+    private activitiesService: ActivitiesService,
+    private knightsService: KnightsService) {
+    this.editActivityForm = new FormGroup({
+      activityId: new FormControl(0),
+      activityName: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(127)
+      ]),
+      activityDescription: new FormControl('', [
+        Validators.maxLength(255)
+      ]),
+      activityCategoryId: new FormControl(null, [
+        Validators.required
+      ]),
+      activityCoordinatorsList: new FormArray([])
+    });
+
+    this.getAllKnights();
+  }
+
+  ngOnInit() {
+    if (this.activity) {
+      this.editActivityForm.patchValue({
+        activityId: this.activity.activityId,
+        activityName: this.activity.activityName,
+        activityDescription: this.activity.activityDescription,
+        activityCategoryId: this.activity.activityCategoryId
+       });
+
+       let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as FormArray;
+
+       this.activity.activityCoordinators.map(function(coordinator) {
+        const activityCoordinatorFg = new FormGroup({
+          activityCoordinatorId: new FormControl(coordinator.activityCoordinatorId),
+          knightId: new FormControl(coordinator.knightId)
+        });
+         activityCoordinatorsList.push(activityCoordinatorFg)
+       });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.updateActivitySubscription) {
+      this.updateActivitySubscription.unsubscribe();
+    }
+
+    if (this.createActivitySubscription) {
+      this.createActivitySubscription.unsubscribe();
+    }
+
+    if (this.getAllKnightsSubscription) {
+      this.getAllKnightsSubscription.unsubscribe();
+    }
+  }
+
+  private getAllKnights() {
+    let knightsObserver = {
+      next: (knights: Knight[]) => this.allKnights = knights,
+      error: (err: any) => this.logError('Error getting all knights.', err),
+      complete: () => console.log('Knights updated.')
+    };
+
+    this.getAllKnightsSubscription = this.knightsService.getAllKnights().subscribe(knightsObserver);
+  }
+
+  get activityCoordinators() {
+    return this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+  }
+
+  addActivityCoordinator() {
+    const activityCoordinator = new FormGroup({
+      activityCoordinatorId: new FormControl(0),
+      knightId: new FormControl(null, [
+        Validators.required
+      ])
+    });
+
+    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+
+    activityCoordinators.push(activityCoordinator);
+  }
+
+  deleteActivityCoordinator(roleIndex: number) {
+    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+    
+    activityCoordinators.removeAt(roleIndex);
+  }
+
+  onSubmitEditActivity() {
+    if (this.modalAction === ModalActionEnums.Edit) {
+      let updatedActivity = this.mapFormToActivity();
+      this.updateActivity(updatedActivity);
+    } else if (this.modalAction === ModalActionEnums.Create) {
+      let newActivity = this.mapFormToActivity();
+      this.createActivity(newActivity);
+    }
+  }
+
+  private mapFormToActivity() {
+    let rawForm = this.editActivityForm.getRawValue();
+    let activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: any) {
+      return new ActivityCoordinator({
+        activityCoordinatorId: coordinator.activityCoordinatorId,
+        knightId: coordinator.knightId
+      });
+    });
+    let activity = new Activity({
+      activityId: rawForm.activityId,
+      activityName: rawForm.activityName,
+      activityDescription: rawForm.activityDescription,
+      activityCategoryId: rawForm.activityCategoryId,
+      activityCoordinators: activityCoordinators
+    });
+
+    return activity;
+  }
+
+  private updateActivity(activity: Activity) {
+    let activityObserver = {
+      next: (updatedActivity: Activity) => this.passBack(updatedActivity),
+      error: (err: any) => this.logError('Error updating Activity', err),
+      complete: () => console.log('Activity updated.')
+    };
+
+    this.updateActivitySubscription = this.activitiesService.updateActivity(activity).subscribe(activityObserver);
+  }
+
+  private createActivity(activity: Activity) {
+    let activityObserver = {
+      next: (createdActivity: Activity) => this.passBack(createdActivity),
+      error: (err: any) => this.logError('Error creating Activity', err),
+      complete: () => console.log('Activity created.')
+    };
+
+    this.createActivitySubscription = this.activitiesService.createActivity(activity).subscribe(activityObserver);
+  }
+
+  passBack(activity: Activity) {
+    this.activeModal.close(activity);
+  }
+
+  logError(message: string, err: any) {
+    console.error(message);
+    console.error(err);
+  }
+}
