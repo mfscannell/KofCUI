@@ -334,7 +334,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         })
       });
       let locationAddress = new Address({
-        addressId: rawForm.locationAddressId,
+        addressId: rawForm.locationAddress.addressId,
         addressName: rawForm.locationAddress.addressName,
         address1: rawForm.locationAddress.address1,
         address2: rawForm.locationAddress.address2,

@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  tenants: [
+    {
+      tenantName: "htknights",
+      tenantId: "6673"
+    }
+  ],
+  baseUrl: "https://localhost:44388/",
+  apiBaseUrl: "https://localhost:44388/api/"
 };
 
 /*
