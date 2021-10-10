@@ -15,18 +15,18 @@ export class KnightsService {
 
     getAllKnights(): Observable<Knight[]> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.get<Knight[]>('api/6673/knights');
+        return this.http.get<Knight[]>('knights');
     }
 
     createKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
-        return this.http.post<Knight>('api/6673/knights/withAllActivities', knight);
+        return this.http.post<Knight>('knights/withAllActivities', knight);
     }
 
     createKnights(knights: Knight[]) : Observable<Knight[]> {
-        return this.http.post<Knight[]>('api/6673/knights/multiple', knights);
+        return this.http.post<Knight[]>('knights/multiple', knights);
     }
 
     updateKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
-        return this.http.put<Knight>(`api/6673/knights/${knight?.knightId}/withAllActivities`, knight);
+        return this.http.put<Knight>(`knights/${knight?.knightId}/withAllActivities`, knight);
     }
 }

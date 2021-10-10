@@ -15,14 +15,14 @@ export class ActivitiesService {
 
     getAllActivities(): Observable<Activity[]> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.get<Activity[]>('api/6673/activities');
+        return this.http.get<Activity[]>('activities');
     }
 
     createActivity(activity: Activity): Observable<Activity> {
-        return this.http.post<Activity>('api/6673/activities/', activity);
+        return this.http.post<Activity>('activities/', activity);
     }
 
     updateActivity(updatedActivity: Activity): Observable<Activity> {
-        return this.http.put<Activity>(`api/6673/activities/${updatedActivity.activityId}`, updatedActivity);
+        return this.http.put<Activity>(`activities/${updatedActivity.activityId}`, updatedActivity);
     }
 }
