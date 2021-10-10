@@ -14,16 +14,16 @@ export class ActivityCategoriesService {
     }
 
     getAllActivityCategories(): Observable<ActivityCategory[]> {
-        return this.http.get<ActivityCategory[]>('api/6673/activityCategories');
+        return this.http.get<ActivityCategory[]>('activityCategories');
     }
 
     updateActivityCategory(updatedActivityCategory: ActivityCategory): Observable<ActivityCategory> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.put<ActivityCategory>(`api/6673/activityCategories/${updatedActivityCategory.activityCategoryId}`, updatedActivityCategory);
+        return this.http.put<ActivityCategory>(`activityCategories/${updatedActivityCategory.activityCategoryId}`, updatedActivityCategory);
     }
 
     createActivityCategory(activityCategory: ActivityCategory): Observable<ActivityCategory> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.post<ActivityCategory>('api/6673/activityCategories/', activityCategory);
+        return this.http.post<ActivityCategory>('activityCategories/', activityCategory);
     }
 }

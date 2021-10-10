@@ -7,15 +7,19 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { TenantService } from 'src/app/services/tenant.service';
+import { environment } from 'src/environments/environment';
+
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
-    constructor() {
+    constructor(private tenantService: TenantService) {
 
     }
 
     intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        var baseUrl = "https://localhost:44388/"; //TODO this should be retrieved from config.
-        var url = `${baseUrl}${httpRequest.url}`;
+        let apiBaseUrl = environment.apiBaseUrl;
+        let tenantId = this.tenantService.getTenantId();
+        let url = `${apiBaseUrl}${tenantId}/${httpRequest.url}`;
 
         return next.handle(httpRequest.clone({
             url: url,

@@ -15,6 +15,6 @@ export class KnightActivityInterestsService {
 
     getAllIKnightActivityInterestsForNewKnight(): Observable<ActivityInterest[]> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.get<ActivityInterest[]>('api/6673/knightActivityInterests');
+        return this.http.get<ActivityInterest[]>('knightActivityInterests');
     }
 }

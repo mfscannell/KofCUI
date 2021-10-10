@@ -15,14 +15,14 @@ export class LeadershipRolesService {
 
     getAllLeadershipRoles(): Observable<LeadershipRole[]> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.get<LeadershipRole[]>('api/6673/leadershipRoles');
+        return this.http.get<LeadershipRole[]>('leadershipRoles');
     }
 
     updateLeadershipRole(updatedLeadershipRole: LeadershipRole): Observable<LeadershipRole> {
-        return this.http.put<LeadershipRole>(`api/6673/leadershipRoles/${updatedLeadershipRole.leadershipRoleId}`, updatedLeadershipRole);
+        return this.http.put<LeadershipRole>(`leadershipRoles/${updatedLeadershipRole.leadershipRoleId}`, updatedLeadershipRole);
     }
 
     createLeadershipRole(leadershipRole: LeadershipRole): Observable<LeadershipRole> {
-        return this.http.post<LeadershipRole>('api/6673/leadershipRoles/', leadershipRole);
+        return this.http.post<LeadershipRole>('leadershipRoles/', leadershipRole);
     }
 }

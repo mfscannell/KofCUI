@@ -14,16 +14,16 @@ export class LeadershipRoleCategoriesService {
     }
 
     getAllLeadershipRoleCategories(): Observable<LeadershipRoleCategory[]> {
-        return this.http.get<LeadershipRoleCategory[]>('api/6673/leadershipRoleCategories');
+        return this.http.get<LeadershipRoleCategory[]>('leadershipRoleCategories');
     }
 
     updateLeadershipRoleCategory(updatedleadershipRoleCategory: LeadershipRoleCategory): Observable<LeadershipRoleCategory> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.put<LeadershipRoleCategory>(`api/6673/leadershipRoleCategories/${updatedleadershipRoleCategory.leadershipRoleCategoryId}`, updatedleadershipRoleCategory);
+        return this.http.put<LeadershipRoleCategory>(`leadershipRoleCategories/${updatedleadershipRoleCategory.leadershipRoleCategoryId}`, updatedleadershipRoleCategory);
     }
 
     createLeadershipRoleCategory(leadershipRoleCategory: LeadershipRoleCategory): Observable<LeadershipRoleCategory> {
         //TODO all routes should pull the council ID from somewhere
-        return this.http.post<LeadershipRoleCategory>('api/6673/leadershipRoleCategories/', leadershipRoleCategory);
+        return this.http.post<LeadershipRoleCategory>('leadershipRoleCategories/', leadershipRoleCategory);
     }
 }
