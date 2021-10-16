@@ -140,6 +140,35 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
           };
         })
        });
+
+       this.activityEvent.volunteerSignUpRoles?.forEach((role) => {
+        const volunteerSignUpRole = new FormGroup({
+          volunteerSignUpRoleId: new FormControl(role.volunteerSignupRoleId),
+          roleTitle: new FormControl(role.roleTitle),
+          startDate: new FormControl({
+            year: DateTimeFormatter.getYear(role.startDate),
+            month: DateTimeFormatter.getMonth(role.startDate),
+            day: DateTimeFormatter.getDay(role.startDate)
+          }),
+          startTime: new FormControl({
+            hour: DateTimeFormatter.getHour(role.startTime),
+            minute: DateTimeFormatter.getMinute(role.startTime)
+          }),
+          endDate: new FormControl({
+            year: DateTimeFormatter.getYear(role.endDate),
+            month: DateTimeFormatter.getMonth(role.endDate),
+            day: DateTimeFormatter.getDay(role.endDate)
+          }),
+          endTime: new FormControl({
+            hour: DateTimeFormatter.getHour(role.endTime),
+            minute: DateTimeFormatter.getMinute(role.endTime)
+          }),
+          numberOfVolunteersNeeded: new FormControl(role.numberOfVolunteersNeeded)
+        });
+    
+        this.volunteerSignUpRoles.push(volunteerSignUpRole);
+       });
+
     }
 
     this.getAllActivities();
@@ -286,7 +315,6 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   addVolunteerSignUpRole() {
     const volunteerSignUpRole = new FormGroup({
       volunteerSignUpRoleId: new FormControl(''),
-      activityEventId: new FormControl(''),
       roleTitle: new FormControl(''),
       startDate: new FormControl(this.getEventStartDate()),
       startTime: new FormControl({
