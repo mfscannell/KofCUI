@@ -34,13 +34,7 @@ import { EditActivityEventModalComponent } from './components/admin/activity-eve
 import { OurCouncilComponent } from './components/our-council/our-council.component';
 import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.component';
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
-
-// import { adapterFactory } from 'angular-calendar/date-adapters/moment';
-// import * as moment from 'moment';
-
-// export function momentAdapterFactory() {
-//   return adapterFactory(moment);
-// };
+import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +44,7 @@ import { CalendarEventsComponent } from './components/calendar-events/calendar-e
     AboutKnightsComponent,
     OurCouncilComponent,
     CalendarEventsComponent,
+    ViewUpcomingEventModalComponent,
     AdminComponent,
     ActivityCategoriesComponent,
     EditActivityCategoryModalComponent,

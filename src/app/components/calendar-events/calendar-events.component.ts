@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { Address } from 'src/app/models/address';
 import { Month } from 'src/app/models/calendar/month';
@@ -6,6 +7,7 @@ import { UpcomingEvent } from 'src/app/models/upcomingEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { CalendarUtilities } from 'src/app/utilities/calendarUtilities';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { ViewUpcomingEventModalComponent } from './view-upcoming-event-modal/view-upcoming-event-modal.component';
 
 @Component({
   selector: 'kofc-calendar-events',
@@ -20,77 +22,15 @@ export class CalendarEventsComponent implements OnInit {
   currentMonthName: string = CalendarUtilities.getNameOfMonth(this.currentMonth);
   calendarMonth: Month = new Month();
 
-  constructor(private activityEventsService: ActivityEventsService) {
+  constructor(
+    private activityEventsService: ActivityEventsService,
+    private modalService: NgbModal) {
 
   }
 
   ngOnInit() {
-    // this.upcomingEvents = [
-    //   new UpcomingEvent({
-    //     eventName: "Pancake Breakfast",
-    //     eventDescription: "Join us for pancakes, eggs, and biscuits and gravy!  Proceeds go to 8th grade school trip.",
-    //     startDate: "2021-9-11",
-    //     startTime: "7:00 AM",
-    //     endDate: "2021-9-11",
-    //     endTime: "11:00 AM",
-    //     locationAddress: new Address({
-    //       addressId: 1,
-    //       addressName: "School Cafeteria",
-    //       address1: "123 Main St.",
-    //       address2: "",
-    //       addressCity: "Lenexa",
-    //       addressStateCode: "KS",
-    //       addressPostalCode: "66123",
-    //       addressCountryCode: "US"
-    //     }),
-    //     canceled: false,
-    //     canceledReason: "Not Canceled"
-    //   }),
-    //   new UpcomingEvent({
-    //     eventName: "Food Drive",
-    //     eventDescription: "This is a monthly canned food drive for Catholic Charities.  Desired items are canned corn and green beans.",
-    //     startDate: "2021-10-18",
-    //     startTime: "7:00 AM",
-    //     endDate: "2021-10-18",
-    //     endTime: "11:00 AM",
-    //     locationAddress: new Address({
-    //       addressId: 1,
-    //       addressName: "Main Church",
-    //       address1: "123 Main St.",
-    //       address2: "",
-    //       addressCity: "Lenexa",
-    //       addressStateCode: "KS",
-    //       addressPostalCode: "66123",
-    //       addressCountryCode: "US"
-    //     }),
-    //     canceled: false,
-    //     canceledReason: "Not Canceled"
-    //   }),
-    //   new UpcomingEvent({
-    //     eventName: "Chili Competition",
-    //     eventDescription: "Proceeds go to Saint James Academy tuition fund",
-    //     startDate: "2021-9-22",
-    //     startTime: "5:00 PM",
-    //     endDate: "2021-9-22",
-    //     endTime: "9:00 PM",
-    //     locationAddress: new Address({
-    //       addressId: 1,
-    //       addressName: "Fr. Quigley Center",
-    //       address1: "123 Main St.",
-    //       address2: "",
-    //       addressCity: "Lenexa",
-    //       addressStateCode: "KS",
-    //       addressPostalCode: "66123",
-    //       addressCountryCode: "US"
-    //     }),
-    //     canceled: true,
-    //     canceledReason: "Not enough participants"
-    //   })
-    // ];
-
     this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
     this.calendarMonth.addEventsToMonth(this.upcomingEvents);
-    let something = 5;
 
     this.getAllUpcomingEvents();
   }
@@ -148,8 +88,29 @@ export class CalendarEventsComponent implements OnInit {
     this.calendarMonth.addEventsToMonth(this.upcomingEvents);
   }
 
-  openActivitiesModal(dayOfMonth: number) {
+  viewUpcomingEvents(dayOfMonth: number) {
+    let selectedDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, dayOfMonth);
+    let eventsForDate = this.upcomingEvents.filter(upcomingEvent => upcomingEvent.startDate === selectedDate);
     console.log(dayOfMonth);
+
+    const modalRef = this.modalService.open(ViewUpcomingEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
+
+    modalRef.componentInstance.upcomingEvents = eventsForDate;
+    let date = new Date(this.currentYear, this.currentMonth - 1, dayOfMonth);
+    let dateString = date.toLocaleDateString("en-US", {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    modalRef.componentInstance.modalHeaderText = `Events for ${dateString}`;
+    modalRef.result.then((result) => {
+    }).catch((error) => {
+      if (error !== 0) {
+        console.log('Error from View Upcoming Events Modal');
+        console.log(error);
+      }
+    });
   }
 
   logError(message: string, err: any) {
