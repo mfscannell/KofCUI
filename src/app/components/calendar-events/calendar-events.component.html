@@ -38,7 +38,7 @@
             <td *ngFor='let dayOfWeek of week.days'>
     
     
-              <div *ngIf='dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length > 0' role='button' (click)="openActivitiesModal(dayOfWeek.dayOfMonth)">
+              <div *ngIf='dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length > 0' role='button' (click)="viewUpcomingEvents(dayOfWeek.dayOfMonth)">
                 <div>
                   {{dayOfWeek.dayOfMonth}}
                 </div>
