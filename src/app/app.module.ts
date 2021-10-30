@@ -35,6 +35,7 @@ import { OurCouncilComponent } from './components/our-council/our-council.compon
 import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.component';
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
+import { EditActivityEventLocationModalComponent } from './components/admin/activity-events/edit-activity-event-location-modal/edit-activity-event-location-modal.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ViewUpcomingEventModalComponent } from './components/calendar-events/vi
     EditLeadershipRoleCategoryModalComponent,
     EditLeadershipRoleModalComponent,
     ActivityEventsComponent,
-    EditActivityEventModalComponent
+    EditActivityEventModalComponent,
+    EditActivityEventLocationModalComponent
   ],
   imports: [
     YouTubePlayerModule,
