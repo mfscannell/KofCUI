@@ -10,7 +10,8 @@ export class ActivityEvent {
     startTime?: string;
     endDate?: string;
     endTime?: string;
-    locationAddress?: Address;
+    locationAddressId: number = 0;
+    //locationAddress?: Address;
     volunteerSignUpRoles?: VolunteerSignUpRole[];
     showInCalendar: boolean = true;
     canceled: boolean = false;
@@ -26,7 +27,8 @@ export class ActivityEvent {
             startTime: string,
             endDate: string,
             endTime: string,
-            locationAddress: Address
+            locationAddressId: number,
+            //locationAddress: Address
             volunteerSignUpRoles: VolunteerSignUpRole[],
             showInCalendar: boolean,
             canceled: boolean,
@@ -41,7 +43,8 @@ export class ActivityEvent {
             this.startTime = fields.startTime || this.startTime;
             this.endDate = fields.endDate || this.endDate;
             this.endTime = fields.endTime || this.endTime;
-            this.locationAddress = fields.locationAddress || this.locationAddress;
+            this.locationAddressId = fields.locationAddressId || this.locationAddressId;
+            //this.locationAddress = fields.locationAddress || this.locationAddress;
             this.volunteerSignUpRoles = fields.volunteerSignUpRoles || this.volunteerSignUpRoles;
             this.showInCalendar = fields.showInCalendar || this.showInCalendar;
             this.canceled = fields.canceled || this.canceled;

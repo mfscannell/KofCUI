@@ -18,12 +18,10 @@ export class ActivityCategoriesService {
     }
 
     updateActivityCategory(updatedActivityCategory: ActivityCategory): Observable<ActivityCategory> {
-        //TODO all routes should pull the council ID from somewhere
         return this.http.put<ActivityCategory>(`activityCategories/${updatedActivityCategory.activityCategoryId}`, updatedActivityCategory);
     }
 
     createActivityCategory(activityCategory: ActivityCategory): Observable<ActivityCategory> {
-        //TODO all routes should pull the council ID from somewhere
         return this.http.post<ActivityCategory>('activityCategories/', activityCategory);
     }
 }
