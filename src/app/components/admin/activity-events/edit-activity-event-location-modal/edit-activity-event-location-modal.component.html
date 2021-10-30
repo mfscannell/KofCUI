@@ -1,0 +1,74 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="editActivityEventLocationFormGroup" (ngSubmit)="onSubmitEditActivityEventLocation()">
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="addressName" class="col-form-label">Location Name</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="addressName" id="addressName" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="address1" class="col-form-label">Address 1</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="address2" class="col-form-label">Address 2</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="addressCity" class="col-form-label">City</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="addressCity" id="addressCity" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="addressStateCode" class="col-form-label">State</label>
+      </div>
+      <div class="col-md-8">
+        <select class="form-control" id="addressStateCode" formControlName="addressStateCode">
+          <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="addressPostalCode" class="col-form-label">Zip Code</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control" formControlName="addressPostalCode" id="addressPostalCode" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-4">
+        <label for="addressCountryCode" class="col-form-label">Country</label>
+      </div>
+      <div class="col-md-8">
+        <select class="form-control" id="addressCountryCode" formControlName="addressCountryCode">
+          <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+    </div>
+  </form>
+</div>

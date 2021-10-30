@@ -23,6 +23,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
   @Input() activityEvent?: ActivityEvent;
+  @Input() allAddresses: Address[] = [];
   allActivities: Activity[] = [];
   getAllActivitiesSubscription?: Subscription;
   updateActivityEventSubscription?: Subscription;
@@ -102,15 +103,18 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
           minute: DateTimeFormatter.getMinute(this.activityEvent.endTime)
         },
         locationAddress: {
-          addressId: this.activityEvent.locationAddress?.addressId,
-          addressName: this.activityEvent.locationAddress?.addressName,
-          address1: this.activityEvent.locationAddress?.address1,
-          address2: this.activityEvent.locationAddress?.address2,
-          addressCity: this.activityEvent.locationAddress?.addressCity,
-          addressStateCode: this.activityEvent.locationAddress?.addressStateCode,
-          addressPostalCode: this.activityEvent.locationAddress?.addressPostalCode,
-          addressCountryCode: this.activityEvent.locationAddress?.addressCountryCode
+          addressId: this.activityEvent.locationAddressId,
         },
+        // locationAddress: {
+        //   addressId: this.activityEvent.locationAddress?.addressId,
+        //   addressName: this.activityEvent.locationAddress?.addressName,
+        //   address1: this.activityEvent.locationAddress?.address1,
+        //   address2: this.activityEvent.locationAddress?.address2,
+        //   addressCity: this.activityEvent.locationAddress?.addressCity,
+        //   addressStateCode: this.activityEvent.locationAddress?.addressStateCode,
+        //   addressPostalCode: this.activityEvent.locationAddress?.addressPostalCode,
+        //   addressCountryCode: this.activityEvent.locationAddress?.addressCountryCode
+        // },
         showInCalendar: this.activityEvent.showInCalendar,
         canceled: this.activityEvent.canceled,
         canceledReason: this.activityEvent.canceledReason,
@@ -169,6 +173,20 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         this.volunteerSignUpRoles.push(volunteerSignUpRole);
        });
 
+       if (this.allAddresses && this.allAddresses.length > 0) {
+         let address = this.allAddresses.find(x => x.addressId === this.activityEvent?.locationAddressId);
+        this.editActivityEventForm.patchValue({
+          locationAddress: {
+            addressName: address?.addressName,
+            address1: address?.address1,
+            address2: address?.address2,
+            addressCity: address?.addressCity,
+            addressStateCode: address?.addressStateCode,
+            addressPostalCode: address?.addressPostalCode,
+            addressCountryCode: address?.addressCountryCode
+          }
+        });
+       }
     }
 
     this.getAllActivities();
@@ -195,6 +213,23 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       complete: () => console.log('All activities loaded.')
     };
     this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
+  }
+
+  changeLocationAddress($event: any) {
+    let newAddressId = Number($event.target.value);
+    let newAddress = this.allAddresses.find(x => x.addressId === newAddressId);
+    this.editActivityEventForm.patchValue({
+      locationAddress: {
+        addressId: newAddress?.addressId,
+        addressName: newAddress?.addressName,
+        address1: newAddress?.address1,
+        address2: newAddress?.address2,
+        addressCity: newAddress?.addressCity,
+        addressStateCode: newAddress?.addressStateCode,
+        addressPostalCode: newAddress?.addressPostalCode,
+        addressCountryCode: newAddress?.addressCountryCode
+      }
+    });
   }
 
   onChangeShowInCalendar(isChecked: boolean) {
@@ -380,7 +415,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         startTime: DateTimeFormatter.ToIso8601Time(rawForm.startTime.hour, rawForm.startTime.minute),
         endDate: DateTimeFormatter.ToIso8601Date(rawForm.endDate.year, rawForm.endDate.month, rawForm.endDate.day),
         endTime: DateTimeFormatter.ToIso8601Time(rawForm.endTime.hour, rawForm.endTime.minute),
-        locationAddress: locationAddress,
+        locationAddressId: rawForm.locationAddress.addressId,
+        //locationAddress: locationAddress,
         volunteerSignUpRoles: volunteerRoles,
         showInCalendar: rawForm.showInCalendar,
         canceled: rawForm.canceled,
