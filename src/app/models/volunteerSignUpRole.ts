@@ -1,3 +1,5 @@
+import { EventVolunteer } from "./eventVolunteer";
+
 export class VolunteerSignUpRole {
     volunteerSignupRoleId: number = 0;
     roleTitle: string = '';
@@ -6,6 +8,7 @@ export class VolunteerSignUpRole {
     endDate?: string;
     endTime?: string;
     numberOfVolunteersNeeded: number = 0;
+    eventVolunteers?: EventVolunteer[] = [];
 
     public constructor(
         fields?: {
@@ -15,7 +18,8 @@ export class VolunteerSignUpRole {
             startTime?: string,
             endDate?: string,
             endTime?: string,
-            numberOfVolunteersNeeded?: number
+            numberOfVolunteersNeeded?: number,
+            eventVolunteers: EventVolunteer[],
     }) {
         if (fields) {
             this.volunteerSignupRoleId = fields.volunteerSignupRoleId || this.volunteerSignupRoleId;
@@ -25,6 +29,7 @@ export class VolunteerSignUpRole {
             this.endDate = fields.endDate || this.endDate;
             this.endTime = fields.endTime || this.endTime;
             this.numberOfVolunteersNeeded = fields.numberOfVolunteersNeeded || this.numberOfVolunteersNeeded;
+            this.eventVolunteers = fields.eventVolunteers || this.eventVolunteers;
         }
     }
 }

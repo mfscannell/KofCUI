@@ -7,60 +7,60 @@
 <div class="modal-body">
   <form [formGroup]="editActivityEventLocationFormGroup" (ngSubmit)="onSubmitEditActivityEventLocation()">
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="addressName" class="col-form-label">Location Name</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <input type="text" class="form-control" formControlName="addressName" id="addressName" autocomplete="off">
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="address1" class="col-form-label">Address 1</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off">
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="address2" class="col-form-label">Address 2</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off">
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="addressCity" class="col-form-label">City</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <input type="text" class="form-control" formControlName="addressCity" id="addressCity" autocomplete="off">
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="addressStateCode" class="col-form-label">State</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <select class="form-control" id="addressStateCode" formControlName="addressStateCode">
           <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
         </select>
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="addressPostalCode" class="col-form-label">Zip Code</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <input type="text" class="form-control" formControlName="addressPostalCode" id="addressPostalCode" autocomplete="off">
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-md-4">
+      <div class="col-4 col-md-3">
         <label for="addressCountryCode" class="col-form-label">Country</label>
       </div>
-      <div class="col-md-8">
+      <div class="col-8 col-md-9">
         <select class="form-control" id="addressCountryCode" formControlName="addressCountryCode">
           <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
         </select>

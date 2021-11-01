@@ -10,10 +10,10 @@
       <ng-template ngbPanelContent>
         <div class="container">
           <div class="row" *ngFor='let activity of filterActivitiesByCategory(activityCategory.activityCategoryId)'>
-            <div class="col-md-6">
+            <div class="col-6 col-md-6">
               {{activity.activityName}}
             </div>
-            <div class="col-md-4">
+            <div class="col-6 col-md-4">
               <div class="btn-toolbar text-center mt-1">
                 <button type="button" class="btn btn-primary mr-1" (click)="openEditActivityModal(activity)">Edit</button>
                 <button type="button" class="btn btn-danger">Delete</button>
