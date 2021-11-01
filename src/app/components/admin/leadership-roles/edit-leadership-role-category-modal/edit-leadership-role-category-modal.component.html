@@ -8,8 +8,10 @@
   <div class="modal-body">
     <form [formGroup]="editLeadershipRoleCategoryForm" (ngSubmit)="onSubmitEditLeadershipRoleCategory()">
       <div class="form-group row">
-        <label for="leadershipRoleCategoryName" class="col-sm-4 col-form-label">Leadership Role Category Name</label>
-        <div class="col-sm-8">
+        <div class="col-4 col-md-3">
+          <label for="leadershipRoleCategoryName" class="col-form-label">Category Name</label>
+        </div>
+        <div class="col-8 col-md-9">
           <input type="text" class="form-control" formControlName="categoryName" id="leadershipRoleCategoryName" autocomplete="off">
         </div>
       </div>

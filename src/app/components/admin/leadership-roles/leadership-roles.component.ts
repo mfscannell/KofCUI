@@ -85,7 +85,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   openEditLeadershipRoleCategoryModal(leadershipRoleCategory: LeadershipRoleCategory) {
-    const modalRef = this.modalService.open(EditLeadershipRoleCategoryModalComponent, {ariaLabelledBy: 'modal-basic-title'});
+    const modalRef = this.modalService.open(EditLeadershipRoleCategoryModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.leadershipRoleCategory = leadershipRoleCategory;
     modalRef.componentInstance.modalHeaderText = 'Editing Leadership Role Category';
@@ -111,7 +111,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   openCreateLeadershipRoleCategoryModal() {
-    const modalRef = this.modalService.open(EditLeadershipRoleCategoryModalComponent, {ariaLabelledBy: 'modal-basic-title'});
+    const modalRef = this.modalService.open(EditLeadershipRoleCategoryModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.modalHeaderText = 'Adding Leadership Role Category';
     modalRef.componentInstance.modalAction = ModalActionEnums.Create;
@@ -128,7 +128,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   openEditLeadershipRoleModal(leadershipRole: LeadershipRole) {
-    const modalRef = this.modalService.open(EditLeadershipRoleModalComponent, {ariaLabelledBy: 'modal-basic-title'});
+    const modalRef = this.modalService.open(EditLeadershipRoleModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.leadershipRole = leadershipRole;
@@ -156,7 +156,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   openCreateLeadershipRoleModal() {
-    const modalRef = this.modalService.open(EditLeadershipRoleModalComponent, {ariaLabelledBy: 'modal-basic-title'});
+    const modalRef = this.modalService.open(EditLeadershipRoleModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
     
     modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.leadershipRole = new LeadershipRole({

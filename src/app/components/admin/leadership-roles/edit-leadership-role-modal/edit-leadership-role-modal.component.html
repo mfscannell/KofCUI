@@ -8,36 +8,36 @@
   <div class="modal-body">
     <form [formGroup]="editLeadershipRoleForm" (ngSubmit)="onSubmitEditLeadershipRole()">
       <div class="form-group row">
-        <div class="col-md-4">
+        <div class="col-4 col-md-3">
           <label for="title" class="col-form-label">Title</label>
         </div>
-        <div class="col-md-8">
+        <div class="col-8 col-md-9">
           <input type="text" class="form-control" formControlName="title" id="title" autocomplete="off">
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-md-4">
-          <label for="leadershipRoleCategory" class="col-form-label">Leadership Role Category</label>
+        <div class="col-4 col-md-3">
+          <label for="leadershipRoleCategory" class="col-form-label">Category</label>
         </div>
-        <div class="col-md-8">
+        <div class="col-8 col-md-9">
           <select class="form-control" id="leadershipRoleCategory" formControlName="leadershipRoleCategoryId">
             <option *ngFor="let leadershipRoleCategory of leadershipRoleCategories" [value]="leadershipRoleCategory.leadershipRoleCategoryId">{{leadershipRoleCategory.categoryName}}</option>
           </select>
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-md-4">
+        <div class="col-4 col-md-3">
           <label for="occupied" class="col-form-label">Occupied</label>
         </div>
-        <div class="col-md-8">
+        <div class="col-8 col-md-9">
           <input type="checkbox" class="form-check-input" formControlName="occupied" id="occupied">
         </div>
       </div>
       <div class="form-group row" *ngIf="editLeadershipRoleForm.controls['occupied'].value">
-        <div class="col-md-4">
+        <div class="col-4 col-md-3">
           <label for="leadershipRoleOccupier" class="col-form-label">Occupier</label>
         </div>
-        <div class="col-sm-8">
+        <div class="col-4 col-md-9">
           <select class="form-control" id="leadershipRoleOccupier" formControlName="knightId">
             <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
           </select>

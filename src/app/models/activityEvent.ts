@@ -1,5 +1,6 @@
 import { Address } from 'src/app/models/address';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
+import { EventVolunteer } from './eventVolunteer';
 
 export class ActivityEvent {
     activityEventId: number = 0;
@@ -11,8 +12,7 @@ export class ActivityEvent {
     endDate?: string;
     endTime?: string;
     locationAddressId: number = 0;
-    //locationAddress?: Address;
-    volunteerSignUpRoles?: VolunteerSignUpRole[];
+    volunteerSignUpRoles?: VolunteerSignUpRole[] = [];
     showInCalendar: boolean = true;
     canceled: boolean = false;
     canceledReason?: string;
@@ -28,7 +28,6 @@ export class ActivityEvent {
             endDate: string,
             endTime: string,
             locationAddressId: number,
-            //locationAddress: Address
             volunteerSignUpRoles: VolunteerSignUpRole[],
             showInCalendar: boolean,
             canceled: boolean,
@@ -44,7 +43,6 @@ export class ActivityEvent {
             this.endDate = fields.endDate || this.endDate;
             this.endTime = fields.endTime || this.endTime;
             this.locationAddressId = fields.locationAddressId || this.locationAddressId;
-            //this.locationAddress = fields.locationAddress || this.locationAddress;
             this.volunteerSignUpRoles = fields.volunteerSignUpRoles || this.volunteerSignUpRoles;
             this.showInCalendar = fields.showInCalendar || this.showInCalendar;
             this.canceled = fields.canceled || this.canceled;
