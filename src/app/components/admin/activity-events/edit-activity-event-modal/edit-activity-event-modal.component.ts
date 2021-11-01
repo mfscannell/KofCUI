@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,9 +10,10 @@ import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
 import { Address } from 'src/app/models/address';
-import { ActivitiesService } from 'src/app/services/activities.service';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { EventVolunteer } from 'src/app/models/eventVolunteer';
+import { Knight } from 'src/app/models/knight';
 
 @Component({
   selector: 'kofc-edit-activity-event-modal',
@@ -24,17 +25,17 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
   @Input() activityEvent?: ActivityEvent;
   @Input() allAddresses: Address[] = [];
-  allActivities: Activity[] = [];
-  getAllActivitiesSubscription?: Subscription;
+  @Input() allKnights: Knight[] = [];
+  @Input() allActivities: Activity[] = [];
   updateActivityEventSubscription?: Subscription;
   createActivityEventSubscription?: Subscription;
   editActivityEventForm: FormGroup;
+  allVolunteerRoles: VolunteerSignUpRole[] = [];
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private activitiesService: ActivitiesService,
     private activityEventsService: ActivityEventsService) {
       var today = new Date();
       this.editActivityEventForm = new FormGroup({
@@ -105,47 +106,12 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         locationAddress: {
           addressId: this.activityEvent.locationAddressId,
         },
-        // locationAddress: {
-        //   addressId: this.activityEvent.locationAddress?.addressId,
-        //   addressName: this.activityEvent.locationAddress?.addressName,
-        //   address1: this.activityEvent.locationAddress?.address1,
-        //   address2: this.activityEvent.locationAddress?.address2,
-        //   addressCity: this.activityEvent.locationAddress?.addressCity,
-        //   addressStateCode: this.activityEvent.locationAddress?.addressStateCode,
-        //   addressPostalCode: this.activityEvent.locationAddress?.addressPostalCode,
-        //   addressCountryCode: this.activityEvent.locationAddress?.addressCountryCode
-        // },
         showInCalendar: this.activityEvent.showInCalendar,
         canceled: this.activityEvent.canceled,
-        canceledReason: this.activityEvent.canceledReason,
-        volunteerSignUpRoles: this.activityEvent.volunteerSignUpRoles?.map(function(role) {
-          return {
-            volunteerSignUpRoleId: role.volunteerSignupRoleId,
-            roleTitle: role.roleTitle,
-            startDate: {
-              year: DateTimeFormatter.getYear(role.startDate),
-              month: DateTimeFormatter.getMonth(role.startDate),
-              day: DateTimeFormatter.getDay(role.startDate)
-            },
-            startTime: {
-              hour: DateTimeFormatter.getHour(role.startTime),
-              minute: DateTimeFormatter.getMinute(role.startTime)
-            },
-            endDate: {
-              year: DateTimeFormatter.getYear(role.endDate),
-              month: DateTimeFormatter.getMonth(role.endDate),
-              day: DateTimeFormatter.getDay(role.endDate)
-            },
-            endTime: {
-              hour: DateTimeFormatter.getHour(role.endTime),
-              minute: DateTimeFormatter.getMinute(role.endTime)
-            },
-            numberOfVolunteersNeeded: role.numberOfVolunteersNeeded
-          };
-        })
+        canceledReason: this.activityEvent.canceledReason
        });
 
-       this.activityEvent.volunteerSignUpRoles?.forEach((role) => {
+       this.activityEvent.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
         const volunteerSignUpRole = new FormGroup({
           volunteerSignUpRoleId: new FormControl(role.volunteerSignupRoleId),
           roleTitle: new FormControl(role.roleTitle),
@@ -167,10 +133,11 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
             hour: DateTimeFormatter.getHour(role.endTime),
             minute: DateTimeFormatter.getMinute(role.endTime)
           }),
-          numberOfVolunteersNeeded: new FormControl(role.numberOfVolunteersNeeded)
+          numberOfVolunteersNeeded: new FormControl(role.numberOfVolunteersNeeded),
+          eventVolunteers: new FormArray(this.initEventVolunteersForm(role.eventVolunteers))
         });
     
-        this.volunteerSignUpRoles.push(volunteerSignUpRole);
+        this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
        });
 
        if (this.allAddresses && this.allAddresses.length > 0) {
@@ -188,15 +155,26 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         });
        }
     }
+  }
 
-    this.getAllActivities();
+  initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
+    let eventVolunteersArray: FormGroup[] = [];
+
+    if (eventVolunteers) {
+      eventVolunteers.forEach((eventVolunteer) => {
+        const eventVolunteerFormGroup = new FormGroup({
+          eventVolunteerId: new FormControl(eventVolunteer.eventVolunteerId),
+          knightId: new FormControl(eventVolunteer.knightId)
+        });
+
+        eventVolunteersArray.push(eventVolunteerFormGroup);
+      });
+    }
+
+    return eventVolunteersArray;
   }
 
   ngOnDestroy() {
-    if (this.getAllActivitiesSubscription) {
-      this.getAllActivitiesSubscription.unsubscribe();
-    }
-
     if (this.createActivityEventSubscription) {
       this.createActivityEventSubscription.unsubscribe();
     }
@@ -204,15 +182,6 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     if (this.updateActivityEventSubscription) {
       this.updateActivityEventSubscription.unsubscribe();
     }
-  }
-
-  private getAllActivities() {
-    let activitiesObserver = {
-      next: (getAllActivitiesResponse: Activity[]) => this.allActivities = getAllActivitiesResponse.sort((a, b)=> a.activityName.localeCompare(b.activityName)),
-      error: (err: any) => this.logError('Error getting all activities', err),
-      complete: () => console.log('All activities loaded.')
-    };
-    this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
   }
 
   changeLocationAddress($event: any) {
@@ -254,7 +223,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.volunteerSignUpRoles.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
+    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
       vsurControl.patchValue({
         startDate: {
           year: event.year,
@@ -278,7 +247,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.volunteerSignUpRoles.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
+    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
       vsurControl.patchValue({
         startTime: {
           hour: event.hour,
@@ -294,7 +263,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
   onChangeEventEndTime(event: any) {
     //TODO need to limit end time to one hour past start time
-    this.volunteerSignUpRoles.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
+    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
       vsurControl.patchValue({
         endTime: {
           hour: event.hour,
@@ -305,7 +274,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   }
 
   onChangeVolunteerRoleStartTime(event: any, index: number) {
-    this.volunteerSignUpRoles.at(index).patchValue({
+    this.volunteerSignUpRolesForm.at(index).patchValue({
       endTime: {
         hour: event.hour,
         minute: event.minute
@@ -319,7 +288,14 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     //TODO need to limit end time to be after start time.
   }
 
-  get volunteerSignUpRoles() {
+  getEventVolunteers(volunteerSignUpRole: AbstractControl) {
+    const something = volunteerSignUpRole as FormGroup;
+    const eventVolunteers = something.controls["eventVolunteers"] as FormArray;
+
+    return eventVolunteers.controls;
+  }
+
+  get volunteerSignUpRolesForm() {
     return this.editActivityEventForm.controls["volunteerSignUpRoles"] as FormArray;
   }
 
@@ -361,14 +337,32 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         "hour": this.getEventEndTime().hour,
         "minute": this.getEventEndTime().minute
       }),
-      numberOfVolunteersNeeded: new FormControl('')
+      numberOfVolunteersNeeded: new FormControl(''),
+      eventVolunteers: new FormArray([])
     });
 
-    this.volunteerSignUpRoles.push(volunteerSignUpRole);
+    this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
   }
 
   deleteVolunteerSignUpRole(roleIndex: number) {
-    this.volunteerSignUpRoles.removeAt(roleIndex);
+    this.volunteerSignUpRolesForm.removeAt(roleIndex);
+  }
+
+  addEventVolunteer(volunteerSignUpRoleIndex: number) {
+    const eventVolunteerFormGroup = new FormGroup({
+      eventVolunteerId: new FormControl(''),
+      knightId: new FormControl('')
+    })
+
+    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as FormGroup;
+    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+    eventVolunteerFormArray.push(eventVolunteerFormGroup);
+  }
+
+  deleteEventVolunteer(roleIndex: number, volunteerIndex: number) {
+    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(roleIndex) as FormGroup;
+    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+    eventVolunteerFormArray.removeAt(volunteerIndex);
   }
 
   onSubmitEditActivityEvent() {
@@ -393,18 +387,14 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
           startTime: DateTimeFormatter.ToIso8601Time(role.startTime.hour, role.startTime.minute),
           endDate: DateTimeFormatter.ToIso8601Date(role.endDate.year, role.endDate.month, role.endDate.day),
           endTime: DateTimeFormatter.ToIso8601Time(role.endTime.hour, role.endTime.minute),
-          numberOfVolunteersNeeded: role.numberOfVolunteersNeeded
+          numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
+          eventVolunteers: role.eventVolunteers.map(function(eventVolunteer: any) {
+            return new EventVolunteer({
+              eventVolunteerId: eventVolunteer.eventVolunteerId,
+              knightId: eventVolunteer.knightId
+            });
+          })
         })
-      });
-      let locationAddress = new Address({
-        addressId: rawForm.locationAddress.addressId,
-        addressName: rawForm.locationAddress.addressName,
-        address1: rawForm.locationAddress.address1,
-        address2: rawForm.locationAddress.address2,
-        addressCity: rawForm.locationAddress.addressCity,
-        addressStateCode: rawForm.locationAddress.addressStateCode,
-        addressPostalCode: rawForm.locationAddress.addressPostalCode,
-        addressCountryCode: rawForm.locationAddress.addressCountryCode
       });
       let activityEvent = new ActivityEvent({
         activityEventId: rawForm.activityEventId,
@@ -416,7 +406,6 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         endDate: DateTimeFormatter.ToIso8601Date(rawForm.endDate.year, rawForm.endDate.month, rawForm.endDate.day),
         endTime: DateTimeFormatter.ToIso8601Time(rawForm.endTime.hour, rawForm.endTime.minute),
         locationAddressId: rawForm.locationAddress.addressId,
-        //locationAddress: locationAddress,
         volunteerSignUpRoles: volunteerRoles,
         showInCalendar: rawForm.showInCalendar,
         canceled: rawForm.canceled,

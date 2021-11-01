@@ -13,6 +13,10 @@ import { AddressesService } from 'src/app/services/addresses.service';
 
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { EditActivityEventLocationModalComponent } from './edit-activity-event-location-modal/edit-activity-event-location-modal.component';
+import { Knight } from 'src/app/models/knight';
+import { KnightsService } from 'src/app/services/knights.service';
+import { Activity } from 'src/app/models/activity';
+import { ActivitiesService } from 'src/app/services/activities.service';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -22,8 +26,12 @@ import { EditActivityEventLocationModalComponent } from './edit-activity-event-l
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   activityEventsSubscription?: Subscription;
   getAllAddressesForEventsSubscription?: Subscription;
+  getAllKnightsSubscription?: Subscription;
+  getAllActivitiesSubscription?: Subscription;
   activityEvents: ActivityEvent[] = [];
+  allActivities: Activity[] = [];
   allAddresses: Address[] = [];
+  allKnights: Knight[] = [];
   // beginDate: Date = new Date();
   // endDate: Date = new Date();
   fromDate: NgbDate | null;
@@ -35,7 +43,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   constructor(
     private activityEventsService: ActivityEventsService,
+    private activitiesService: ActivitiesService,
     private addressesService: AddressesService,
+    private knightsService: KnightsService,
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter,
     private modalService: NgbModal) {
@@ -46,6 +56,8 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getAllActivityEvents();
     this.getAllAddressesForEvents();
+    this.getAllKnights();
+    this.getAllActivities();
   }
 
   ngOnDestroy() {
@@ -55,6 +67,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
     if (this.getAllAddressesForEventsSubscription) {
       this.getAllAddressesForEventsSubscription.unsubscribe();
+    }
+
+    if (this.getAllKnightsSubscription) {
+      this.getAllKnightsSubscription.unsubscribe();
+    }
+
+    if (this.getAllActivitiesSubscription) {
+      this.getAllActivitiesSubscription.unsubscribe();
     }
   }
 
@@ -81,6 +101,15 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       }
   }
 
+  private getAllActivities() {
+    let activitiesObserver = {
+      next: (getAllActivitiesResponse: Activity[]) => this.allActivities = getAllActivitiesResponse.sort((a, b)=> a.activityName.localeCompare(b.activityName)),
+      error: (err: any) => this.logError('Error getting all activities', err),
+      complete: () => console.log('All activities loaded.')
+    };
+    this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
+  }
+
   private getAllAddressesForEvents() {
     let addressesesObserver = {
       next: (getAllAddressesResponse: Address[]) => this.allAddresses = getAllAddressesResponse,
@@ -91,11 +120,23 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     this.getAllAddressesForEventsSubscription = this.addressesService.getAllAddressesForEvents().subscribe(addressesesObserver);
   }
 
+  private getAllKnights() {
+    let knightsObserver = {
+      next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
+      error: (err: any) => this.logError('Error getting all knights.', err),
+      complete: () => console.log('All knights loaded.')
+    };
+
+    this.getAllKnightsSubscription = this.knightsService.getAllKnights().subscribe(knightsObserver);
+  }
+
   openEditActivityEventModal(activityEvent: ActivityEvent) {
     const modalRef = this.modalService.open(EditActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.activityEvent = activityEvent;
     modalRef.componentInstance.allAddresses = this.allAddresses;
+    modalRef.componentInstance.allActivities = this.allActivities;
+    modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.modalHeaderText = 'Editing Activity Event';
     modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
     modalRef.result.then((result) => {
@@ -121,6 +162,8 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(EditActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.allAddresses = this.allAddresses;
+    modalRef.componentInstance.allActivities = this.allActivities;
+    modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.modalHeaderText = 'Adding Activity Category';
     modalRef.componentInstance.modalAction = ModalActionEnums.Create;
     modalRef.result.then((result: ActivityEvent) => {
@@ -182,7 +225,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   openEditAddressModal(address: Address) {
     const modalRef = this.modalService.open(EditActivityEventLocationModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
-    modalRef.componentInstance.activityEvent = address;
+    modalRef.componentInstance.locationAddress = address;
     modalRef.componentInstance.modalHeaderText = 'Editing Event Location';
     modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
     modalRef.result.then((result: Address) => {
