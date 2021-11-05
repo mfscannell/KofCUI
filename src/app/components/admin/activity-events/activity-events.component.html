@@ -40,7 +40,11 @@
                          [value]="formatter.format(fromDate)"
                          (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button">
+                      <svg class="bi" width="20" height="20" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -52,12 +56,16 @@
                          [value]="formatter.format(toDate)"
                          (input)="toDate = validateInput(toDate, dpToDate.value)">
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button"></button>
+                    <button class="btn btn-outline-secondary calendar" (click)="datepicker.toggle()" type="button">
+                      <svg class="bi" width="20" height="20" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
               <div class="col-4 col-md-4">
-                <button type="button"  class="btn btn-primary" (click)="getAllActivityEvents()">Update</button>
+                <button type="button"  class="btn btn-primary" (click)="getAllActivityEvents()">Search</button>
               </div>
             </div>
           </div>
@@ -105,10 +113,18 @@
                 <td>{{activityEvent.eventName}}</td>
                 <td>{{activityEvent.startDate}}</td>
                 <td>
-                  <button type="button" class="btn btn-primary" (click)="openEditActivityEventModal(activityEvent)">Edit</button>
+                  <button type="button" class="btn btn-primary" (click)="openEditActivityEventModal(activityEvent)">
+                    <svg class="bi" width="24" height="24" fill="currentColor">
+                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                    </svg>
+                  </button>
                 </td>
                 <td>
-                  <button type="button" class="btn btn-danger">Delete</button>
+                  <button type="button" class="btn btn-danger">
+                    <svg class="bi" width="24" height="24" fill="currentColor">
+                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                    </svg>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -141,10 +157,18 @@
                   <td>{{address.addressName}}</td>
                   <td>{{address.address1}}</td>
                   <td>
-                    <button type="button" class="btn btn-primary" (click)="openEditAddressModal(address)">Edit</button>
+                    <button type="button" class="btn btn-primary" (click)="openEditAddressModal(address)">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                      </svg>
+                    </button>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-danger">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                      </svg>
+                    </button>
                   </td>
                 </tr>
               </tbody>

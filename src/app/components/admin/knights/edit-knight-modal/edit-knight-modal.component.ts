@@ -38,6 +38,8 @@ export class EditKnightModalComponent implements OnInit {
   states: AddressState[] = AddressState.AllStates;
   activityCategories: ActivityCategory[] = [];
   allActivities: ActivityInterest[] = [];
+  errorSaving: boolean = false;
+  errorMessages: string[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -292,5 +294,17 @@ export class EditKnightModalComponent implements OnInit {
     logError(message: string, err: any) {
       console.error(message);
       console.error(err);
+
+      this.errorMessages = [];
+
+      if (typeof err?.error === 'string') {
+        this.errorMessages.push(err.error);
+      } else {
+        for (let key in err?.error?.errors) {
+          this.errorMessages.push(err?.error?.errors[key][0]);
+        }
+      }
+      
+      this.errorSaving = true;
     }
 }

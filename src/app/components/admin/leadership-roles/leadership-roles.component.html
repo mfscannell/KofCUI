@@ -4,19 +4,31 @@
       <ng-template ngbPanelHeader>
         <div class="d-flex align-items-center justify-content-between">
           <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory.categoryName}}</button>
-          <button type="button" class="btn btn-primary" (click)="openEditLeadershipRoleCategoryModal(leadershipRoleCategory)">Edit</button>
+          <button type="button" class="btn btn-primary" (click)="openEditLeadershipRoleCategoryModal(leadershipRoleCategory)">
+            <svg class="bi" width="20" height="20" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+            </svg>
+          </button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
         <div class="container">
           <div class="row" *ngFor='let leadershipRole of filterLeadershipRolesByCategory(leadershipRoleCategory.leadershipRoleCategoryId)'>
-            <div class="col-md-10">
+            <div class="col-6 col-md-10">
               {{leadershipRole.title}}
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-md-2">
               <div class="btn-toolbar text-center mt-1">
-                <button type="button" class="btn btn-primary mr-1" (click)="openEditLeadershipRoleModal(leadershipRole)">Edit</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-primary mr-1" (click)="openEditLeadershipRoleModal(leadershipRole)">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-danger">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
