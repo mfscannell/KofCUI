@@ -23,6 +23,8 @@ export class EditActivityEventLocationModalComponent implements OnInit, OnDestro
   states: AddressState[] = AddressState.AllStates;
   updateAddressSubscription?: Subscription;
   createAddressSubscription?: Subscription;
+  errorSaving: boolean = false;
+  errorMessages: string[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -119,5 +121,17 @@ export class EditActivityEventLocationModalComponent implements OnInit, OnDestro
   private logError(message: string, err: any) {
     console.error(message);
     console.error(err);
+
+    this.errorMessages = [];
+
+    if (typeof err?.error === 'string') {
+      this.errorMessages.push(err.error);
+    } else {
+      for (let key in err?.error?.errors) {
+        this.errorMessages.push(err?.error?.errors[key][0]);
+      }
+    }
+    
+    this.errorSaving = true;
   }
 }

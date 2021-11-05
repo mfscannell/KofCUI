@@ -44,6 +44,11 @@
         </div>
       </div>
       <div class="modal-footer">
+        <div class="container">
+          <div class="row" *ngIf="errorSaving">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary">Save</button>
         <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
        </div>

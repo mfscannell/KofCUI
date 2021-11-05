@@ -52,7 +52,11 @@
                     </select>
                   </div>
                   <div class="col-4 col-md-2">
-                    <button type="button" class="btn btn-danger" (click)="deleteActivityCoordinator(i)">Delete</button>
+                    <button type="button" class="btn btn-danger" (click)="deleteActivityCoordinator(i)">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </ng-container>
@@ -66,8 +70,14 @@
         </ng-container>
       </nav>
       <div [ngbNavOutlet]="nav" class="mt-2"></div>
+      
 
       <div class="modal-footer">
+        <div class="container">
+          <div class="row" *ngIf="errorSaving">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+          </div>
+        </div>
         <button id="saveActivity" type="submit" class="btn btn-primary">Save</button>
         <button id="cancelChangeToActivity" type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
        </div>

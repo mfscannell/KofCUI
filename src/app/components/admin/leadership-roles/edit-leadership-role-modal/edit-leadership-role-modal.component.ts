@@ -23,6 +23,8 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
   updateLeadershipRoleSubscription?: Subscription;
   createLeadershipRoleSubscription?: Subscription;
   editLeadershipRoleForm: FormGroup;
+  errorSaving: boolean = false;
+  errorMessages: string[] = [];
 
   constructor(public activeModal: NgbActiveModal,
     private fb: FormBuilder,
@@ -113,7 +115,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
   private updateLeadershipRole(leadershipRole: LeadershipRole) {
     let leadershipRoleObserver = {
       next: (updatedLeadershipRole: LeadershipRole) => this.passBack(updatedLeadershipRole),
-      error: (err: any) => console.log(`${err}`),
+      error: (err: any) => this.logError('Error updating leadership role.', err),
       complete: () => console.log('Leadership Role updated.')
     };
 
@@ -123,7 +125,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
   private createLeadershipRole(leadershipRole: LeadershipRole) {
     let leadershipRoleObserver = {
       next: (createdLeadershipRole: LeadershipRole) => this.passBack(createdLeadershipRole),
-      error: (err: any) => console.log(`${err}`),
+      error: (err: any) => this.logError('Error creating leadership role.', err),
       complete: () => console.log('Leadership Role created.')
     };
 
@@ -132,5 +134,22 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
 
   passBack(leadershipRole: LeadershipRole) {
     this.activeModal.close(leadershipRole);
+  }
+
+  logError(message: string, err: any) {
+    console.error(message);
+    console.error(err);
+
+    this.errorMessages = [];
+
+    if (typeof err?.error === 'string') {
+      this.errorMessages.push(err.error);
+    } else {
+      for (let key in err?.error?.errors) {
+        this.errorMessages.push(err?.error?.errors[key][0]);
+      }
+    }
+    
+    this.errorSaving = true;
   }
 }

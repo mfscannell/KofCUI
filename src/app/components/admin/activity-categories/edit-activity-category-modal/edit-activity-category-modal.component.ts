@@ -19,6 +19,8 @@ export class EditActivityCategoryModalComponent implements OnInit, OnDestroy {
   updateActivityCategorySubscription?: Subscription;
   createActivityCategorySubscription?: Subscription;
   editActivityCategoryForm: FormGroup;
+  errorSaving: boolean = false;
+  errorMessages: string[] = [];
 
   constructor(public activeModal: NgbActiveModal,
     private activityCategoriesService: ActivityCategoriesService) {
@@ -88,5 +90,17 @@ export class EditActivityCategoryModalComponent implements OnInit, OnDestroy {
   logError(message: string, err: any) {
     console.error(message);
     console.error(err);
+
+    this.errorMessages = [];
+
+    if (typeof err?.error === 'string') {
+      this.errorMessages.push(err.error);
+    } else {
+      for (let key in err?.error?.errors) {
+        this.errorMessages.push(err?.error?.errors[key][0]);
+      }
+    }
+    
+    this.errorSaving = true;
   }
 }

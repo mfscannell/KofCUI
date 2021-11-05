@@ -24,6 +24,11 @@
         </div>
       </div>
       <div class="modal-footer">
+        <div class="container">
+          <div class="row" *ngIf="errorSaving">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+          </div>
+        </div>
         <button id="saveActivityCategory" type="submit" class="btn btn-primary" [disabled]="editActivityCategoryForm.invalid">Save</button>
         <button id="cancelActivityCategoryChanges" type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
       </div>

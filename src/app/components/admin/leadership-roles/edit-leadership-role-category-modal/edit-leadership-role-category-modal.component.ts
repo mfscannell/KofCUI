@@ -20,6 +20,8 @@ export class EditLeadershipRoleCategoryModalComponent implements OnInit, OnDestr
   updateLeadershipRoleCategorySubscription?: Subscription;
   createLeadershipRoleCategorySubscription?: Subscription;
   editLeadershipRoleCategoryForm: FormGroup;
+  errorSaving: boolean = false;
+  errorMessages: string[] = [];
 
   constructor(public activeModal: NgbActiveModal,
     private fb: FormBuilder,
@@ -63,7 +65,7 @@ export class EditLeadershipRoleCategoryModalComponent implements OnInit, OnDestr
   private updateLeadershipRoleCategory(leadershipRoleCategory: LeadershipRoleCategory) {
     let leadershipRoleCategoryObserver = {
       next: (leadershipRoleCategory: LeadershipRoleCategory) => this.passBack(leadershipRoleCategory),
-      error: (err: any) => console.log(`${err}`),
+      error: (err: any) => this.logError('An error occurred creating leadership role.', err),
       complete: () => console.log('Leadership Role Category updated.')
     };
 
@@ -73,7 +75,7 @@ export class EditLeadershipRoleCategoryModalComponent implements OnInit, OnDestr
   private createLeadershipRoleCategory(leadershipRoleCategory: LeadershipRoleCategory) {
     let leadershipRoleCategoryObserver = {
       next: (createdLeadershipRoleCategory: LeadershipRoleCategory) => this.passBack(createdLeadershipRoleCategory),
-      error: (err: any) => console.log(`${err}`),
+      error: (err: any) => this.logError('An error occurred creating leadership role.', err),
       complete: () => console.log('Leadership Role Category created.')
     };
 
@@ -82,5 +84,22 @@ export class EditLeadershipRoleCategoryModalComponent implements OnInit, OnDestr
 
   passBack(leadershipRoleCategory: LeadershipRoleCategory) {
     this.activeModal.close(leadershipRoleCategory);
+  }
+
+  logError(message: string, err: any) {
+    console.error(message);
+    console.error(err);
+
+    this.errorMessages = [];
+
+    if (typeof err?.error === 'string') {
+      this.errorMessages.push(err.error);
+    } else {
+      for (let key in err?.error?.errors) {
+        this.errorMessages.push(err?.error?.errors[key][0]);
+      }
+    }
+    
+    this.errorSaving = true;
   }
 }

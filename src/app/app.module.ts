@@ -4,11 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
-// import { CalendarDateFormatter,
-//   CalendarModule,
-//   CalendarMomentDateFormatter,
-//   DateAdapter,
-//   MOMENT, } from 'angular-calendar';
 import { YouTubePlayerModule } from '@angular/youtube-player';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
