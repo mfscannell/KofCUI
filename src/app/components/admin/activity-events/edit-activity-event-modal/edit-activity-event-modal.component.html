@@ -43,7 +43,11 @@
             <div class="col-8 col-md-9 input-group">
               <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()" (ngModelChange)='onChangeEventStartDate($event)'>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="sd.toggle()" type="button"></button>
+                <button class="btn btn-outline-secondary calendar" (click)="sd.toggle()" type="button">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -165,34 +169,48 @@
           <ng-container formArrayName="volunteerSignUpRoles">
             <ng-container *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
                 <div class="form-group row">
-                  <div class="col-5 col-md-5">
+                  <div class="col-5 col-sm-3">
                     <input type="text" class="form-control" formControlName="roleTitle" id="roleTitle" placeholder="Title" autocomplete="off">
                   </div>
-                  <div class="col-3 col-md-3">
-                    <input type="text" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
+                  <div class="col-3 col-sm-2">
+                    <input type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
                   </div>
-                  <div class="col-4 col-md-2">
-                    <button type="button" class="btn btn-danger" (click)="deleteVolunteerSignUpRole(i)">Delete</button>
-                  </div>
-                </div>
-                <div class="form-group row">
                   <div class="col-md-3">
                     <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleStartTime($event, i)'></ngb-timepicker>
                   </div>
                   <div class="col-md-3">
                     <ngb-timepicker formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleEndTime($event, i)'></ngb-timepicker>
                   </div>
+                  <div class="col-4 col-sm-1">
+                    <button type="button" class="btn btn-danger" (click)="deleteVolunteerSignUpRole(i)">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
+                <!-- <div class="form-group row">
+                  <div class="col-md-3">
+                    <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleStartTime($event, i)'></ngb-timepicker>
+                  </div>
+                  <div class="col-md-3">
+                    <ngb-timepicker formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleEndTime($event, i)'></ngb-timepicker>
+                  </div>
+                </div> -->
                 <ng-container formArrayName="eventVolunteers">
                   <ng-container *ngFor="let eventVolunteer of getEventVolunteers(volunteerSignUpRole); let j = index" [formGroupName]="j">
                     <div class="form-group row">
-                      <div class="col-8 col-md-4">
+                      <div class="col-8 col-md-3">
                         <select class="form-control" id="activityId" formControlName="knightId">
                           <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
                         </select>
                       </div>
                       <div class="col-4 col-md-2">
-                        <button type="button" class="btn btn-danger" (click)="deleteEventVolunteer(i, j)">Delete</button>
+                        <button type="button" class="btn btn-danger" (click)="deleteEventVolunteer(i, j)">
+                          <svg class="bi" width="22" height="22" fill="currentColor">
+                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </ng-container>
@@ -202,6 +220,7 @@
                     </div>
                   </div>
                 </ng-container>
+                <hr *ngIf="i !== volunteerSignUpRolesForm.controls.length-1" class="my-12"/>
             </ng-container>
           </ng-container>
           <div class="container">
@@ -214,6 +233,11 @@
     </nav>
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
     <div class="modal-footer">
+      <div class="container">
+        <div class="row" *ngIf="errorSaving">
+          <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+        </div>
+      </div>
       <button type="submit" class="btn btn-primary">Save</button>
       <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
     </div>

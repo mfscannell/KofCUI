@@ -4,7 +4,11 @@
       <ng-template ngbPanelHeader>
         <div class="d-flex align-items-center justify-content-between">
           <button ngbPanelToggle class="btn btn-link">{{activityCategory.categoryName}}</button>
-          <button type="button" class="btn btn-primary" (click)="openEditActivityCategoryModal(activityCategory)">Edit</button>
+          <button type="button" class="btn btn-primary" (click)="openEditActivityCategoryModal(activityCategory)">
+            <svg class="bi" width="22" height="22" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+            </svg>
+          </button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
@@ -15,8 +19,16 @@
             </div>
             <div class="col-6 col-md-4">
               <div class="btn-toolbar text-center mt-1">
-                <button type="button" class="btn btn-primary mr-1" (click)="openEditActivityModal(activity)">Edit</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-primary mr-1" (click)="openEditActivityModal(activity)">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-danger">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
