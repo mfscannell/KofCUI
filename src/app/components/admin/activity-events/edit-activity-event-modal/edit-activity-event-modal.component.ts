@@ -30,7 +30,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   updateActivityEventSubscription?: Subscription;
   createActivityEventSubscription?: Subscription;
   editActivityEventForm: FormGroup;
-  allVolunteerRoles: VolunteerSignUpRole[] = [];
+  //allVolunteerRoles: VolunteerSignUpRole[] = [];
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
   errorSaving: boolean = false;
@@ -159,7 +159,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
+  private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
     let eventVolunteersArray: FormGroup[] = [];
 
     if (eventVolunteers) {

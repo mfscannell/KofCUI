@@ -8,7 +8,7 @@ export class VolunteerSignUpRole {
     endDate?: string;
     endTime?: string;
     numberOfVolunteersNeeded: number = 0;
-    eventVolunteers?: EventVolunteer[] = [];
+    eventVolunteers: EventVolunteer[] = [];
 
     public constructor(
         fields?: {
