@@ -31,6 +31,7 @@ import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.co
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
 import { EditActivityEventLocationModalComponent } from './components/admin/activity-events/edit-activity-event-location-modal/edit-activity-event-location-modal.component';
+import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { EditActivityEventLocationModalComponent } from './components/admin/acti
     EditLeadershipRoleCategoryModalComponent,
     EditLeadershipRoleModalComponent,
     ActivityEventsComponent,
+    VolunteerForActivityEventModalComponent,
     EditActivityEventModalComponent,
     EditActivityEventLocationModalComponent
   ],

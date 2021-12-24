@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { UpcomingEvent } from '../models/upcomingEvent';
+import { VolunteerForActivityEventRequest } from '../models/requests/volunteerForActivityEventRequest';
+import { EventVolunteer } from '../models/eventVolunteer';
 
 @Injectable({
     providedIn: 'root'
@@ -23,12 +25,14 @@ export class ActivityEventsService {
     }
 
     updateActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
-        //TODO all routes should pull the council ID from somewhere
         return this.http.put<ActivityEvent>(`activityEvents/${activityEvent.activityEventId}`, activityEvent);
     }
 
     createActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
-        //TODO all routes should pull the council ID from somewhere
         return this.http.post<ActivityEvent>('activityEvents/', activityEvent);
+    }
+
+    volunteerForActivityEvent(volunteerForActivityEventRequest: VolunteerForActivityEventRequest): Observable<EventVolunteer[]> {
+        return this.http.put<EventVolunteer[]>(`activityEvents/volunteerFor`, volunteerForActivityEventRequest);
     }
 }

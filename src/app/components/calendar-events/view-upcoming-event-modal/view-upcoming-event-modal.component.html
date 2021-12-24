@@ -12,6 +12,12 @@
     <h6>
       {{upcomingEvent.startTime}} - {{upcomingEvent.endTime}}
     </h6>
+    <h6>
+      {{upcomingEvent?.locationAddress?.addressName}}
+    </h6>
+    <h6>
+      {{upcomingEvent?.locationAddress?.address1}} {{upcomingEvent?.locationAddress?.addressCity}}, {{upcomingEvent?.locationAddress?.addressStateCode}}
+    </h6>
     <div>
       {{upcomingEvent.eventDescription}}
     </div>

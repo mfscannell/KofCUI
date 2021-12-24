@@ -13,7 +13,7 @@ export class ActivityEvent {
     endTime?: string;
     locationAddressId: number = 0;
     volunteerSignUpRoles?: VolunteerSignUpRole[] = [];
-    showInCalendar: boolean = true;
+    showInCalendar: boolean = false;
     canceled: boolean = false;
     canceledReason?: string;
 
