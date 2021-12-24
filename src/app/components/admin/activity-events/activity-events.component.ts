@@ -17,6 +17,7 @@ import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
+import { VolunteerForActivityEventModalComponent } from './volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -150,6 +151,26 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     });
   }
 
+  openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
+    const modalRef = this.modalService.open(VolunteerForActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
+
+    modalRef.componentInstance.activityEvent = activityEvent;
+    modalRef.componentInstance.allAddresses = this.allAddresses;
+    //modalRef.componentInstance.allActivities = this.allActivities;
+    modalRef.componentInstance.allKnights = this.allKnights;
+    modalRef.componentInstance.modalHeaderText = 'Volunteer For Activity Event';
+    //modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
+    modalRef.result.then((result) => {
+      if (result) {
+        this.updateActivityEventInList(result);
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        this.logError('Error from Volunteer For Activity Event Modal.', error);
+      }
+    });
+  }
+
   private updateActivityEventInList(activityEvent: ActivityEvent) {
     let index = this.activityEvents?.findIndex(x => x.activityEventId === activityEvent.activityEventId)
 
@@ -175,18 +196,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         this.logError('Error from Create Activity Event Modal.', error);
       }
     });
-  }
-
-  onDateSelection(date: NgbDate, datepicker: any) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
-      this.toDate = date;
-      datepicker.close();
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
   }
 
   isHovered(date: NgbDate) {
