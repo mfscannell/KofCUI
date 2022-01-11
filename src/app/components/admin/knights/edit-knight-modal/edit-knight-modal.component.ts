@@ -32,7 +32,7 @@ export class EditKnightModalComponent implements OnInit {
   getKnightActivitiesSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
   createKnightSubscription?: Subscription;
-  getActivityCategoriesSubscription?: Subscription
+  getActivityCategoriesSubscription?: Subscription;
   editKnightForm: FormGroup;
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;

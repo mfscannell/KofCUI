@@ -1,4 +1,19 @@
 export class DateTimeFormatter {
+    private static AllMonths: string[] = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+
     static getYear(date: string | undefined) {
         let year = '';
 
@@ -71,6 +86,24 @@ export class DateTimeFormatter {
         let minuteNumber = Number(minute);
 
         return minuteNumber;
+    }
+
+    /// date: string 'yyyy-mm-dd'
+    static ToDisplayedDate(date: string | undefined) {
+        let displayedDate = '';
+
+        let year = DateTimeFormatter.getYear(date);
+        let month = DateTimeFormatter.getMonth(date);
+        let day = DateTimeFormatter.getDay(date);
+        let monthName = ''
+
+        if (1 <= month && month <= 12) {
+            monthName = DateTimeFormatter.AllMonths[month - 1];
+        }
+
+        displayedDate = `${monthName} ${day}, ${year}`;
+
+        return displayedDate;
     }
 
     static ToIso8601Date(year: number, month: number, day: number) {
