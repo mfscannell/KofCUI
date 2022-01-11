@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Knight } from 'src/app/models/knight';
+import { ActivityInterest } from 'src/app/models/activityInterest'
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +14,11 @@ export class KnightsService {
 
     }
 
+    getKnight(knightId: number): Observable<Knight> {
+        return this.http.get<Knight>(`knights/${knightId}`);
+    }
+
     getAllKnights(): Observable<Knight[]> {
-        //TODO all routes should pull the council ID from somewhere
         return this.http.get<Knight[]>('knights');
     }
 
@@ -26,7 +30,15 @@ export class KnightsService {
         return this.http.post<Knight[]>('knights/multiple', knights);
     }
 
+    updateKnight(knight: Knight) : Observable<Knight> {
+        return this.http.put<Knight>(`knights/${knight?.knightId}`, knight);
+    }
+
     updateKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
         return this.http.put<Knight>(`knights/${knight?.knightId}/withAllActivities`, knight);
+    }
+
+    updateKnightActivityInterest(knightId: number, activityInterests: ActivityInterest[]) : Observable<ActivityInterest[]> {
+        return this.http.put<ActivityInterest[]>(`knights/${knightId}/activities`, activityInterests);
     }
 }
