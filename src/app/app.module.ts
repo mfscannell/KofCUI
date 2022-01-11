@@ -32,6 +32,9 @@ import { CalendarEventsComponent } from './components/calendar-events/calendar-e
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
 import { EditActivityEventLocationModalComponent } from './components/admin/activity-events/edit-activity-event-location-modal/edit-activity-event-location-modal.component';
 import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
+import { AccountComponent } from './components/account/account.component';
+import { AccountPersonalInfoComponent } from './components/account/account-personalInfo/account-personalInfo.component';
+import { AccountInterestsComponent } from './components/account/account-interests/account-interests.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,9 @@ import { VolunteerForActivityEventModalComponent } from './components/admin/acti
     NavMenuComponent,
     HomePageComponent,
     AboutKnightsComponent,
+    AccountComponent,
+    AccountInterestsComponent,
+    AccountPersonalInfoComponent,
     OurCouncilComponent,
     CalendarEventsComponent,
     ViewUpcomingEventModalComponent,
@@ -68,6 +74,9 @@ import { VolunteerForActivityEventModalComponent } from './components/admin/acti
       { path: 'aboutKnights', component: AboutKnightsComponent, pathMatch: 'full' },
       { path: 'aboutOurCouncil', component: OurCouncilComponent, pathMatch: 'full' },
       { path: 'upcomingEvents', component: CalendarEventsComponent, pathMatch: 'full' },
+      { path: 'account', component: AccountComponent, pathMatch: 'full' },
+      { path: 'account/interests', component: AccountInterestsComponent, pathMatch: 'full' },
+      { path: 'account/personalInfo', component: AccountPersonalInfoComponent, pathMatch: 'full' },
       { path: 'admin', component: AdminComponent, pathMatch: 'full' },
       { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full' },
       { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full' },

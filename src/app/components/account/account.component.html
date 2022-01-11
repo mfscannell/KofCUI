@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="container border">
+        <div class="row">
+          <div class="col-12">
+            <h6>Personal Info</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">{{knight?.firstName}} {{knight?.lastName}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">Date of Birth: {{formatDate(knight?.dateOfBirth)}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">{{knight?.homeAddress?.address1}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">{{knight?.homeAddress?.addressCity}}, {{knight?.homeAddress?.addressStateCode}} {{knight?.homeAddress?.addressPostalCode}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">{{knight?.cellPhoneNumber}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">{{knight?.emailAddress}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <a href="/account/personalInfo" class="link-primary" aria-pressed="true">Edit</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="container border">
+        <div class="row">
+          <div class="col-12">
+            <h6>Knight Info</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">Member Number: {{knight?.knightInfo?.memberNumber}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">Member Type: {{knight?.knightInfo?.memberType}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">Degree: {{knight?.knightInfo?.degree}}</div>
+        </div>
+        <div class="row">
+          <div class="col-12">First Degree Date: {{formatDate(knight?.knightInfo?.firstDegreeDate)}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="container border">
+        <div class="row">
+          <div class="col-12">
+            <h6>Interests</h6>
+          </div>
+        </div>
+
+        <div class="row" *ngFor="let interestedActivity of filterActivitiesInterested()">
+          <div class="col-12">
+            {{interestedActivity.activityName}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <a href="/account/interests" class="link-primary" aria-pressed="true">Edit</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="container border">
+        <div class="row">
+          <div class="col-12">
+            <h6>Security</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <a href="/account/security" class="link-primary" aria-pressed="true">Edit</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row border">
+  </div>
+</div>
