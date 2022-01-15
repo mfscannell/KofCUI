@@ -24,7 +24,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   knightsSubscription?: Subscription;
   knightsLoaded: boolean = false;
   page = 1;
-  pageSize = 5;
+  pageSize = 20;
   maxSize = 10;
 
   private _search$ = new Subject<void>();
@@ -110,7 +110,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   openUploadKnightsModal() {
-    const modalRef = this.modalService.open(UploadKnightsModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lb'});
+    const modalRef = this.modalService.open(UploadKnightsModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
 
     modalRef.componentInstance.modalHeaderText = 'Upload Knights From File';
     modalRef.result.then((result: Knight[]) => {

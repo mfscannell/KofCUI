@@ -1,5 +1,6 @@
 import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
 import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
+import { KnightMemberClassEnums } from '../enums/knightMemberClassEnums';
 
 export class KnightInfo {
     knightInfoId?: number;
@@ -9,6 +10,7 @@ export class KnightInfo {
     firstDegreeDate?: string;
     reentryDate?: string;
     memberType: KnightMemberTypeEnums = KnightMemberTypeEnums.Associate;
+    memberClass: KnightMemberClassEnums = KnightMemberClassEnums.Paying
 
     public constructor(
         fields?: {
@@ -18,7 +20,8 @@ export class KnightInfo {
             degree?: KnightDegreeEnums,
             firstDegreeDate?: string,
             reentryDate?: string,
-            memberType?: KnightMemberTypeEnums
+            memberType?: KnightMemberTypeEnums,
+            memberClass?: KnightMemberClassEnums
     }) {
         if (fields) {
             this.knightInfoId = fields.knightInfoId || this.knightInfoId;
@@ -28,6 +31,7 @@ export class KnightInfo {
             this.firstDegreeDate = fields.firstDegreeDate || this.firstDegreeDate;
             this.reentryDate = fields.reentryDate || this.reentryDate;
             this.memberType = fields.memberType || this.memberType;
+            this.memberClass = fields.memberClass || this.memberClass;
         }
     }
 }

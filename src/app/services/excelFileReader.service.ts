@@ -4,9 +4,10 @@ import { Injectable } from '@angular/core';
 import { Address } from 'src/app/models/address';
 import { Knight } from 'src/app/models/knight';
 import { KnightInfo } from 'src/app/models/knightInfo';
-import { KnightDegreeEnums } from '../enums/knightDegreeEnums';
-import { KnightMemberTypeEnums } from '../enums/knightMemberTypeEnums';
-import { DateTimeFormatter } from '../utilities/dateTimeFormatter';
+import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { KnightDegreeEnumMapper } from 'src/app/utilities/knightDegreeEnumMapper'
+import { KnightMemberTypeEnumMapper } from 'src/app/utilities/knightMemberTypeEnumMapper';
+import { KnightMemberClassEnumMapper } from 'src/app/utilities/knightMemberClassEnumMapper';
 
 @Injectable({
     providedIn: 'root'
@@ -14,61 +15,77 @@ import { DateTimeFormatter } from '../utilities/dateTimeFormatter';
 
 export class ExcelFileReader {
     static ReadKnightsFromFile(file: Blob) {
-        let knights: Knight[] = [];
-        const fileReader = new FileReader();
+        return new Promise<Knight[]>((resolve, reject) => {
+            const fileReader = new FileReader();
 
-        //fileReader.readAsArrayBuffer(filePath);
-        fileReader.onload = (e) => {
-            //let data = fileReader.result;
-            let data = e.target?.result;
-            let workBook = XLSX.read(
-                data, 
-                {
-                    type: 'binary'
+            fileReader.onload = (e) => {
+                let data = e.target?.result;
+                let workBook = XLSX.read(
+                    data, 
+                    {
+                        type: 'binary'
+                    });
+                let firstSheetName = workBook.SheetNames[0];
+                let worksheet = workBook.Sheets[firstSheetName];
+                let rawJson = XLSX.utils.sheet_to_json(worksheet, {raw: true});
+                let readKnights: Knight[] = [];
+
+                rawJson.forEach(function(rawKnight: any) {
+                    let firstName = rawKnight['First Name'] === undefined ? "" : `${rawKnight['First Name']}`;
+                    let middleName = rawKnight['Middle Name'] === undefined ? "" : `${rawKnight['Middle Name']}`;
+                    let lastName = rawKnight['Last Name'] === undefined ? "" : `${rawKnight['Last Name']}`;
+                    let nameSuffix = rawKnight['Suffix'] === undefined ? "" : `${rawKnight['Suffix']}`;
+                    let dateOfBirth = DateTimeFormatter.MapNumberToIso8601Date(rawKnight['Birth Date'], true);
+                    let emailAddress = rawKnight['Email Address'] === undefined ? "" : `${rawKnight['Email Address']}`;
+                    let cellPhoneNumber = rawKnight['Cell Phone Number'] === undefined ? "" : `${rawKnight['Cell Phone Number']}`;
+
+                    let homeAddress1 = rawKnight['Address 1'] === undefined ? "" : `${rawKnight['Address 1']}`;
+                    let homeAddress2 = rawKnight['Address 2'] === undefined ? "" : `${rawKnight['Address 2']}`;
+                    let addressCity = rawKnight['City1'] === undefined ? "" : `${rawKnight['City']}`;
+                    let addressStateCode = rawKnight['State Code'] === undefined ? "" : `${rawKnight['State Code']}`;
+                    let addressPostalCode = rawKnight['Postal Code'] === undefined ? "" : `${rawKnight['Postal Code']}`;
+                    let addressCountryCode = rawKnight['Country Code'] === undefined ? "" : `${rawKnight['Country Code']}`;
+
+                    let memberNumber = rawKnight['Member Number'];
+                    let mailReturned = rawKnight['Mail Returned'];
+                    let degree = KnightDegreeEnumMapper.Map(rawKnight['Degree']);
+                    let firstDegreeDate = DateTimeFormatter.MapNumberToIso8601Date(rawKnight['First Degree Date'], true);
+                    let reentryDate = DateTimeFormatter.MapNumberToIso8601Date(rawKnight['Reentry Date'], true);
+                    let memberType = KnightMemberTypeEnumMapper.Map(rawKnight['Member Type']);
+                    let memberClass = KnightMemberClassEnumMapper.Map(rawKnight['Member Class']);
+                    let mappedKnight = new Knight({
+                        firstName: firstName,
+                        middleName: middleName,
+                        lastName: lastName,
+                        nameSuffix: nameSuffix,
+                        dateOfBirth: dateOfBirth,
+                        emailAddress: emailAddress,
+                        cellPhoneNumber: cellPhoneNumber,
+                        homeAddress: new Address({
+                            address1: homeAddress1,
+                            address2: homeAddress2,
+                            addressCity: addressCity,
+                            addressStateCode: addressStateCode,
+                            addressPostalCode: addressPostalCode,
+                            addressCountryCode: addressCountryCode
+                        }),
+                        knightInfo: new KnightInfo({
+                            memberNumber: memberNumber,
+                            mailReturned: mailReturned,
+                            degree: degree,
+                            firstDegreeDate: firstDegreeDate,
+                            reentryDate: reentryDate,
+                            memberType: memberType,
+                            memberClass: memberClass
+                        })
+                    });
+
+                    readKnights.push(mappedKnight);
                 });
-            let firstSheetName = workBook.SheetNames[0];
-            let worksheet = workBook.Sheets[firstSheetName];
-            let rawJson = XLSX.utils.sheet_to_json(worksheet, {raw: true});
-            // let jsonData = workBook.SheetNames.reduce((initial, name) => {
-            //     const sheet = workBook.Sheets[name];
-            //     initial[name] = XLSX.utils.sheet_to_json(sheet);
-            //     return initial;
-            // }, {});
-            console.log(rawJson);
 
-            rawJson.forEach(function(rawKnight: any) {
-                let mappedKnight = new Knight({
-                    firstName: rawKnight['First Name'],
-                    middleName: rawKnight['Middle Name'],
-                    lastName: rawKnight['Last Name'],
-                    nameSuffix: rawKnight['Suffix'],
-                    dateOfBirth: DateTimeFormatter.MapNumberToDate(rawKnight['Birth Date']),
-                    emailAddress: rawKnight['Email Address'], //TODO needed in excel file
-                    cellPhoneNumber: rawKnight['Cell Phone Number'], //TODO needed in excel file
-                    homeAddress: new Address({
-                        address1: rawKnight['Street Address'],
-                        address2: '',
-                        addressCity: rawKnight['City'],
-                        addressStateCode: rawKnight['State'],
-                        addressPostalCode: rawKnight['Postal Code'],
-                        addressCountryCode: 'US'
-                    }),
-                    knightInfo: new KnightInfo({
-                        memberNumber: rawKnight['Member Number'],
-                        mailReturned: rawKnight['Mail Returned'],
-                        degree: KnightDegreeEnums.First, //TODO need to read from raw Knight
-                        firstDegreeDate: '', //TODO need in file
-                        reentryDate: rawKnight['Reentry Date'], //TODO need to map from number 1 to January 1, 1900
-                        memberType: rawKnight['Member Type'] == 'Insurance' ? KnightMemberTypeEnums.Insurance : KnightMemberTypeEnums.Associate
-                    })
-                });
-            });
-
-            let readKnights: Knight[] = [];
-
-
-            let something = 5;
-        }
-        fileReader.readAsBinaryString(file);
+                resolve(readKnights);
+            }
+            fileReader.readAsBinaryString(file);
+        });
     }
 }
