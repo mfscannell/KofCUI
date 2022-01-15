@@ -162,10 +162,19 @@
             </div>
 
             <div class="form-group row">
-              <label for="degree" class="col-sm-4 col-form-label">Member Type</label>
+              <label for="memberType" class="col-sm-4 col-form-label">Member Type</label>
               <div class="col-sm-8">
                 <select class="form-control" id="knightInfo_memberType" formControlName="memberType">
                   <option *ngFor="let knightMemberTypeEnum of knightMemberTypeEnums" [value]="knightMemberTypeEnum">{{knightMemberTypeEnum}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="memberClass" class="col-sm-4 col-form-label">Member Class</label>
+              <div class="col-sm-8">
+                <select class="form-control" id="knightInfo_memberClass" formControlName="memberClass">
+                  <option *ngFor="let knightMemberClassEnum of knightMemberClassEnums" [value]="knightMemberClassEnum">{{knightMemberClassEnum}}</option>
                 </select>
               </div>
             </div>
