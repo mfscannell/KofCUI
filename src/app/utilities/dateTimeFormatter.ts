@@ -88,6 +88,7 @@ export class DateTimeFormatter {
         return minuteNumber;
     }
 
+    /// converts an ISO-8601 date to Month DD, YYYY
     /// date: string 'yyyy-mm-dd'
     static ToDisplayedDate(date: string | undefined) {
         let displayedDate = '';
@@ -134,23 +135,30 @@ export class DateTimeFormatter {
         return iso8601Time;
     }
 
-    static MapNumberToDate(dateNumber: number) {
+    /// converts a number to a date in 'YYYY-MM-DD' format. 
+    /// 1 equates to 1900-01-01.
+    /// Excel has a bug thinking 1900 is a leap year.
+    static MapNumberToIso8601Date(dateNumber: number | undefined, excelBugExists: boolean) {
         let year = 1900;
         let date = '';
+
+        if (dateNumber === undefined) {
+            return date;
+        }
+
         let yearFound = false;
-        //let isYearLeapYear = false;
 
         while (!yearFound) {
-            if (dateNumber <= 365 && !DateTimeFormatter.isYearLeapYear(year)) {
+            if (dateNumber <= 365 && !DateTimeFormatter.isYearLeapYear(year, excelBugExists)) {
                 yearFound = true;
             }
 
-            if (dateNumber <= 366 && DateTimeFormatter.isYearLeapYear(year)) {
+            if (dateNumber <= 366 && DateTimeFormatter.isYearLeapYear(year, excelBugExists)) {
                 yearFound = true;
             }
 
             if (!yearFound) {
-                if (DateTimeFormatter.isYearLeapYear(year)) {
+                if (DateTimeFormatter.isYearLeapYear(year, excelBugExists)) {
                     dateNumber = dateNumber - 366;
                 } else {
                     dateNumber = dateNumber - 365;
@@ -170,8 +178,8 @@ export class DateTimeFormatter {
                 monthFound = true;
                 day = dateNumber;
             } else if (month === 2 && 
-                ((dateNumber <= 29 && DateTimeFormatter.isYearLeapYear(year)) || 
-                    (dateNumber <= 28 && !DateTimeFormatter.isYearLeapYear(year)))) {
+                ((dateNumber <= 29 && DateTimeFormatter.isYearLeapYear(year, excelBugExists)) || 
+                    (dateNumber <= 28 && !DateTimeFormatter.isYearLeapYear(year, excelBugExists)))) {
                 monthFound = true;
                 day = dateNumber;
             }  else if (month === 3 && dateNumber <= 31) {
@@ -204,8 +212,10 @@ export class DateTimeFormatter {
             } else if (month === 12 && dateNumber <= 31) {
                 monthFound = true;
                 day = dateNumber;
+            } else if (dateNumber <= 31) {
+                //TODO error!!! No month found!
             } else {
-                dateNumber = dateNumber - DateTimeFormatter.getDaysInMonth(year, month);
+                dateNumber = dateNumber - DateTimeFormatter.getDaysInMonth(year, month, excelBugExists);
                 month++;
             }
         }
@@ -215,24 +225,26 @@ export class DateTimeFormatter {
         return date;
     }
 
-    static getDaysInMonth(year: number, month: number) {
+    static getDaysInMonth(year: number, month: number, excelBugExists: boolean = false) {
         if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
             return 31;
         } else if (month === 4 || month === 6 || month === 9 || month === 11) {
             return 30;
-        } else if (month === 2 && DateTimeFormatter.isYearLeapYear(year)) {
+        } else if (month === 2 && DateTimeFormatter.isYearLeapYear(year, excelBugExists)) {
             return 29;
-        } else if (month === 2 && !DateTimeFormatter.isYearLeapYear(year)) {
+        } else if (month === 2 && !DateTimeFormatter.isYearLeapYear(year, excelBugExists)) {
             return 28;
         } else {
             return 0;
         }
     }
 
-    static isYearLeapYear(year: number) {
+    static isYearLeapYear(year: number, excelBugExists: boolean = false) {
         let isLeapYear = false;
 
-        if (year % 4 === 0) {
+        if (excelBugExists && year === 1900) {
+            isLeapYear = true;
+        } else if (year % 4 === 0) {
             isLeapYear = true;
 
             if (year % 100 === 0 && year % 400 !== 0) {
@@ -262,10 +274,5 @@ export class DateTimeFormatter {
                ) % 7;
 
         return dayOfWeek;
-        // if (month === 1 || month === 2) {
-        //     year = year - 1;
-        // }
-
-        // return (year + Math.floor(year / 4) - Math.floor(year / 100) + Math.floor(year / 400) + numbers[month - 1] + day) % 7;
     }
 }

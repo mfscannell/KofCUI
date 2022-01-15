@@ -17,6 +17,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { KnightInfo } from 'src/app/models/knightInfo';
+import { KnightMemberClassEnums } from 'src/app/enums/knightMemberClassEnums';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -29,6 +30,7 @@ export class EditKnightModalComponent implements OnInit {
   @Input() knight?: Knight;
   public knightDegrees = Object.values(KnightDegreeEnums);
   public knightMemberTypeEnums = Object.values(KnightMemberTypeEnums);
+  public knightMemberClassEnums = Object.values(KnightMemberClassEnums);
   getKnightActivitiesSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
   createKnightSubscription?: Subscription;
@@ -110,7 +112,8 @@ export class EditKnightModalComponent implements OnInit {
             month: today.getMonth() + 1,
             day: today.getDate()
           }),
-          memberType: new FormControl(KnightMemberTypeEnums.Associate)
+          memberType: new FormControl(KnightMemberTypeEnums.Associate),
+          memberClass: new FormControl(KnightMemberClassEnums.Paying)
         })
       });
 
@@ -148,7 +151,8 @@ export class EditKnightModalComponent implements OnInit {
               month: DateTimeFormatter.getMonth(this.knight.knightInfo.reentryDate),
               day: DateTimeFormatter.getDay(this.knight.knightInfo.reentryDate)
             },
-            memberType: this.knight.knightInfo.memberType
+            memberType: this.knight.knightInfo.memberType,
+            memberClass: this.knight.knightInfo.memberClass
           }
          });
 
@@ -237,7 +241,8 @@ export class EditKnightModalComponent implements OnInit {
           rawForm.knightInfo.reentryDate.year, 
           rawForm.knightInfo.reentryDate.month, 
           rawForm.knightInfo.reentryDate.day),
-        memberType: rawForm.knightInfo.memberType
+        memberType: rawForm.knightInfo.memberType,
+        memberClass: rawForm.knightInfo.memberClass
       });
       let knight = new Knight({
         knightId: rawForm.knightId,
