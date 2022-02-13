@@ -16,6 +16,7 @@ import { ActivityCategoriesComponent } from 'src/app/components/admin/activity-c
 import { EditActivityCategoryModalComponent } from './components/admin/activity-categories/edit-activity-category-modal/edit-activity-category-modal.component';
 import { EditActivityModalComponent } from './components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
 import { NavMenuComponent } from 'src/app/components/nav-menu/nav-menu.component';
+
 import { AdminComponent } from 'src/app/components/admin/admin.component';
 import { KnightsComponent } from 'src/app/components/admin/knights/knights.component';
 import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-knight-modal/edit-knight-modal.component';
@@ -32,6 +33,8 @@ import { CalendarEventsComponent } from './components/calendar-events/calendar-e
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
 import { EditActivityEventLocationModalComponent } from './components/admin/activity-events/edit-activity-event-location-modal/edit-activity-event-location-modal.component';
 import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
+import { ConfigsComponent } from './components/admin/configs/configs.component';
+
 import { AccountComponent } from './components/account/account.component';
 import { AccountPersonalInfoComponent } from './components/account/account-personalInfo/account-personalInfo.component';
 import { AccountInterestsComponent } from './components/account/account-interests/account-interests.component';
@@ -58,6 +61,7 @@ import { AccountInterestsComponent } from './components/account/account-interest
     LeadershipRolesComponent,
     EditLeadershipRoleCategoryModalComponent,
     EditLeadershipRoleModalComponent,
+    ConfigsComponent,
     ActivityEventsComponent,
     VolunteerForActivityEventModalComponent,
     EditActivityEventModalComponent,
@@ -81,7 +85,8 @@ import { AccountInterestsComponent } from './components/account/account-interest
       { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full' },
       { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full' },
       { path: 'admin/leadershipRoles', component: LeadershipRolesComponent, pathMatch: 'full' },
-      { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full' }
+      { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full' },
+      { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full' }
     ]),
     NgbModule,
     ReactiveFormsModule

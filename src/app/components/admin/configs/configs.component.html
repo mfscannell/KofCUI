@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="row" *ngIf="showErrorMessage">
+    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+  </div>
+  <div class="row" *ngIf="showSuccessMessage">
+    <div class="col-12 alert alert-success">Successfully saved settings.</div>
+  </div>
+  <form [formGroup]="editConfigsForm" (ngSubmit)="onSubmitEditConfigSettings()">
+    <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
+      <ng-container formArrayName="configGroups">
+        <ngb-panel *ngFor="let configGroupFormGroup of configGroupsForm.controls; let i = index;" [formGroupName]="i">
+          <ng-template ngbPanelHeader>
+            <div class="row">
+              <button ngbPanelToggle class="btn btn-link" >{{getConfigGroupName(i)}}</button>
+            </div>
+          </ng-template>
+          <ng-template ngbPanelContent>
+            <ng-container formArrayName="configSettings">
+              <ng-container *ngFor="let configSetting of getConfigSettings(configGroupFormGroup); let j = index" [formGroupName]="j">
+                <div class="form-group row">
+                  <div class="col-12 col-sm-4">
+                    <label for="configSetting_value" class="col-form-label">{{getConfigName(i, j)}}</label>
+                  </div>
+                  <div class="col-10 col-sm-7">
+                    <input *ngIf="isBoolean(i, j)" type="checkbox" class="form-control" formControlName="booleanValue" id="configSetting_booleanValue">
+                    <input *ngIf="isString(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
+                  </div>
+                  <div class="col-2 col-sm-1">
+                    <button type="button" class="btn btn-primary rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">
+                      <svg class="bi" width="22" height="22" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#question"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </ngb-panel>
+      </ng-container>
+    </ngb-accordion>
+    <div class="form-group row">
+      <div class="col-12 mt-1">
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </form>
+  <!-- <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
+    <ngb-panel *ngFor='let configGroup of configGroups'>
+      <ng-template ngbPanelHeader>
+        <div class="d-flex align-items-left justify-content-between">
+          <button ngbPanelToggle class="btn btn-link">{{configGroup.configGroupName}}</button>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="container">
+          <div class="row" *ngFor='let configSetting of configGroup.configSettings'>
+            <div class="col-6">
+              <label for="configSetting_value" class="col-form-label">{{configSetting.configName}}</label>
+            </div>
+            <div class="col-6">
+              <input *ngIf="isBoolean(configSetting)" type="checkbox" class="form-control" formControlName="booleanValue" id="configSetting_booleanValue">
+            </div>
+            <div class="col-6">
+              <input type="text" class="form-control" formControlName="stringValue" id="configSetting_stringValue" autocomplete="off">
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion> -->
+</div>

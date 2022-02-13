@@ -7,7 +7,7 @@ export const environment = {
   tenants: [
     {
       tenantName: "htknights",
-      tenantId: "6673"
+      tenantId: "1234"
     }
   ],
   baseUrl: "https://localhost:44388/",
