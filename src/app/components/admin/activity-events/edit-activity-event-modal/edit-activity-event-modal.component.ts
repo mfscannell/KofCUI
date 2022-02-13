@@ -381,40 +381,40 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
   private mapFormToActivityEvent() {
     let rawForm = this.editActivityEventForm.getRawValue();
-      let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
-        return new VolunteerSignUpRole({
-          volunteerSignupRoleId: role.volunteerSignUpRoleId,
-          roleTitle: role.roleTitle,
-          startDate: DateTimeFormatter.ToIso8601Date(role.startDate.year, role.startDate.month, role.startDate.day),
-          startTime: DateTimeFormatter.ToIso8601Time(role.startTime.hour, role.startTime.minute),
-          endDate: DateTimeFormatter.ToIso8601Date(role.endDate.year, role.endDate.month, role.endDate.day),
-          endTime: DateTimeFormatter.ToIso8601Time(role.endTime.hour, role.endTime.minute),
-          numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-          eventVolunteers: role.eventVolunteers.map(function(eventVolunteer: any) {
-            return new EventVolunteer({
-              eventVolunteerId: eventVolunteer.eventVolunteerId,
-              knightId: eventVolunteer.knightId
-            });
-          })
+    let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
+      return new VolunteerSignUpRole({
+        volunteerSignupRoleId: role.volunteerSignUpRoleId,
+        roleTitle: role.roleTitle,
+        startDate: DateTimeFormatter.ToIso8601Date(role.startDate.year, role.startDate.month, role.startDate.day),
+        startTime: DateTimeFormatter.ToIso8601Time(role.startTime.hour, role.startTime.minute),
+        endDate: DateTimeFormatter.ToIso8601Date(role.endDate.year, role.endDate.month, role.endDate.day),
+        endTime: DateTimeFormatter.ToIso8601Time(role.endTime.hour, role.endTime.minute),
+        numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
+        eventVolunteers: role.eventVolunteers.map(function(eventVolunteer: any) {
+          return new EventVolunteer({
+            eventVolunteerId: eventVolunteer.eventVolunteerId,
+            knightId: eventVolunteer.knightId
+          });
         })
-      });
-      let activityEvent = new ActivityEvent({
-        activityEventId: rawForm.activityEventId,
-        activityId: rawForm.activityId,
-        eventName: rawForm.eventName,
-        eventDescription: rawForm.eventDescription,
-        startDate: DateTimeFormatter.ToIso8601Date(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day),
-        startTime: DateTimeFormatter.ToIso8601Time(rawForm.startTime.hour, rawForm.startTime.minute),
-        endDate: DateTimeFormatter.ToIso8601Date(rawForm.endDate.year, rawForm.endDate.month, rawForm.endDate.day),
-        endTime: DateTimeFormatter.ToIso8601Time(rawForm.endTime.hour, rawForm.endTime.minute),
-        locationAddressId: rawForm.locationAddress.addressId,
-        volunteerSignUpRoles: volunteerRoles,
-        showInCalendar: rawForm.showInCalendar,
-        canceled: rawForm.canceled,
-        canceledReason: rawForm.canceledReason
-      });
+      })
+    });
+    let activityEvent = new ActivityEvent({
+      activityEventId: rawForm.activityEventId,
+      activityId: rawForm.activityId,
+      eventName: rawForm.eventName,
+      eventDescription: rawForm.eventDescription,
+      startDate: DateTimeFormatter.ToIso8601Date(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day),
+      startTime: DateTimeFormatter.ToIso8601Time(rawForm.startTime.hour, rawForm.startTime.minute),
+      endDate: DateTimeFormatter.ToIso8601Date(rawForm.endDate.year, rawForm.endDate.month, rawForm.endDate.day),
+      endTime: DateTimeFormatter.ToIso8601Time(rawForm.endTime.hour, rawForm.endTime.minute),
+      locationAddressId: rawForm.locationAddress.addressId,
+      volunteerSignUpRoles: volunteerRoles,
+      showInCalendar: rawForm.showInCalendar,
+      canceled: rawForm.canceled,
+      canceledReason: rawForm.canceledReason
+    });
 
-      return activityEvent;
+    return activityEvent;
   }
 
   private createActivityEvent(activityEvent: ActivityEvent) {

@@ -2,7 +2,7 @@
   <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
     <ngb-panel *ngFor='let activityCategory of activityCategories'>
       <ng-template ngbPanelHeader>
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-left justify-content-between">
           <button ngbPanelToggle class="btn btn-link">{{activityCategory.categoryName}}</button>
           <button type="button" class="btn btn-primary" (click)="openEditActivityCategoryModal(activityCategory)">
             <svg class="bi" width="22" height="22" fill="currentColor">
