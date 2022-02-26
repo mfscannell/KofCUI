@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
+import { ExternalLinks } from '../models/externalLinks';
 
 @Injectable({
     providedIn: 'root'
@@ -20,5 +21,9 @@ export class ConfigsService {
 
     updateConfigSettings(updatedConfigs: ConfigSetting[]): Observable<ConfigSetting[]> {
         return this.http.put<ConfigSetting[]>('configs', updatedConfigs);
+    }
+
+    getAllExternalLinks(): Observable<ExternalLinks> {
+        return this.http.get<ExternalLinks>('configs/externalLinks');
     }
 }
