@@ -23,18 +23,10 @@
         <li class="nav-item active">
           <a class="nav-link" routerLink="/upcomingEvents" (click)="isMenuCollapsed = true" routerLinkActiver="active">Upcoming Events</a>
         </li>
-        <li ngbDropdown class="nav-item dropdown active">
+        <li ngbDropdown class="nav-item dropdown active" *ngIf="displayExternalLinks">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Links</a>
           <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li ngbDropdownItem><a class="dropdown-item" href="https://htlenexa.org">Holy Trinity Parish</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://htslenexa.org">Holy Trinity School</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://archkck.org/">Archdiocese of Kansas City in Kansas</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="http://www.kansas-kofc.org/">Knights of Columbus State Council</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://bible.usccb.org/daily-bible-reading">USCCB Daily Readings</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://www.wordonfire.org/">Word on Fire</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://www.youtube.com/c/AscensionPresents">Ascension Presents</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://www.youtube.com/c/PintsWithAquinas">Pints With Aquinas</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" href="https://www.youtube.com/user/catholiccom">Catholic Answers</a></li>
+            <li ngbDropdownItem *ngFor="let extLink of externalLinks"><a class="dropdown-item" href="{{extLink.url}}">{{extLink.websiteName}}</a></li>
           </ul>
         </li>
         <li class="nav-item active">
