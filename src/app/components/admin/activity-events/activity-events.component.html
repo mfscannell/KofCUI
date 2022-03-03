@@ -66,6 +66,7 @@
                       <th></th>
                       <th></th>
                       <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -76,6 +77,13 @@
                       <td>
                         <button type="button" class="btn btn-primary" (click)="openVolunteerForActivityEventModal(activityEvent)">
                           Volunteer
+                        </button>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-primary" (click)="openSendEmailModal(activityEvent)">
+                          <svg class="bi" width="24" height="24" fill="currentColor">
+                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
+                          </svg>
                         </button>
                       </td>
                       <td>

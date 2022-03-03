@@ -18,6 +18,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { VolunteerForActivityEventModalComponent } from './volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
+import { SendEmailModalComponent } from './send-email-modal/send-email-modal.component';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -151,15 +152,30 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     });
   }
 
+  openSendEmailModal(activityEvent: ActivityEvent) {
+    const modalRef = this.modalService.open(SendEmailModalComponent, {size: 'xl', ariaLabelledBy: 'modal-basic-title'});
+
+    modalRef.componentInstance.activityEvent = activityEvent;
+    modalRef.componentInstance.modalHeaderText = 'Send Email For Activity Event';
+
+    modalRef.result.then((result) => {
+      if (result) {
+        this.showEmailSentMessage();
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        this.logError('Error from Send Email for Activity Event Modal.', error);
+      }
+    });
+  }
+
   openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
     const modalRef = this.modalService.open(VolunteerForActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.activityEvent = activityEvent;
     modalRef.componentInstance.allAddresses = this.allAddresses;
-    //modalRef.componentInstance.allActivities = this.allActivities;
     modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.modalHeaderText = 'Volunteer For Activity Event';
-    //modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
     modalRef.result.then((result) => {
       if (result) {
         this.updateActivityEventInList(result);
@@ -254,6 +270,10 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     if (this.allAddresses && index !== undefined && index >= 0) {
       this.allAddresses[index] = address;
     }
+  }
+
+  private showEmailSentMessage() {
+
   }
 
   logError(message: string, err: any) {
