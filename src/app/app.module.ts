@@ -38,6 +38,7 @@ import { ConfigsComponent } from './components/admin/configs/configs.component';
 import { AccountComponent } from './components/account/account.component';
 import { AccountPersonalInfoComponent } from './components/account/account-personalInfo/account-personalInfo.component';
 import { AccountInterestsComponent } from './components/account/account-interests/account-interests.component';
+import { SendEmailModalComponent } from './components/admin/activity-events/send-email-modal/send-email-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { AccountInterestsComponent } from './components/account/account-interest
     EditLeadershipRoleModalComponent,
     ConfigsComponent,
     ActivityEventsComponent,
+    SendEmailModalComponent,
     VolunteerForActivityEventModalComponent,
     EditActivityEventModalComponent,
     EditActivityEventLocationModalComponent
