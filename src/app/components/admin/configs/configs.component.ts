@@ -6,6 +6,9 @@ import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
+import { TimeZone } from 'src/app/models/timeZone';
+import { ConfigInputTypeEnums } from 'src/app/enums/configInputTypeEnums';
+import { StringDropDownOption } from 'src/app/models/stringDropDownOption';
 
 @Component({
   selector: 'kofc-configs',
@@ -15,7 +18,9 @@ import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
 export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllConfigsSubscription?: Subscription;
   private updateConfigsSubscription?: Subscription;
+  private getAllTimeZonesSubscription?: Subscription;
   configGroups: ConfigGroup[] = [];
+  timeZones: TimeZone[] = [];
   editConfigsForm: FormGroup;
   showErrorMessage: boolean = false;
   errorMessages: string[] = [];
@@ -29,6 +34,16 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllConfigs();
+    this.getAllTimeZones();
+  }
+
+  private getAllTimeZones() {
+    let getAllTimeZonesObserver = {
+      next: (timeZones: TimeZone[]) => this.timeZones = timeZones,
+      error: (err: any) => this.logError('Error getting all timeZones.', err),
+      complete: () => console.log('Time zones loaded.')
+    };
+    this.getAllTimeZonesSubscription = this.configsService.getAllTimeZones().subscribe(getAllTimeZonesObserver);
   }
   
   private getAllConfigs() {
@@ -71,7 +86,8 @@ export class ConfigsComponent implements OnInit, OnDestroy {
           booleanValue: new FormControl(configSetting.booleanValue),
           longValue: new FormControl(configSetting.longValue),
           stringValue: new FormControl(configSetting.stringValue),
-          dateTimeValue: new FormControl(configSetting.dateTimeValue)
+          dateTimeValue: new FormControl(configSetting.dateTimeValue),
+          inputType: new FormControl(configSetting.inputType)
         });
 
         configSettingsArray.push(configSettingFormGroup);
@@ -81,12 +97,25 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     return configSettingsArray;
   }
 
-  isBoolean(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Boolean;
+  isCheckBox(i: number, j: number) {
+    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.CheckBox;
   }
 
-  isString(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.String;
+  isStringInput(i: number, j: number) {
+    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.TextBox;
+  }
+
+  isStringDropDown(i: number, j: number) {
+    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.DropDown &&
+    this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.String;
+  }
+
+  getStringDropDownList(i: number, j: number) : StringDropDownOption[] {
+    if (this.configGroups[i].configSettings[j].configName === 'CouncilTimeZone') {
+      return this.timeZones;
+    }
+
+    return [];
   }
 
   isLong(i: number, j: number) {
@@ -127,6 +156,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
       if (this.updateConfigsSubscription) {
         this.updateConfigsSubscription.unsubscribe();
+      }
+
+      if (this.getAllTimeZonesSubscription) {
+        this.getAllTimeZonesSubscription.unsubscribe();
       }
   }
 
@@ -182,7 +215,8 @@ export class ConfigsComponent implements OnInit, OnDestroy {
           booleanValue: configSetting.booleanValue,
           longValue: configSetting.longValue,
           stringValue: configSetting.stringValue,
-          dateTimeValue: configSetting.dateTimeValue
+          dateTimeValue: configSetting.dateTimeValue,
+          inputType: configSetting.inputType
         }));
       });
     });

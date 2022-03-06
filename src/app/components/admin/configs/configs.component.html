@@ -22,8 +22,11 @@
                     <label for="configSetting_value" class="col-form-label">{{getConfigName(i, j)}}</label>
                   </div>
                   <div class="col-10 col-sm-7">
-                    <input *ngIf="isBoolean(i, j)" type="checkbox" class="form-control" formControlName="booleanValue" id="configSetting_booleanValue">
-                    <input *ngIf="isString(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
+                    <input *ngIf="isCheckBox(i, j)" type="checkbox" class="form-control" formControlName="booleanValue" id="configSetting_booleanValue">
+                    <input *ngIf="isStringInput(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
+                    <select *ngIf="isStringDropDown(i, j)" class="form-control" id="configSetting_stringDropDown" formControlName="stringValue">
+                      <option *ngFor="let selectOption of getStringDropDownList(i, j)" [value]="selectOption.id">{{selectOption.displayName}}</option>
+                    </select>
                   </div>
                   <div class="col-2 col-sm-1">
                     <button type="button" class="btn btn-primary rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">

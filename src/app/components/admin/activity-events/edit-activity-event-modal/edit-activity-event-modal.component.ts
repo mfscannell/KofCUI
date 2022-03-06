@@ -14,6 +14,8 @@ import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
 import { Knight } from 'src/app/models/knight';
+import { TimeZone } from 'src/app/models/timeZone';
+import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
   selector: 'kofc-edit-activity-event-modal',
@@ -28,6 +30,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() allActivities: Activity[] = [];
   updateActivityEventSubscription?: Subscription;
   createActivityEventSubscription?: Subscription;
+  getCouncilTImeZoneSubscription?: Subscription;
+  councilTimeZone: TimeZone = new TimeZone();
   editActivityEventForm: FormGroup;
   //allVolunteerRoles: VolunteerSignUpRole[] = [];
   countries: Country[] = Country.AllCountries;
@@ -37,7 +41,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public activeModal: NgbActiveModal,
-    private activityEventsService: ActivityEventsService) {
+    private activityEventsService: ActivityEventsService,
+    private configsService: ConfigsService) {
       var today = new Date();
       this.editActivityEventForm = new FormGroup({
         activityEventId: new FormControl(''),
@@ -77,6 +82,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         canceledReason: new FormControl(''),
         volunteerSignUpRoles: new FormArray([])
        });
+
+       this.getCouncilTimeZone();
     }
 
   ngOnInit() {
@@ -166,6 +173,20 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     if (this.updateActivityEventSubscription) {
       this.updateActivityEventSubscription.unsubscribe();
     }
+
+    if (this.getCouncilTImeZoneSubscription) {
+      this.getCouncilTImeZoneSubscription.unsubscribe();
+    }
+  }
+
+  private getCouncilTimeZone() {
+    let getCouncilTimeZoneObserver = {
+      next: (councilTimeZone: TimeZone) => this.councilTimeZone = councilTimeZone,
+      error: (err: any) => this.logError('Error getting council time zone.', err),
+      complete: () => console.log('Council time zone loaded.')
+    };
+
+    this.getCouncilTImeZoneSubscription = this.configsService.getCouncilTimeZone().subscribe(getCouncilTimeZoneObserver);
   }
 
   onChangeShowInCalendar(isChecked: boolean) {
