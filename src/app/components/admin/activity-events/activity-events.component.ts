@@ -7,12 +7,9 @@ import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-boo
 import { EditActivityEventModalComponent } from 'src/app/components/admin/activity-events/edit-activity-event-modal/edit-activity-event-modal.component';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
-import { Address } from 'src/app/models/address';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
-import { AddressesService } from 'src/app/services/addresses.service';
 
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { EditActivityEventLocationModalComponent } from './edit-activity-event-location-modal/edit-activity-event-location-modal.component';
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
@@ -27,12 +24,10 @@ import { SendEmailModalComponent } from './send-email-modal/send-email-modal.com
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   activityEventsSubscription?: Subscription;
-  getAllAddressesForEventsSubscription?: Subscription;
   getAllKnightsSubscription?: Subscription;
   getAllActivitiesSubscription?: Subscription;
   activityEvents: ActivityEvent[] = [];
   allActivities: Activity[] = [];
-  allAddresses: Address[] = [];
   allKnights: Knight[] = [];
   // beginDate: Date = new Date();
   // endDate: Date = new Date();
@@ -46,7 +41,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   constructor(
     private activityEventsService: ActivityEventsService,
     private activitiesService: ActivitiesService,
-    private addressesService: AddressesService,
     private knightsService: KnightsService,
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter,
@@ -57,7 +51,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllActivityEvents();
-    this.getAllAddressesForEvents();
     this.getAllKnights();
     this.getAllActivities();
   }
@@ -65,10 +58,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.activityEventsSubscription) {
       this.activityEventsSubscription.unsubscribe();
-    }
-
-    if (this.getAllAddressesForEventsSubscription) {
-      this.getAllAddressesForEventsSubscription.unsubscribe();
     }
 
     if (this.getAllKnightsSubscription) {
@@ -112,16 +101,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
   }
 
-  private getAllAddressesForEvents() {
-    let addressesesObserver = {
-      next: (getAllAddressesResponse: Address[]) => this.allAddresses = getAllAddressesResponse,
-      error: (err: any) => this.logError('Error getting all addresses.', err),
-      complete: () => console.log('All addresses loaded.')
-    };
-
-    this.getAllAddressesForEventsSubscription = this.addressesService.getAllAddressesForEvents().subscribe(addressesesObserver);
-  }
-
   private getAllKnights() {
     let knightsObserver = {
       next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
@@ -136,7 +115,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(EditActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.activityEvent = activityEvent;
-    modalRef.componentInstance.allAddresses = this.allAddresses;
     modalRef.componentInstance.allActivities = this.allActivities;
     modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.modalHeaderText = 'Editing Activity Event';
@@ -173,7 +151,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(VolunteerForActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.activityEvent = activityEvent;
-    modalRef.componentInstance.allAddresses = this.allAddresses;
     modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.modalHeaderText = 'Volunteer For Activity Event';
     modalRef.result.then((result) => {
@@ -198,7 +175,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   openCreateActivityEventModal() {
     const modalRef = this.modalService.open(EditActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
-    modalRef.componentInstance.allAddresses = this.allAddresses;
     modalRef.componentInstance.allActivities = this.allActivities;
     modalRef.componentInstance.allKnights = this.allKnights;
     modalRef.componentInstance.modalHeaderText = 'Adding Activity Category';
@@ -229,47 +205,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
     const parsed = this.formatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
-
-  openCreateAddressModal() {
-    const modalRef = this.modalService.open(EditActivityEventLocationModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.modalHeaderText = 'Adding Event Location';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Create;
-    modalRef.result.then((result: Address) => {
-      if (result) {
-        this.allAddresses?.push(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        this.logError('Error from Create Event Location Modal.', error);
-      }
-    });
-  }
-
-  openEditAddressModal(address: Address) {
-    const modalRef = this.modalService.open(EditActivityEventLocationModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.locationAddress = address;
-    modalRef.componentInstance.modalHeaderText = 'Editing Event Location';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
-    modalRef.result.then((result: Address) => {
-      if (result) {
-        this.updateEventLocationInList(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        this.logError('Error from Edit Event Location Modal.', error);
-      }
-    });
-  }
-
-  private updateEventLocationInList(address: Address) {
-    let index = this.allAddresses.findIndex(x => x.addressId === address.addressId)
-
-    if (this.allAddresses && index !== undefined && index >= 0) {
-      this.allAddresses[index] = address;
-    }
   }
 
   private showEmailSentMessage() {

@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import { Injectable } from '@angular/core';
 
-import { Address } from 'src/app/models/address';
+import { StreetAddress } from 'src/app/models/streetAddress';
 import { Knight } from 'src/app/models/knight';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
@@ -41,10 +41,10 @@ export class ExcelFileReader {
 
                     let homeAddress1 = rawKnight['Address 1'] === undefined ? "" : `${rawKnight['Address 1']}`;
                     let homeAddress2 = rawKnight['Address 2'] === undefined ? "" : `${rawKnight['Address 2']}`;
-                    let addressCity = rawKnight['City1'] === undefined ? "" : `${rawKnight['City']}`;
-                    let addressStateCode = rawKnight['State Code'] === undefined ? "" : `${rawKnight['State Code']}`;
-                    let addressPostalCode = rawKnight['Postal Code'] === undefined ? "" : `${rawKnight['Postal Code']}`;
-                    let addressCountryCode = rawKnight['Country Code'] === undefined ? "" : `${rawKnight['Country Code']}`;
+                    let city = rawKnight['City'] === undefined ? "" : `${rawKnight['City']}`;
+                    let stateCode = rawKnight['State Code'] === undefined ? "" : `${rawKnight['State Code']}`;
+                    let postalCode = rawKnight['Postal Code'] === undefined ? "" : `${rawKnight['Postal Code']}`;
+                    let countryCode = rawKnight['Country Code'] === undefined ? "" : `${rawKnight['Country Code']}`;
 
                     let memberNumber = rawKnight['Member Number'];
                     let mailReturned = rawKnight['Mail Returned'];
@@ -61,13 +61,13 @@ export class ExcelFileReader {
                         dateOfBirth: dateOfBirth,
                         emailAddress: emailAddress,
                         cellPhoneNumber: cellPhoneNumber,
-                        homeAddress: new Address({
+                        homeAddress: new StreetAddress({
                             address1: homeAddress1,
                             address2: homeAddress2,
-                            addressCity: addressCity,
-                            addressStateCode: addressStateCode,
-                            addressPostalCode: addressPostalCode,
-                            addressCountryCode: addressCountryCode
+                            city: city,
+                            stateCode: stateCode,
+                            postalCode: postalCode,
+                            countryCode: countryCode
                         }),
                         knightInfo: new KnightInfo({
                             memberNumber: memberNumber,

@@ -1,4 +1,4 @@
-import { Address } from 'src/app/models/address';
+import { StreetAddress } from 'src/app/models/streetAddress';
 
 export class UpcomingEvent {
     activityEventId: number = 0;
@@ -9,7 +9,7 @@ export class UpcomingEvent {
     startTime?: string;
     endDate?: string;
     endTime?: string;
-    locationAddress?: Address;
+    locationAddress?: StreetAddress;
     canceled: boolean = false;
     canceledReason?: string;
 
@@ -23,7 +23,7 @@ export class UpcomingEvent {
             startTime: string,
             endDate: string,
             endTime: string,
-            locationAddress: Address
+            locationAddress: StreetAddress
             canceled: boolean,
             canceledReason: string
     }) {

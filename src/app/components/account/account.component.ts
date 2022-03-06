@@ -5,7 +5,7 @@ import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
 import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
 import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { Address } from 'src/app/models/address';
+import { StreetAddress } from 'src/app/models/streetAddress';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
 import { Knight } from 'src/app/models/knight';

@@ -6,7 +6,7 @@ import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
 import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
 import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { Address } from 'src/app/models/address';
+import { StreetAddress } from 'src/app/models/streetAddress';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
 import { Knight } from 'src/app/models/knight';
@@ -14,6 +14,7 @@ import { KnightInfo } from 'src/app/models/knightInfo';
 import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
 
 @Component({
   selector: 'kofc-account-interests',
@@ -103,7 +104,11 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
       complete: () => console.log('Knight Activity Interests updated.')
     };
 
-    this.updateKnightActivityInterestSubscription = this.knightsService.updateKnightActivityInterest(this.knightId, knightActivityInterests).subscribe(knightObserver);
+    let request = new UpdateKnightActivityInterestsRequest({
+      knightId: this.knightId,
+      activityInterests: knightActivityInterests});
+
+    this.updateKnightActivityInterestSubscription = this.knightsService.updateKnightActivityInterest(request).subscribe(knightObserver);
   }
 
   private passBackResponse(activityInterests: ActivityInterest[]) {
