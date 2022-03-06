@@ -6,7 +6,7 @@ import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
 import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
 import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { Address } from 'src/app/models/address';
+import { StreetAddress } from 'src/app/models/streetAddress';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
 import { Knight } from 'src/app/models/knight';
@@ -63,7 +63,7 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
           Validators.maxLength(31)
         ]),
         homeAddress: new FormGroup({
-          addressId: new FormControl(0),
+          streetAddressId: new FormControl(0),
           addressName: new FormControl(null),
           address1: new FormControl('', [
             Validators.maxLength(63)
@@ -71,16 +71,16 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
           address2: new FormControl('', [
             Validators.maxLength(63)
           ]),
-          addressCity: new FormControl('', [
+          city: new FormControl('', [
             Validators.maxLength(63)
           ]),
-          addressStateCode: new FormControl('', [
+          stateCode: new FormControl('', [
             Validators.maxLength(3)
           ]),
-          addressPostalCode: new FormControl('', [
+          postalCode: new FormControl('', [
             Validators.maxLength(15)
           ]),
-          addressCountryCode: new FormControl('', [
+          countryCode: new FormControl('', [
             Validators.maxLength(7)
           ])
         })
@@ -129,7 +129,7 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
 
   onSubmitEditKnight() {
     let updatedKnight = this.mapEditKnightFormToKnight();
-    this.updateKnight(updatedKnight);
+    this.updateKnightPersonalInfo(updatedKnight);
   }
 
   cancelEditKnightPersonalInfo() {
@@ -138,15 +138,15 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
 
   private mapEditKnightFormToKnight() {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
-    let homeAddress = new Address({
-      addressId: rawForm.homeAddress.addressId,
+    let homeAddress = new StreetAddress({
+      streetAddressId: rawForm.homeAddress.streetAddressId,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,
-      addressCity: rawForm.homeAddress.addressCity,
-      addressStateCode: rawForm.homeAddress.addressStateCode,
-      addressPostalCode: rawForm.homeAddress.addressPostalCode,
-      addressCountryCode: rawForm.homeAddress.addressCountryCode
+      city: rawForm.homeAddress.city,
+      stateCode: rawForm.homeAddress.stateCode,
+      postalCode: rawForm.homeAddress.postalCode,
+      countryCode: rawForm.homeAddress.countryCode
     });
     let knight = new Knight({
       knightId: rawForm.knightId,
@@ -166,14 +166,14 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
     return knight;
   }
 
-  private updateKnight(knight: Knight) {
+  private updateKnightPersonalInfo(knight: Knight) {
     let knightObserver = {
       next: (response: Knight) => this.passBackResponse(response),
       error: (err: any) => this.logError("Error Updating Knight.", err),
       complete: () => console.log('Knight updated.')
     };
 
-    this.updateKnightSubscription = this.knightsService.updateKnight(knight).subscribe(knightObserver);
+    this.updateKnightSubscription = this.knightsService.updateKnightPersonalInfo(knight).subscribe(knightObserver);
   }
 
   private passBackResponse(knight: Knight) {

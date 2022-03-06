@@ -31,7 +31,6 @@ import { OurCouncilComponent } from './components/our-council/our-council.compon
 import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.component';
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
-import { EditActivityEventLocationModalComponent } from './components/admin/activity-events/edit-activity-event-location-modal/edit-activity-event-location-modal.component';
 import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { ConfigsComponent } from './components/admin/configs/configs.component';
 
@@ -66,8 +65,7 @@ import { SendEmailModalComponent } from './components/admin/activity-events/send
     ActivityEventsComponent,
     SendEmailModalComponent,
     VolunteerForActivityEventModalComponent,
-    EditActivityEventModalComponent,
-    EditActivityEventLocationModalComponent
+    EditActivityEventModalComponent
   ],
   imports: [
     YouTubePlayerModule,

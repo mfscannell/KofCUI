@@ -99,12 +99,10 @@
           <ng-container formGroupName=locationAddress>
             <div class="form-group row">
               <div class="col-4 col-md-3">
-                <label for="locationAddress_addressId" class="col-form-label">Location</label>
+                <label for="locationAddress_addressName" class="col-form-label">Location Name</label>
               </div>
               <div class="col-8 col-md-9">
-                <select class="form-control" id="addressId" formControlName="addressId" (change)='changeLocationAddress($event)'>
-                  <option *ngFor="let address of allAddresses" [value]="address.addressId">{{address.addressName}}</option>
-                </select>
+                <input type="text" class="form-control" formControlName="addressName" id="locationAddress_addressName" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
@@ -112,7 +110,7 @@
                 <label for="locationAddress_address1" class="col-form-label">Address 1</label>
               </div>
               <div class="col-8 col-md-9">
-                <input readonly type="text" class="form-control" formControlName="address1" id="locationAddress_address1" autocomplete="off">
+                <input type="text" class="form-control" formControlName="address1" id="locationAddress_address1" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
@@ -120,41 +118,41 @@
                 <label for="locationAddress_address2" class="col-form-label">Address 2</label>
               </div>
               <div class="col-8 col-md-9">
-                <input readonly type="text" class="form-control" formControlName="address2" id="locationAddress_address2" autocomplete="off">
+                <input type="text" class="form-control" formControlName="address2" id="locationAddress_address2" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-4 col-md-3">
-                <label for="locationAddress_addressCity" class="col-form-label">City</label>
+                <label for="locationAddress_city" class="col-form-label">City</label>
               </div>
               <div class="col-8 col-md-9">
-                <input readonly type="text" class="form-control" formControlName="addressCity" id="locationAddress_addressCity" autocomplete="off">
+                <input type="text" class="form-control" formControlName="city" id="locationAddress_city" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-4 col-md-3">
-                <label for="locationAddress_addressStateCode" class="col-form-label">State</label>
+                <label for="locationAddress_stateCode" class="col-form-label">State</label>
               </div>
               <div class="col-8 col-md-9">
-                <select readonly class="form-control" id="locationAddress_addressStateCode" formControlName="addressStateCode">
+                <select class="form-control" id="locationAddress_stateCode" formControlName="stateCode">
                   <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
                 </select>
               </div>
             </div>
             <div class="form-group row">
               <div class="col-4 col-md-3">
-                <label for="locationAddress_addressPostalCode" class="col-form-label">Zip Code</label>
+                <label for="locationAddress_postalCode" class="col-form-label">Zip Code</label>
               </div>
               <div class="col-8 col-md-9">
-                <input readonly type="text" class="form-control" formControlName="addressPostalCode" id="locationAddress_addressPostalCode" autocomplete="off">
+                <input type="text" class="form-control" formControlName="postalCode" id="locationAddress_postalCode" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-4 col-md-3">
-                <label for="locationAddress_addressCountryCode" class="col-form-label">Country</label>
+                <label for="locationAddress_countryCode" class="col-form-label">Country</label>
               </div>
               <div class="col-8 col-md-9">
-                <select readonly class="form-control" id="locationAddress_addressCountryCode" formControlName="addressCountryCode">
+                <select class="form-control" id="locationAddress_countryCode" formControlName="countryCode">
                   <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
                 </select>
               </div>
