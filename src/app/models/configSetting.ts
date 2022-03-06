@@ -1,4 +1,5 @@
 import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
+import { ConfigInputTypeEnums } from '../enums/configInputTypeEnums';
 
 export class ConfigSetting {
     configId: number = 0;
@@ -12,6 +13,7 @@ export class ConfigSetting {
     longValue: number = 0;
     stringValue: string = '';
     dateTimeValue?: string = undefined;
+    inputType: ConfigInputTypeEnums = ConfigInputTypeEnums.TextBox
 
     public constructor(
         fields?: {
@@ -25,7 +27,8 @@ export class ConfigSetting {
             booleanValue?: boolean,
             longValue?: number,
             stringValue?: string,
-            dateTimeValue?: string
+            dateTimeValue?: string,
+            inputType?: ConfigInputTypeEnums
     }) {
         if (fields) {
             this.configId = fields.configId || this.configId;
@@ -39,6 +42,7 @@ export class ConfigSetting {
             this.longValue = fields.longValue || this.longValue;
             this.stringValue = fields.stringValue || this.stringValue;
             this.dateTimeValue = fields.dateTimeValue || this.dateTimeValue;
+            this.inputType = fields.inputType || this.inputType;
         }
     }
 }

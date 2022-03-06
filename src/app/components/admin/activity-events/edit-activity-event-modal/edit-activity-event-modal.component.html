@@ -11,6 +11,9 @@
         <a ngbNavLink>Event Information</a>
         <ng-template ngbNavContent>
           <div class="form-group row">
+            <div class="col-12">All times are in {{councilTimeZone.displayName}} time zone.</div>
+          </div>
+          <div class="form-group row">
             <div class="col-4 col-md-3">
               <label for="activityId" class="col-form-label">Activity</label>
             </div>
@@ -165,6 +168,9 @@
         <a ngbNavLink>Volunteer Roles</a>
         <ng-template ngbNavContent>
           <ng-container formArrayName="volunteerSignUpRoles">
+            <div class="form-group row">
+              <div class="col-12">All times are in {{councilTimeZone.displayName}} time zone.</div>
+            </div>
             <ng-container *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
                 <div class="form-group row">
                   <div class="col-5 col-md-3">
