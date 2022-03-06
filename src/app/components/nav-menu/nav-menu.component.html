@@ -23,7 +23,7 @@
         <li class="nav-item active">
           <a class="nav-link" routerLink="/upcomingEvents" (click)="isMenuCollapsed = true" routerLinkActiver="active">Upcoming Events</a>
         </li>
-        <li ngbDropdown class="nav-item dropdown active" *ngIf="displayExternalLinks">
+        <li ngbDropdown class="nav-item dropdown active" *ngIf="externalLinks.length > 0">
           <a ngbDropdownToggle class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Links</a>
           <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li ngbDropdownItem *ngFor="let extLink of externalLinks"><a class="dropdown-item" href="{{extLink.url}}">{{extLink.websiteName}}</a></li>

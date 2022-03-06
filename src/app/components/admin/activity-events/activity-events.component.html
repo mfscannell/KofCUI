@@ -113,50 +113,6 @@
           </div>
       </ng-template>
     </ng-container>
-    <ng-container ngbNavItem>
-      <a ngbNavLink>Event Locations</a>
-      <ng-template ngbNavContent>
-        <div class="row">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Location Name</th>
-                  <th>Address</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let address of allAddresses">
-                  <td>{{address.addressName}}</td>
-                  <td>{{address.address1}}</td>
-                  <td>
-                    <button type="button" class="btn btn-primary" (click)="openEditAddressModal(address)">
-                      <svg class="bi" width="24" height="24" fill="currentColor">
-                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
-                      </svg>
-                    </button>
-                  </td>
-                  <td>
-                    <button type="button" class="btn btn-danger">
-                      <svg class="bi" width="24" height="24" fill="currentColor">
-                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <button type="button" class="btn btn-primary" (click)="openCreateAddressModal()">Add</button>
-          </div>
-        </div>
-      </ng-template>
-    </ng-container>
   </nav>
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>

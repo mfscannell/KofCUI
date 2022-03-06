@@ -1,5 +1,5 @@
 import { UserTypeEnums } from "../enums/userTypeEnums";
-import { Address } from "./address";
+import { StreetAddress } from "./streetAddress";
 import { KnightInfo } from "src/app/models/knightInfo";
 import { ActivityInterest } from "src/app/models/activityInterest";
 
@@ -12,7 +12,7 @@ export class Knight {
     dateOfBirth: string = "";
     emailAddress: string = "";
     cellPhoneNumber: string = "";
-    homeAddress: Address = new Address();
+    homeAddress: StreetAddress = new StreetAddress();
     knightInfo: KnightInfo = new KnightInfo();
     activityInterests: ActivityInterest[] = [];
 
@@ -28,7 +28,7 @@ export class Knight {
             emailAddress: string,
             cellPhoneNumber: string,
             homeAddressId?: number,
-            homeAddress?: Address,
+            homeAddress?: StreetAddress,
             knightInfo?: KnightInfo,
             activityInterests?: ActivityInterest[]
     }) {

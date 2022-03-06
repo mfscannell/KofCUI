@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Knight } from 'src/app/models/knight';
 import { ActivityInterest } from 'src/app/models/activityInterest'
+import { UpdateKnightActivityInterestsRequest } from '../models/requests/updateKnightActivityInterestsRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -30,15 +31,15 @@ export class KnightsService {
         return this.http.post<Knight[]>('knights/multiple', knights);
     }
 
-    updateKnight(knight: Knight) : Observable<Knight> {
-        return this.http.put<Knight>(`knights/${knight?.knightId}`, knight);
+    updateKnightPersonalInfo(knight: Knight) : Observable<Knight> {
+        return this.http.put<Knight>(`knights/${knight?.knightId}/personalInfo`, knight);
     }
 
     updateKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
         return this.http.put<Knight>(`knights/${knight?.knightId}/withAllActivities`, knight);
     }
 
-    updateKnightActivityInterest(knightId: number, activityInterests: ActivityInterest[]) : Observable<ActivityInterest[]> {
-        return this.http.put<ActivityInterest[]>(`knights/${knightId}/activities`, activityInterests);
+    updateKnightActivityInterest(updateKnightActivityInterestsRequest: UpdateKnightActivityInterestsRequest) : Observable<ActivityInterest[]> {
+        return this.http.put<ActivityInterest[]>(`knights/${updateKnightActivityInterestsRequest.knightId}/activities`, updateKnightActivityInterestsRequest);
     }
 }

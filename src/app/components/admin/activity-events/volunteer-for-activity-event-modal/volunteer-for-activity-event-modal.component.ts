@@ -9,7 +9,7 @@ import { Activity } from 'src/app/models/activity';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
-import { Address } from 'src/app/models/address';
+import { StreetAddress } from 'src/app/models/streetAddress';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
@@ -24,7 +24,6 @@ import { VolunteerForActivityEventRequest } from 'src/app/models/requests/volunt
 export class VolunteerForActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() activityEvent?: ActivityEvent;
-  @Input() allAddresses: Address[] = [];
   @Input() allKnights: Knight[] = [];
   knightId: number = 5; //TODO need to get this from log in.
   updateVolunteerForActivityEventSubscription?: Subscription;
@@ -62,14 +61,14 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
         "minute": 0
       }),
       locationAddress: new FormGroup({
-        addressId: new FormControl(''),
+        streetAddressId: new FormControl(''),
         addressName: new FormControl(''),
         address1: new FormControl(''),
         address2: new FormControl(''),
-        addressCity: new FormControl(''),
-        addressStateCode: new FormControl(''),
-        addressPostalCode: new FormControl(''),
-        addressCountryCode: new FormControl('')
+        city: new FormControl(''),
+        stateCode: new FormControl(''),
+        postalCode: new FormControl(''),
+        countryCode: new FormControl('')
       }),
       showInCalendar: new FormControl(null),
       canceled: new FormControl({value: null, disabled: true}),
@@ -103,9 +102,7 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
           hour: DateTimeFormatter.getHour(this.activityEvent.endTime),
           minute: DateTimeFormatter.getMinute(this.activityEvent.endTime)
         },
-        locationAddress: {
-          addressId: this.activityEvent.locationAddressId,
-        },
+        locationAddress: this.activityEvent.locationAddress,
         showInCalendar: this.activityEvent.showInCalendar,
         canceled: this.activityEvent.canceled,
         canceledReason: this.activityEvent.canceledReason
@@ -143,21 +140,6 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
     
         this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
        });
-
-       if (this.allAddresses && this.allAddresses.length > 0) {
-         let address = this.allAddresses.find(x => x.addressId === this.activityEvent?.locationAddressId);
-        this.volunteerForActivityEventForm.patchValue({
-          locationAddress: {
-            addressName: address?.addressName,
-            address1: address?.address1,
-            address2: address?.address2,
-            addressCity: address?.addressCity,
-            addressStateCode: address?.addressStateCode,
-            addressPostalCode: address?.addressPostalCode,
-            addressCountryCode: address?.addressCountryCode
-          }
-        });
-       }
     }
   }
 
@@ -268,6 +250,16 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
           })
         })
       });
+      let locationAddress = new StreetAddress({
+        streetAddressId: rawForm.locationAddress.streetAddressId,
+        addressName: rawForm.locationAddress.addressName,
+        address1: rawForm.locationAddress.address1,
+        address2: rawForm.locationAddress.address2,
+        city: rawForm.locationAddress.city,
+        stateCode: rawForm.locationAddress.stateCode,
+        postalCode: rawForm.locationAddress.postalCode,
+        countryCode: rawForm.locationAddress.countryCode
+      });
       let activityEvent = new ActivityEvent({
         activityEventId: rawForm.activityEventId,
         activityId: rawForm.activityId,
@@ -277,7 +269,7 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
         startTime: DateTimeFormatter.ToIso8601Time(rawForm.startTime.hour, rawForm.startTime.minute),
         endDate: DateTimeFormatter.ToIso8601Date(rawForm.endDate.year, rawForm.endDate.month, rawForm.endDate.day),
         endTime: DateTimeFormatter.ToIso8601Time(rawForm.endTime.hour, rawForm.endTime.minute),
-        locationAddressId: rawForm.locationAddress.addressId,
+        locationAddress: locationAddress,
         volunteerSignUpRoles: volunteerRoles,
         showInCalendar: rawForm.showInCalendar,
         canceled: rawForm.canceled,
