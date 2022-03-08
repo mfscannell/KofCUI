@@ -76,7 +76,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     if (configSettings) {
       configSettings.forEach((configSetting) => {
         const configSettingFormGroup = new FormGroup({
-          configId: new FormControl(configSetting.configId),
+          configSettingId: new FormControl(configSetting.configSettingId),
           configGroupId: new FormControl(configSetting.configGroupId),
           configName: new FormControl(configSetting.configName),
           configDisplayName: new FormControl(configSetting.configDisplayName),
@@ -205,7 +205,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     rawForm?.configGroups?.map((configGroup: any) => {
       configGroup.configSettings?.forEach((configSetting: any) => {
         configSettings.push(new ConfigSetting({
-          configId: configSetting.configId,
+          configSettingId: configSetting.configSettingId,
           configGroupId: configSetting.configGroupId,
           configName: configSetting.configName,
           configDisplayName: configSetting.configDisplayName,

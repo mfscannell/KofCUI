@@ -1,6 +1,6 @@
 <div class="container">
   <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditActivityInterests()">
-    <div class="form-group row" *ngFor="let activityCategory of activityCategories">
+    <div class="form-group row mb-1" *ngFor="let activityCategory of activityCategories">
       <div class="container">
         <div class="row">
           <h4 class="col-sm-4 col-form-label">{{activityCategory.categoryName}}</h4>
@@ -8,16 +8,16 @@
       </div>
       <div class="container">
         <ng-container *ngFor="let activity of filterActivitiesByCategoryId(activityCategory.activityCategoryId)">
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <label class="col-md-4 form-label">{{activity.activityName}}</label>
-            <input class="col-md-8 form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+            <input class="col-md-8 form-check" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
           </div>
         </ng-container>
       </div>
     </div>
 
 
-    <div class="form-group row">
+    <div class="form-group row mb-1">
       <div class="container">
         <div class="row" *ngIf="errorSaving">
           <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>

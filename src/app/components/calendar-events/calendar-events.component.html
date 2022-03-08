@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="form-group row">
+  <div class="form-group row mb-1">
     <div class="col-0 col-md-4"></div>
     <div class="col-3 col-md-1 text-center">
       <button type="button" class="btn btn-secondary" (click)="navigateToPreviousMonth()">Prev</button>
@@ -39,7 +39,7 @@
     
     
               <div *ngIf='dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length > 0' role='button' (click)="viewUpcomingEvents(dayOfWeek.dayOfMonth)">
-                <div>
+                <div class="divBtn divCenter">
                   {{dayOfWeek.dayOfMonth}}
                 </div>
                 <div *ngIf='dayOfWeek.events.length > 0'>
@@ -49,7 +49,7 @@
     
     
               <div *ngIf='dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length === 0'>
-                <div>
+                <div class="divCenter">
                   {{dayOfWeek.dayOfMonth}}
                 </div>
                 <div>

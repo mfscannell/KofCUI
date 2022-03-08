@@ -2,7 +2,7 @@ import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
 import { ConfigInputTypeEnums } from '../enums/configInputTypeEnums';
 
 export class ConfigSetting {
-    configId: number = 0;
+    configSettingId: number = 0;
     configGroupId: number = 0;
     configName: string = '';
     configDisplayName: string = '';
@@ -17,7 +17,7 @@ export class ConfigSetting {
 
     public constructor(
         fields?: {
-            configId? : number,
+            configSettingId? : number,
             configGroupId? : number,
             configName?: string,
             configDisplayName?: string,
@@ -31,7 +31,7 @@ export class ConfigSetting {
             inputType?: ConfigInputTypeEnums
     }) {
         if (fields) {
-            this.configId = fields.configId || this.configId;
+            this.configSettingId = fields.configSettingId || this.configSettingId;
             this.configGroupId = fields.configGroupId || this.configGroupId;
             this.configName = fields.configName || this.configName;
             this.configDisplayName = fields.configDisplayName || this.configDisplayName;

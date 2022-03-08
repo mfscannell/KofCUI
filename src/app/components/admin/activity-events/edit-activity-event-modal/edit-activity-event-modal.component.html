@@ -10,20 +10,20 @@
       <ng-container ngbNavItem>
         <a ngbNavLink>Event Information</a>
         <ng-template ngbNavContent>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-12">All times are in {{councilTimeZone.displayName}} time zone.</div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="activityId" class="col-form-label">Activity</label>
             </div>
             <div class="col-8 col-md-9">
-              <select class="form-control" id="activityId" formControlName="activityId" (change)='onChangeActivity($event)'>
+              <select class="form-select" id="activityId" formControlName="activityId" (change)='onChangeActivity($event)'>
                 <option *ngFor="let activity of allActivities" [value]="activity.activityId">{{activity.activityName}}</option>
               </select>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="eventName" class="col-form-label">Event Name</label>
             </div>
@@ -31,7 +31,7 @@
               <input type="text" class="form-control" formControlName="eventName" id="eventName" autocomplete="off">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="eventDescription" class="col-form-label">Event Description</label>
             </div>
@@ -39,38 +39,44 @@
               <textarea class="form-control" formControlName="eventDescription" id="eventDescription" rows="4"></textarea>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="startDate" class="col-form-label">Start Date</label>
             </div>
-            <div class="col-8 col-md-9 input-group">
-              <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()" (ngModelChange)='onChangeEventStartDate($event)'>
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="sd.toggle()" type="button">
-                  <svg class="bi" width="20" height="20" fill="currentColor">
-                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-                  </svg>
-                </button>
+            <div class="col-8 col-md-9">
+              <div class="input-group">
+                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()" (ngModelChange)='onChangeEventStartDate($event)'>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="sd.toggle()" type="button">
+                    <svg class="bi" width="20" height="20" fill="currentColor">
+                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="startTime" class="col-form-label">Start Time</label>
             </div>
-            <div class="col-8 col-md-9 input-group">
-              <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeEventStartTime($event)'></ngb-timepicker>
+            <div class="col-8 col-md-9">
+              <div class="input-group">
+                <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeEventStartTime($event)'></ngb-timepicker>
+              </div>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="endTime" class="col-form-label">End Time</label>
             </div>
-            <div class="col-8 col-md-9 input-group">
-              <ngb-timepicker formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeEventEndTime($event)'></ngb-timepicker>
+            <div class="col-8 col-md-9">
+              <div class="input-group">
+                <ngb-timepicker formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeEventEndTime($event)'></ngb-timepicker>
+              </div>
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="showInCalendar" class="col-form-label">Show in Calendar</label>
             </div>
@@ -78,7 +84,7 @@
               <input type="checkbox" class="form-check-input" formControlName="showInCalendar" id="showInCalendar">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="canceled" class="col-form-label">Canceled</label>
             </div>
@@ -86,7 +92,7 @@
               <input type="checkbox" class="form-check-input" formControlName="canceled" id="canceled">
             </div>
           </div>
-          <div class="form-group row">
+          <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
               <label for="canceledReason" class="col-form-label">Reason for Cancelation</label>
             </div>
@@ -100,7 +106,7 @@
         <a ngbNavLink>Location</a>
         <ng-template ngbNavContent>
           <ng-container formGroupName=locationAddress>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_addressName" class="col-form-label">Location Name</label>
               </div>
@@ -108,7 +114,7 @@
                 <input type="text" class="form-control" formControlName="addressName" id="locationAddress_addressName" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_address1" class="col-form-label">Address 1</label>
               </div>
@@ -116,7 +122,7 @@
                 <input type="text" class="form-control" formControlName="address1" id="locationAddress_address1" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_address2" class="col-form-label">Address 2</label>
               </div>
@@ -124,7 +130,7 @@
                 <input type="text" class="form-control" formControlName="address2" id="locationAddress_address2" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_city" class="col-form-label">City</label>
               </div>
@@ -132,17 +138,17 @@
                 <input type="text" class="form-control" formControlName="city" id="locationAddress_city" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_stateCode" class="col-form-label">State</label>
               </div>
               <div class="col-8 col-md-9">
-                <select class="form-control" id="locationAddress_stateCode" formControlName="stateCode">
+                <select class="form-select" id="locationAddress_stateCode" formControlName="stateCode">
                   <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
                 </select>
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_postalCode" class="col-form-label">Zip Code</label>
               </div>
@@ -150,12 +156,12 @@
                 <input type="text" class="form-control" formControlName="postalCode" id="locationAddress_postalCode" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="locationAddress_countryCode" class="col-form-label">Country</label>
               </div>
               <div class="col-8 col-md-9">
-                <select class="form-control" id="locationAddress_countryCode" formControlName="countryCode">
+                <select class="form-select" id="locationAddress_countryCode" formControlName="countryCode">
                   <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
                 </select>
               </div>
@@ -168,11 +174,11 @@
         <a ngbNavLink>Volunteer Roles</a>
         <ng-template ngbNavContent>
           <ng-container formArrayName="volunteerSignUpRoles">
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-12">All times are in {{councilTimeZone.displayName}} time zone.</div>
             </div>
             <ng-container *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
-                <div class="form-group row">
+                <div class="form-group row mb-1">
                   <div class="col-5 col-md-3">
                     <input type="text" class="form-control" formControlName="roleTitle" id="roleTitle" placeholder="Title" autocomplete="off">
                   </div>
@@ -187,7 +193,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="form-group row">
+                <div class="form-group row mb-1">
                   <div class="col-6 col-md-3">
                     <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleStartTime($event, i)'></ngb-timepicker>
                   </div>
@@ -197,9 +203,9 @@
                 </div>
                 <ng-container formArrayName="eventVolunteers">
                   <ng-container *ngFor="let eventVolunteer of getEventVolunteers(volunteerSignUpRole); let j = index" [formGroupName]="j">
-                    <div class="form-group row">
+                    <div class="form-group row mb-1">
                       <div class="col-8 col-md-3">
-                        <select class="form-control" id="activityId" formControlName="knightId">
+                        <select class="form-select" id="activityId" formControlName="knightId">
                           <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
                         </select>
                       </div>
@@ -212,7 +218,7 @@
                       </div>
                     </div>
                   </ng-container>
-                  <div class="form-group row">
+                  <div class="form-group row mb-1">
                     <div class="col-12 col-md-12">
                       <button type="button" class="btn btn-primary" (click)="addEventVolunteer(i)">Add Volunteer</button>
                     </div>
@@ -222,7 +228,7 @@
             </ng-container>
           </ng-container>
           <div class="container">
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <button type="button" class="btn btn-primary" (click)="addVolunteerSignUpRole()">Add Role</button>
             </div>
           </div>
