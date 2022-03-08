@@ -36,6 +36,14 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -71,6 +79,9 @@
             "browserTarget": "kofCUI:build"
           },
           "configurations": {
+            "development": {
+              "browserTarget": "kofCUI:build:development"
+            },
             "production": {
               "browserTarget": "kofCUI:build:production"
             }
@@ -119,6 +130,9 @@
             "devServerTarget": "kofCUI:serve"
           },
           "configurations": {
+            "development": {
+              "devServerTarget": "kofCUI:serve:development"
+            },
             "production": {
               "devServerTarget": "kofCUI:serve:production"
             }

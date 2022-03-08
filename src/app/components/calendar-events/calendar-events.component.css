@@ -7,3 +7,15 @@
     border-color: rgb(255, 255, 255);
     color: rgb(255, 255, 255);
 }
+
+@media only screen and (max-width: 770px) {
+    .divBtn {
+        background-color: blue;
+        border-radius: 15px;
+        color: white;
+    }
+
+    .divCenter {
+        text-align: center;
+    }
+}

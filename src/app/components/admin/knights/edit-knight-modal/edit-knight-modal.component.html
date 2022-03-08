@@ -10,52 +10,58 @@
       <ng-container ngbNavItem>
         <a ngbNavLink>Personal Info</a>
         <ng-template ngbNavContent>
-          <div class="form-group row">
-            <label for="firstName" class="col-sm-4 col-form-label">First Name</label>
-            <div class="col-sm-8">
+          <div class="form-group row mb-1">
+            <label for="firstName" class="col-5 col-md-3 col-form-label">First Name</label>
+            <div class="col-7 col-md-9">
               <input type="text" class="form-control" formControlName="firstName" id="firstName">
             </div>
           </div>
-          <div class="form-group row">
-            <label for="middleName" class="col-sm-4 col-form-label">Middle Name</label>
-            <div class="col-sm-8">
+          <div class="form-group row mb-1">
+            <label for="middleName" class="col-5 col-md-3 col-form-label">Middle Name</label>
+            <div class="col-7 col-md-9">
               <input type="text" class="form-control" formControlName="middleName" id="middleName">
             </div>
           </div>
-          <div class="form-group row">
-            <label for="lastName" class="col-sm-4 col-form-label">Last Name</label>
-            <div class="col-sm-8">
+          <div class="form-group row mb-1">
+            <label for="lastName" class="col-5 col-md-3 col-form-label">Last Name</label>
+            <div class="col-7 col-md-9">
               <input type="text" class="form-control" formControlName="lastName" id="lastName">
             </div>
           </div>
-          <div class="form-group row">
-            <label for="nameSuffix" class="col-sm-4 col-form-label">Suffix</label>
-            <div class="col-sm-8">
+          <div class="form-group row mb-1">
+            <label for="nameSuffix" class="col-5 col-md-3 col-form-label">Suffix</label>
+            <div class="col-7 col-md-9">
               <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix">
             </div>
           </div>
 
-          <div class="form-group row">
-              <div class="col-md-4">
+          <div class="form-group row mb-1">
+              <div class="col-5 col-md-3">
                 <label for="dateOfBirth" class="col-form-label">Date of Birth</label>
               </div>
-              <div class="col-md-8 input-group">
-                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" ngbDatepicker #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" (click)="dob.toggle()" type="button"></button>
+              <div class="col-7 col-md-9">
+                <div class="input-group">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" ngbDatepicker #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="dob.toggle()" type="button">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-          <div class="form-group row">
-            <label for="emailAddress" class="col-sm-4 col-form-label">Email Address</label>
-            <div class="col-sm-8">
+          <div class="form-group row mb-1">
+            <label for="emailAddress" class="col-5 col-md-3 col-form-label">Email Address</label>
+            <div class="col-7 col-md-9">
               <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress">
             </div>
           </div>
-          <div class="form-group row">
-            <label for="cellPhoneNumber" class="col-sm-4 col-form-label">Cell Phone Number</label>
-            <div class="col-sm-8">
+          <div class="form-group row mb-1">
+            <label for="cellPhoneNumber" class="col-5 col-md-3 col-form-label">Cell Phone</label>
+            <div class="col-7 col-md-9">
               <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber">
             </div>
           </div>
@@ -66,42 +72,42 @@
         <a ngbNavLink>Address</a>
         <ng-template ngbNavContent>
           <div class="panel-body" formGroupName="homeAddress">
-            <div class="form-group row">
-              <label for="address1" class="col-sm-4 col-form-label">Address 1</label>
-              <div class="col-sm-8">
+            <div class="form-group row mb-1">
+              <label for="address1" class="col-5 col-md-3 col-form-label">Address 1</label>
+              <div class="col-7 col-md-9">
                 <input type="text" class="form-control" formControlName="address1" id="address1">
               </div>
             </div>
-            <div class="form-group row">
-              <label for="address2" class="col-sm-4 col-form-label">Address 2</label>
-              <div class="col-sm-8">
+            <div class="form-group row mb-1">
+              <label for="address2" class="col-5 col-md-3 col-form-label">Address 2</label>
+              <div class="col-7 col-md-9">
                 <input type="text" class="form-control" formControlName="address2" id="address2">
               </div>
             </div>
-            <div class="form-group row">
-              <label for="city" class="col-sm-4 col-form-label">City</label>
-              <div class="col-sm-8">
+            <div class="form-group row mb-1">
+              <label for="city" class="col-5 col-md-3 col-form-label">City</label>
+              <div class="col-7 col-md-9">
                 <input type="text" class="form-control" formControlName="city" id="city">
               </div>
             </div>
-            <div class="form-group row">
-              <label for="stateCode" class="col-sm-4 col-form-label">State</label>
-              <div class="col-sm-8">
-                <select class="form-control" id="stateCode" formControlName="stateCode">
+            <div class="form-group row mb-1">
+              <label for="stateCode" class="col-5 col-md-3 col-form-label">State</label>
+              <div class="col-7 col-md-9">
+                <select class="form-select" id="stateCode" formControlName="stateCode">
                   <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
                 </select>
               </div>
             </div>
-            <div class="form-group row">
-              <label for="postalCode" class="col-sm-4 col-form-label">Zip Code</label>
-              <div class="col-sm-8">
+            <div class="form-group row mb-1">
+              <label for="postalCode" class="col-5 col-md-3 col-form-label">Zip Code</label>
+              <div class="col-7 col-md-9">
                 <input type="text" class="form-control" formControlName="postalCode" id="postalCode">
               </div>
             </div>
-            <div class="form-group row">
-              <label for="countryCode" class="col-sm-4 col-form-label">Country</label>
-              <div class="col-sm-8">
-                <select class="form-control" id="countryCode" formControlName="countryCode">
+            <div class="form-group row mb-1">
+              <label for="countryCode" class="col-5 col-md-3 col-form-label">Country</label>
+              <div class="col-7 col-md-9">
+                <select class="form-select" id="countryCode" formControlName="countryCode">
                   <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
                 </select>
               </div>
@@ -114,66 +120,78 @@
         <a ngbNavLink>Knight Info</a>
         <ng-template ngbNavContent>
           <div class="panel-body" formGroupName="knightInfo">
-            <div class="form-group row">
-              <label for="memberNumber" class="col-sm-4 col-form-label">Member Number</label>
-              <div class="col-sm-8">
+            <div class="form-group row mb-1">
+              <label for="memberNumber" class="col-5 col-md-3 col-form-label">Member Number</label>
+              <div class="col-7 col-md-9">
                 <input type="text" class="form-control" formControlName="memberNumber" id="memberNumber">
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="mailReturned" class="col-sm-4 col-form-label">Mail Returned</label>
-              <div class="col-sm-8">
-                <input type="checkbox" class="form-control" formControlName="mailReturned" id="mailReturned">
+            <div class="form-group row mb-1">
+              <label for="mailReturned" class="col-5 col-md-3 col-form-label">Mail Returned</label>
+              <div class="col-7 col-md-9">
+                <input type="checkbox" class="form-check-input" formControlName="mailReturned" id="mailReturned">
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="degree" class="col-sm-4 col-form-label">Degree</label>
-              <div class="col-sm-8">
-                <select class="form-control" id="knightInfo_degree" formControlName="degree">
+            <div class="form-group row mb-1">
+              <label for="degree" class="col-5 col-md-3 col-form-label">Degree</label>
+              <div class="col-7 col-md-9">
+                <select class="form-select" id="knightInfo_degree" formControlName="degree">
                   <option *ngFor="let knightDegreeEnum of knightDegrees" [value]="knightDegreeEnum">{{knightDegreeEnum}}</option>
                 </select>
               </div>
             </div>
 
-            <div class="form-group row">
-              <div class="col-md-4">
+            <div class="form-group row mb-1">
+              <div class="col-5 col-md-3">
                 <label for="firstDegreeDate" class="col-form-label">First Degree Date</label>
               </div>
-              <div class="col-md-8 input-group">
-                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="firstDegreeDate" id="firstDegreeDate" ngbDatepicker #fdd="ngbDatepicker" [firstDayOfWeek]="7" (click)="fdd.toggle()">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" (click)="fdd.toggle()" type="button"></button>
+              <div class="col-7 col-md-9">
+                <div class="input-group">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="firstDegreeDate" id="firstDegreeDate" ngbDatepicker #fdd="ngbDatepicker" [firstDayOfWeek]="7" (click)="fdd.toggle()">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="fdd.toggle()" type="button">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="form-group row">
-              <div class="col-md-4">
+            <div class="form-group row mb-1">
+              <div class="col-5 col-md-3">
                 <label for="reentryDate" class="col-form-label">Reentry Date</label>
               </div>
-              <div class="col-md-8 input-group">
-                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="reentryDate" id="reentryDate" ngbDatepicker #rd="ngbDatepicker" [firstDayOfWeek]="7" (click)="rd.toggle()">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" (click)="rd.toggle()" type="button"></button>
+              <div class="col-7 col-md-9">
+                <div class="input-group">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="reentryDate" id="reentryDate" ngbDatepicker #rd="ngbDatepicker" [firstDayOfWeek]="7" (click)="rd.toggle()">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="rd.toggle()" type="button">
+                      <svg class="bi" width="24" height="24" fill="currentColor">
+                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="memberType" class="col-sm-4 col-form-label">Member Type</label>
-              <div class="col-sm-8">
-                <select class="form-control" id="knightInfo_memberType" formControlName="memberType">
+            <div class="form-group row mb-1">
+              <label for="memberType" class="col-5 col-md-3 col-form-label">Member Type</label>
+              <div class="col-7 col-md-9">
+                <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
                   <option *ngFor="let knightMemberTypeEnum of knightMemberTypeEnums" [value]="knightMemberTypeEnum">{{knightMemberTypeEnum}}</option>
                 </select>
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="memberClass" class="col-sm-4 col-form-label">Member Class</label>
-              <div class="col-sm-8">
-                <select class="form-control" id="knightInfo_memberClass" formControlName="memberClass">
+            <div class="form-group row mb-1">
+              <label for="memberClass" class="col-5 col-md-3 col-form-label">Member Class</label>
+              <div class="col-7 col-md-9">
+                <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
                   <option *ngFor="let knightMemberClassEnum of knightMemberClassEnums" [value]="knightMemberClassEnum">{{knightMemberClassEnum}}</option>
                 </select>
               </div>
@@ -186,15 +204,17 @@
       <ng-container ngbNavItem>
         <a ngbNavLink>Activities</a>
         <ng-template ngbNavContent>
-          <div class="form-group row" *ngFor="let activityCategory of activityCategories">
+          <div class="form-group row mb-1" *ngFor="let activityCategory of activityCategories">
             <div class="container">
-              <h4 class="col-sm-4 col-form-label">{{activityCategory.categoryName}}</h4>
+              <h4 class="col-5 col-md-3 col-form-label">{{activityCategory.categoryName}}</h4>
             </div>
             <div class="container">
               <ng-container *ngFor="let activity of filterActivitiesByCategoryId(activityCategory.activityCategoryId)">
-                <div class="form-group row">
-                  <label class="col-md-4 form-label">{{activity.activityName}}</label>
-                  <input class="col-md-8 form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+                <div class="form-group row mb-1">
+                  <label class="col-5 col-md-3 form-label">{{activity.activityName}}</label>
+                  <div class="col-7 col-md-9">
+                    <input class="form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+                  </div>
                 </div>
               </ng-container>
             </div>

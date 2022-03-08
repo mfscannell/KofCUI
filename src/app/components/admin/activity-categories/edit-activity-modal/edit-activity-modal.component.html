@@ -11,7 +11,7 @@
         <ng-container ngbNavItem>
           <a ngbNavLink>Activity Information</a>
           <ng-template ngbNavContent>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="activityName" class="col-form-label">Activity Name</label>
               </div>
@@ -19,7 +19,7 @@
                 <input type="text" class="form-control" formControlName="activityName" id="activityName" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="activityDescription" class="col-form-label">Activity Description</label>
               </div>
@@ -27,12 +27,12 @@
                 <textarea class="form-control" formControlName="activityDescription" id="activityDescription" rows="4"></textarea>
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
                 <label for="activityCategory" class="col-form-label">Activity Category</label>
               </div>
               <div class="col-8 col-md-9">
-                <select class="form-control" id="activityCategory" formControlName="activityCategoryId">
+                <select class="form-select" id="activityCategory" formControlName="activityCategoryId">
                   <option *ngFor="let activityCategory of activityCategories" [value]="activityCategory.activityCategoryId">{{activityCategory.categoryName}}</option>
                 </select>
               </div>
@@ -45,9 +45,9 @@
           <ng-template ngbNavContent>
             <ng-container formArrayName="activityCoordinatorsList">
               <ng-container *ngFor="let coordinator of activityCoordinators.controls; let i = index;">
-                <div class="form-group row" [formGroupName]="i">
+                <div class="form-group row mb-1" [formGroupName]="i">
                   <div class="col-8 col-md-10">
-                    <select class="form-control" id="activityCoordinatorKnightId" formControlName="knightId">
+                    <select class="form-select" id="activityCoordinatorKnightId" formControlName="knightId">
                       <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
                     </select>
                   </div>
@@ -62,7 +62,7 @@
               </ng-container>
             </ng-container>
             <div class="container">
-              <div class="form-group row">
+              <div class="form-group mb-1">
                 <button type="button" class="btn btn-primary" (click)="addActivityCoordinator()">Add Coordinator</button>
               </div>
             </div>
