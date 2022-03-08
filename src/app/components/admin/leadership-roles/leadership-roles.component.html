@@ -1,14 +1,14 @@
 <div class="container">
   <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
     <ngb-panel *ngFor='let leadershipRoleCategory of leadershipRoleCategories'>
-      <ng-template ngbPanelHeader>
-        <div class="d-flex align-items-center justify-content-between">
-          <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory.categoryName}}</button>
+      <ng-template ngbPanelHeader let-opened="opened">
+        <div class="accordion-button custom-header justify-content-between" [class.collapsed]="!opened">
           <button type="button" class="btn btn-primary" (click)="openEditLeadershipRoleCategoryModal(leadershipRoleCategory)">
-            <svg class="bi" width="20" height="20" fill="currentColor">
+            <svg class="bi" width="22" height="22" fill="currentColor">
               <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
             </svg>
           </button>
+          <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory.categoryName}}</button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
@@ -19,7 +19,7 @@
             </div>
             <div class="col-6 col-md-2">
               <div class="btn-toolbar text-center mt-1">
-                <button type="button" class="btn btn-primary mr-1" (click)="openEditLeadershipRoleModal(leadershipRole)">
+                <button type="button" class="btn btn-primary me-1" (click)="openEditLeadershipRoleModal(leadershipRole)">
                   <svg class="bi" width="20" height="20" fill="currentColor">
                     <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                   </svg>
@@ -39,7 +39,7 @@
   <div class="row">
     <div class="col-md-12 mt-1">
       <div class="btn-toolbar text-center mt-1">
-        <button type="button" class="btn btn-primary mr-1" (click)="openCreateLeadershipRoleCategoryModal()">Add Category</button>
+        <button type="button" class="btn btn-primary me-1" (click)="openCreateLeadershipRoleCategoryModal()">Add Category</button>
         <button type="button" *ngIf="leadershipRoleCategories.length > 0" class="btn btn-primary" (click)="openCreateLeadershipRoleModal()">Add Leadership Role</button>
       </div>
     </div>
