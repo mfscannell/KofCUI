@@ -14,7 +14,7 @@ In the src/environments/environments.ts file, add a new tenant in the tenants ar
 }
 
 To Start up, run the command
-ng serve --disable-host-check
+ng serve --disable-host-check --configuration development
 
 
 ## Development server
