@@ -41,7 +41,7 @@
               </div>
               <div class="col-7 col-md-9">
                 <div class="input-group">
-                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" ngbDatepicker #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="dob.toggle()" type="button">
                       <svg class="bi" width="24" height="24" fill="currentColor">
@@ -149,7 +149,7 @@
               </div>
               <div class="col-7 col-md-9">
                 <div class="input-group">
-                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="firstDegreeDate" id="firstDegreeDate" ngbDatepicker #fdd="ngbDatepicker" [firstDayOfWeek]="7" (click)="fdd.toggle()">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="firstDegreeDate" id="firstDegreeDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #fdd="ngbDatepicker" [firstDayOfWeek]="7" (click)="fdd.toggle()">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="fdd.toggle()" type="button">
                       <svg class="bi" width="24" height="24" fill="currentColor">
@@ -167,7 +167,7 @@
               </div>
               <div class="col-7 col-md-9">
                 <div class="input-group">
-                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="reentryDate" id="reentryDate" ngbDatepicker #rd="ngbDatepicker" [firstDayOfWeek]="7" (click)="rd.toggle()">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="reentryDate" id="reentryDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #rd="ngbDatepicker" [firstDayOfWeek]="7" (click)="rd.toggle()">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="rd.toggle()" type="button">
                       <svg class="bi" width="24" height="24" fill="currentColor">

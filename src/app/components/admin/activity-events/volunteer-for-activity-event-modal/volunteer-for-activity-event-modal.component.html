@@ -32,7 +32,7 @@
             </div>
             <div class="col-8 col-md-9">
               <div class="input-group">
-                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()">
+                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary calendar" type="button">
                     <svg class="bi" width="20" height="20" fill="currentColor">
