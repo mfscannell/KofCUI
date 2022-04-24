@@ -23,7 +23,6 @@ import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-
 import { UploadKnightsModalComponent } from 'src/app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
 import { HomePageComponent } from 'src/app/components/home-page/home-page.component';
 import { LeadershipRolesComponent } from './components/admin/leadership-roles/leadership-roles.component';
-import { EditLeadershipRoleCategoryModalComponent } from './components/admin/leadership-roles/edit-leadership-role-category-modal/edit-leadership-role-category-modal.component';
 import { EditLeadershipRoleModalComponent } from './components/admin/leadership-roles/edit-leadership-role-modal/edit-leadership-role-modal.component';
 import { ActivityEventsComponent } from './components/admin/activity-events/activity-events.component';
 import { EditActivityEventModalComponent } from './components/admin/activity-events/edit-activity-event-modal/edit-activity-event-modal.component';
@@ -38,6 +37,13 @@ import { AccountComponent } from './components/account/account.component';
 import { AccountPersonalInfoComponent } from './components/account/account-personalInfo/account-personalInfo.component';
 import { AccountInterestsComponent } from './components/account/account-interests/account-interests.component';
 import { SendEmailModalComponent } from './components/admin/activity-events/send-email-modal/send-email-modal.component';
+import { KnightsGuard } from './guards/knights.guard';
+import { LeadershipRolesGuard } from './guards/leadershipRoles.guard';
+import { ActivitiesGuard } from './guards/activities.guard';
+import { ActivityEventsGuard } from './guards/activityEvents.guard';
+import { ConfigsGuard } from './guards/configs.guard';
+import { AdminGuard } from './guards/admin.guard';
+import { AccountGuard } from './guards/account.guard';
 
 @NgModule({
   declarations: [
@@ -59,7 +65,6 @@ import { SendEmailModalComponent } from './components/admin/activity-events/send
     EditKnightModalComponent,
     UploadKnightsModalComponent,
     LeadershipRolesComponent,
-    EditLeadershipRoleCategoryModalComponent,
     EditLeadershipRoleModalComponent,
     ConfigsComponent,
     ActivityEventsComponent,
@@ -78,30 +83,19 @@ import { SendEmailModalComponent } from './components/admin/activity-events/send
       { path: 'aboutKnights', component: AboutKnightsComponent, pathMatch: 'full' },
       { path: 'aboutOurCouncil', component: OurCouncilComponent, pathMatch: 'full' },
       { path: 'upcomingEvents', component: CalendarEventsComponent, pathMatch: 'full' },
-      { path: 'account', component: AccountComponent, pathMatch: 'full' },
-      { path: 'account/interests', component: AccountInterestsComponent, pathMatch: 'full' },
-      { path: 'account/personalInfo', component: AccountPersonalInfoComponent, pathMatch: 'full' },
-      { path: 'admin', component: AdminComponent, pathMatch: 'full' },
-      { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full' },
-      { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full' },
-      { path: 'admin/leadershipRoles', component: LeadershipRolesComponent, pathMatch: 'full' },
-      { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full' },
-      { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full' }
+      { path: 'account', component: AccountComponent, pathMatch: 'full', canActivate: [AccountGuard] },
+      { path: 'account/interests', component: AccountInterestsComponent, pathMatch: 'full', canActivate: [AccountGuard] },
+      { path: 'account/personalInfo', component: AccountPersonalInfoComponent, pathMatch: 'full', canActivate: [AccountGuard] },
+      { path: 'admin', component: AdminComponent, pathMatch: 'full', canActivate: [AdminGuard] },
+      { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full', canActivate: [ActivitiesGuard] },
+      { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },
+      { path: 'admin/leadershipRoles', component: LeadershipRolesComponent, pathMatch: 'full', canActivate: [LeadershipRolesGuard] },
+      { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full', canActivate: [ActivityEventsGuard] },
+      { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full', canActivate: [ConfigsGuard] },
+      { path: '**', redirectTo: '/' }
     ]),
     NgbModule,
     ReactiveFormsModule
-    // CalendarModule.forRoot(
-    //   {
-    //     provide: DateAdapter,
-    //     useFactory: momentAdapterFactory,
-    //   },
-    //   {
-    //     dateFormatter: {
-    //       provide: CalendarDateFormatter,
-    //       useClass: CalendarMomentDateFormatter,
-    //     },
-    //   }
-    // )
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }

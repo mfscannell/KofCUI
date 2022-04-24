@@ -13,6 +13,7 @@ import { KnightInfo } from 'src/app/models/knightInfo';
 import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
   selector: 'kofc-account',
@@ -21,10 +22,9 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';
-  knightId: number = 5; //TODO need to get this from log in.
+  knightId?: number;
   knight?: Knight;
   activityCategories: ActivityCategory[] = [];
-  allActivities: ActivityInterest[] = [];
   getKnightSubscription?: Subscription;
   getActivityCategoriesSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
@@ -44,10 +44,12 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   constructor(
     private knightsService: KnightsService,
-    private activityCategoriesService: ActivityCategoriesService) {
+    private activityCategoriesService: ActivityCategoriesService,
+    private accountsService: AccountsService) {
   }
 
   ngOnInit() {
+    this.knightId = this.accountsService.getKnightId();
     this.getKnight();
     this.getActivityCategories();
   }
@@ -63,7 +65,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   filterActivitiesByCategoryId(activityCategoryId: number) {
-    return this.allActivities.filter(x => x.activityCategoryId == activityCategoryId);
+    return this.knight?.activityInterests.filter(x => x.activityCategoryId == activityCategoryId);
   }
 
   filterActivitiesInterested() {
@@ -75,13 +77,15 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private getKnight() {
-    let knightObserver = {
-      next: (getKnightResponse: Knight) => this.knight = getKnightResponse,
-      error: (err: any) => this.logError('Error getting knight.', err),
-      complete: () => console.log('Knight loaded.')
-    };
-
-    this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+    if (this.knightId) {
+      let knightObserver = {
+        next: (getKnightResponse: Knight) => this.knight = getKnightResponse,
+        error: (err: any) => this.logError('Error getting knight.', err),
+        complete: () => console.log('Knight loaded.')
+      };
+      
+      this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+    }
   }
 
   private getActivityCategories() {

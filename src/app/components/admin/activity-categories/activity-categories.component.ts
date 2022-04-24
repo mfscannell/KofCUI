@@ -10,6 +10,7 @@ import { Activity } from 'src/app/models/activity';
 import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'activity-categories',
@@ -25,6 +26,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   constructor(private activityCategoriesService: ActivityCategoriesService,
     private activitiesService: ActivitiesService,
+    private permissionsService: PermissionsService,
     private modalService: NgbModal)
   {
   }
@@ -42,6 +44,18 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     if (this.activityCategoriesSubscription) {
       this.activityCategoriesSubscription.unsubscribe();
     }
+  }
+
+  canAddActivityCategory() {
+    return this.permissionsService.canAddActivityCategory();
+  }
+
+  canAddActivity() {
+    return this.permissionsService.canAddActivity();
+  }
+
+  canEditActivity(activityId?: number) {
+    return this.permissionsService.canEditActivity(activityId);
   }
 
   private getAllActivityCategories() {

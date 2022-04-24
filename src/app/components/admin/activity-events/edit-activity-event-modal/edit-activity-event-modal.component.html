@@ -19,7 +19,7 @@
             </div>
             <div class="col-8 col-md-9">
               <select class="form-select" id="activityId" formControlName="activityId" (change)='onChangeActivity($event)'>
-                <option *ngFor="let activity of allActivities" [value]="activity.activityId">{{activity.activityName}}</option>
+                <option *ngFor="let activity of selectableActivities" [value]="activity.activityId">{{activity.activityName}}</option>
               </select>
             </div>
           </div>
