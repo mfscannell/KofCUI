@@ -15,6 +15,7 @@ import { MonthName } from 'src/app/models/monthName';
 import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
   selector: 'app-account-personalInfo',
@@ -22,7 +23,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   styleUrls: ['./account-personalInfo.component.css']
 })
 export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
-  knightId: number = 5; //TODO need to get this from log in.
+  knightId?: number;
   knight?: Knight;
   getKnightSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
@@ -35,6 +36,7 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     private knightsService: KnightsService,
+    private accountService: AccountsService,
     private router: Router
   ) {
     var today = new Date();
@@ -88,6 +90,7 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.knightId = this.accountService.getKnightId();
     this.getKnight();
   }
 
@@ -102,13 +105,15 @@ export class AccountPersonalInfoComponent implements OnInit, OnDestroy {
   }
 
   private getKnight() {
-    let knightObserver = {
-      next: (getKnightResponse: Knight) => this.patchKnightForm(getKnightResponse),
-      error: (err: any) => this.logError('Error getting knight.', err),
-      complete: () => console.log('Knight loaded.')
-    };
-
-    this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+    if (this.knightId) {
+      let knightObserver = {
+        next: (getKnightResponse: Knight) => this.patchKnightForm(getKnightResponse),
+        error: (err: any) => this.logError('Error getting knight.', err),
+        complete: () => console.log('Knight loaded.')
+      };
+  
+      this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+    }
   }
 
   private patchKnightForm(knight: Knight) {

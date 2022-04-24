@@ -19,7 +19,7 @@
             </div>
             <div class="col-6 col-md-4">
               <div class="btn-toolbar text-center mt-1">
-                <button type="button" class="btn btn-primary me-1" (click)="openEditActivityModal(activity)">
+                <button *ngIf="canEditActivity(activity.activityId)" type="button" class="btn btn-primary me-1" (click)="openEditActivityModal(activity)">
                   <svg class="bi" width="20" height="20" fill="currentColor">
                     <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                   </svg>
@@ -39,8 +39,8 @@
   <div class="row">
     <div class="col-md-12 mt-1">
       <div class="btn-toolbar text-center mt-1">
-        <button type="button" class="btn btn-primary me-1" (click)="openCreateActivityCategoryModal()">Add Category</button>
-        <button type="button" *ngIf="activityCategories.length > 0" class="btn btn-primary" (click)="openCreateActivityModal()">Add Activity</button>
+        <button *ngIf="canAddActivityCategory()" type="button" class="btn btn-primary me-1" (click)="openCreateActivityCategoryModal()">Add Category</button>
+        <button type="button" *ngIf="canAddActivity() && activityCategories.length > 0" class="btn btn-primary" (click)="openCreateActivityModal()">Add Activity</button>
       </div>
     </div>
   </div>

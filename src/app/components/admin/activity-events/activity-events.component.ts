@@ -16,6 +16,7 @@ import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { VolunteerForActivityEventModalComponent } from './volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { SendEmailModalComponent } from './send-email-modal/send-email-modal.component';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -42,6 +43,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     private activityEventsService: ActivityEventsService,
     private activitiesService: ActivitiesService,
     private knightsService: KnightsService,
+    private permissionsService: PermissionsService,
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter,
     private modalService: NgbModal) {
@@ -67,6 +69,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     if (this.getAllActivitiesSubscription) {
       this.getAllActivitiesSubscription.unsubscribe();
     }
+  }
+
+  canAddEvent() {
+    return this.permissionsService.canAddEvent(this.allActivities);
+  }
+
+  canEditEvent(activityId: number) {
+    return this.permissionsService.canEditEvent(activityId);
   }
 
   getAllActivityEvents() {
@@ -108,7 +118,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       complete: () => console.log('All knights loaded.')
     };
 
-    this.getAllKnightsSubscription = this.knightsService.getAllKnights().subscribe(knightsObserver);
+    this.getAllKnightsSubscription = this.knightsService.getAllKnightsNames().subscribe(knightsObserver);
   }
 
   openEditActivityEventModal(activityEvent: ActivityEvent) {

@@ -1,15 +1,18 @@
+import { LeadershipRoleCategoryEnums } from "../enums/leadershipRoleCategoryEnums";
+import { LeadershipRole } from "./leadershipRole";
+
 export class LeadershipRoleCategory {
-    leadershipRoleCategoryId: number = 0;
-    categoryName: string = '';
+    categoryName: LeadershipRoleCategoryEnums = LeadershipRoleCategoryEnums.Director;
+    leadershipRoles: LeadershipRole[] = [];
 
     public constructor(
         fields?: {
-            leadershipRoleCategoryId? : number,
-            categoryName?: string
+            categoryName?: LeadershipRoleCategoryEnums,
+            leadershipRoles: LeadershipRole[]
     }) {
         if (fields) {
-            this.leadershipRoleCategoryId = fields.leadershipRoleCategoryId || this.leadershipRoleCategoryId;
             this.categoryName = fields.categoryName || this.categoryName;
+            this.leadershipRoles = fields.leadershipRoles || this.leadershipRoles;
         }
     }
 }

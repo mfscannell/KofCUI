@@ -6,13 +6,18 @@ import {
     HttpEvent
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 import { TenantService } from 'src/app/services/tenant.service';
 import { environment } from 'src/environments/environment';
+import { AccountsService } from '../services/accounts.service';
+import { LogInResponse } from '../models/responses/logInResponse';
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
-    constructor(private tenantService: TenantService) {
+    constructor(
+        private tenantService: TenantService,
+        private accountsService: AccountsService) {
 
     }
 
@@ -20,12 +25,14 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         let apiBaseUrl = environment.apiBaseUrl;
         let tenantId = this.tenantService.getTenantId();
         let url = `${apiBaseUrl}${tenantId}/${httpRequest.url}`;
+        let token = this.accountsService.getToken();
 
         return next.handle(httpRequest.clone({
             url: url,
             setHeaders: {
                 'Content-Type': 'application/json; charset=utf-8',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         }));
     }

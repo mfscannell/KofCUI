@@ -92,7 +92,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       complete: () => console.log('Knights updated.')
     };
 
-    this.getAllKnightsSubscription = this.knightsService.getAllKnights().subscribe(knightsObserver);
+    this.getAllKnightsSubscription = this.knightsService.getAllKnightsNames().subscribe(knightsObserver);
   }
 
   get activityCoordinators() {

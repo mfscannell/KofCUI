@@ -1,17 +1,17 @@
 <div class="container">
-  <div class="row">
+  <div class="row" *ngIf="canActivateKnights()">
     <a class="nav-link" routerLink="/admin/knights" routerLinkActiver="active">Knights Roster</a>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="canActivateLeadershipRoles()">
     <a class="nav-link" routerLink="/admin/leadershipRoles" routerLinkActiver="active">Leadership Roles</a>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="canActivateActivities()">
     <a class="nav-link" routerLink="/admin/activities" routerLinkActiver="active">Activities</a>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="canActivateActiviyEvents()">
     <a class="nav-link" routerLink="/admin/activityEvents" routerLinkActiver="active">Events</a>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="canActivateConfigs()">
     <a class="nav-link" routerLink="/admin/configSettings" routerLinkActiver="active">Configuration</a>
   </div>
 </div>

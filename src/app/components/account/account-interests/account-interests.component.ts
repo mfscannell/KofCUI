@@ -15,6 +15,7 @@ import { ActivityCategoriesService } from 'src/app/services/activityCategories.s
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
+import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
   selector: 'kofc-account-interests',
@@ -23,7 +24,7 @@ import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/up
 })
 export class AccountInterestsComponent implements OnInit, OnDestroy {
   editKnightActivityInterestsForm: FormGroup;
-  knightId: number = 5; //TODO need to get this from log in.
+  knightId?: number;
   knight?: Knight;
   activityCategories: ActivityCategory[] = [];
   allActivities: ActivityInterest[] = [];
@@ -36,12 +37,14 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
   constructor(
     private knightsService: KnightsService,
     private activityCategoriesService: ActivityCategoriesService,
-    private router: Router
+    private router: Router,
+    private accountsService: AccountsService
   ) {
     this.editKnightActivityInterestsForm = new FormGroup({});
   }
 
   ngOnInit() {
+    this.knightId = this.accountsService.getKnightId();
     this.getKnight();
     this.getActivityCategories();
   }
@@ -61,13 +64,15 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
   }
 
   private getKnight() {
-    let knightObserver = {
-      next: (getKnightResponse: Knight) => this.patchKnightForm(getKnightResponse),
-      error: (err: any) => this.logError('Error getting knight.', err),
-      complete: () => console.log('Knight loaded.')
-    };
+    if (this.knightId) {
+      let knightObserver = {
+        next: (getKnightResponse: Knight) => this.patchKnightForm(getKnightResponse),
+        error: (err: any) => this.logError('Error getting knight.', err),
+        complete: () => console.log('Knight loaded.')
+      };
 
-    this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+      this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+    }
   }
 
   private patchKnightForm(knight: Knight) {
@@ -98,17 +103,19 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
   }
 
   private updateKnightActivityInterests(knightActivityInterests: ActivityInterest[]) {
-    let knightObserver = {
-      next: (response: ActivityInterest[]) => this.passBackResponse(response),
-      error: (err: any) => this.logError("Error Updating Knight Activity Interests.", err),
-      complete: () => console.log('Knight Activity Interests updated.')
-    };
-
-    let request = new UpdateKnightActivityInterestsRequest({
-      knightId: this.knightId,
-      activityInterests: knightActivityInterests});
-
-    this.updateKnightActivityInterestSubscription = this.knightsService.updateKnightActivityInterest(request).subscribe(knightObserver);
+    if (this.knightId) {
+      let knightObserver = {
+        next: (response: ActivityInterest[]) => this.passBackResponse(response),
+        error: (err: any) => this.logError("Error Updating Knight Activity Interests.", err),
+        complete: () => console.log('Knight Activity Interests updated.')
+      };
+  
+      let request = new UpdateKnightActivityInterestsRequest({
+        knightId: this.knightId,
+        activityInterests: knightActivityInterests});
+  
+      this.updateKnightActivityInterestSubscription = this.knightsService.updateKnightActivityInterest(request).subscribe(knightObserver);
+    }
   }
 
   private passBackResponse(activityInterests: ActivityInterest[]) {
