@@ -8,6 +8,7 @@ import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 import { LeadershipRoleCategory } from 'src/app/models/leadershipRoleCategory';
+import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategoryEnums';
 
 @Component({
   selector: 'kofc-edit-leadership-role-modal',
@@ -18,7 +19,6 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
   @Input() leadershipRole?: LeadershipRole = this.getDefaultLeadershipRole();
-  @Input() leadershipRoleCategories?: LeadershipRoleCategory[];
   @Input() allKnights: Knight[] = [];
   updateLeadershipRoleSubscription?: Subscription;
   createLeadershipRoleSubscription?: Subscription;
@@ -32,9 +32,9 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
     this.editLeadershipRoleForm = this.fb.group({
       leadershipRoleId: [''],
       title: [''],
-      leadershipRoleCategoryId: [''],
       occupied: [false],
-      knightId: ['']
+      knightId: [''],
+      leadershipRoleCategory: ['']
      });
   }
 
@@ -43,9 +43,9 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
       this.editLeadershipRoleForm.patchValue({
         leadershipRoleId: this.leadershipRole.leadershipRoleId,
         title: this.leadershipRole.title,
-        leadershipRoleCategoryId: this.leadershipRole.leadershipRoleCategoryId,
         occupied: this.leadershipRole.occupied,
-        knightId: this.leadershipRole.knightId
+        knightId: this.leadershipRole.knightId,
+        leadershipRoleCategory: this.leadershipRole.leadershipRoleCategory
        });
     }
 
@@ -72,8 +72,6 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
 
       return 0;
     });
-
-    let something = 5;
   }
 
   ngOnDestroy() {
@@ -86,19 +84,17 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  isReadonly() {
+    return this.leadershipRole?.leadershipRoleCategory === LeadershipRoleCategoryEnums.Officer;
+  }
+
   private getDefaultLeadershipRole() {
-    let leadershipRoleCategoryId = 0;
-
-    if (this.leadershipRoleCategories && this.leadershipRoleCategories.length > 0) {
-      leadershipRoleCategoryId = this.leadershipRoleCategories[0].leadershipRoleCategoryId;
-    }
-
     return new LeadershipRole({
       leadershipRoleId: 0,
       title: '',
-      leadershipRoleCategoryId: leadershipRoleCategoryId || 0,
       knightId: 0,
-      occupied: false
+      occupied: false,
+      leadershipRoleCategory: LeadershipRoleCategoryEnums.Director
     });
   }
 

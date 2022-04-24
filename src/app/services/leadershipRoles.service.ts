@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { LeadershipRole } from 'src/app/models/leadershipRole';
+import { LeadershipRoleCategory } from '../models/leadershipRoleCategory';
 
 @Injectable({
     providedIn: 'root'
@@ -13,9 +14,8 @@ export class LeadershipRolesService {
 
     }
 
-    getAllLeadershipRoles(): Observable<LeadershipRole[]> {
-        //TODO all routes should pull the council ID from somewhere
-        return this.http.get<LeadershipRole[]>('leadershipRoles');
+    getAllLeadershipRoles(): Observable<LeadershipRoleCategory[]> {
+        return this.http.get<LeadershipRoleCategory[]>('leadershipRoles');
     }
 
     updateLeadershipRole(updatedLeadershipRole: LeadershipRole): Observable<LeadershipRole> {

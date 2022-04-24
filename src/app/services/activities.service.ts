@@ -16,7 +16,6 @@ export class ActivitiesService {
     }
 
     getAllActivities(): Observable<Activity[]> {
-        //TODO all routes should pull the council ID from somewhere
         return this.http.get<Activity[]>('activities');
     }
 

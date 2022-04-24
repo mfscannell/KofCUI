@@ -1,24 +1,26 @@
+import { LeadershipRoleCategoryEnums } from "../enums/leadershipRoleCategoryEnums";
+
 export class LeadershipRole {
     leadershipRoleId?: number;
     title: string = "";
-    leadershipRoleCategoryId: number = 0;
     knightId?: number;
     occupied: boolean = false;
+    leadershipRoleCategory: LeadershipRoleCategoryEnums = LeadershipRoleCategoryEnums.Director;
 
     public constructor(
         fields?: {
             leadershipRoleId?: number,
             title?: string,
-            leadershipRoleCategoryId?: number,
             knightId?: number,
-            occupied: boolean
+            occupied: boolean,
+            leadershipRoleCategory: LeadershipRoleCategoryEnums
     }) {
         if (fields) {
             this.leadershipRoleId = fields.leadershipRoleId || this.leadershipRoleId;
             this.title = fields.title || this.title;
-            this.leadershipRoleCategoryId = fields.leadershipRoleCategoryId || this.leadershipRoleCategoryId;
             this.knightId = fields.knightId || this.knightId;
             this.occupied = fields.occupied || this.occupied;
+            this.leadershipRoleCategory = fields.leadershipRoleCategory || this.leadershipRoleCategory;
         }
     }
 }

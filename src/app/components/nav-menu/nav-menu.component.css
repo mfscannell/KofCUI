@@ -20,6 +20,10 @@
     color: rgb(255, 255, 255);
 }
 
+.signInDropDown {
+    width: 500px;
+}
+
 /* @media only screen and (max-width: 400px) {
     #navigationLogo {
         width: 200px;

@@ -23,6 +23,10 @@ export class KnightsService {
         return this.http.get<Knight[]>('knights');
     }
 
+    getAllKnightsNames(): Observable<Knight[]> {
+        return this.http.get<Knight[]>('knights/namesOnly');
+    }
+
     createKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
         return this.http.post<Knight>('knights/withAllActivities', knight);
     }

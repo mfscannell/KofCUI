@@ -16,6 +16,7 @@ import { EventVolunteer } from 'src/app/models/eventVolunteer';
 import { Knight } from 'src/app/models/knight';
 import { TimeZone } from 'src/app/models/timeZone';
 import { ConfigsService } from 'src/app/services/configs.service';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'kofc-edit-activity-event-modal',
@@ -28,12 +29,12 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() activityEvent?: ActivityEvent;
   @Input() allKnights: Knight[] = [];
   @Input() allActivities: Activity[] = [];
+  selectableActivities: Activity[] = [];
   updateActivityEventSubscription?: Subscription;
   createActivityEventSubscription?: Subscription;
   getCouncilTImeZoneSubscription?: Subscription;
   councilTimeZone: TimeZone = new TimeZone();
   editActivityEventForm: FormGroup;
-  //allVolunteerRoles: VolunteerSignUpRole[] = [];
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
   errorSaving: boolean = false;
@@ -42,7 +43,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   constructor(
     public activeModal: NgbActiveModal,
     private activityEventsService: ActivityEventsService,
-    private configsService: ConfigsService) {
+    private configsService: ConfigsService,
+    private permissionsService: PermissionsService) {
       var today = new Date();
       this.editActivityEventForm = new FormGroup({
         activityEventId: new FormControl(''),
@@ -87,6 +89,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
+    this.selectableActivities = this.permissionsService.filterActivitiesByEventCreation(this.allActivities);
+
     if (this.activityEvent) {
       this.editActivityEventForm.patchValue({
         activityEventId: this.activityEvent.activityEventId,
@@ -194,10 +198,10 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
   onChangeActivity(event: any) {
     console.log(event);
-    let eventNameIndex = this.allActivities.findIndex(x => x.activityId == event.target.value);
+    let eventNameIndex = this.selectableActivities.findIndex(x => x.activityId == event.target.value);
 
     if (eventNameIndex >= 0) {
-      let eventName = this.allActivities[eventNameIndex].activityName;
+      let eventName = this.selectableActivities[eventNameIndex].activityName;
       this.editActivityEventForm.controls["eventName"].setValue(eventName);
     }
   }

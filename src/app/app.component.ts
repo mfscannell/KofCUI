@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import { LogInRequest } from './models/requests/logInRequest';
+import { LogInResponse } from './models/responses/logInResponse';
+import { AccountsService } from './services/accounts.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +11,7 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit {
 
-  constructor() {
-
+  constructor(private accountsService: AccountsService) {
   }
 
   ngOnInit() {

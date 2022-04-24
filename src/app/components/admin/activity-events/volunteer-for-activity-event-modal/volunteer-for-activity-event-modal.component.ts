@@ -15,6 +15,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
 import { Knight } from 'src/app/models/knight';
 import { VolunteerForActivityEventRequest } from 'src/app/models/requests/volunteerForActivityEventRequest';
+import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
   selector: 'kofc-volunteer-for-activity-event-modal',
@@ -25,7 +26,7 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   @Input() modalHeaderText: string = '';
   @Input() activityEvent?: ActivityEvent;
   @Input() allKnights: Knight[] = [];
-  knightId: number = 5; //TODO need to get this from log in.
+  knightId?: number;
   updateVolunteerForActivityEventSubscription?: Subscription;
   volunteerForActivityEventForm: FormGroup;
   countries: Country[] = Country.AllCountries;
@@ -35,7 +36,8 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
 
   constructor(
     public activeModal: NgbActiveModal,
-    private activityEventsService: ActivityEventsService) {
+    private activityEventsService: ActivityEventsService,
+    private accountsService: AccountsService) {
     var today = new Date();
     this.volunteerForActivityEventForm = new FormGroup({
       activityEventId: new FormControl(''),
@@ -78,6 +80,8 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   }
 
   ngOnInit() {
+    this.knightId = this.accountsService.getKnightId();
+
     if (this.activityEvent) {
       this.volunteerForActivityEventForm.patchValue({
         activityEventId: this.activityEvent.activityEventId,
@@ -199,6 +203,10 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   }
 
   onSubmitVolunteerForActivityEvent() {
+    if (!this.knightId) {
+      return;
+    }
+    
     let knightId = this.knightId;
     let activityEventId = this.activityEvent?.activityEventId || 0;
     let volunteerSignUpRoles: number[] = [];
