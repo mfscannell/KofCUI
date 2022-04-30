@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Knight } from 'src/app/models/knight';
 import { ActivityInterest } from 'src/app/models/activityInterest'
 import { UpdateKnightActivityInterestsRequest } from '../models/requests/updateKnightActivityInterestsRequest';
+import { UpdateKnightPasswordRequest } from '../models/requests/updateKnightPasswordRequest';
+import { UpdateKnightPasswordResponse } from '../models/responses/updateKnightPasswordResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -41,6 +43,10 @@ export class KnightsService {
 
     updateKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
         return this.http.put<Knight>(`knights/${knight?.knightId}/withAllActivities`, knight);
+    }
+
+    updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<UpdateKnightPasswordResponse> {
+        return this.http.put<UpdateKnightPasswordResponse>(`knights/${request?.knightId}/password`, request);
     }
 
     updateKnightActivityInterest(updateKnightActivityInterestsRequest: UpdateKnightActivityInterestsRequest) : Observable<ActivityInterest[]> {
