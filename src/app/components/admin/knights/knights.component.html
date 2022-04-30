@@ -12,6 +12,7 @@
         <th>Last Name</th>
         <th></th>
         <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +23,13 @@
           <button type="button" class="btn btn-primary" (click)="openEditKnightModal(knight)">
             <svg class="bi" width="24" height="24" fill="currentColor">
               <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+            </svg>
+          </button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-primary" (click)="openEditKnightPassword(knight)">
+            <svg class="bi" width="24" height="24" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
             </svg>
           </button>
         </td>
