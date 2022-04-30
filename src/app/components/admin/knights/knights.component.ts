@@ -11,6 +11,7 @@ import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-knight-modal/edit-knight-modal.component';
 import { UploadKnightsModalComponent } from 'src/app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
+import { EditKnightPasswordModalComponent } from './edit-knight-password-modal/edit-knight-password-modal.component';
 
 @Component({
   selector: 'knights',
@@ -80,6 +81,22 @@ export class KnightsComponent implements OnInit, OnDestroy {
     }).catch((error) => {
       if (error !== 0) {
         console.log('Error from Edit Knight Modal.');
+        console.log(error);
+      }
+    });
+  }
+
+  openEditKnightPassword(knight: Knight) {
+    const modalRef = this.modalService.open(EditKnightPasswordModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
+
+    modalRef.componentInstance.knight = knight;
+    modalRef.componentInstance.modalHeaderText = 'Editing Knight Password';
+    modalRef.result.then((result: Knight) => {
+      if (result) {
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        console.log('Error from Edit Knight Password Modal.');
         console.log(error);
       }
     });

@@ -29,7 +29,7 @@
             <li ngbDropdownItem *ngFor="let extLink of externalLinks"><a class="dropdown-item" href="{{extLink.url}}">{{extLink.websiteName}}</a></li>
           </ul>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item active" *ngIf="(accountsService.currentUser | async) as user">
           <a class="nav-link" routerLink="/admin" (click)="isMenuCollapsed = true" routerLinkActiver="active">Admin</a>
         </li>
       </ul>

@@ -44,6 +44,7 @@ import { ActivityEventsGuard } from './guards/activityEvents.guard';
 import { ConfigsGuard } from './guards/configs.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { AccountGuard } from './guards/account.guard';
+import { EditKnightPasswordModalComponent } from './components/admin/knights/edit-knight-password-modal/edit-knight-password-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { AccountGuard } from './guards/account.guard';
     EditActivityModalComponent,
     KnightsComponent,
     EditKnightModalComponent,
+    EditKnightPasswordModalComponent,
     UploadKnightsModalComponent,
     LeadershipRolesComponent,
     EditLeadershipRoleModalComponent,
