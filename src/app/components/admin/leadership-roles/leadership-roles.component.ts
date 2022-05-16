@@ -7,7 +7,6 @@ import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { EditLeadershipRoleModalComponent } from 'src/app/components/admin/leadership-roles/edit-leadership-role-modal/edit-leadership-role-modal.component';
 import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
-import { LeadershipRoleCategory } from 'src/app/models/leadershipRoleCategory';
 import { KnightsService } from 'src/app/services/knights.service';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategoryEnums';
@@ -20,7 +19,8 @@ import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategor
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   allKnights: Knight[] = [];
-  leadershipRoleCategories: LeadershipRoleCategory[] = [];
+  leadershipRoles: LeadershipRole[] = [];
+  leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(LeadershipRoleCategoryEnums);
   knightsLoaded: boolean = false;
   knightsSubscription?: Subscription;
   leadershipRolesSubscription?: Subscription;
@@ -63,11 +63,19 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
   private getAllLeadershipRoles() {
     let leadershipRolesObserver = {
-      next: (leadershipRoleCategories: LeadershipRoleCategory[]) => this.leadershipRoleCategories = leadershipRoleCategories,
+      next: (leadershipRoles: LeadershipRole[]) => this.leadershipRoles = leadershipRoles,
       error: (err: any) => console.log(`${err}`),
       complete: () => console.log('Leadership Roles loaded.')
     };
     this.leadershipRolesSubscription = this.leadershipRolesService.getAllLeadershipRoles().subscribe(leadershipRolesObserver);
+  }
+
+  filterLeadershipRoles(leadershipRoleCategory: LeadershipRoleCategoryEnums) {
+    if (this.leadershipRoles) {
+      return this.leadershipRoles.filter(x => x.leadershipRoleCategory === leadershipRoleCategory);
+    }
+
+    return [];
   }
 
   openCreateLeadershipRoleModal() {
@@ -82,11 +90,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.modalAction = ModalActionEnums.Create;
     modalRef.result.then((result: LeadershipRole) => {
       if (result) {
-        this.leadershipRoleCategories.forEach((category) => {
-          if (category.categoryName === LeadershipRoleCategoryEnums.Director) {
-            category.leadershipRoles.push(result);
-          }
-        });
+        this.leadershipRoles.push(result);
       }
     }).catch((error) => {
       if (error !== 0) {
@@ -116,12 +120,10 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   private updateLeadershipRoleInList(leadershipRole: LeadershipRole) {
-    this.leadershipRoleCategories.forEach((category) => {
-      var ind = category.leadershipRoles.findIndex(lr => lr.leadershipRoleId === leadershipRole.leadershipRoleId);
+    let index = this.leadershipRoles?.findIndex(x => x.leadershipRoleId == leadershipRole.leadershipRoleId)
 
-      if (ind > -1) {
-        category.leadershipRoles[ind] = leadershipRole;
-      }
-    });
+    if (this.leadershipRoles && index !== undefined && index >= 0) {
+      this.leadershipRoles[index] = leadershipRole;
+    }
   }
 }

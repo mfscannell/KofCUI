@@ -7,7 +7,6 @@ import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
-import { LeadershipRoleCategory } from 'src/app/models/leadershipRoleCategory';
 import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategoryEnums';
 
 @Component({

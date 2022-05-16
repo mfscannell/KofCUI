@@ -54,7 +54,9 @@ export class CalendarEventsComponent implements OnInit {
     let beginDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, 1);
     let endDate = DateTimeFormatter.ToIso8601Date(endDateDate.getFullYear(), endDateDate.getMonth(), 1);
 
-    this.getAllUpcomingEventsSubscription = this.activityEventsService.getAllUpcomingEvents(beginDate, endDate).subscribe(activityEventsObserver);
+    if (beginDate && endDate) {
+      this.getAllUpcomingEventsSubscription = this.activityEventsService.getAllUpcomingEvents(beginDate, endDate).subscribe(activityEventsObserver);
+    }
   }
 
   private setEventsForCalendar(upcomingEvents: UpcomingEvent[]) {

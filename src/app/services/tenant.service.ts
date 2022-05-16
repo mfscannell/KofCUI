@@ -13,15 +13,38 @@ export class TenantService {
     }
 
     getTenantId() {
-        let tenantName = location.hostname.split('.')[0];
+        let tenantName = location.host.split('.')[0];
         let tenantId = '';
-        let tenant = environment.tenants.find(t => t.tenantName === tenantName)
+        let tenant = environment.tenants.find(t => t.tenantName === tenantName);
 
         if (tenant) {
             tenantId = tenant.tenantId;
         }
 
         return tenantId;
+    }
+
+    goingToBasePage() {
+        let domains = location.host.split('.');
+        let usingBasePage = domains.length === environment.numDomains - 1;
+
+        return usingBasePage;
+    }
+
+    tenantExists() {
+        let domains = location.host.split('.');
+        let tenantExists = false;
+
+        if (domains.length === environment.numDomains) {
+            let tenantName = domains[0];
+            let tenant = environment.tenants.find(t => t.tenantName === tenantName);
+
+            if (tenant) {
+                tenantExists = true;
+            }
+        }
+
+        return tenantExists;
     }
 
     // getTenantForHostname(hostname: string): Tenant {

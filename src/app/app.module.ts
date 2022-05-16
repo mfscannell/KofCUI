@@ -13,7 +13,6 @@ import { AppComponent } from './app.component';
 import { HttpConfigInterceptor } from './config/httpConfig.interceptor';
 
 import { ActivityCategoriesComponent } from 'src/app/components/admin/activity-categories/activity-categories.component';
-import { EditActivityCategoryModalComponent } from './components/admin/activity-categories/edit-activity-category-modal/edit-activity-category-modal.component';
 import { EditActivityModalComponent } from './components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
 import { NavMenuComponent } from 'src/app/components/nav-menu/nav-menu.component';
 
@@ -60,7 +59,6 @@ import { EditKnightPasswordModalComponent } from './components/admin/knights/edi
     ViewUpcomingEventModalComponent,
     AdminComponent,
     ActivityCategoriesComponent,
-    EditActivityCategoryModalComponent,
     EditActivityModalComponent,
     KnightsComponent,
     EditKnightModalComponent,

@@ -48,7 +48,7 @@
               <label for="startTime" class="col-form-label">Start Time</label>
             </div>
             <div class="col-8 col-md-9">
-              <ngb-timepicker [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
+              <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
             </div>
           </div>
           <div class="form-group row mb-1">
@@ -56,7 +56,7 @@
               <label for="endTime" class="col-form-label">End Time</label>
             </div>
             <div class="col-8 col-md-9">
-              <ngb-timepicker [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
+              <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
             </div>
           </div>
           <div class="form-group row mb-1">
@@ -158,10 +158,10 @@
                     <input readonly type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
                   </div>
                   <div class="col-6 col-md-3">
-                    <ngb-timepicker [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
+                    <ngb-timepicker readonly [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
                   </div>
                   <div class="col-6 col-md-3">
-                    <ngb-timepicker [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
+                    <ngb-timepicker readonly [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
                   </div>
                 </div>
                 <div class="form-group row mb-1">
