@@ -25,6 +25,16 @@
           </div>
           <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
+              <label for="activityCategory" class="col-form-label">Activity Category</label>
+            </div>
+            <div class="col-8 col-md-9">
+              <select class="form-select" id="activityCategory" formControlName="activityCategory">
+                <option *ngFor="let activityCategory of activityCategories" [value]="activityCategory">{{activityCategory}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row mb-1">
+            <div class="col-4 col-md-3">
               <label for="eventName" class="col-form-label">Event Name</label>
             </div>
             <div class="col-8 col-md-9">

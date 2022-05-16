@@ -4,13 +4,11 @@ import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
-import { EditActivityCategoryModalComponent } from 'src/app/components/admin/activity-categories/edit-activity-category-modal/edit-activity-category-modal.component';
 import { EditActivityModalComponent } from 'src/app/components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
 import { Activity } from 'src/app/models/activity';
-import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivitiesService } from 'src/app/services/activities.service';
-import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 
 @Component({
   selector: 'activity-categories',
@@ -19,20 +17,17 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   activitiesSubscription?: Subscription;
-  activityCategoriesSubscription?: Subscription;
-  activityCategories: ActivityCategory[] = [];
+  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   activities?: Activity[];
   closeModalResult = '';
 
-  constructor(private activityCategoriesService: ActivityCategoriesService,
-    private activitiesService: ActivitiesService,
+  constructor(private activitiesService: ActivitiesService,
     private permissionsService: PermissionsService,
     private modalService: NgbModal)
   {
   }
 
   ngOnInit() {
-    this.getAllActivityCategories();
     this.getAllActivities();
   }
 
@@ -40,14 +35,6 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     if (this.activitiesSubscription) {
       this.activitiesSubscription.unsubscribe();
     }
-
-    if (this.activityCategoriesSubscription) {
-      this.activityCategoriesSubscription.unsubscribe();
-    }
-  }
-
-  canAddActivityCategory() {
-    return this.permissionsService.canAddActivityCategory();
   }
 
   canAddActivity() {
@@ -56,15 +43,6 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   canEditActivity(activityId?: number) {
     return this.permissionsService.canEditActivity(activityId);
-  }
-
-  private getAllActivityCategories() {
-    let activityCategoriesObserver = {
-      next: (activityCategories: ActivityCategory[]) => this.activityCategories = activityCategories,
-      error: (err: any) => this.logError('Error getting all activity categories.', err),
-      complete: () => console.log('Activity Categories loaded.')
-    };
-    this.activityCategoriesSubscription = this.activityCategoriesService.getAllActivityCategories().subscribe(activityCategoriesObserver);
   }
 
   private getAllActivities() {
@@ -76,55 +54,12 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     this.activitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
   }
 
-  openCreateActivityCategoryModal() {
-    const modalRef = this.modalService.open(EditActivityCategoryModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.modalHeaderText = 'Adding Activity Category';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Create;
-    modalRef.result.then((result: ActivityCategory) => {
-      if (result) {
-        this.activityCategories?.push(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        this.logError('Error from Create Activity Category Modal.', error);
-      }
-    });
-  }
-
-  openEditActivityCategoryModal(activityCategory: ActivityCategory) {
-    const modalRef = this.modalService.open(EditActivityCategoryModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.activityCategory = activityCategory;
-    modalRef.componentInstance.modalHeaderText = 'Editing Activity Category';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
-    modalRef.result.then((result) => {
-      if (result) {
-        this.updateActivityCategoryInList(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        console.log('Error from Edit Activity Category Modal.');
-        console.log(error);
-      }
-    });
-  }
-
-  private updateActivityCategoryInList(activityCategory: ActivityCategory) {
-    let index = this.activityCategories?.findIndex(x => x.activityCategoryId == activityCategory.activityCategoryId)
-
-    if (this.activityCategories && index !== undefined && index >= 0) {
-      this.activityCategories[index] = activityCategory;
-    }
-  }
-
   openCreateActivityModal() {
     const modalRef = this.modalService.open(EditActivityModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
     modalRef.componentInstance.activity = new Activity({
-      activityCategoryId: this.activityCategories[0].activityCategoryId || 0,
+      activityCategory: this.activityCategories[0],
       activityCoordinators: []
     });
-    modalRef.componentInstance.activityCategories = this.activityCategories;
     modalRef.componentInstance.modalHeaderText = 'Creating Activity';
     modalRef.componentInstance.modalAction = ModalActionEnums.Create;
     modalRef.result.then((result: Activity) => {
@@ -143,7 +78,6 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(EditActivityModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.activity = activity;
-    modalRef.componentInstance.activityCategories = this.activityCategories;
     modalRef.componentInstance.modalHeaderText = 'Editing Activity';
     modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
     modalRef.result.then((result: Activity) => {
@@ -165,9 +99,9 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterActivitiesByCategory(activityCategoryId?: number) {
-    if (this.activities && activityCategoryId !== undefined) {
-      return this.activities.filter(x => x.activityCategoryId == activityCategoryId).sort(function(a, b){
+  filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
+    if (this.activities) {
+      return this.activities.filter(x => x.activityCategory === activityCategory).sort(function(a, b){
         if (a.activityName.toLowerCase() < b.activityName.toLowerCase()) {
           return -1;
         }

@@ -3,12 +3,12 @@
     <ngb-panel *ngFor='let leadershipRoleCategory of leadershipRoleCategories'>
       <ng-template ngbPanelHeader let-opened="opened">
         <div class="accordion-button custom-header justify-content-between" [class.collapsed]="!opened">
-          <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory.categoryName}}</button>
+          <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory}}</button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
         <div class="container">
-          <div class="row" *ngFor='let leadershipRole of leadershipRoleCategory.leadershipRoles'>
+          <div class="row" *ngFor='let leadershipRole of filterLeadershipRoles(leadershipRoleCategory)'>
             <div class="col-6 col-md-10">
               {{leadershipRole.title}}
             </div>

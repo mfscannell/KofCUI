@@ -30,6 +30,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
       middleName: new FormControl(),
       lastName: new FormControl(),
       nameSuffix: new FormControl(),
+      accountActivated: new FormControl(),
       password: new FormControl(),
       updatePasswordAtNextLogin: new FormControl()
     });
@@ -42,7 +43,8 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
         firstName: this.knight.firstName,
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
-        nameSuffix: this.knight.nameSuffix
+        nameSuffix: this.knight.nameSuffix,
+        accountActivated: this.knight.knightUser.accountActivated
       });
     }
   }
@@ -62,6 +64,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     let rawForm = this.editKnightPasswordForm.getRawValue();
     let request = new UpdateKnightPasswordRequest({
       knightId: rawForm.knightId,
+      accountActivated: rawForm.accountActivated,
       password: rawForm.password,
       updatePasswordAtNextLogin: rawForm.updatePasswordAtNextLogin
     });

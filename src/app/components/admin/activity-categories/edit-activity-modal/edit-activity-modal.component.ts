@@ -5,11 +5,11 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
-import { ActivityCategory } from 'src/app/models/activityCategory';
 import { Knight } from 'src/app/models/knight';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
+import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 
 @Component({
   selector: 'app-edit-activity-modal',
@@ -20,7 +20,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
   @Input() activity?: Activity;
-  @Input() activityCategories?: ActivityCategory[];
+  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   allKnights: Knight[] = [];
   updateActivitySubscription?: Subscription;
   createActivitySubscription?: Subscription;
@@ -41,7 +41,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityDescription: new FormControl('', [
         Validators.maxLength(255)
       ]),
-      activityCategoryId: new FormControl(null, [
+      activityCategory: new FormControl(null, [
         Validators.required
       ]),
       activityCoordinatorsList: new FormArray([])
@@ -56,7 +56,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
         activityId: this.activity.activityId,
         activityName: this.activity.activityName,
         activityDescription: this.activity.activityDescription,
-        activityCategoryId: this.activity.activityCategoryId
+        activityCategory: this.activity.activityCategory
        });
 
        let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as FormArray;
@@ -140,7 +140,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityId: rawForm.activityId,
       activityName: rawForm.activityName,
       activityDescription: rawForm.activityDescription,
-      activityCategoryId: rawForm.activityCategoryId,
+      activityCategory: rawForm.activityCategory,
       activityCoordinators: activityCoordinators
     });
 

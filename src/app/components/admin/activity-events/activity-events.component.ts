@@ -71,6 +71,10 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatDate(date: string | undefined) {
+    return DateTimeFormatter.ToDisplayedDate(date);
+  }
+
   canAddEvent() {
     return this.permissionsService.canAddEvent(this.allActivities);
   }
@@ -98,7 +102,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         let beginDate = DateTimeFormatter.ToIso8601Date(this.fromDate.year, this.fromDate.month, this.fromDate.day);
         let endDate = DateTimeFormatter.ToIso8601Date(this.toDate.year, this.toDate.month, this.toDate.day);
 
-        this.activityEventsSubscription = this.activityEventsService.getAllActivityEvents(beginDate, endDate).subscribe(activityEventsObserver);
+        if (beginDate && endDate) {
+          this.activityEventsSubscription = this.activityEventsService.getAllActivityEvents(beginDate, endDate).subscribe(activityEventsObserver);
+        }
       }
   }
 

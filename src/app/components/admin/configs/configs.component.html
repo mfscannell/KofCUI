@@ -11,7 +11,7 @@
         <ngb-panel *ngFor="let configGroupFormGroup of configGroupsForm.controls; let i = index;" [formGroupName]="i">
           <ng-template ngbPanelTitle>
             <div class="row">
-              <button class="btn btn-link" >{{getConfigGroupName(i)}}</button>
+              <button type="button" class="btn btn-link" >{{getConfigGroupName(i)}}</button>
             </div>
           </ng-template>
           <ng-template ngbPanelContent>

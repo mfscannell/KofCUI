@@ -32,8 +32,8 @@
                 <label for="activityCategory" class="col-form-label">Activity Category</label>
               </div>
               <div class="col-8 col-md-9">
-                <select class="form-select" id="activityCategory" formControlName="activityCategoryId">
-                  <option *ngFor="let activityCategory of activityCategories" [value]="activityCategory.activityCategoryId">{{activityCategory.categoryName}}</option>
+                <select class="form-select" id="activityCategory" formControlName="activityCategory">
+                  <option *ngFor="let activityCategory of activityCategories" [value]="activityCategory">{{activityCategory}}</option>
                 </select>
               </div>
             </div>

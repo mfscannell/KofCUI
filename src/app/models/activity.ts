@@ -1,10 +1,11 @@
 import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
+import { ActivityCategoryEnums } from '../enums/activityCategoryEnums';
 
 export class Activity {
     activityId?: number;
     activityName: string = "";
     activityDescription: string = "";
-    activityCategoryId: number = 0;
+    activityCategory: ActivityCategoryEnums = ActivityCategoryEnums.Miscellaneous;
     activityCoordinators: ActivityCoordinator[] = [];
 
     public constructor(
@@ -12,14 +13,14 @@ export class Activity {
             activityId? : number,
             activityName?: string,
             activityDescription?: string,
-            activityCategoryId?: number,
+            activityCategory?: ActivityCategoryEnums,
             activityCoordinators: ActivityCoordinator[]
     }) {
         if (fields) {
             this.activityId = fields.activityId || this.activityId;
             this.activityName = fields.activityName || this.activityName;
             this.activityDescription = fields.activityDescription || this.activityDescription;
-            this.activityCategoryId = fields.activityCategoryId || this.activityCategoryId;
+            this.activityCategory = fields.activityCategory || this.activityCategory;
             this.activityCoordinators = fields.activityCoordinators || this.activityCoordinators;
         }
     }
