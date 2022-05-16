@@ -4,18 +4,17 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
 import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
-import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
 import { Knight } from 'src/app/models/knight';
 import { KnightInfo } from 'src/app/models/knightInfo';
-import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
 import { AccountsService } from 'src/app/services/accounts.service';
+import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 
 @Component({
   selector: 'kofc-account-interests',
@@ -26,7 +25,7 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
   editKnightActivityInterestsForm: FormGroup;
   knightId?: number;
   knight?: Knight;
-  activityCategories: ActivityCategory[] = [];
+  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   allActivities: ActivityInterest[] = [];
   getKnightSubscription?: Subscription;
   getActivityCategoriesSubscription?: Subscription;
@@ -36,7 +35,6 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
 
   constructor(
     private knightsService: KnightsService,
-    private activityCategoriesService: ActivityCategoriesService,
     private router: Router,
     private accountsService: AccountsService
   ) {
@@ -46,16 +44,11 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.knightId = this.accountsService.getKnightId();
     this.getKnight();
-    this.getActivityCategories();
   }
 
   ngOnDestroy() {
     if (this.getKnightSubscription) {
       this.getKnightSubscription.unsubscribe;
-    }
-
-    if (this.getActivityCategoriesSubscription) {
-      this.getActivityCategoriesSubscription.unsubscribe();
     }
 
     if (this.updateKnightActivityInterestSubscription) {
@@ -79,18 +72,8 @@ export class AccountInterestsComponent implements OnInit, OnDestroy {
      this.allActivities = knight.activityInterests;
   }
 
-  private getActivityCategories() {
-    let activityCategoriesObserver = {
-      next: (activityCategories: ActivityCategory[]) => this.activityCategories = activityCategories,
-      error: (err: any) => this.logError('Error getting activity categories', err),
-      complete: () => console.log('Activity categories loaded.')
-    };
-
-    this.getActivityCategoriesSubscription = this.activityCategoriesService.getAllActivityCategories().subscribe(activityCategoriesObserver);
-  }
-
-  filterActivitiesByCategoryId(activityCategoryId: number) {
-    return this.allActivities.filter(x => x.activityCategoryId == activityCategoryId);
+  filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
+    return this.allActivities.filter(x => x.activityCategory === activityCategory);
   }
 
   toggleInterestCheckbox(interestChangeEvent: any, activity: ActivityInterest) {

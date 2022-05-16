@@ -6,18 +6,17 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
 import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
-import { ActivityCategory } from 'src/app/models/activityCategory';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { AddressState } from 'src/app/models/addressState';
 import { Country } from 'src/app/models/country';
 import { Knight } from 'src/app/models/knight';
-import { ActivityCategoriesService } from 'src/app/services/activityCategories.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { KnightMemberClassEnums } from 'src/app/enums/knightMemberClassEnums';
+import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -38,7 +37,7 @@ export class EditKnightModalComponent implements OnInit {
   editKnightForm: FormGroup;
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
-  activityCategories: ActivityCategory[] = [];
+  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   allActivities: ActivityInterest[] = [];
   errorSaving: boolean = false;
   errorMessages: string[] = [];
@@ -46,8 +45,7 @@ export class EditKnightModalComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private knightsService: KnightsService,
-    private knightActivityInterestsService: KnightActivityInterestsService,
-    private activityCategoriesService: ActivityCategoriesService) {
+    private knightActivityInterestsService: KnightActivityInterestsService) {
       var today = new Date();
       this.editKnightForm = new FormGroup({
         knightId: new FormControl(0),
@@ -116,8 +114,6 @@ export class EditKnightModalComponent implements OnInit {
           memberClass: new FormControl(KnightMemberClassEnums.Paying)
         })
       });
-
-      this.getActivityCategories();
     }
 
     ngOnInit() {
@@ -162,16 +158,6 @@ export class EditKnightModalComponent implements OnInit {
 
         this.getAllKnightActivityInterestsForNewKnight();
       }
-    }
-
-    private getActivityCategories() {
-      let activityCategoriesObserver = {
-        next: (activityCategories: ActivityCategory[]) => this.activityCategories = activityCategories,
-        error: (err: any) => this.logError('Error getting activity categories', err),
-        complete: () => console.log('Activity categories loaded.')
-      };
-
-      this.getActivityCategoriesSubscription = this.activityCategoriesService.getAllActivityCategories().subscribe(activityCategoriesObserver);
     }
 
     private getAllKnightActivityInterestsForNewKnight() {
@@ -288,8 +274,8 @@ export class EditKnightModalComponent implements OnInit {
       this.activeModal.close(knight);
     }
 
-    filterActivitiesByCategoryId(activityCategoryId: number) {
-      return this.allActivities.filter(x => x.activityCategoryId == activityCategoryId);
+    filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
+      return this.allActivities.filter(x => x.activityCategory === activityCategory);
     }
 
     toggleInterestCheckbox(interestChangeEvent: any, activity: ActivityInterest) {

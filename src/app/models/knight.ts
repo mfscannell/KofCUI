@@ -2,6 +2,7 @@ import { UserTypeEnums } from "../enums/userTypeEnums";
 import { StreetAddress } from "./streetAddress";
 import { KnightInfo } from "src/app/models/knightInfo";
 import { ActivityInterest } from "src/app/models/activityInterest";
+import { KnightUser } from "./knightUser";
 
 export class Knight {
     knightId?: number;
@@ -14,6 +15,7 @@ export class Knight {
     cellPhoneNumber: string = "";
     homeAddress: StreetAddress = new StreetAddress();
     knightInfo: KnightInfo = new KnightInfo();
+    knightUser: KnightUser = new KnightUser();
     activityInterests: ActivityInterest[] = [];
 
 
@@ -30,6 +32,7 @@ export class Knight {
             homeAddressId?: number,
             homeAddress?: StreetAddress,
             knightInfo?: KnightInfo,
+            knightUser?: KnightUser,
             activityInterests?: ActivityInterest[]
     }) {
         if (fields) {
@@ -43,6 +46,7 @@ export class Knight {
             this.cellPhoneNumber = fields.cellPhoneNumber || this.cellPhoneNumber;
             this.homeAddress = fields.homeAddress || this.homeAddress;
             this.knightInfo = fields.knightInfo || this.knightInfo;
+            this.knightUser = fields.knightUser || this.knightUser;
             this.activityInterests = fields.activityInterests || this.activityInterests;
         }
     }

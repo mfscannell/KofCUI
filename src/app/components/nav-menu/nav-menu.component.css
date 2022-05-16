@@ -11,6 +11,15 @@
     color: rgb(255, 255, 255);
 }
 
+.dropdown-menu a {
+    color: rgb(17, 40, 102);
+}
+
+.dropdown-menu button {
+    color: rgb(17, 40, 102);
+    border-color: rgb(17, 40, 102);
+}
+
 .dropdown-item:hover {
     background-color: rgb(17, 40, 102);
     color: rgb(255, 255, 255);

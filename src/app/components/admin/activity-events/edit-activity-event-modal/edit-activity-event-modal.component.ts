@@ -17,6 +17,7 @@ import { Knight } from 'src/app/models/knight';
 import { TimeZone } from 'src/app/models/timeZone';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 
 @Component({
   selector: 'kofc-edit-activity-event-modal',
@@ -30,6 +31,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() allKnights: Knight[] = [];
   @Input() allActivities: Activity[] = [];
   selectableActivities: Activity[] = [];
+  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   updateActivityEventSubscription?: Subscription;
   createActivityEventSubscription?: Subscription;
   getCouncilTImeZoneSubscription?: Subscription;
@@ -49,6 +51,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       this.editActivityEventForm = new FormGroup({
         activityEventId: new FormControl(''),
         activityId: new FormControl(''),
+        activityCategory: new FormControl(''),
         eventName: new FormControl(''),
         eventDescription: new FormControl(''),
         startDate: new FormControl({
@@ -95,25 +98,26 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       this.editActivityEventForm.patchValue({
         activityEventId: this.activityEvent.activityEventId,
         activityId: this.activityEvent.activityId,
+        activityCategory: this.activityEvent.activityCategory,
         eventName: this.activityEvent.eventName,
         eventDescription: this.activityEvent.eventDescription,
         startDate: {
-          year: DateTimeFormatter.getYear(this.activityEvent.startDate),
-          month: DateTimeFormatter.getMonth(this.activityEvent.startDate),
-          day: DateTimeFormatter.getDay(this.activityEvent.startDate)
+          year: DateTimeFormatter.getYear(this.activityEvent.startDateTime),
+          month: DateTimeFormatter.getMonth(this.activityEvent.startDateTime),
+          day: DateTimeFormatter.getDay(this.activityEvent.startDateTime)
         },
         startTime: {
-          hour: DateTimeFormatter.getHour(this.activityEvent.startTime),
-          minute: DateTimeFormatter.getMinute(this.activityEvent.startTime)
+          hour: DateTimeFormatter.getHour(this.activityEvent.startDateTime),
+          minute: DateTimeFormatter.getMinute(this.activityEvent.startDateTime)
         },
         endDate: {
-          year: DateTimeFormatter.getYear(this.activityEvent.endDate),
-          month: DateTimeFormatter.getMonth(this.activityEvent.startDate),
-          day: DateTimeFormatter.getDay(this.activityEvent.startDate)
+          year: DateTimeFormatter.getYear(this.activityEvent.endDateTime),
+          month: DateTimeFormatter.getMonth(this.activityEvent.endDateTime),
+          day: DateTimeFormatter.getDay(this.activityEvent.endDateTime)
         },
         endTime: {
-          hour: DateTimeFormatter.getHour(this.activityEvent.endTime),
-          minute: DateTimeFormatter.getMinute(this.activityEvent.endTime)
+          hour: DateTimeFormatter.getHour(this.activityEvent.endDateTime),
+          minute: DateTimeFormatter.getMinute(this.activityEvent.endDateTime)
         },
         locationAddress: this.activityEvent.locationAddress,
         showInCalendar: this.activityEvent.showInCalendar,
@@ -126,22 +130,22 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
           volunteerSignUpRoleId: new FormControl(role.volunteerSignupRoleId),
           roleTitle: new FormControl(role.roleTitle),
           startDate: new FormControl({
-            year: DateTimeFormatter.getYear(role.startDate),
-            month: DateTimeFormatter.getMonth(role.startDate),
-            day: DateTimeFormatter.getDay(role.startDate)
+            year: DateTimeFormatter.getYear(role.startDateTime),
+            month: DateTimeFormatter.getMonth(role.startDateTime),
+            day: DateTimeFormatter.getDay(role.startDateTime)
           }),
           startTime: new FormControl({
-            hour: DateTimeFormatter.getHour(role.startTime),
-            minute: DateTimeFormatter.getMinute(role.startTime)
+            hour: DateTimeFormatter.getHour(role.startDateTime),
+            minute: DateTimeFormatter.getMinute(role.startDateTime)
           }),
           endDate: new FormControl({
-            year: DateTimeFormatter.getYear(role.endDate),
-            month: DateTimeFormatter.getMonth(role.endDate),
-            day: DateTimeFormatter.getDay(role.endDate)
+            year: DateTimeFormatter.getYear(role.endDateTime),
+            month: DateTimeFormatter.getMonth(role.endDateTime),
+            day: DateTimeFormatter.getDay(role.endDateTime)
           }),
           endTime: new FormControl({
-            hour: DateTimeFormatter.getHour(role.endTime),
-            minute: DateTimeFormatter.getMinute(role.endTime)
+            hour: DateTimeFormatter.getHour(role.endDateTime),
+            minute: DateTimeFormatter.getMinute(role.endDateTime)
           }),
           numberOfVolunteersNeeded: new FormControl(role.numberOfVolunteersNeeded),
           eventVolunteers: new FormArray(this.initEventVolunteersForm(role.eventVolunteers))
@@ -203,6 +207,9 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     if (eventNameIndex >= 0) {
       let eventName = this.selectableActivities[eventNameIndex].activityName;
       this.editActivityEventForm.controls["eventName"].setValue(eventName);
+
+      let activityCategory = this.selectableActivities[eventNameIndex].activityCategory;
+      this.editActivityEventForm.controls["activityCategory"].setValue(activityCategory);
     }
   }
 
@@ -375,10 +382,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       return new VolunteerSignUpRole({
         volunteerSignupRoleId: role.volunteerSignUpRoleId,
         roleTitle: role.roleTitle,
-        startDate: DateTimeFormatter.ToIso8601Date(role.startDate.year, role.startDate.month, role.startDate.day),
-        startTime: DateTimeFormatter.ToIso8601Time(role.startTime.hour, role.startTime.minute),
-        endDate: DateTimeFormatter.ToIso8601Date(role.endDate.year, role.endDate.month, role.endDate.day),
-        endTime: DateTimeFormatter.ToIso8601Time(role.endTime.hour, role.endTime.minute),
+        startDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.startTime.hour, role.startTime.minute),
+        endDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.endTime.hour, role.endTime.minute),
         numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
         eventVolunteers: role.eventVolunteers.map(function(eventVolunteer: any) {
           return new EventVolunteer({
@@ -401,12 +406,11 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     let activityEvent = new ActivityEvent({
       activityEventId: rawForm.activityEventId,
       activityId: rawForm.activityId,
+      activityCategory: rawForm.activityCategory,
       eventName: rawForm.eventName,
       eventDescription: rawForm.eventDescription,
-      startDate: DateTimeFormatter.ToIso8601Date(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day),
-      startTime: DateTimeFormatter.ToIso8601Time(rawForm.startTime.hour, rawForm.startTime.minute),
-      endDate: DateTimeFormatter.ToIso8601Date(rawForm.endDate.year, rawForm.endDate.month, rawForm.endDate.day),
-      endTime: DateTimeFormatter.ToIso8601Time(rawForm.endTime.hour, rawForm.endTime.minute),
+      startDateTime: DateTimeFormatter.ToIso8601DateTime(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day, rawForm.startTime.hour, rawForm.startTime.minute) || '1999-01-01T00:00',
+      endDateTime: DateTimeFormatter.ToIso8601DateTime(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day, rawForm.endTime.hour, rawForm.endTime.minute) || '1999-01-01T00:00',
       locationAddress: locationAddress,
       volunteerSignUpRoles: volunteerRoles,
       showInCalendar: rawForm.showInCalendar,

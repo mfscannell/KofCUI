@@ -3,11 +3,11 @@
     <div class="form-group row mb-1" *ngFor="let activityCategory of activityCategories">
       <div class="container">
         <div class="row">
-          <h4 class="col-sm-4 col-form-label">{{activityCategory.categoryName}}</h4>
+          <h4 class="col-sm-4 col-form-label">{{activityCategory}}</h4>
         </div>
       </div>
       <div class="container">
-        <ng-container *ngFor="let activity of filterActivitiesByCategoryId(activityCategory.activityCategoryId)">
+        <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategory)">
           <div class="form-group row mb-1">
             <label class="col-6 col-sm-5 col-md-4 col-lg-3 form-label">{{activity.activityName}}</label>
             <div class="col-6 col-sm-7 col-md-8 col-lg-9">

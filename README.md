@@ -13,8 +13,9 @@ In the src/environments/environments.ts file, add a new tenant in the tenants ar
     tenantId: "mytenantID"
 }
 
-To Start up, run the command
+To Start up locally, run the command
 ng serve --disable-host-check --configuration development
+ng serve --host mynewtenant.localhost --port 4200 --open --configuration development
 
 
 ## Development server

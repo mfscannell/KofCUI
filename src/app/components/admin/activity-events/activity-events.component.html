@@ -75,7 +75,7 @@
                     <tr *ngFor="let activityEvent of activityEvents">
                       <td *ngIf="activityEvent.canceled">{{activityEvent.eventName}} (CANCELED)</td>
                       <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
-                      <td>{{activityEvent.startDate}}</td>
+                      <td>{{formatDate(activityEvent.startDateTime)}}</td>
                       <td>
                         <button type="button" class="btn btn-primary" (click)="openVolunteerForActivityEventModal(activityEvent)">
                           Volunteer

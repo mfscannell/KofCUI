@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  domain: 'localhost:4200',
+  numDomains: 2,
   tenants: [
     {
       tenantName: "htknights",

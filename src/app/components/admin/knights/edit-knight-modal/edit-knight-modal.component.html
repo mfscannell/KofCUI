@@ -206,10 +206,10 @@
         <ng-template ngbNavContent>
           <div class="form-group row mb-1" *ngFor="let activityCategory of activityCategories">
             <div class="container">
-              <h4 class="col-5 col-md-3 col-form-label">{{activityCategory.categoryName}}</h4>
+              <h4 class="col-5 col-md-3 col-form-label">{{activityCategory}}</h4>
             </div>
             <div class="container">
-              <ng-container *ngFor="let activity of filterActivitiesByCategoryId(activityCategory.activityCategoryId)">
+              <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategory)">
                 <div class="form-group row mb-1">
                   <label class="col-5 col-md-3 form-label">{{activity.activityName}}</label>
                   <div class="col-7 col-md-9">

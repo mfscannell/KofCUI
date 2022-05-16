@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from 'src/app/models/externalLink';
 import { LogInRequest } from 'src/app/models/requests/logInRequest';
@@ -23,7 +24,8 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   constructor(
     private configsService: ConfigsService,
-    public accountsService: AccountsService) {
+    public accountsService: AccountsService,
+    private router: Router) {
     this.loginForm = new FormGroup({
       username: new FormControl(),
       password: new FormControl()
@@ -73,6 +75,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   logout() {
     this.accountsService.logout();
+    this.router.navigate(['/']);
   }
 
   private getAllExternalLinks() {

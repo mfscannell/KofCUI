@@ -14,13 +14,46 @@ export class DateTimeFormatter {
         "December"
     ];
 
-    static getYear(date: string | undefined) {
+    static getYearFromDateTime(dateTime: string | undefined) {
         let year = '';
 
-        if (date) {
-            let dateArray = date.split('-');
-            year = dateArray[0];
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
         }
+
+        let dateTimeArray = dateTime.split('T');
+        let date = dateTimeArray[0];
+        let dateArray = date.split('-');
+        year = dateArray[0];
+
+        let yearNumber = Number(year);
+
+        return yearNumber;
+    }
+
+    static getYear(dateTime: string | undefined) {
+        // let year = '';
+
+        // if (date === undefined || date === null) {
+        //     return undefined;
+        // }
+
+        // let dateArray = date.split('-');
+        // year = dateArray[0];
+
+        // let yearNumber = Number(year);
+
+        // return yearNumber;
+        let year = '';
+
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
+        }
+
+        let dateTimeArray = dateTime.split('T');
+        let date = dateTimeArray[0];
+        let dateArray = date.split('-');
+        year = dateArray[0];
 
         let yearNumber = Number(year);
 
@@ -29,59 +62,119 @@ export class DateTimeFormatter {
 
     /// date: string 'yyyy-mm-dd'
     /// returns month: number January = 1
-    static getMonth(date: string | undefined) {
+    static getMonth(dateTime: string | undefined) {
+        // let month = '';
+
+        // if (date === undefined || date === null) {
+        //     return undefined;
+        // }
+
+        // let dateArray = date.split('-');
+        // month = dateArray[1];
+
+        // let monthNumber = Number(month);
+
+        // return monthNumber;
         let month = '';
 
-        if (date) {
-            let dateArray = date.split('-');
-            month = dateArray[1];
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
         }
+
+        let dateTimeArray = dateTime.split('T');
+        let date = dateTimeArray[0];
+        let dateArray = date.split('-');
+        month = dateArray[1];
 
         let monthNumber = Number(month);
 
         return monthNumber;
     }
 
-    static getDay(date: string | undefined) {
+    static getDay(dateTime: string | undefined) {
+        // let day = '';
+
+        // if (date === undefined || date === null) {
+        //     return undefined;
+        // }
+
+        // let dateArray = date.split('-');
+
+        // day = dateArray[2];
+
+        // let indexOfT = day.indexOf('T');
+
+        // if (indexOfT >= 0) {
+        //     day = day.substr(0, indexOfT);
+        // }
+
+        // let dayNumber = Number(day);
+
+        // return dayNumber;
         let day = '';
 
-        if (date) {
-            let dateArray = date.split('-');
-
-            day = dateArray[2];
-
-            let indexOfT = day.indexOf('T');
-
-            if (indexOfT >= 0) {
-                day = day.substr(0, indexOfT);
-            }
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
         }
+
+        let dateTimeArray = dateTime.split('T');
+        let date = dateTimeArray[0];
+        let dateArray = date.split('-');
+        day = dateArray[2];
 
         let dayNumber = Number(day);
 
         return dayNumber;
     }
 
-    static getHour(time: string | undefined) {
+    static getHour(dateTime: string | undefined) {
+        // let hour = '';
+
+        // if (time) {
+        //     let dateArray = time.split(':');
+        //     hour = dateArray[0];
+        // }
+
+        // let hourNumber = Number(hour);
+
+        // return hourNumber;
         let hour = '';
 
-        if (time) {
-            let dateArray = time.split(':');
-            hour = dateArray[0];
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
         }
+
+        let dateTimeArray = dateTime.split('T');
+        let time = dateTimeArray[1];
+        let timeArray = time.split(':');
+        hour = timeArray[0];
 
         let hourNumber = Number(hour);
 
         return hourNumber;
     }
 
-    static getMinute(time: string | undefined) {
+    static getMinute(dateTime: string | undefined) {
+        // let minute = '';
+
+        // if (time) {
+        //     var dateArray = time.split(':');
+        //     minute = dateArray[1];
+        // }
+
+        // let minuteNumber = Number(minute);
+
+        // return minuteNumber;
         let minute = '';
 
-        if (time) {
-            var dateArray = time.split(':');
-            minute = dateArray[1];
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
         }
+
+        let dateTimeArray = dateTime.split('T');
+        let time = dateTimeArray[1];
+        let timeArray = time.split(':');
+        minute = timeArray[1];
 
         let minuteNumber = Number(minute);
 
@@ -98,6 +191,10 @@ export class DateTimeFormatter {
         let day = DateTimeFormatter.getDay(date);
         let monthName = ''
 
+        if (year === undefined || month === undefined || day === undefined || year === null || month === null || day === null) {
+            return undefined;
+        }
+
         if (1 <= month && month <= 12) {
             monthName = DateTimeFormatter.AllMonths[month - 1];
         }
@@ -107,7 +204,23 @@ export class DateTimeFormatter {
         return displayedDate;
     }
 
+    static ToDisplayTime(hour: number, minute: number) {
+        let displayedTime = '';
+        let meridian = 'AM';
+
+        if (hour > 12) {
+            hour = hour - 12;
+            meridian = 'PM';
+        }
+
+        return `${hour}:${minute} ${meridian}`;
+    }
+
     static ToIso8601Date(year: number, month: number, day: number) {
+        if (year === undefined || month === undefined || day === undefined || year === null || month === null || day === null) {
+            return undefined;
+        }
+
         let yearString = '';
 
         if (year < 10) {
@@ -135,15 +248,41 @@ export class DateTimeFormatter {
         return iso8601Time;
     }
 
+    static ToIso8601DateTime(year: number, month: number, day: number, hour: number, minute: number) {
+        if (year === undefined || month === undefined || day === undefined || year === null || month === null || day === null) {
+            return undefined;
+        }
+
+        let yearString = '';
+
+        if (year < 10) {
+            yearString = `000${year}`;
+        } else if (year < 100) {
+            yearString = `00${year}`;
+        } else if (year < 1000) {
+            yearString = `0${year}`;
+        } else {
+            yearString = `${year}`;
+        }
+
+        let monthString = month < 10 ? `0${month}` : `${month}`;
+        let dayString = day < 10 ? `0${day}` : `${day}`;
+        let hourString = hour < 10 ? `0${hour}` : `${hour}`;
+        let minuteString = minute < 10 ? `0${minute}` : `${minute}`;
+        let iso8601DateTime = `${yearString}-${monthString}-${dayString}T${hourString}:${minuteString}`;
+
+        return iso8601DateTime;
+    }
+
     /// converts a number to a date in 'YYYY-MM-DD' format. 
     /// 1 equates to 1900-01-01.
     /// Excel has a bug thinking 1900 is a leap year.
     static MapNumberToIso8601Date(dateNumber: number | undefined, excelBugExists: boolean) {
         let year = 1900;
-        let date = '';
+        let date: string | undefined = '';
 
-        if (dateNumber === undefined) {
-            return date;
+        if (dateNumber === undefined || dateNumber === null) {
+            return undefined;
         }
 
         let yearFound = false;
