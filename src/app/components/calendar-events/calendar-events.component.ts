@@ -92,8 +92,7 @@ export class CalendarEventsComponent implements OnInit {
 
   viewUpcomingEvents(dayOfMonth: number) {
     let selectedDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, dayOfMonth);
-    let eventsForDate = this.upcomingEvents.filter(upcomingEvent => upcomingEvent.startDate === selectedDate);
-    console.log(dayOfMonth);
+    let eventsForDate = this.upcomingEvents.filter(upcomingEvent => DateTimeFormatter.sameDate(upcomingEvent.startDateTime, selectedDate));
 
     const modalRef = this.modalService.open(ViewUpcomingEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 

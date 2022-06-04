@@ -20,12 +20,12 @@ export class Month {
     }
 
     addEventsToMonth(upcomingEvents: UpcomingEvent[]) {
-        let eventsInMonth = upcomingEvents.filter(event => DateTimeFormatter.getMonth(event.startDate) === this.monthOfYear && DateTimeFormatter.getYear(event.startDate) === this.year);
+        let eventsInMonth = upcomingEvents.filter(event => DateTimeFormatter.getMonth(event.startDateTime) === this.monthOfYear && DateTimeFormatter.getYear(event.startDateTime) === this.year);
 
         eventsInMonth.forEach((event) => {
             this.weeks.forEach((week) => {
                 week.days.forEach((day) => {
-                    if (DateTimeFormatter.getDay(event.startDate) === day.dayOfMonth) {
+                    if (DateTimeFormatter.getDay(event.startDateTime) === day.dayOfMonth) {
                         day.events.push(event);
                     }
                 });

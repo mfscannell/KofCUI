@@ -53,7 +53,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllActivityEvents();
-    this.getAllKnights();
+    this.getAllKnightsNames();
     this.getAllActivities();
   }
 
@@ -117,7 +117,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
   }
 
-  private getAllKnights() {
+  private getAllKnightsNames() {
     let knightsObserver = {
       next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
       error: (err: any) => this.logError('Error getting all knights.', err),

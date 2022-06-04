@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
 import { Knight } from 'src/app/models/knight';
+import { KnightUser } from 'src/app/models/knightUser';
 import { UpdateKnightPasswordRequest } from 'src/app/models/requests/updateKnightPasswordRequest';
 import { UpdateKnightPasswordResponse } from 'src/app/models/responses/updateKnightPasswordResponse';
 import { KnightsService } from 'src/app/services/knights.service';
@@ -32,7 +33,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
       nameSuffix: new FormControl(),
       accountActivated: new FormControl(),
       password: new FormControl(),
-      updatePasswordAtNextLogin: new FormControl()
+      resetPasswordAtNextLogin: new FormControl()
     });
   }
 
@@ -44,7 +45,8 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
         nameSuffix: this.knight.nameSuffix,
-        accountActivated: this.knight.knightUser.accountActivated
+        accountActivated: this.knight.knightUser.accountActivated,
+        resetPasswordAtNextLogin: this.knight.knightUser.resetPasswordAtNextLogin
       });
     }
   }
@@ -66,7 +68,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
       knightId: rawForm.knightId,
       accountActivated: rawForm.accountActivated,
       password: rawForm.password,
-      updatePasswordAtNextLogin: rawForm.updatePasswordAtNextLogin
+      resetPasswordAtNextLogin: rawForm.resetPasswordAtNextLogin
     });
 
     return request;
@@ -74,7 +76,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
 
   private updateKnightPassword(request: UpdateKnightPasswordRequest) {
     let knightObserver = {
-      next: (response: UpdateKnightPasswordResponse) => this.passBackResponse(response),
+      next: (response: KnightUser) => this.passBackResponse(response),
       error: (err: any) => this.logError("Error Updating Knight", err),
       complete: () => console.log('Knight updated.')
     };
@@ -82,8 +84,8 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     this.updateKnightPasswordSubscription= this.knightsService.updateKnightPassword(request).subscribe(knightObserver);
   }
 
-  private passBackResponse(request: UpdateKnightPasswordResponse) {
-    this.activeModal.close(request);
+  private passBackResponse(response: KnightUser) {
+    this.activeModal.close(response);
   }
 
   private logError(message: string, err: any) {

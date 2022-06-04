@@ -7,6 +7,8 @@ import { ActivityInterest } from 'src/app/models/activityInterest'
 import { UpdateKnightActivityInterestsRequest } from '../models/requests/updateKnightActivityInterestsRequest';
 import { UpdateKnightPasswordRequest } from '../models/requests/updateKnightPasswordRequest';
 import { UpdateKnightPasswordResponse } from '../models/responses/updateKnightPasswordResponse';
+import { UpdateKnightAndActivityInterestsRequest } from '../models/requests/updateKnightAndActivityInterestsRequest';
+import { KnightUser } from '../models/knightUser';
 
 @Injectable({
     providedIn: 'root'
@@ -41,12 +43,12 @@ export class KnightsService {
         return this.http.put<Knight>(`knights/${knight?.knightId}/personalInfo`, knight);
     }
 
-    updateKnightAndActivityInterest(knight: Knight) : Observable<Knight> {
+    updateKnightAndActivityInterests(knight: UpdateKnightAndActivityInterestsRequest) : Observable<Knight> {
         return this.http.put<Knight>(`knights/${knight?.knightId}/withAllActivities`, knight);
     }
 
-    updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<UpdateKnightPasswordResponse> {
-        return this.http.put<UpdateKnightPasswordResponse>(`knights/${request?.knightId}/password`, request);
+    updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<KnightUser> {
+        return this.http.put<KnightUser>(`knights/${request?.knightId}/password`, request);
     }
 
     updateKnightActivityInterest(updateKnightActivityInterestsRequest: UpdateKnightActivityInterestsRequest) : Observable<ActivityInterest[]> {

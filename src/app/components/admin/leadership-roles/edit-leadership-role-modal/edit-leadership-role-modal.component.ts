@@ -101,9 +101,6 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
     if (this.modalAction === ModalActionEnums.Edit) {
       let updatedLeadershipRole = new LeadershipRole(this.editLeadershipRoleForm.getRawValue());
       this.updateLeadershipRole(updatedLeadershipRole);
-    } else if (this.modalAction === ModalActionEnums.Create) {
-      let newLeadershipRole = new LeadershipRole(this.editLeadershipRoleForm.getRawValue());
-      this.createLeadershipRole(newLeadershipRole);
     }
   }
 
@@ -115,16 +112,6 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
     };
 
     this.updateLeadershipRoleSubscription = this.leadershipRolesService.updateLeadershipRole(leadershipRole).subscribe(leadershipRoleObserver);
-  }
-
-  private createLeadershipRole(leadershipRole: LeadershipRole) {
-    let leadershipRoleObserver = {
-      next: (createdLeadershipRole: LeadershipRole) => this.passBack(createdLeadershipRole),
-      error: (err: any) => this.logError('Error creating leadership role.', err),
-      complete: () => console.log('Leadership Role created.')
-    };
-
-    this.createLeadershipRoleSubscription = this.leadershipRolesService.createLeadershipRole(leadershipRole).subscribe(leadershipRoleObserver);
   }
 
   passBack(leadershipRole: LeadershipRole) {
