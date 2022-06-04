@@ -10,7 +10,7 @@
       {{upcomingEvent.eventName}}
     </h5>
     <h6>
-      {{upcomingEvent.startTime}} - {{upcomingEvent.endTime}}
+      {{formatTime(upcomingEvent.startDateTime)}} - {{formatTime(upcomingEvent.endDateTime)}}
     </h6>
     <h6>
       {{upcomingEvent?.locationAddress?.addressName}}

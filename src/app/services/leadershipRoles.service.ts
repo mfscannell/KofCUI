@@ -20,8 +20,4 @@ export class LeadershipRolesService {
     updateLeadershipRole(updatedLeadershipRole: LeadershipRole): Observable<LeadershipRole> {
         return this.http.put<LeadershipRole>(`leadershipRoles/${updatedLeadershipRole.leadershipRoleId}`, updatedLeadershipRole);
     }
-
-    createLeadershipRole(leadershipRole: LeadershipRole): Observable<LeadershipRole> {
-        return this.http.post<LeadershipRole>('leadershipRoles/', leadershipRole);
-    }
 }

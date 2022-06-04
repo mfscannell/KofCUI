@@ -12,6 +12,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-knight-modal/edit-knight-modal.component';
 import { UploadKnightsModalComponent } from 'src/app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
 import { EditKnightPasswordModalComponent } from './edit-knight-password-modal/edit-knight-password-modal.component';
+import { KnightUser } from 'src/app/models/knightUser';
 
 @Component({
   selector: 'knights',
@@ -91,8 +92,9 @@ export class KnightsComponent implements OnInit, OnDestroy {
 
     modalRef.componentInstance.knight = knight;
     modalRef.componentInstance.modalHeaderText = 'Editing Knight Password';
-    modalRef.result.then((result: Knight) => {
+    modalRef.result.then((result: KnightUser) => {
       if (result) {
+        this.updateKnightUserInList(knight, result);
       }
     }).catch((error) => {
       if (error !== 0) {
@@ -106,6 +108,16 @@ export class KnightsComponent implements OnInit, OnDestroy {
     let index = this.allKnights?.findIndex(x => x.knightId == knight.knightId)
 
     if (this.allKnights && index !== undefined && index >= 0) {
+      knight.knightUser = this.allKnights[index].knightUser;
+      this.allKnights[index] = knight;
+    }
+  }
+
+  private updateKnightUserInList(knight: Knight, knightUser: KnightUser) {
+    let index = this.allKnights?.findIndex(x => x.knightId == knight.knightId)
+
+    if (this.allKnights && index !== undefined && index >= 0) {
+      knight.knightUser = knightUser;
       this.allKnights[index] = knight;
     }
   }

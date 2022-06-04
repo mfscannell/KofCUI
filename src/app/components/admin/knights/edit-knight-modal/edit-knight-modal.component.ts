@@ -17,6 +17,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { KnightMemberClassEnums } from 'src/app/enums/knightMemberClassEnums';
 import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
+import { UpdateKnightAndActivityInterestsRequest } from 'src/app/models/requests/updateKnightAndActivityInterestsRequest';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -194,12 +195,60 @@ export class EditKnightModalComponent implements OnInit {
 
     onSubmitEditKnight() {
       if (this.modalAction === ModalActionEnums.Edit) {
-        let updatedKnight = this.mapFormToKnight();
+        let updatedKnight = this.mapFormToUpdateKnightRequest();
         this.updateKnight(updatedKnight);
       } else if (this.modalAction === ModalActionEnums.Create) {
         let createdKnight = this.mapFormToKnight();
         this.createKnight(createdKnight);
       }
+    }
+
+    private mapFormToUpdateKnightRequest() {
+      let rawForm = this.editKnightForm.getRawValue();
+      let homeAddress = new StreetAddress({
+        streetAddressId: rawForm.homeAddress.streetAddressId,
+        addressName: rawForm.homeAddress.addressName,
+        address1: rawForm.homeAddress.address1,
+        address2: rawForm.homeAddress.address2,
+        city: rawForm.homeAddress.city,
+        stateCode: rawForm.homeAddress.stateCode,
+        postalCode: rawForm.homeAddress.postalCode,
+        countryCode: rawForm.homeAddress.countryCode
+      });
+      let knightInfo = new KnightInfo({
+        knightInfoId: rawForm.knightInfo.knightInfoId,
+        memberNumber: rawForm.knightInfo.memberNumber,
+        mailReturned: rawForm.knightInfo.mailReturned,
+        degree: rawForm.knightInfo.degree,
+        firstDegreeDate: DateTimeFormatter.ToIso8601Date(
+          rawForm.knightInfo.firstDegreeDate.year, 
+          rawForm.knightInfo.firstDegreeDate.month, 
+          rawForm.knightInfo.firstDegreeDate.day),
+        reentryDate: DateTimeFormatter.ToIso8601Date(
+          rawForm.knightInfo.reentryDate.year, 
+          rawForm.knightInfo.reentryDate.month, 
+          rawForm.knightInfo.reentryDate.day),
+        memberType: rawForm.knightInfo.memberType,
+        memberClass: rawForm.knightInfo.memberClass
+      });
+      let knight = new UpdateKnightAndActivityInterestsRequest({
+        knightId: rawForm.knightId,
+        firstName: rawForm.firstName,
+        middleName: rawForm.middleName,
+        lastName: rawForm.lastName,
+        nameSuffix: rawForm.nameSuffix,
+        dateOfBirth: DateTimeFormatter.ToIso8601Date(
+          rawForm.dateOfBirth.year, 
+          rawForm.dateOfBirth.month, 
+          rawForm.dateOfBirth.day),
+        emailAddress: rawForm.emailAddress,
+        cellPhoneNumber: rawForm.cellPhoneNumber,
+        homeAddress: homeAddress,
+        knightInfo: knightInfo,
+        activityInterests: this.allActivities
+      });
+
+      return knight;
     }
 
     private mapFormToKnight() {
@@ -260,14 +309,14 @@ export class EditKnightModalComponent implements OnInit {
       this.createKnightSubscription = this.knightsService.createKnightAndActivityInterest(knight).subscribe(knightObserver);
     }
 
-    private updateKnight(knight: Knight) {
+    private updateKnight(knight: UpdateKnightAndActivityInterestsRequest) {
       let knightObserver = {
         next: (response: Knight) => this.passBackResponse(response),
         error: (err: any) => this.logError("Error Updating Knight", err),
         complete: () => console.log('Knight updated.')
       };
   
-      this.updateKnightSubscription = this.knightsService.updateKnightAndActivityInterest(knight).subscribe(knightObserver);
+      this.updateKnightSubscription = this.knightsService.updateKnightAndActivityInterests(knight).subscribe(knightObserver);
     }
 
     private passBackResponse(knight: Knight) {
