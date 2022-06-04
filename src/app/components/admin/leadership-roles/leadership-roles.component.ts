@@ -33,7 +33,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    this.getAllKnights();
+    this.getAllKnightsNames();
     this.getAllLeadershipRoles();
   }
 
@@ -47,7 +47,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getAllKnights() {
+  private getAllKnightsNames() {
     let knightsObserver = {
       next: (knights: Knight[]) => this.loadAllKnights(knights),
       error: (err: any) => console.log(`${err}`),
@@ -76,28 +76,6 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     }
 
     return [];
-  }
-
-  openCreateLeadershipRoleModal() {
-    const modalRef = this.modalService.open(EditLeadershipRoleModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-    
-    modalRef.componentInstance.allKnights = this.allKnights;
-    modalRef.componentInstance.leadershipRole = new LeadershipRole({
-      occupied: false,
-      leadershipRoleCategory: LeadershipRoleCategoryEnums.Director
-    });
-    modalRef.componentInstance.modalHeaderText = 'Creating Leadership Role';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Create;
-    modalRef.result.then((result: LeadershipRole) => {
-      if (result) {
-        this.leadershipRoles.push(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        console.log('Error from Edit Leadership Role Modal.');
-        console.log(error);
-      }
-    });
   }
 
   openEditLeadershipRoleModal(leadershipRole: LeadershipRole) {

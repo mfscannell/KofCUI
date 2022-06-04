@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpcomingEvent } from 'src/app/models/upcomingEvent';
+import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
   selector: 'kofc-view-upcoming-event-modal',
@@ -16,6 +17,10 @@ export class ViewUpcomingEventModalComponent implements OnInit {
   ngOnInit() {
     if (this.upcomingEvents) {
     }
+  }
+
+  formatTime(dateTime: string | undefined) {
+    return DateTimeFormatter.ToDisplayTime(dateTime);
   }
 
 }

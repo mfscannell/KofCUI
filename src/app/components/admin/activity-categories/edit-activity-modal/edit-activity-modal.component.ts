@@ -47,7 +47,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityCoordinatorsList: new FormArray([])
     });
 
-    this.getAllKnights();
+    this.getAllKnightsNames();
   }
 
   ngOnInit() {
@@ -85,7 +85,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getAllKnights() {
+  private getAllKnightsNames() {
     let knightsObserver = {
       next: (knights: Knight[]) => this.allKnights = knights,
       error: (err: any) => this.logError('Error getting all knights.', err),

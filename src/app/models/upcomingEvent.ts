@@ -5,10 +5,8 @@ export class UpcomingEvent {
     activityId: number = 0;
     eventName: string = '';
     eventDescription: string = '';
-    startDate?: string; //yyyy-mm-dd
-    startTime?: string;
-    endDate?: string;
-    endTime?: string;
+    startDateTime?: string;
+    endDateTime?: string;
     locationAddress?: StreetAddress;
     canceled: boolean = false;
     canceledReason?: string;
@@ -19,10 +17,8 @@ export class UpcomingEvent {
             activityId?: number,
             eventName: string,
             eventDescription: string,
-            startDate: string,
-            startTime: string,
-            endDate: string,
-            endTime: string,
+            startDateTime: string,
+            endDateTime: string,
             locationAddress: StreetAddress
             canceled: boolean,
             canceledReason: string
@@ -32,10 +28,8 @@ export class UpcomingEvent {
             this.activityId = fields.activityId || this.activityId;
             this.eventName = fields.eventName || this.eventName;
             this.eventDescription = fields.eventDescription || this.eventDescription;
-            this.startDate = fields.startDate || this.startDate;
-            this.startTime = fields.startTime || this.startTime;
-            this.endDate = fields.endDate || this.endDate;
-            this.endTime = fields.endTime || this.endTime;
+            this.startDateTime = fields.startDateTime || this.startDateTime;
+            this.endDateTime = fields.endDateTime || this.endDateTime;
             this.locationAddress = fields.locationAddress || this.locationAddress;
             this.canceled = fields.canceled || this.canceled;
             this.canceledReason = fields.canceledReason || this.canceledReason;

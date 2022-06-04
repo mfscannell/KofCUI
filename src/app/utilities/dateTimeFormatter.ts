@@ -14,6 +14,17 @@ export class DateTimeFormatter {
         "December"
     ];
 
+    static sameDate(dateTime1: string | undefined, dateTime2: string | undefined) {
+        let year1 = this.getYearFromDateTime(dateTime1);
+        let month1 = this.getMonth(dateTime1);
+        let day1 = this.getDay(dateTime1);
+        let year2 = this.getYearFromDateTime(dateTime2);
+        let month2 = this.getMonth(dateTime2);
+        let day2 = this.getDay(dateTime2);
+
+        return year1 === year2 && month1 === month2 && day1 === day2;
+    }
+
     static getYearFromDateTime(dateTime: string | undefined) {
         let year = '';
 
@@ -32,18 +43,6 @@ export class DateTimeFormatter {
     }
 
     static getYear(dateTime: string | undefined) {
-        // let year = '';
-
-        // if (date === undefined || date === null) {
-        //     return undefined;
-        // }
-
-        // let dateArray = date.split('-');
-        // year = dateArray[0];
-
-        // let yearNumber = Number(year);
-
-        // return yearNumber;
         let year = '';
 
         if (dateTime === undefined || dateTime === null) {
@@ -63,18 +62,6 @@ export class DateTimeFormatter {
     /// date: string 'yyyy-mm-dd'
     /// returns month: number January = 1
     static getMonth(dateTime: string | undefined) {
-        // let month = '';
-
-        // if (date === undefined || date === null) {
-        //     return undefined;
-        // }
-
-        // let dateArray = date.split('-');
-        // month = dateArray[1];
-
-        // let monthNumber = Number(month);
-
-        // return monthNumber;
         let month = '';
 
         if (dateTime === undefined || dateTime === null) {
@@ -92,25 +79,6 @@ export class DateTimeFormatter {
     }
 
     static getDay(dateTime: string | undefined) {
-        // let day = '';
-
-        // if (date === undefined || date === null) {
-        //     return undefined;
-        // }
-
-        // let dateArray = date.split('-');
-
-        // day = dateArray[2];
-
-        // let indexOfT = day.indexOf('T');
-
-        // if (indexOfT >= 0) {
-        //     day = day.substr(0, indexOfT);
-        // }
-
-        // let dayNumber = Number(day);
-
-        // return dayNumber;
         let day = '';
 
         if (dateTime === undefined || dateTime === null) {
@@ -128,16 +96,6 @@ export class DateTimeFormatter {
     }
 
     static getHour(dateTime: string | undefined) {
-        // let hour = '';
-
-        // if (time) {
-        //     let dateArray = time.split(':');
-        //     hour = dateArray[0];
-        // }
-
-        // let hourNumber = Number(hour);
-
-        // return hourNumber;
         let hour = '';
 
         if (dateTime === undefined || dateTime === null) {
@@ -155,16 +113,6 @@ export class DateTimeFormatter {
     }
 
     static getMinute(dateTime: string | undefined) {
-        // let minute = '';
-
-        // if (time) {
-        //     var dateArray = time.split(':');
-        //     minute = dateArray[1];
-        // }
-
-        // let minuteNumber = Number(minute);
-
-        // return minuteNumber;
         let minute = '';
 
         if (dateTime === undefined || dateTime === null) {
@@ -204,16 +152,31 @@ export class DateTimeFormatter {
         return displayedDate;
     }
 
-    static ToDisplayTime(hour: number, minute: number) {
-        let displayedTime = '';
+    static ToDisplayTime(dateTime: string | undefined) {
+        if (dateTime === undefined || dateTime === null) {
+            return undefined;
+        }
+
+        let hour = DateTimeFormatter.getHour(dateTime);
+        let minute = DateTimeFormatter.getMinute(dateTime);
         let meridian = 'AM';
+
+        if (hour === undefined || hour === null) {
+            return undefined;
+        }
 
         if (hour > 12) {
             hour = hour - 12;
             meridian = 'PM';
         }
 
-        return `${hour}:${minute} ${meridian}`;
+        if (minute === undefined || minute === null) {
+            minute = 0;
+        }
+
+        let minuteString = minute < 10 ? `0${minute}` : `${minute}`
+
+        return `${hour}:${minuteString} ${meridian}`;
     }
 
     static ToIso8601Date(year: number, month: number, day: number) {
@@ -238,14 +201,6 @@ export class DateTimeFormatter {
         let iso8601Date = `${yearString}-${monthString}-${dayString}`;
 
         return iso8601Date;
-    }
-
-    static ToIso8601Time(hour: number, minute: number) {
-        let hourString = hour < 10 ? `0${hour}` : `${hour}`;
-        let minuteString = minute < 10 ? `0${minute}` : `${minute}`;
-        let iso8601Time = `${hourString}:${minuteString}`;
-
-        return iso8601Time;
     }
 
     static ToIso8601DateTime(year: number, month: number, day: number, hour: number, minute: number) {
