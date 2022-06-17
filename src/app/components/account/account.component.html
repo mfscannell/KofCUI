@@ -4,7 +4,7 @@
       <div class="container border">
         <div class="row">
           <div class="col-12">
-            <h6>Personal Info</h6>
+            <h4 class="text-decoration-underline">Personal Info</h4>
           </div>
         </div>
         <div class="row">
@@ -27,7 +27,7 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <a href="/account/personalInfo" class="link-primary" aria-pressed="true">Edit</a>
+            <button class="btn btn-primary" (click)="openEditAccountPersonalInfoModal()">Edit</button>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@
       <div class="container border">
         <div class="row">
           <div class="col-12">
-            <h6>Knight Info</h6>
+            <h4 class="text-decoration-underline">Knight Info</h4>
           </div>
         </div>
         <div class="row">
@@ -64,19 +64,23 @@
       <div class="container border">
         <div class="row">
           <div class="col-12">
-            <h6>Interests</h6>
+            <h4 class="text-decoration-underline">Interests</h4>
           </div>
         </div>
-
-        <div class="row" *ngFor="let interestedActivity of filterActivitiesInterested()">
-          <div class="col-12">
-            {{interestedActivity.activityName}}
+        <div *ngFor="let activityCategory of activityCategories">
+          <div class="row">
+            <h6>{{activityCategory}}</h6>
+          </div>
+          <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategory)">
+            <div class="col-12 ms-2">
+              {{interestedActivity.activityName}}
+            </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col-12">
-            <a href="/account/interests" class="link-primary" aria-pressed="true">Edit</a>
+            <button class="btn btn-primary" (click)="openEditAccountActivityInterestsModal()">Edit</button>
           </div>
         </div>
       </div>
@@ -87,12 +91,12 @@
       <div class="container border">
         <div class="row">
           <div class="col-12">
-            <h6>Security</h6>
+            <h4 class="text-decoration-underline">Security</h4>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <a href="/account/security" class="link-primary" aria-pressed="true">Edit</a>
+            <button class="btn btn-primary" (click)="openEditAccountSecurityModal()">Edit</button>
           </div>
         </div>
       </div>
