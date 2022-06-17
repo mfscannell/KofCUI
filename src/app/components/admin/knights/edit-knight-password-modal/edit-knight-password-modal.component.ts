@@ -6,7 +6,9 @@ import { Subscription } from 'rxjs';
 import { Knight } from 'src/app/models/knight';
 import { KnightUser } from 'src/app/models/knightUser';
 import { UpdateKnightPasswordRequest } from 'src/app/models/requests/updateKnightPasswordRequest';
+import { PasswordRequirements } from 'src/app/models/responses/passwordRequirements';
 import { UpdateKnightPasswordResponse } from 'src/app/models/responses/updateKnightPasswordResponse';
+import { AccountsService } from 'src/app/services/accounts.service';
 import { KnightsService } from 'src/app/services/knights.service';
 
 @Component({
@@ -18,13 +20,24 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() knight?: Knight;
   editKnightPasswordForm: FormGroup;
+  public passwordRequirements: PasswordRequirements = new PasswordRequirements({
+    requireUppercase: false,
+    requireLowercase: false,
+    requiredUniqueChars: 1,
+    requireDigit: false,
+    requiredLength: 1,
+    requireNonAlphanumeric: false,
+    allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?'
+  });
   private updateKnightPasswordSubscription?: Subscription;
+  private getPasswordRequirementsSubscription?: Subscription;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
-    private knightsService: KnightsService) {
+    private knightsService: KnightsService,
+    private accountsService: AccountsService) {
     this.editKnightPasswordForm = new FormGroup({
       knightId: new FormControl(),
       firstName: new FormControl(),
@@ -32,7 +45,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
       lastName: new FormControl(),
       nameSuffix: new FormControl(),
       accountActivated: new FormControl(),
-      password: new FormControl(),
+      password: new FormControl(''),
       resetPasswordAtNextLogin: new FormControl()
     });
   }
@@ -49,12 +62,91 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
         resetPasswordAtNextLogin: this.knight.knightUser.resetPasswordAtNextLogin
       });
     }
+
+    this.getPasswordRequirements();
   }
 
   ngOnDestroy() {
     if (this.updateKnightPasswordSubscription) {
       this.updateKnightPasswordSubscription.unsubscribe();
     }
+
+    if (this.getPasswordRequirementsSubscription) {
+      this.getPasswordRequirementsSubscription.unsubscribe();
+    }
+  }
+
+  private getPasswordRequirements() {
+    let getPasswordRequirementsObserver = {
+      next: (response: PasswordRequirements) => this.passwordRequirements = response,
+      error: (err: any) => this.logError("Error Getting password requirements.", err),
+      complete: () => console.log('Password requirements retrieved.')
+    };
+
+    this.getPasswordRequirementsSubscription = this.accountsService.getPasswordRequirements().subscribe(getPasswordRequirementsObserver);
+  }
+
+  isAccountActivated() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let isAccountActive = rawForm.accountActivated as boolean;
+
+    return isAccountActive;
+  }
+
+  hasRequiredLength() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let newPassword = rawForm.password as string;
+    let hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
+
+    return hasLength;
+  }
+
+  hasDistinctCharacters() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let newPassword = rawForm.password as string;
+    let numDistinctCharacters = new Set(newPassword).size;
+
+    return numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars;
+  }
+
+  hasUpperCase() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let newPassword = rawForm.password as string;
+    let hasUpper = /[A-Z]/.test(newPassword);
+
+    return hasUpper;
+  }
+
+  hasLowerCase() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let newPassword = rawForm.password as string;
+    let hasLower = /[a-z]/.test(newPassword);
+
+    return hasLower;
+  }
+
+  hasDigit() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let newPassword = rawForm.password as string;
+    let hasDigitChar = /[0-9]/.test(newPassword);
+
+    return hasDigitChar;
+  }
+
+  hasAllowedSpecialCharacter() {
+    let rawForm = this.editKnightPasswordForm.getRawValue();
+    let newPassword = rawForm.password as string;
+    let hasSpecialCharacter = false;
+
+    for (let i = 0; i < this.passwordRequirements.allowedNonAlphanumericCharacters.length; i++) {
+      let specialChar = this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
+
+      if (newPassword.indexOf(specialChar) > -1) {
+        hasSpecialCharacter = true;
+      }
+    }
+
+    return hasSpecialCharacter;
   }
 
   onSubmitEditKnightPassword() {

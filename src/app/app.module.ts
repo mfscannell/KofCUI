@@ -33,8 +33,6 @@ import { VolunteerForActivityEventModalComponent } from './components/admin/acti
 import { ConfigsComponent } from './components/admin/configs/configs.component';
 
 import { AccountComponent } from './components/account/account.component';
-import { AccountPersonalInfoComponent } from './components/account/account-personalInfo/account-personalInfo.component';
-import { AccountInterestsComponent } from './components/account/account-interests/account-interests.component';
 import { SendEmailModalComponent } from './components/admin/activity-events/send-email-modal/send-email-modal.component';
 import { KnightsGuard } from './guards/knights.guard';
 import { LeadershipRolesGuard } from './guards/leadershipRoles.guard';
@@ -44,16 +42,22 @@ import { ConfigsGuard } from './guards/configs.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { AccountGuard } from './guards/account.guard';
 import { EditKnightPasswordModalComponent } from './components/admin/knights/edit-knight-password-modal/edit-knight-password-modal.component';
+import { LoginComponent } from './components/login/login.component';
+import { EditAccountPersonalInfoModalComponent } from './components/account/edit-account-personalInfo-modal/edit-account-personalInfo-modal.component';
+import { EditAccountInterestsModalComponent } from './components/account/edit-account-interests-modal/edit-account-interests-modal.component';
+import { EditAccountSecurityModalComponent } from './components/account/edit-account-security-modal/edit-account-security-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomePageComponent,
+    LoginComponent,
     AboutKnightsComponent,
     AccountComponent,
-    AccountInterestsComponent,
-    AccountPersonalInfoComponent,
+    EditAccountPersonalInfoModalComponent,
+    EditAccountInterestsModalComponent,
+    EditAccountSecurityModalComponent,
     OurCouncilComponent,
     CalendarEventsComponent,
     ViewUpcomingEventModalComponent,
@@ -80,12 +84,11 @@ import { EditKnightPasswordModalComponent } from './components/admin/knights/edi
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomePageComponent, pathMatch: 'full' },
+      { path: 'login', component: LoginComponent, pathMatch: 'full' },
       { path: 'aboutKnights', component: AboutKnightsComponent, pathMatch: 'full' },
       { path: 'aboutOurCouncil', component: OurCouncilComponent, pathMatch: 'full' },
       { path: 'upcomingEvents', component: CalendarEventsComponent, pathMatch: 'full' },
       { path: 'account', component: AccountComponent, pathMatch: 'full', canActivate: [AccountGuard] },
-      { path: 'account/interests', component: AccountInterestsComponent, pathMatch: 'full', canActivate: [AccountGuard] },
-      { path: 'account/personalInfo', component: AccountPersonalInfoComponent, pathMatch: 'full', canActivate: [AccountGuard] },
       { path: 'admin', component: AdminComponent, pathMatch: 'full', canActivate: [AdminGuard] },
       { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full', canActivate: [ActivitiesGuard] },
       { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },

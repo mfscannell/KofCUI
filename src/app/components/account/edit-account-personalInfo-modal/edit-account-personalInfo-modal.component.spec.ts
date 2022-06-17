@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { AccountPersonalInfoComponent } from './account-personalInfo.component';
+import { EditAccountPersonalInfoModalComponent } from './edit-account-personalInfo-modal.component';
 
-describe('AccountPersonalInfoComponent', () => {
-  let component: AccountPersonalInfoComponent;
-  let fixture: ComponentFixture<AccountPersonalInfoComponent>;
+describe('EditAccountPersonalInfoModalComponent', () => {
+  let component: EditAccountPersonalInfoModalComponent;
+  let fixture: ComponentFixture<EditAccountPersonalInfoModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccountPersonalInfoComponent ]
+      declarations: [ EditAccountPersonalInfoModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AccountPersonalInfoComponent);
+    fixture = TestBed.createComponent(EditAccountPersonalInfoModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

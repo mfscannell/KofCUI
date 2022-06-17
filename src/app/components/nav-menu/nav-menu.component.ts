@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from 'src/app/models/externalLink';
 import { LogInRequest } from 'src/app/models/requests/logInRequest';
@@ -15,10 +16,10 @@ import { ConfigsService } from 'src/app/services/configs.service';
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
   public isMenuCollapsed = true;
+  public isAccountDropDownOpen = false;
   private externalLinksSubscription?: Subscription;
   private logInSubscription?: Subscription;
   public externalLinks: ExternalLink[] = [];
-  public loginForm: FormGroup;
   public errorMessages: string[] = [];
   public errorLoggingIn: boolean = false;
 
@@ -26,10 +27,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     private configsService: ConfigsService,
     public accountsService: AccountsService,
     private router: Router) {
-    this.loginForm = new FormGroup({
-      username: new FormControl(),
-      password: new FormControl()
-    });
   }
 
   ngOnInit() {
@@ -46,36 +43,22 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  login() {
-    let rawForm = this.loginForm.getRawValue();
-    console.log(rawForm.username);
-    console.log(rawForm.password);
-
-    var loginRequest = new LogInRequest({
-      username: rawForm.username,
-      password: rawForm.password
-    });
-    let logInObserver = {
-      next: (logInResult: void) => this.handleLogInResult(),
-      error: (err: any) => this.logError('Error logging in.', err),
-      complete: () => console.log('Logged In.')
-    };
-
-    this.logInSubscription = this.accountsService.login(loginRequest).subscribe(logInObserver);
+  navigateToAccountClick(dropDown: NgbDropdown) {
+    dropDown.close();
+    this.isMenuCollapsed = true;
   }
 
-  private handleLogInResult() {
-    this.loginForm.patchValue({
-      username: '',
-      password: ''
-    });
-
-    this.errorLoggingIn = false;
+  navigateToLogin(dropDown: NgbDropdown) {
+    dropDown.close();
+    this.router.navigate(['/login']);
+    this.isMenuCollapsed = true;
   }
 
-  logout() {
+  logout(dropDown: NgbDropdown) {
+    dropDown.close();
     this.accountsService.logout();
     this.router.navigate(['/']);
+    this.isMenuCollapsed = true;
   }
 
   private getAllExternalLinks() {

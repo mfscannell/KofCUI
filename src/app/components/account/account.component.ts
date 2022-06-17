@@ -13,6 +13,11 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EditAccountPersonalInfoModalComponent } from './edit-account-personalInfo-modal/edit-account-personalInfo-modal.component';
+import { EditAccountInterestsModalComponent } from './edit-account-interests-modal/edit-account-interests-modal.component';
+import { EditAccountSecurityModalComponent } from './edit-account-security-modal/edit-account-security-modal.component';
+import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
 
 @Component({
   selector: 'kofc-account',
@@ -41,6 +46,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private modalService: NgbModal,
     private knightsService: KnightsService,
     private accountsService: AccountsService) {
   }
@@ -64,8 +70,66 @@ export class AccountComponent implements OnInit, OnDestroy {
     return this.knight?.activityInterests.filter(x => x.interested);
   }
 
+  filterActivitiesInterestedInCategory(activityCategory: ActivityCategoryEnums) {
+    return this.knight?.activityInterests.filter(x => x.interested && x.activityCategory === activityCategory);
+  }
+
   formatDate(date: string | undefined) {
     return DateTimeFormatter.ToDisplayedDate(date);
+  }
+
+  openEditAccountPersonalInfoModal() {
+    const modalRef = this.modalService.open(EditAccountPersonalInfoModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
+
+    modalRef.componentInstance.knight = this.knight;
+    modalRef.result.then((result: Knight) => {
+      if (result) {
+        if (this.knight) {
+          result.activityInterests = this.knight?.activityInterests;
+          this.knight = result;
+        }
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        console.log('Error from Edit Account Personal Info Modal.');
+        console.log(error);
+      }
+    });
+  }
+
+  openEditAccountActivityInterestsModal() {
+    const modalRef = this.modalService.open(EditAccountInterestsModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
+
+    modalRef.componentInstance.knightId = this.knight?.knightId;
+    modalRef.componentInstance.allActivities = this.knight?.activityInterests;
+    modalRef.result.then((result: ActivityInterest[]) => {
+      if (result) {
+        if (this.knight) {
+          this.knight.activityInterests = result;
+        }
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        console.log('Error from Edit Account Activity Interests Modal.');
+        console.log(error);
+      }
+    });
+  }
+
+  openEditAccountSecurityModal() {
+    const modalRef = this.modalService.open(EditAccountSecurityModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
+
+    modalRef.componentInstance.knightId = this.knight?.knightId;
+    modalRef.result.then((result: ChangePasswordResponse) => {
+      if (result) {
+        
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        console.log('Error from Edit Account Security Modal.');
+        console.log(error);
+      }
+    });
   }
 
   private getKnight() {

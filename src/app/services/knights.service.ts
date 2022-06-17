@@ -9,6 +9,7 @@ import { UpdateKnightPasswordRequest } from '../models/requests/updateKnightPass
 import { UpdateKnightPasswordResponse } from '../models/responses/updateKnightPasswordResponse';
 import { UpdateKnightAndActivityInterestsRequest } from '../models/requests/updateKnightAndActivityInterestsRequest';
 import { KnightUser } from '../models/knightUser';
+import { UpdateKnightPersonalInfoRequest } from '../models/requests/updateKnightPersonalInfoRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -39,7 +40,7 @@ export class KnightsService {
         return this.http.post<Knight[]>('knights/multiple', knights);
     }
 
-    updateKnightPersonalInfo(knight: Knight) : Observable<Knight> {
+    updateKnightPersonalInfo(knight: UpdateKnightPersonalInfoRequest) : Observable<Knight> {
         return this.http.put<Knight>(`knights/${knight?.knightId}/personalInfo`, knight);
     }
 
