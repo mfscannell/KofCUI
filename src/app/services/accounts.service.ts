@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { LogInRequest } from '../models/requests/logInRequest';
 import { LogInResponse } from '../models/responses/logInResponse';
+import { ChangePassWordRequest } from '../models/requests/changePasswordRequest';
+import { ChangePasswordResponse } from '../models/responses/changePasswordResponse';
+import { PasswordRequirements } from '../models/responses/passwordRequirements';
 
 @Injectable({
     providedIn: 'root'
@@ -29,9 +32,21 @@ export class AccountsService {
       )
   }
 
+  changePassword(changePasswordRequest: ChangePassWordRequest) : Observable<ChangePasswordResponse> {
+    return this.http.put<ChangePasswordResponse>('accounts/changePassword', changePasswordRequest);
+  }
+
+  getPasswordRequirements() : Observable<PasswordRequirements> {
+    return this.http.get<PasswordRequirements>('accounts/passwordRequirements');
+  }
+
   logout() {
     this.currentUserSource.next(null);
     this.loggedInUser = undefined;
+  }
+
+  isLoggedIn() {
+    return this.loggedInUser !== null && this.loggedInUser !== undefined;
   }
 
   setCurrentUser(user: LogInResponse) {
