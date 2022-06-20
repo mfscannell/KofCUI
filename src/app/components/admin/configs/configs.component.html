@@ -11,7 +11,7 @@
         <ngb-panel *ngFor="let configGroupFormGroup of configGroupsForm.controls; let i = index;" [formGroupName]="i">
           <ng-template ngbPanelTitle>
             <div class="row">
-              <button type="button" class="btn btn-link" >{{getConfigGroupName(i)}}</button>
+              <button type="button" class="btn btn-link btn-link-kofc-blue" >{{getConfigGroupName(i)}}</button>
             </div>
           </ng-template>
           <ng-template ngbPanelContent>
@@ -29,7 +29,7 @@
                     </select>
                   </div>
                   <div class="col-2 col-sm-1">
-                    <button type="button" class="btn btn-primary rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">
+                    <button type="button" class="btn btn-primary btn-kofc-blue rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">
                       <svg class="bi" width="22" height="22" fill="currentColor">
                         <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#question"/>
                       </svg>
@@ -44,8 +44,9 @@
     </ngb-accordion>
     <div class="form-group row mb-1">
       <div class="col-12 mt-1">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
       </div>
     </div>
   </form>
+  <div id="configsSpacer"></div>
 </div>

@@ -78,6 +78,12 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return hasLength;
   }
 
+  isPasswordDirty() {
+    let newPasswordInput = this.editAccountSecurityForm.get('newPassword');
+
+    return newPasswordInput?.dirty;
+  }
+
   hasDistinctCharacters() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;

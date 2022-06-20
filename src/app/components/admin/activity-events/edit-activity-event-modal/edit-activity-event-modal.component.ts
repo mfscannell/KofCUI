@@ -22,7 +22,7 @@ import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 @Component({
   selector: 'kofc-edit-activity-event-modal',
   templateUrl: './edit-activity-event-modal.component.html',
-  styleUrls: ['./edit-activity-event-modal.component.css']
+  styleUrls: ['./edit-activity-event-modal.component.scss']
 })
 export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';

@@ -22,7 +22,7 @@ import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordR
 @Component({
   selector: 'kofc-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+  styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';

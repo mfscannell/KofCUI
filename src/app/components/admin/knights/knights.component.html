@@ -20,14 +20,14 @@
         <td>{{knight.firstName}}</td>
         <td>{{knight.lastName}}</td>
         <td>
-          <button type="button" class="btn btn-primary" (click)="openEditKnightModal(knight)">
+          <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditKnightModal(knight)">
             <svg class="bi" width="24" height="24" fill="currentColor">
               <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
             </svg>
           </button>
         </td>
         <td>
-          <button type="button" class="btn btn-primary" (click)="openEditKnightPassword(knight)">
+          <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditKnightPassword(knight)">
             <svg class="bi" width="24" height="24" fill="currentColor">
               <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
             </svg>
@@ -47,12 +47,13 @@
   </ngb-pagination>
   <div class="form-group row mb-1">
     <div class="col-md-12">
-      <button type="button" class="btn btn-primary" (click)="openCreateKnightModal()">Add</button>
+      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openCreateKnightModal()">Add</button>
     </div>
   </div>
   <div class="form-group row mb-1">
     <div class="col-md-12">
-      <button type="button" class="btn btn-primary" (click)="openUploadKnightsModal()">Upload</button>
+      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openUploadKnightsModal()">Upload</button>
     </div>
   </div>
+  <div id="knightsSpacer"></div>
 </div>

@@ -6,7 +6,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 @Component({
   selector: 'kofc-view-upcoming-event-modal',
   templateUrl: './view-upcoming-event-modal.component.html',
-  styleUrls: ['./view-upcoming-event-modal.component.css']
+  styleUrls: ['./view-upcoming-event-modal.component.scss']
 })
 export class ViewUpcomingEventModalComponent implements OnInit {
   @Input() modalHeaderText: string = '';
