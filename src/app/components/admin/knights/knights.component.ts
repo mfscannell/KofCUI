@@ -17,7 +17,7 @@ import { KnightUser } from 'src/app/models/knightUser';
 @Component({
   selector: 'knights',
   templateUrl: './knights.component.html',
-  styleUrls: ['./knights.component.css']
+  styleUrls: ['./knights.component.scss']
 })
 export class KnightsComponent implements OnInit, OnDestroy {
   allKnights: Knight[] = [];

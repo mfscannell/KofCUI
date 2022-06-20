@@ -93,6 +93,12 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     return isAccountActive;
   }
 
+  isPasswordDirty() {
+    let newPasswordInput = this.editKnightPasswordForm.get('password');
+
+    return newPasswordInput?.dirty;
+  }
+
   hasRequiredLength() {
     let rawForm = this.editKnightPasswordForm.getRawValue();
     let newPassword = rawForm.password as string;

@@ -5,3 +5,83 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+
+.accordion-button:not(.collapsed) {
+  background-color: #fbda8a !important;
+}
+
+/* Buttons */
+.btn-kofc-blue {
+  background-color: #112866;
+  border-color: #112866;
+  color: white;
+}
+
+.btn-kofc-blue:hover {
+  background-color: #142f77;
+  border-color: #142f77;
+  color: #dddddd;
+}
+
+.btn-kofc-blue:focus {
+  background-color: #112866;
+  border-color: #112866;
+  color: white;
+}
+
+.btn-kofc-yellow {
+  background-color: #f7b718;
+  border-color: #f7b718;
+  color: #112866;
+}
+
+.btn-kofc-yellow:hover {
+  background-color: #f8bf31;
+  border-color: #f8bf31;
+  color: #0d1f50;
+}
+
+.btn-link-kofc-blue {
+  color: rgb(17, 40, 102) !important;
+}
+
+.nav-item-kofc-blue {
+  color: #112866;
+}
+
+.nav-item-kofc-blue:active {
+  color: #495057;
+}
+
+/* Navigation Links */
+.nav-link-kofc-blue {
+  color: #112866;
+}
+
+.nav-link-kofc-blue:hover {
+  background-color: #112866;
+  color: rgb(255, 255, 255) !important;
+}
+
+.nav-link-kofc-white {
+  color: white;
+}
+
+.nav-link-kofc-white:hover {
+  color: #dddddd;
+}
+
+.nav-link-kofc-white:focus {
+  color: white;
+}
+
+/* Page Links */
+.page-link {
+  color: #112866;
+}
+
+.page-item.active .page-link {
+  color: white;
+  background-color: #112866;
+  border-color: #112866;
+}

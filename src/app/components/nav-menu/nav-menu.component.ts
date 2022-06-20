@@ -12,7 +12,7 @@ import { ConfigsService } from 'src/app/services/configs.service';
 @Component({
   selector: 'nav-menu',
   templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  styleUrls: ['./nav-menu.component.scss']
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
   public isMenuCollapsed = true;

@@ -4,7 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'kofc-aboutKnights',
   templateUrl: './aboutKnights.component.html',
-  styleUrls: ['./aboutKnights.component.css']
+  styleUrls: ['./aboutKnights.component.scss']
 })
 export class AboutKnightsComponent implements OnInit {
   //safeUrl: SafeResourceUrl;

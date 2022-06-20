@@ -46,10 +46,12 @@ import { LoginComponent } from './components/login/login.component';
 import { EditAccountPersonalInfoModalComponent } from './components/account/edit-account-personalInfo-modal/edit-account-personalInfo-modal.component';
 import { EditAccountInterestsModalComponent } from './components/account/edit-account-interests-modal/edit-account-interests-modal.component';
 import { EditAccountSecurityModalComponent } from './components/account/edit-account-security-modal/edit-account-security-modal.component';
+import { NavFooterComponent } from './components/nav-footer/nav-footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    NavFooterComponent,
     NavMenuComponent,
     HomePageComponent,
     LoginComponent,

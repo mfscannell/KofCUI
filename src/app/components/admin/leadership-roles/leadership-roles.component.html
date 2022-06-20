@@ -1,9 +1,9 @@
 <div class="container">
   <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
-    <ngb-panel *ngFor='let leadershipRoleCategory of leadershipRoleCategories'>
-      <ng-template ngbPanelHeader let-opened="opened">
-        <div class="accordion-button custom-header justify-content-between" [class.collapsed]="!opened">
-          <button ngbPanelToggle class="btn btn-link">{{leadershipRoleCategory}}</button>
+    <ngb-panel *ngFor="let leadershipRoleCategory of leadershipRoleCategories">
+      <ng-template ngbPanelTitle>
+        <div class="row">
+          <button type="button" class="btn btn-link btn-link-kofc-blue" >{{leadershipRoleCategory}}</button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-6 col-md-2">
               <div class="btn-toolbar text-center mt-1">
-                <button type="button" class="btn btn-primary me-1" (click)="openEditLeadershipRoleModal(leadershipRole)">
+                <button type="button" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditLeadershipRoleModal(leadershipRole)">
                   <svg class="bi" width="20" height="20" fill="currentColor">
                     <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                   </svg>
@@ -30,5 +30,35 @@
         </div>
       </ng-template>
     </ngb-panel>
+    <!-- <ngb-panel *ngFor='let leadershipRoleCategory of leadershipRoleCategories'>
+      <ng-template ngbPanelHeader let-opened="opened">
+        <div class="accordion-button custom-header justify-content-between" [class.collapsed]="!opened">
+          <button ngbPanelToggle class="btn btn-link btn-link-kofc-blue">{{leadershipRoleCategory}}</button>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="container">
+          <div class="row" *ngFor='let leadershipRole of filterLeadershipRoles(leadershipRoleCategory)'>
+            <div class="col-6 col-md-10">
+              {{leadershipRole.title}}
+            </div>
+            <div class="col-6 col-md-2">
+              <div class="btn-toolbar text-center mt-1">
+                <button type="button" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditLeadershipRoleModal(leadershipRole)">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-danger">
+                  <svg class="bi" width="20" height="20" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-panel> -->
   </ngb-accordion>
 </div>
