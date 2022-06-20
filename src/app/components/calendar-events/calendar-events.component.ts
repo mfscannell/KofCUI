@@ -12,7 +12,7 @@ import { ViewUpcomingEventModalComponent } from './view-upcoming-event-modal/vie
 @Component({
   selector: 'kofc-calendar-events',
   templateUrl: './calendar-events.component.html',
-  styleUrls: ['./calendar-events.component.css']
+  styleUrls: ['./calendar-events.component.scss']
 })
 export class CalendarEventsComponent implements OnInit {
   getAllUpcomingEventsSubscription?: Subscription;

@@ -15,7 +15,7 @@ import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategor
 @Component({
   selector: 'kofc-leadership-roles',
   templateUrl: './leadership-roles.component.html',
-  styleUrls: ['./leadership-roles.component.css']
+  styleUrls: ['./leadership-roles.component.scss']
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   allKnights: Knight[] = [];

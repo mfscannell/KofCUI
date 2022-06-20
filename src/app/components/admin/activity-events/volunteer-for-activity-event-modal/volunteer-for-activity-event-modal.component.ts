@@ -21,7 +21,7 @@ import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 @Component({
   selector: 'kofc-volunteer-for-activity-event-modal',
   templateUrl: './volunteer-for-activity-event-modal.component.html',
-  styleUrls: ['./volunteer-for-activity-event-modal.component.css']
+  styleUrls: ['./volunteer-for-activity-event-modal.component.scss']
 })
 export class VolunteerForActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';

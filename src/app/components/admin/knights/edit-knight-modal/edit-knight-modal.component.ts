@@ -22,7 +22,7 @@ import { UpdateKnightAndActivityInterestsRequest } from 'src/app/models/requests
 @Component({
   selector: 'edit-knight-modal',
   templateUrl: './edit-knight-modal.component.html',
-  styleUrls: ['./edit-knight-modal.component.css']
+  styleUrls: ['./edit-knight-modal.component.scss']
 })
 export class EditKnightModalComponent implements OnInit {
   @Input() modalHeaderText: string = '';

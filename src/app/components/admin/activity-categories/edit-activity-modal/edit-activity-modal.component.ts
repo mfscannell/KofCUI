@@ -14,7 +14,7 @@ import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 @Component({
   selector: 'app-edit-activity-modal',
   templateUrl: './edit-activity-modal.component.html',
-  styleUrls: ['./edit-activity-modal.component.css']
+  styleUrls: ['./edit-activity-modal.component.scss']
 })
 export class EditActivityModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';

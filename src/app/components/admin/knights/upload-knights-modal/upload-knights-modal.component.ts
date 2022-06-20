@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'kofc-upload-knights-modal',
   templateUrl: './upload-knights-modal.component.html',
-  styleUrls: ['./upload-knights-modal.component.css']
+  styleUrls: ['./upload-knights-modal.component.scss']
 })
 export class UploadKnightsModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';

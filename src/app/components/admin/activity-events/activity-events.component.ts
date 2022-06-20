@@ -21,7 +21,7 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 @Component({
   selector: 'kofc-activity-events',
   templateUrl: './activity-events.component.html',
-  styleUrls: ['./activity-events.component.css']
+  styleUrls: ['./activity-events.component.scss']
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   activityEventsSubscription?: Subscription;

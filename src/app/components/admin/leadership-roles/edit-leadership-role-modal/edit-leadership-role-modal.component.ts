@@ -12,7 +12,7 @@ import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategor
 @Component({
   selector: 'kofc-edit-leadership-role-modal',
   templateUrl: './edit-leadership-role-modal.component.html',
-  styleUrls: ['./edit-leadership-role-modal.component.css']
+  styleUrls: ['./edit-leadership-role-modal.component.scss']
 })
 export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';

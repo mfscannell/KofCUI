@@ -1,9 +1,9 @@
 <div class="container">
   <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
-    <ngb-panel *ngFor='let activityCategory of activityCategories'>
-      <ng-template ngbPanelHeader let-opened="opened">
-        <div class="accordion-button custom-header justify-content-between" [class.collapsed]="!opened">
-          <button ngbPanelToggle class="btn btn-link">{{activityCategory}}</button>
+    <ngb-panel *ngFor="let activityCategory of activityCategories">
+      <ng-template ngbPanelTitle>
+        <div class="row">
+          <button type="button" class="btn btn-link btn-link-kofc-blue" >{{activityCategory}}</button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-6 col-md-4">
               <div class="btn-toolbar text-center mt-1">
-                <button *ngIf="canEditActivity(activity.activityId)" type="button" class="btn btn-primary me-1" (click)="openEditActivityModal(activity)">
+                <button *ngIf="canEditActivity(activity.activityId)" type="button" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditActivityModal(activity)">
                   <svg class="bi" width="20" height="20" fill="currentColor">
                     <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                   </svg>
@@ -34,8 +34,9 @@
   <div class="row">
     <div class="col-md-12 mt-1">
       <div class="btn-toolbar text-center mt-1">
-        <button type="button" *ngIf="canAddActivity() && activityCategories.length > 0" class="btn btn-primary" (click)="openCreateActivityModal()">Add Activity</button>
+        <button type="button" *ngIf="canAddActivity() && activityCategories.length > 0" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityModal()">Add Activity</button>
       </div>
     </div>
   </div>
+  <div id="activitySpacer"></div>
 </div>

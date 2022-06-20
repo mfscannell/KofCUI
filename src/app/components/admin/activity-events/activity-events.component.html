@@ -1,120 +1,108 @@
 <div class="container">
-  <nav ngbNav #nav="ngbNav" class="nav-tabs">
-    <ng-container ngbNavItem>
-      <a ngbNavLink>Events</a>
-      <ng-template ngbNavContent>
-          <div class="container">
-            <div class="form-row">
-              <div class="col-12 col-md-2">
-                <div class="input-group">
-                  <input #dpFromDate
-                        class="form-control"
-                        placeholder="yyyy-mm-dd"
-                        [(ngModel)]="fromDate"
-                        [value]="formatter.format(fromDate)"
-                        name="dpFromDate"
-                        (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
-                        ngbDatepicker
-                        [minDate]="{year: 1900, month: 1, day: 1}"
-                        [firstDayOfWeek]="7"
-                        outsideDays="hidden"
-                        #fromDatepicker="ngbDatepicker">
-                  <div class="input-group-append">
-                    <!-- <span class="input-group-text">
-                      <img src="assets/icons/bootstrap-icons/calendar.svg" fill="currentColor" alt="Bootstrap" class="img-fluid" (click)="fromDatepicker.toggle()">
-                    </span> -->
-                    <button class="btn btn-outline-secondary calendar" (click)="fromDatepicker.toggle()" type="button">
-                      <svg class="bi" width="20" height="20" fill="currentColor">
-                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-md-2">
-                <div class="input-group">
-                  <input #dpToDate
-                        class="form-control"
-                        placeholder="yyyy-mm-dd"
-                        [(ngModel)]="toDate"
-                        [value]="formatter.format(toDate)"
-                        name="dpToDate"
-                        (input)="fromDate = validateInput(toDate, dpToDate.value)"
-                        ngbDatepicker
-                        [minDate]="{year: 1900, month: 1, day: 1}"
-                        [firstDayOfWeek]="7"
-                        outsideDays="hidden"
-                        #toDatepicker="ngbDatepicker">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="toDatepicker.toggle()" type="button">
-                      <svg class="bi" width="20" height="20" fill="currentColor">
-                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="col-4 col-md-2">
-                <button type="button"  class="btn btn-primary" (click)="getAllActivityEvents()">Search</button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>Event Name</th>
-                      <th>Event Date</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let activityEvent of activityEvents">
-                      <td *ngIf="activityEvent.canceled">{{activityEvent.eventName}} (CANCELED)</td>
-                      <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
-                      <td>{{formatDate(activityEvent.startDateTime)}}</td>
-                      <td>
-                        <button type="button" class="btn btn-primary" (click)="openVolunteerForActivityEventModal(activityEvent)">
-                          Volunteer
-                        </button>
-                      </td>
-                      <td>
-                        <button type="button" class="btn btn-primary" (click)="openSendEmailModal(activityEvent)">
-                          <svg class="bi" width="24" height="24" fill="currentColor">
-                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
-                          </svg>
-                        </button>
-                      </td>
-                      <td>
-                        <button type="button" class="btn btn-primary" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
-                          <svg class="bi" width="24" height="24" fill="currentColor">
-                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
-                          </svg>
-                        </button>
-                      </td>
-                      <td>
-                        <button type="button" class="btn btn-danger">
-                          <svg class="bi" width="24" height="24" fill="currentColor">
-                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="row" *ngIf="canAddEvent()">
-              <div class="col-md-12">
-                <button type="button" class="btn btn-primary" (click)="openCreateActivityEventModal()">Add</button>
-              </div>
-            </div>
-          </div>
-      </ng-template>
-    </ng-container>
-  </nav>
-  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+  <div class="form-row">
+    <div class="col-12 col-md-2">
+      <div class="input-group">
+        <input #dpFromDate
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              [(ngModel)]="fromDate"
+              [value]="formatter.format(fromDate)"
+              name="dpFromDate"
+              (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+              ngbDatepicker
+              [minDate]="{year: 1900, month: 1, day: 1}"
+              [firstDayOfWeek]="7"
+              outsideDays="hidden"
+              #fromDatepicker="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="fromDatepicker.toggle()" type="button">
+            <svg class="bi" width="20" height="20" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-2">
+      <div class="input-group">
+        <input #dpToDate
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              [(ngModel)]="toDate"
+              [value]="formatter.format(toDate)"
+              name="dpToDate"
+              (input)="fromDate = validateInput(toDate, dpToDate.value)"
+              ngbDatepicker
+              [minDate]="{year: 1900, month: 1, day: 1}"
+              [firstDayOfWeek]="7"
+              outsideDays="hidden"
+              #toDatepicker="ngbDatepicker">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="toDatepicker.toggle()" type="button">
+            <svg class="bi" width="20" height="20" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 col-md-2">
+      <button type="button"  class="btn btn-primary btn-kofc-blue" (click)="getAllActivityEvents()">Search</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Event Name</th>
+            <th>Event Date</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let activityEvent of activityEvents">
+            <td *ngIf="activityEvent.canceled">{{activityEvent.eventName}} (CANCELED)</td>
+            <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
+            <td>{{formatDate(activityEvent.startDateTime)}}</td>
+            <td>
+              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openVolunteerForActivityEventModal(activityEvent)">
+                Volunteer
+              </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openSendEmailModal(activityEvent)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
+                </svg>
+              </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                </svg>
+              </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row" *ngIf="canAddEvent()">
+    <div class="col-md-12">
+      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityEventModal()">Add</button>
+    </div>
+  </div>
+  <div id="activityEventSpacer"></div>
 </div>

@@ -13,7 +13,7 @@ import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 @Component({
   selector: 'activity-categories',
   templateUrl: './activity-categories.component.html',
-  styleUrls: ['./activity-categories.component.css']
+  styleUrls: ['./activity-categories.component.scss']
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   activitiesSubscription?: Subscription;

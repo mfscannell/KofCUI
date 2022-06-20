@@ -5,41 +5,43 @@
     </div>
   </nav>
   <nav id="menuNavBar" class="navbar navbar-expand-md mb-3">
-    <button id="navigationButton" class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+    <button id="navigationButton" class="navbar-toggler nav-link-kofc-white" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
       &#9776;
     </button>
   
     <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
         <li class="nav-item active">
-          <a class="nav-link" routerLink="/" (click)="isMenuCollapsed = true" routerLinkActiver="active">Home</a>
+          <a class="nav-link nav-link-kofc-white" routerLink="/" (click)="isMenuCollapsed = true" routerLinkActiver="active">Home</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" routerLink="/aboutKnights" (click)="isMenuCollapsed = true" routerLinkActiver="active">About the Knights</a>
+          <a class="nav-link nav-link-kofc-white" routerLink="/aboutKnights" (click)="isMenuCollapsed = true" routerLinkActiver="active">About the Knights</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" routerLink="/aboutOurCouncil" (click)="isMenuCollapsed = true" routerLinkActiver="active">About Our Council</a>
+          <a class="nav-link nav-link-kofc-white" routerLink="/aboutOurCouncil" (click)="isMenuCollapsed = true" routerLinkActiver="active">About Our Council</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" routerLink="/upcomingEvents" (click)="isMenuCollapsed = true" routerLinkActiver="active">Upcoming Events</a>
+          <a class="nav-link nav-link-kofc-white" routerLink="/upcomingEvents" (click)="isMenuCollapsed = true" routerLinkActiver="active">Upcoming Events</a>
         </li>
         <li ngbDropdown class="nav-item dropdown active" *ngIf="externalLinks.length > 0">
-          <a ngbDropdownToggle class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Links</a>
+          <a ngbDropdownToggle class="nav-link nav-link-kofc-white dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Links</a>
           <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li ngbDropdownItem *ngFor="let extLink of externalLinks"><a class="dropdown-item" href="{{extLink.url}}">{{extLink.websiteName}}</a></li>
+            <li ngbDropdownItem class="nav-link-kofc-blue" *ngFor="let extLink of externalLinks">
+              <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}">{{extLink.websiteName}}</a>
+            </li>
           </ul>
         </li>
         <li class="nav-item active" *ngIf="(accountsService.currentUser | async) as user">
-          <a class="nav-link" routerLink="/admin" (click)="isMenuCollapsed = true" routerLinkActiver="active">Admin</a>
+          <a class="nav-link nav-link-kofc-white" routerLink="/admin" (click)="isMenuCollapsed = true" routerLinkActiver="active">Admin</a>
         </li>
       </ul>
       <li ngbDropdown #accountDropDown="ngbDropdown" class="d-flex" *ngIf="(accountsService.currentUser | async) === null" [autoClose]="true">
-        <button type="button" class="btn btn-outline-primary" id="dropdownForm1" ngbDropdownToggle>Welcome</button>
+        <button type="button" class="btn btn-primary btn-kofc-yellow" id="dropdownForm1" ngbDropdownToggle>Welcome</button>
         <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end signInDropDown" aria-labelledby="dropdownForm1">
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <button type="button" class="btn btn-primary w-100" (click)="navigateToLogin(accountDropDown);">Sign in</button>
+                <button type="button" class="btn btn-primary btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToLogin(accountDropDown);">Sign in</button>
               </div>
             </div>
           </div>
@@ -49,10 +51,10 @@
         </div>
       </li>
       <li ngbDropdown #accountLogOutDropDown="ngbDropdown" class="d-flex" *ngIf="(accountsService.currentUser | async) as user">
-        <button type="button" class="btn btn-outline-primary" id="dropdownForm2" ngbDropdownToggle>Welcome {{user.knight?.firstName | titlecase}}</button>
+        <button type="button" class="btn btn-primary  btn-kofc-yellow" id="dropdownForm2" ngbDropdownToggle>Welcome {{user.knight?.firstName | titlecase}}</button>
         <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownForm2">
-          <a class="nav-link" routerLink="/account" routerLinkActiver="active" (click)="navigateToAccountClick(accountLogOutDropDown)">Account</a>
-          <button type="button" class="btn btn-outline-primary" id="logOutBtn" (click)="logout(accountLogOutDropDown)">Log Out</button>
+          <a class="nav-link nav-link-kofc-blue" routerLink="/account" routerLinkActiver="active" (click)="navigateToAccountClick(accountLogOutDropDown)">Account</a>
+          <button type="button" class="btn btn-primary btn-kofc-blue" id="logOutBtn" (click)="logout(accountLogOutDropDown)">Log Out</button>
         </div>
       </li>
     </div>
