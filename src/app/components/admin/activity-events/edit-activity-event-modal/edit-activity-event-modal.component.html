@@ -8,7 +8,7 @@
   <form [formGroup]="editActivityEventForm" (ngSubmit)="onSubmitEditActivityEvent()">
     <nav ngbNav #nav="ngbNav" class="nav-tabs">
       <ng-container ngbNavItem>
-        <a ngbNavLink class="nav-item-kofc-blue">Event Information</a>
+        <a ngbNavLink class="nav-item-kofc-blue">Information</a>
         <ng-template ngbNavContent>
           <div class="form-group row mb-1">
             <div class="col-12">All times are in {{councilTimeZone.displayName}} time zone.</div>
@@ -181,7 +181,7 @@
       </ng-container>
 
       <ng-container ngbNavItem>
-        <a ngbNavLink class="nav-item-kofc-blue">Volunteer Roles</a>
+        <a ngbNavLink class="nav-item-kofc-blue">Volunteers</a>
         <ng-template ngbNavContent>
           <ng-container formArrayName="volunteerSignUpRoles">
             <div class="form-group row mb-1">
@@ -214,7 +214,7 @@
                 <ng-container formArrayName="eventVolunteers">
                   <ng-container *ngFor="let eventVolunteer of getEventVolunteers(volunteerSignUpRole); let j = index" [formGroupName]="j">
                     <div class="form-group row mb-1">
-                      <div class="col-8 col-md-3">
+                      <div class="col-8 col-md-4">
                         <select class="form-select" id="activityId" formControlName="knightId">
                           <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
                         </select>

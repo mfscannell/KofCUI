@@ -47,7 +47,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityCoordinatorsList: new FormArray([])
     });
 
-    this.getAllKnightsNames();
+    this.getAllActiveKnightsNames();
   }
 
   ngOnInit() {
@@ -85,14 +85,14 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getAllKnightsNames() {
+  private getAllActiveKnightsNames() {
     let knightsObserver = {
       next: (knights: Knight[]) => this.allKnights = knights,
       error: (err: any) => this.logError('Error getting all knights.', err),
       complete: () => console.log('Knights updated.')
     };
 
-    this.getAllKnightsSubscription = this.knightsService.getAllKnightsNames().subscribe(knightsObserver);
+    this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
   }
 
   get activityCoordinators() {
