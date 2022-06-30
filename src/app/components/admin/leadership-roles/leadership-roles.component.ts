@@ -33,7 +33,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    this.getAllKnightsNames();
+    this.getAllActiveKnightsNames();
     this.getAllLeadershipRoles();
   }
 
@@ -47,13 +47,13 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getAllKnightsNames() {
+  private getAllActiveKnightsNames() {
     let knightsObserver = {
       next: (knights: Knight[]) => this.loadAllKnights(knights),
       error: (err: any) => console.log(`${err}`),
       complete: () => console.log('Knights loaded.')
     };
-    this.knightsSubscription = this.knightsService.getAllKnightsNames().subscribe(knightsObserver);
+    this.knightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
   }
 
   private loadAllKnights(knights: Knight[]) {

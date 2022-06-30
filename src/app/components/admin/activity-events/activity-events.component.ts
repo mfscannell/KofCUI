@@ -48,12 +48,13 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     public formatter: NgbDateParserFormatter,
     private modalService: NgbModal) {
       this.fromDate = calendar.getToday();
+      this.fromDate = calendar.getPrev(this.fromDate, 'm', 2);
       this.toDate = calendar.getNext(calendar.getToday(), 'm', 6);
   }
 
   ngOnInit() {
     this.getAllActivityEvents();
-    this.getAllKnightsNames();
+    this.getAllActiveKnightsNames();
     this.getAllActivities();
   }
 
@@ -117,14 +118,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
   }
 
-  private getAllKnightsNames() {
+  private getAllActiveKnightsNames() {
     let knightsObserver = {
       next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
       error: (err: any) => this.logError('Error getting all knights.', err),
       complete: () => console.log('All knights loaded.')
     };
 
-    this.getAllKnightsSubscription = this.knightsService.getAllKnightsNames().subscribe(knightsObserver);
+    this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
   }
 
   openEditActivityEventModal(activityEvent: ActivityEvent) {
