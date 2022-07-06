@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -35,7 +35,7 @@ export class EditKnightModalComponent implements OnInit {
   updateKnightSubscription?: Subscription;
   createKnightSubscription?: Subscription;
   getActivityCategoriesSubscription?: Subscription;
-  editKnightForm: FormGroup;
+  editKnightForm: UntypedFormGroup;
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
   activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
@@ -48,71 +48,71 @@ export class EditKnightModalComponent implements OnInit {
     private knightsService: KnightsService,
     private knightActivityInterestsService: KnightActivityInterestsService) {
       var today = new Date();
-      this.editKnightForm = new FormGroup({
-        knightId: new FormControl(0),
-        firstName: new FormControl('', [
+      this.editKnightForm = new UntypedFormGroup({
+        knightId: new UntypedFormControl(0),
+        firstName: new UntypedFormControl('', [
           Validators.required,
           Validators.maxLength(63)
         ]),
-        middleName: new FormControl('', [
+        middleName: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
-        lastName: new FormControl('', [
+        lastName: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
-        nameSuffix: new FormControl('', [
+        nameSuffix: new UntypedFormControl('', [
           Validators.maxLength(7)
         ]),
-        dateOfBirth: new FormControl({
+        dateOfBirth: new UntypedFormControl({
           year: today.getFullYear(),
           month: today.getMonth() + 1,
           day: today.getDate()
         }),
-        emailAddress: new FormControl('', [
+        emailAddress: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
-        cellPhoneNumber: new FormControl('', [
+        cellPhoneNumber: new UntypedFormControl('', [
           Validators.maxLength(31)
         ]),
-        homeAddress: new FormGroup({
-          streetAddressId: new FormControl(0),
-          addressName: new FormControl(null),
-          address1: new FormControl('', [
+        homeAddress: new UntypedFormGroup({
+          streetAddressId: new UntypedFormControl(0),
+          addressName: new UntypedFormControl(null),
+          address1: new UntypedFormControl('', [
             Validators.maxLength(63)
           ]),
-          address2: new FormControl('', [
+          address2: new UntypedFormControl('', [
             Validators.maxLength(63)
           ]),
-          city: new FormControl('', [
+          city: new UntypedFormControl('', [
             Validators.maxLength(63)
           ]),
-          stateCode: new FormControl('', [
+          stateCode: new UntypedFormControl('', [
             Validators.maxLength(3)
           ]),
-          postalCode: new FormControl('', [
+          postalCode: new UntypedFormControl('', [
             Validators.maxLength(15)
           ]),
-          countryCode: new FormControl('', [
+          countryCode: new UntypedFormControl('', [
             Validators.maxLength(7)
           ])
         }),
-        knightInfo: new FormGroup({
-          knightInfoId: new FormControl(0),
-          memberNumber: new FormControl(0),
-          mailReturned: new FormControl(false),
-          degree: new FormControl(KnightDegreeEnums.First),
-          firstDegreeDate: new FormControl({
+        knightInfo: new UntypedFormGroup({
+          knightInfoId: new UntypedFormControl(0),
+          memberNumber: new UntypedFormControl(0),
+          mailReturned: new UntypedFormControl(false),
+          degree: new UntypedFormControl(KnightDegreeEnums.First),
+          firstDegreeDate: new UntypedFormControl({
             year: today.getFullYear(),
             month: today.getMonth() + 1,
             day: today.getDate()
           }),
-          reentryDate: new FormControl({
+          reentryDate: new UntypedFormControl({
             year: today.getFullYear(),
             month: today.getMonth() + 1,
             day: today.getDate()
           }),
-          memberType: new FormControl(KnightMemberTypeEnums.Associate),
-          memberClass: new FormControl(KnightMemberClassEnums.Paying)
+          memberType: new UntypedFormControl(KnightMemberTypeEnums.Associate),
+          memberClass: new UntypedFormControl(KnightMemberClassEnums.Paying)
         })
       });
     }

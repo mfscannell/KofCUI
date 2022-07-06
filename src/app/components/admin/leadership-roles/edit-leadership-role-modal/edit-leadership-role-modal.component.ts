@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,12 +21,12 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
   @Input() allKnights: Knight[] = [];
   updateLeadershipRoleSubscription?: Subscription;
   createLeadershipRoleSubscription?: Subscription;
-  editLeadershipRoleForm: FormGroup;
+  editLeadershipRoleForm: UntypedFormGroup;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
 
   constructor(public activeModal: NgbActiveModal,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private leadershipRolesService: LeadershipRolesService) {
     this.editLeadershipRoleForm = this.fb.group({
       leadershipRoleId: [''],

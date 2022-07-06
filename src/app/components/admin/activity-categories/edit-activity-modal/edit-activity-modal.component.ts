@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -25,28 +25,28 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
   updateActivitySubscription?: Subscription;
   createActivitySubscription?: Subscription;
   getAllKnightsSubscription?: Subscription;
-  editActivityForm: FormGroup;
+  editActivityForm: UntypedFormGroup;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
 
   constructor(public activeModal: NgbActiveModal,
     private activitiesService: ActivitiesService,
     private knightsService: KnightsService) {
-    this.editActivityForm = new FormGroup({
-      activityId: new FormControl(0),
-      activityName: new FormControl('', [
+    this.editActivityForm = new UntypedFormGroup({
+      activityId: new UntypedFormControl(0),
+      activityName: new UntypedFormControl('', [
         Validators.required,
         Validators.maxLength(127)
       ]),
-      activityDescription: new FormControl('', [
+      activityDescription: new UntypedFormControl('', [
         Validators.maxLength(255)
       ]),
-      activityCategory: new FormControl(null, [
+      activityCategory: new UntypedFormControl(null, [
         Validators.required
       ]),
-      activityCoordinatorsList: new FormArray([]),
-      activityEventNotesList: new FormArray([]),
-      notes: new FormControl('')
+      activityCoordinatorsList: new UntypedFormArray([]),
+      activityEventNotesList: new UntypedFormArray([]),
+      notes: new UntypedFormControl('')
     });
 
     this.getAllActiveKnightsNames();
@@ -62,22 +62,22 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
         notes: this.activity.notes
        });
 
-       let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as FormArray;
+       let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
 
        this.activity.activityCoordinators.map(function(coordinator) {
-        const activityCoordinatorFg = new FormGroup({
-          activityCoordinatorId: new FormControl(coordinator.activityCoordinatorId),
-          knightId: new FormControl(coordinator.knightId)
+        const activityCoordinatorFg = new UntypedFormGroup({
+          activityCoordinatorId: new UntypedFormControl(coordinator.activityCoordinatorId),
+          knightId: new UntypedFormControl(coordinator.knightId)
         });
          activityCoordinatorsList.push(activityCoordinatorFg);
        });
 
-       let activityEventNotes = this.editActivityForm.get('activityEventNotesList') as FormArray;
+       let activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
 
        this.activity.activityEventNotes.map(function(note) {
-        const activityEventNotesFg = new FormGroup({
-          startDateTime: new FormControl(note.startDateTime),
-          notes: new FormControl(note.notes)
+        const activityEventNotesFg = new UntypedFormGroup({
+          startDateTime: new UntypedFormControl(note.startDateTime),
+          notes: new UntypedFormControl(note.notes)
         });
          activityEventNotes.push(activityEventNotesFg);
        });
@@ -109,28 +109,28 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
   }
 
   get activityCoordinators() {
-    return this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+    return this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
   }
 
   get activityEventNotes() {
-    return this.editActivityForm.controls["activityEventNotesList"] as FormArray;
+    return this.editActivityForm.controls["activityEventNotesList"] as UntypedFormArray;
   }
 
   addActivityCoordinator() {
-    const activityCoordinator = new FormGroup({
-      activityCoordinatorId: new FormControl(0),
-      knightId: new FormControl(null, [
+    const activityCoordinator = new UntypedFormGroup({
+      activityCoordinatorId: new UntypedFormControl(0),
+      knightId: new UntypedFormControl(null, [
         Validators.required
       ])
     });
 
-    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
 
     activityCoordinators.push(activityCoordinator);
   }
 
   deleteActivityCoordinator(roleIndex: number) {
-    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
     
     activityCoordinators.removeAt(roleIndex);
   }

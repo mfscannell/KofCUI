@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
@@ -21,14 +21,14 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllTimeZonesSubscription?: Subscription;
   configGroups: ConfigGroup[] = [];
   timeZones: TimeZone[] = [];
-  editConfigsForm: FormGroup;
+  editConfigsForm: UntypedFormGroup;
   showErrorMessage: boolean = false;
   errorMessages: string[] = [];
   showSuccessMessage: boolean = false;
 
   constructor(private configsService: ConfigsService) {
-    this.editConfigsForm = new FormGroup({
-      configGroups: new FormArray([])
+    this.editConfigsForm = new UntypedFormGroup({
+      configGroups: new UntypedFormArray([])
     });
   }
 
@@ -58,12 +58,12 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private patchEditConfigGroupsForm(configGroups: ConfigGroup[]) {
     this.configGroups = configGroups;
     configGroups.forEach((configGroup: ConfigGroup) => {
-      const configGroupFormGroup = new FormGroup({
-        configGroupId: new FormControl(configGroup.configGroupId),
-        configGroupName: new FormControl(configGroup.configGroupName),
-        configGroupDisplayName: new FormControl(configGroup.configGroupDisplayName),
-        configGroupSortValue: new FormControl(configGroup.configGroupSortValue),
-        configSettings: new FormArray(this.initConfigSettings(configGroup.configSettings))
+      const configGroupFormGroup = new UntypedFormGroup({
+        configGroupId: new UntypedFormControl(configGroup.configGroupId),
+        configGroupName: new UntypedFormControl(configGroup.configGroupName),
+        configGroupDisplayName: new UntypedFormControl(configGroup.configGroupDisplayName),
+        configGroupSortValue: new UntypedFormControl(configGroup.configGroupSortValue),
+        configSettings: new UntypedFormArray(this.initConfigSettings(configGroup.configSettings))
       });
 
       this.configGroupsForm.push(configGroupFormGroup);
@@ -71,23 +71,23 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   private initConfigSettings(configSettings: ConfigSetting[] | undefined) {
-    let configSettingsArray: FormGroup[] = [];
+    let configSettingsArray: UntypedFormGroup[] = [];
 
     if (configSettings) {
       configSettings.forEach((configSetting) => {
-        const configSettingFormGroup = new FormGroup({
-          configSettingId: new FormControl(configSetting.configSettingId),
-          configGroupId: new FormControl(configSetting.configGroupId),
-          configName: new FormControl(configSetting.configName),
-          configDisplayName: new FormControl(configSetting.configDisplayName),
-          configSortValue: new FormControl(configSetting.configSortValue),
-          helpText: new FormControl(configSetting.helpText),
-          configValueType: new FormControl(configSetting.configValueType),
-          booleanValue: new FormControl(configSetting.booleanValue),
-          longValue: new FormControl(configSetting.longValue),
-          stringValue: new FormControl(configSetting.stringValue),
-          dateTimeValue: new FormControl(configSetting.dateTimeValue),
-          inputType: new FormControl(configSetting.inputType)
+        const configSettingFormGroup = new UntypedFormGroup({
+          configSettingId: new UntypedFormControl(configSetting.configSettingId),
+          configGroupId: new UntypedFormControl(configSetting.configGroupId),
+          configName: new UntypedFormControl(configSetting.configName),
+          configDisplayName: new UntypedFormControl(configSetting.configDisplayName),
+          configSortValue: new UntypedFormControl(configSetting.configSortValue),
+          helpText: new UntypedFormControl(configSetting.helpText),
+          configValueType: new UntypedFormControl(configSetting.configValueType),
+          booleanValue: new UntypedFormControl(configSetting.booleanValue),
+          longValue: new UntypedFormControl(configSetting.longValue),
+          stringValue: new UntypedFormControl(configSetting.stringValue),
+          dateTimeValue: new UntypedFormControl(configSetting.dateTimeValue),
+          inputType: new UntypedFormControl(configSetting.inputType)
         });
 
         configSettingsArray.push(configSettingFormGroup);
@@ -127,7 +127,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   get configGroupsForm() {
-    return this.editConfigsForm.controls["configGroups"] as FormArray;
+    return this.editConfigsForm.controls["configGroups"] as UntypedFormArray;
   }
 
   getConfigGroupName(index: number) {
@@ -135,8 +135,8 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   getConfigSettings(configGroup: AbstractControl) {
-    const something = configGroup as FormGroup;
-    const configSettings = something.controls["configSettings"] as FormArray;
+    const something = configGroup as UntypedFormGroup;
+    const configSettings = something.controls["configSettings"] as UntypedFormArray;
 
     return configSettings.controls;
   }

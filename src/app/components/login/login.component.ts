@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LogInRequest } from 'src/app/models/requests/logInRequest';
@@ -11,7 +11,7 @@ import { AccountsService } from 'src/app/services/accounts.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  public loginForm: FormGroup;
+  public loginForm: UntypedFormGroup;
   public errorMessages: string[] = [];
   private logInSubscription?: Subscription;
   public errorLoggingIn: boolean = false;
@@ -19,9 +19,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private accountsService: AccountsService,
     private router: Router) {
-    this.loginForm = new FormGroup({
-      username: new FormControl(),
-      password: new FormControl()
+    this.loginForm = new UntypedFormGroup({
+      username: new UntypedFormControl(),
+      password: new UntypedFormControl()
     });
   }
 

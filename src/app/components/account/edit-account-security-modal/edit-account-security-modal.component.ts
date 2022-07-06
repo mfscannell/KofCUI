@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ChangePassWordRequest } from 'src/app/models/requests/changePasswordRequest';
@@ -14,7 +14,7 @@ import { AccountsService } from 'src/app/services/accounts.service';
 })
 export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
   @Input() knightId?: number;
-  public editAccountSecurityForm: FormGroup;
+  public editAccountSecurityForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   public passwordRequirements: PasswordRequirements = new PasswordRequirements({
@@ -32,11 +32,11 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
   constructor(
     public activeModal: NgbActiveModal,
     private accountsService: AccountsService) {
-      this.editAccountSecurityForm = new FormGroup({
-        knightId: new FormControl(0),
-        oldPassword: new FormControl(''),
-        newPassword: new FormControl(''),
-        confirmPassword: new FormControl('')
+      this.editAccountSecurityForm = new UntypedFormGroup({
+        knightId: new UntypedFormControl(0),
+        oldPassword: new UntypedFormControl(''),
+        newPassword: new UntypedFormControl(''),
+        confirmPassword: new UntypedFormControl('')
       });
     }
 

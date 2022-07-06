@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AddressState } from 'src/app/models/addressState';
@@ -19,7 +19,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 })
 export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy {
   @Input() knight?: Knight;
-  public editKnightPersonalInfoForm: FormGroup;
+  public editKnightPersonalInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   public months: MonthName[] = MonthName.AllMonths;
@@ -31,49 +31,49 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
     public activeModal: NgbActiveModal,
     private knightsService: KnightsService) {
     var today = new Date();
-    this.editKnightPersonalInfoForm = new FormGroup({
-      knightId: new FormControl(0),
-      firstName: new FormControl('', [
+    this.editKnightPersonalInfoForm = new UntypedFormGroup({
+      knightId: new UntypedFormControl(0),
+      firstName: new UntypedFormControl('', [
         Validators.required,
         Validators.maxLength(63)
       ]),
-      middleName: new FormControl('', [
+      middleName: new UntypedFormControl('', [
         Validators.maxLength(63)
       ]),
-      lastName: new FormControl('', [
+      lastName: new UntypedFormControl('', [
         Validators.maxLength(63)
       ]),
-      nameSuffix: new FormControl('', [
+      nameSuffix: new UntypedFormControl('', [
         Validators.maxLength(7)
       ]),
-      dateOfBirthYear: new FormControl(today.getFullYear()),
-      dateOfBirthMonth: new FormControl(today.getMonth() + 1),
-      dateOfBirthDay: new FormControl(today.getDate()),
-      emailAddress: new FormControl('', [
+      dateOfBirthYear: new UntypedFormControl(today.getFullYear()),
+      dateOfBirthMonth: new UntypedFormControl(today.getMonth() + 1),
+      dateOfBirthDay: new UntypedFormControl(today.getDate()),
+      emailAddress: new UntypedFormControl('', [
         Validators.maxLength(63)
       ]),
-      cellPhoneNumber: new FormControl('', [
+      cellPhoneNumber: new UntypedFormControl('', [
         Validators.maxLength(31)
       ]),
-      homeAddress: new FormGroup({
-        streetAddressId: new FormControl(0),
-        addressName: new FormControl(null),
-        address1: new FormControl('', [
+      homeAddress: new UntypedFormGroup({
+        streetAddressId: new UntypedFormControl(0),
+        addressName: new UntypedFormControl(null),
+        address1: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
-        address2: new FormControl('', [
+        address2: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
-        city: new FormControl('', [
+        city: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
-        stateCode: new FormControl('', [
+        stateCode: new UntypedFormControl('', [
           Validators.maxLength(3)
         ]),
-        postalCode: new FormControl('', [
+        postalCode: new UntypedFormControl('', [
           Validators.maxLength(15)
         ]),
-        countryCode: new FormControl('', [
+        countryCode: new UntypedFormControl('', [
           Validators.maxLength(7)
         ])
       })

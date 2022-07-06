@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() knight?: Knight;
-  editKnightPasswordForm: FormGroup;
+  editKnightPasswordForm: UntypedFormGroup;
   public passwordRequirements: PasswordRequirements = new PasswordRequirements({
     requireUppercase: false,
     requireLowercase: false,
@@ -38,15 +38,15 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     private knightsService: KnightsService,
     private accountsService: AccountsService) {
-    this.editKnightPasswordForm = new FormGroup({
-      knightId: new FormControl(),
-      firstName: new FormControl(),
-      middleName: new FormControl(),
-      lastName: new FormControl(),
-      nameSuffix: new FormControl(),
-      accountActivated: new FormControl(),
-      password: new FormControl(''),
-      resetPasswordAtNextLogin: new FormControl()
+    this.editKnightPasswordForm = new UntypedFormGroup({
+      knightId: new UntypedFormControl(),
+      firstName: new UntypedFormControl(),
+      middleName: new UntypedFormControl(),
+      lastName: new UntypedFormControl(),
+      nameSuffix: new UntypedFormControl(),
+      accountActivated: new UntypedFormControl(),
+      password: new UntypedFormControl(''),
+      resetPasswordAtNextLogin: new UntypedFormControl()
     });
   }
 
