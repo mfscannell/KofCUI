@@ -85,6 +85,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         showInCalendar: new FormControl(null),
         canceled: new FormControl(null),
         canceledReason: new FormControl(''),
+        notes: new FormControl(''),
         volunteerSignUpRoles: new FormArray([])
        });
 
@@ -122,7 +123,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         locationAddress: this.activityEvent.locationAddress,
         showInCalendar: this.activityEvent.showInCalendar,
         canceled: this.activityEvent.canceled,
-        canceledReason: this.activityEvent.canceledReason
+        canceledReason: this.activityEvent.canceledReason,
+        notes: this.activityEvent.notes
        });
 
        this.activityEvent.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
@@ -415,7 +417,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       volunteerSignUpRoles: volunteerRoles,
       showInCalendar: rawForm.showInCalendar,
       canceled: rawForm.canceled,
-      canceledReason: rawForm.canceledReason
+      canceledReason: rawForm.canceledReason,
+      notes: rawForm.notes
     });
 
     return activityEvent;

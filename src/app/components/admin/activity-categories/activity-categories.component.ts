@@ -58,7 +58,8 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(EditActivityModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
     modalRef.componentInstance.activity = new Activity({
       activityCategory: this.activityCategories[0],
-      activityCoordinators: []
+      activityCoordinators: [],
+      activityEventNotes: []
     });
     modalRef.componentInstance.modalHeaderText = 'Creating Activity';
     modalRef.componentInstance.modalAction = ModalActionEnums.Create;

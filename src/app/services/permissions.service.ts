@@ -17,6 +17,11 @@ export class PermissionsService {
   private grandKnightRole: string = 'Grand Knight';
   private deputyGrandKnightRole: string = 'Deputy Grand Knight';
   private financialSecretaryRole: string = 'Financial Secretary';
+  private programDirectorRole: string = 'Program Director';
+  private communityDirectorRole: string = 'Community Director';
+  private faithDirectorRole: string = 'Faith Director';
+  private familyDirectorRole: string = 'Family Director';
+  private lifeDirectorRole: string = 'Life Director';
 
   constructor(private accountsService: AccountsService) {
 
@@ -57,7 +62,14 @@ export class PermissionsService {
   canActivateActivities() {
     let roles = this.accountsService.getRoles();
 
-    if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
+    if (roles.includes(this.adminRole) || 
+        roles.includes(this.grandKnightRole) || 
+        roles.includes(this.deputyGrandKnightRole) || 
+        roles.includes(this.programDirectorRole) || 
+        roles.includes(this.communityDirectorRole) || 
+        roles.includes(this.faithDirectorRole) || 
+        roles.includes(this.familyDirectorRole) || 
+        roles.includes(this.lifeDirectorRole)) {
       return true;
     }
 
@@ -76,28 +88,67 @@ export class PermissionsService {
     return isActivityCoordinator;
   }
 
-  canAddActivityCategory() {
-    let roles = this.accountsService.getRoles();
-
-    return roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole);
-  }
-
   canAddActivity() {
     let roles = this.accountsService.getRoles();
 
-    return roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole);
+    return roles.includes(this.adminRole) ||
+        roles.includes(this.grandKnightRole) ||
+        roles.includes(this.deputyGrandKnightRole) ||
+        roles.includes(this.programDirectorRole) || 
+        roles.includes(this.communityDirectorRole) || 
+        roles.includes(this.faithDirectorRole) || 
+        roles.includes(this.familyDirectorRole) || 
+        roles.includes(this.lifeDirectorRole);
   }
 
   canEditActivity(activityId?: number) {
     let roles = this.accountsService.getRoles();
 
-    return roles.includes(this.adminRole) 
-    || roles.includes(this.grandKnightRole) 
-    || roles.includes(this.deputyGrandKnightRole) 
-    || roles.includes(`__ActivityCoordinator__${activityId}`);
+    return roles.includes(this.adminRole) || 
+        roles.includes(this.grandKnightRole) || 
+        roles.includes(this.deputyGrandKnightRole) || 
+        roles.includes(this.programDirectorRole) || 
+        roles.includes(this.communityDirectorRole) || 
+        roles.includes(this.faithDirectorRole) || 
+        roles.includes(this.familyDirectorRole) || 
+        roles.includes(this.lifeDirectorRole) ||
+        roles.includes(`__ActivityCoordinator__${activityId}`);
   }
 
   canActivateActiviyEvents() {
+    //TODO need to edit
+    // let token = this.accountsService.getToken();
+
+    // return token !== undefined && token !== '';
+    let roles = this.accountsService.getRoles();
+
+    if (roles.includes(this.adminRole) || 
+        roles.includes(this.grandKnightRole) || 
+        roles.includes(this.deputyGrandKnightRole) || 
+        roles.includes(this.programDirectorRole) || 
+        roles.includes(this.communityDirectorRole) || 
+        roles.includes(this.faithDirectorRole) || 
+        roles.includes(this.familyDirectorRole) || 
+        roles.includes(this.lifeDirectorRole)) {
+      return true;
+    }
+
+    let isActivityCoordinator = false;
+
+    roles.forEach(r => {
+      if (r.startsWith('__ActivityCoordinator__')) {
+        let id = r.substring(23);
+
+        if (Number(id) !== NaN) {
+          isActivityCoordinator = true;
+        }
+      }
+    });
+
+    return isActivityCoordinator;
+  }
+
+  canActivateEventVolunteering() {
     let token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
@@ -106,7 +157,14 @@ export class PermissionsService {
   canAddEvent(activities: Activity[]) {
     let roles = this.accountsService.getRoles();
 
-    if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
+    if (roles.includes(this.adminRole) || 
+        roles.includes(this.grandKnightRole) || 
+        roles.includes(this.deputyGrandKnightRole) || 
+        roles.includes(this.programDirectorRole) || 
+        roles.includes(this.communityDirectorRole) || 
+        roles.includes(this.faithDirectorRole) || 
+        roles.includes(this.familyDirectorRole) || 
+        roles.includes(this.lifeDirectorRole)) {
       return true;
     }
 
@@ -127,13 +185,25 @@ export class PermissionsService {
     return roles.includes(this.adminRole) 
     || roles.includes(this.grandKnightRole) 
     || roles.includes(this.deputyGrandKnightRole) 
+    || roles.includes(this.programDirectorRole)
+    || roles.includes(this.communityDirectorRole)
+    || roles.includes(this.faithDirectorRole)
+    || roles.includes(this.familyDirectorRole)
+    || roles.includes(this.lifeDirectorRole)
     || roles.includes(`__ActivityCoordinator__${activityId}`);
   }
 
   filterActivitiesByEventCreation(activities: Activity[]) {
     let roles = this.accountsService.getRoles();
 
-    if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
+    if (roles.includes(this.adminRole) ||
+        roles.includes(this.grandKnightRole) ||
+        roles.includes(this.deputyGrandKnightRole) ||
+        roles.includes(this.programDirectorRole) || 
+        roles.includes(this.communityDirectorRole) || 
+        roles.includes(this.faithDirectorRole) || 
+        roles.includes(this.familyDirectorRole) || 
+        roles.includes(this.lifeDirectorRole)) {
       return activities;
     }
 

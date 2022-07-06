@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AccountsService } from '../services/accounts.service';
@@ -10,11 +10,20 @@ import { PermissionsService } from '../services/permissions.service';
 })
 
 export class LeadershipRolesGuard implements CanActivate {
-  constructor(private permissionsService: PermissionsService) {
+  constructor(
+    private permissionsService: PermissionsService,
+    private router: Router) {
 
   }
 
   canActivate(): boolean {
-    return this.permissionsService.canActivateLeadershipRoles();
+    let permit = this.permissionsService.canActivateLeadershipRoles();
+
+    if (permit) {
+      return true;
+    }
+
+    this.router.navigateByUrl('/');
+    return false;
   }
 }

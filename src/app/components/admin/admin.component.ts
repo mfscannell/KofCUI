@@ -29,6 +29,10 @@ export class AdminComponent implements OnInit {
     return this.permissionsService.canActivateActiviyEvents();
   }
 
+  canActivateEventVolunteering() {
+    return this.permissionsService.canActivateEventVolunteering();
+  }
+
   canActivateConfigs() {
     return this.permissionsService.canActivateConfigs();
   }

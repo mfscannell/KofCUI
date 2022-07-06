@@ -9,7 +9,7 @@
     <form [formGroup]="editActivityForm" (ngSubmit)="onSubmitEditActivity()">
       <nav ngbNav #nav="ngbNav" class="nav-tabs">
         <ng-container ngbNavItem>
-          <a ngbNavLink class="nav-item-kofc-blue">Activity Information</a>
+          <a ngbNavLink class="nav-item-kofc-blue">Information</a>
           <ng-template ngbNavContent>
             <div class="form-group row mb-1">
               <div class="col-4 col-md-3">
@@ -41,7 +41,7 @@
         </ng-container>
 
         <ng-container ngbNavItem>
-          <a ngbNavLink class="nav-item-kofc-blue">Activity Coordinators</a>
+          <a ngbNavLink class="nav-item-kofc-blue">Coordinators</a>
           <ng-template ngbNavContent>
             <ng-container formArrayName="activityCoordinatorsList">
               <ng-container *ngFor="let coordinator of activityCoordinators.controls; let i = index;">
@@ -66,6 +66,34 @@
                 <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addActivityCoordinator()">Add Coordinator</button>
               </div>
             </div>
+          </ng-template>
+        </ng-container>
+
+        <ng-container ngbNavItem>
+          <a ngbNavLink class="nav-item-kofc-blue">Event Notes</a>
+          <ng-template ngbNavContent>
+            <div class="form-group row mb-1">
+              <div class="col-4 col-md-3">
+                <label for="notes" class="col-form-label">Notes</label>
+              </div>
+              <div class="col-8 col-md-9">
+                <textarea class="form-control" formControlName="notes" id="notes" autocomplete="off" rows="4"></textarea>
+              </div>
+            </div>
+            <ng-container formArrayName="activityEventNotesList">
+              <ng-container *ngFor="let eventNote of activityEventNotes.controls; let i = index;">
+                <div class="form-group row mb-1" [formGroupName]="i">
+                  <div class="col-12">
+                    <input type="text" class="form-control" formControlName="startDateTime" id="startDateTime" autocomplete="off" readonly>
+                  </div>
+                </div>
+                <div class="form-group row mb-1" [formGroupName]="i">
+                  <div class="col-12">
+                    <textarea class="form-control" formControlName="notes" id="notes" rows="4" readonly></textarea>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
           </ng-template>
         </ng-container>
       </nav>
