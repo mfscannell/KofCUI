@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -30,7 +30,7 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   knightId?: number;
   updateVolunteerForActivityEventSubscription?: Subscription;
-  volunteerForActivityEventForm: FormGroup;
+  volunteerForActivityEventForm: UntypedFormGroup;
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
   errorSaving: boolean = false;
@@ -42,44 +42,44 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
     private activityEventsService: ActivityEventsService,
     private accountsService: AccountsService) {
     var today = new Date();
-    this.volunteerForActivityEventForm = new FormGroup({
-      activityEventId: new FormControl(''),
-      activityId: new FormControl(''),
-      activityCategory: new FormControl(''),
-      eventName: new FormControl(''),
-      eventDescription: new FormControl(''),
-      startDate: new FormControl({
+    this.volunteerForActivityEventForm = new UntypedFormGroup({
+      activityEventId: new UntypedFormControl(''),
+      activityId: new UntypedFormControl(''),
+      activityCategory: new UntypedFormControl(''),
+      eventName: new UntypedFormControl(''),
+      eventDescription: new UntypedFormControl(''),
+      startDate: new UntypedFormControl({
         year: today.getFullYear(),
         month: today.getMonth() + 1,
         day: today.getDate()
       }),
-      startTime: new FormControl({
+      startTime: new UntypedFormControl({
         "hour": 6,
         "minute": 0
       }),
-      endDate: new FormControl({
+      endDate: new UntypedFormControl({
         year: today.getFullYear(),
         month: today.getMonth() + 1,
         day: today.getDate()
       }),
-      endTime: new FormControl({
+      endTime: new UntypedFormControl({
         "hour": 7,
         "minute": 0
       }),
-      locationAddress: new FormGroup({
-        streetAddressId: new FormControl(''),
-        addressName: new FormControl(''),
-        address1: new FormControl(''),
-        address2: new FormControl(''),
-        city: new FormControl(''),
-        stateCode: new FormControl(''),
-        postalCode: new FormControl(''),
-        countryCode: new FormControl('')
+      locationAddress: new UntypedFormGroup({
+        streetAddressId: new UntypedFormControl(''),
+        addressName: new UntypedFormControl(''),
+        address1: new UntypedFormControl(''),
+        address2: new UntypedFormControl(''),
+        city: new UntypedFormControl(''),
+        stateCode: new UntypedFormControl(''),
+        postalCode: new UntypedFormControl(''),
+        countryCode: new UntypedFormControl('')
       }),
-      showInCalendar: new FormControl(null),
-      canceled: new FormControl({value: null, disabled: true}),
-      canceledReason: new FormControl(''),
-      volunteerSignUpRoles: new FormArray([])
+      showInCalendar: new UntypedFormControl(null),
+      canceled: new UntypedFormControl({value: null, disabled: true}),
+      canceledReason: new UntypedFormControl(''),
+      volunteerSignUpRoles: new UntypedFormArray([])
      });
   }
 
@@ -118,33 +118,33 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
        });
 
        this.activityEvent.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
-        const volunteerSignUpRole = new FormGroup({
-          volunteerSignUpRoleId: new FormControl(role.volunteerSignupRoleId),
-          roleTitle: new FormControl(role.roleTitle),
-          startDate: new FormControl({
+        const volunteerSignUpRole = new UntypedFormGroup({
+          volunteerSignUpRoleId: new UntypedFormControl(role.volunteerSignupRoleId),
+          roleTitle: new UntypedFormControl(role.roleTitle),
+          startDate: new UntypedFormControl({
             year: DateTimeFormatter.getYear(role.startDateTime),
             month: DateTimeFormatter.getMonth(role.startDateTime),
             day: DateTimeFormatter.getDay(role.startDateTime)
           }),
-          startTime: new FormControl({
+          startTime: new UntypedFormControl({
             hour: DateTimeFormatter.getHour(role.startDateTime),
             minute: DateTimeFormatter.getMinute(role.startDateTime)
           }),
-          endDate: new FormControl({
+          endDate: new UntypedFormControl({
             year: DateTimeFormatter.getYear(role.endDateTime),
             month: DateTimeFormatter.getMonth(role.endDateTime),
             day: DateTimeFormatter.getDay(role.endDateTime)
           }),
-          endTime: new FormControl({
+          endTime: new UntypedFormControl({
             hour: DateTimeFormatter.getHour(role.endDateTime),
             minute: DateTimeFormatter.getMinute(role.endDateTime)
           }),
-          numberOfVolunteersNeeded: new FormControl(role.numberOfVolunteersNeeded),
-          volunteerForRole: new FormControl({
+          numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
+          volunteerForRole: new UntypedFormControl({
             value: role.eventVolunteers.findIndex(ev => ev.knightId === this.knightId) >= 0,
             disabled: role.eventVolunteers.length >= role.numberOfVolunteersNeeded && role.eventVolunteers.findIndex(ev => ev.knightId === this.knightId) < 0
           }),
-          eventVolunteers: new FormArray(this.initEventVolunteersForm(role.eventVolunteers))
+          eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers))
         });
     
         this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
@@ -159,13 +159,13 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   }
 
   private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    let eventVolunteersArray: FormGroup[] = [];
+    let eventVolunteersArray: UntypedFormGroup[] = [];
 
     if (eventVolunteers) {
       eventVolunteers.forEach((eventVolunteer) => {
-        const eventVolunteerFormGroup = new FormGroup({
-          eventVolunteerId: new FormControl(eventVolunteer.eventVolunteerId),
-          knightId: new FormControl(eventVolunteer.knightId)
+        const eventVolunteerFormGroup = new UntypedFormGroup({
+          eventVolunteerId: new UntypedFormControl(eventVolunteer.eventVolunteerId),
+          knightId: new UntypedFormControl(eventVolunteer.knightId)
         });
 
         eventVolunteersArray.push(eventVolunteerFormGroup);
@@ -176,29 +176,29 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   }
 
   get volunteerSignUpRolesForm() {
-    return this.volunteerForActivityEventForm.controls["volunteerSignUpRoles"] as FormArray;
+    return this.volunteerForActivityEventForm.controls["volunteerSignUpRoles"] as UntypedFormArray;
   }
 
   getEventVolunteers(volunteerSignUpRole: AbstractControl) {
-    const something = volunteerSignUpRole as FormGroup;
-    const eventVolunteers = something.controls["eventVolunteers"] as FormArray;
+    const something = volunteerSignUpRole as UntypedFormGroup;
+    const eventVolunteers = something.controls["eventVolunteers"] as UntypedFormArray;
 
     return eventVolunteers.controls;
   }
 
   changeVolunteerForRole($event: any, volunteerSignUpRoleIndex: number) {
     if ($event.target.checked) {
-      const eventVolunteerFormGroup = new FormGroup({
-        eventVolunteerId: new FormControl(''),
-        knightId: new FormControl(this.knightId)
+      const eventVolunteerFormGroup = new UntypedFormGroup({
+        eventVolunteerId: new UntypedFormControl(''),
+        knightId: new UntypedFormControl(this.knightId)
       })
 
-      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as FormGroup;
-      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
+      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
       eventVolunteerFormArray.push(eventVolunteerFormGroup);
     } else {
-      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as FormGroup;
-      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
+      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
       let volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
 
       if (volunteerIndex >= 0) {
@@ -217,8 +217,8 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
     let volunteerSignUpRoles: number[] = [];
 
     for (let i = 0; i < this.volunteerSignUpRolesForm.length; i++) {
-      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(i) as FormGroup;
-      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(i) as UntypedFormGroup;
+      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
       let volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
 
       if (volunteerIndex >= 0) {

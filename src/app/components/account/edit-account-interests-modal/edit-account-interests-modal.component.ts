@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
@@ -15,7 +15,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 export class EditAccountInterestsModalComponent implements OnInit, OnDestroy {
   @Input() knightId?: number;
   @Input() allActivities: ActivityInterest[] = [];
-  public editKnightActivityInterestsForm: FormGroup;
+  public editKnightActivityInterestsForm: UntypedFormGroup;
   public activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
   public errorMessages: string[] = [];
   public errorSaving: boolean = false;
@@ -25,7 +25,7 @@ export class EditAccountInterestsModalComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     private knightsService: KnightsService
   ) {
-    this.editKnightActivityInterestsForm = new FormGroup({});
+    this.editKnightActivityInterestsForm = new UntypedFormGroup({});
   }
 
   ngOnInit() {
