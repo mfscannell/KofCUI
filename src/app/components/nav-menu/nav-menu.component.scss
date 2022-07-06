@@ -11,6 +11,12 @@
     width: 500px;
 }
 
+@media only screen and (max-width: 400px) {
+    .signInDropDown {
+        width: 200px;
+    }
+}
+
 /* @media only screen and (max-width: 400px) {
     #navigationLogo {
         width: 200px;

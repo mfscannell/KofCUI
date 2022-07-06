@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 
-import { EditActivityEventModalComponent } from 'src/app/components/admin/activity-events/edit-activity-event-modal/edit-activity-event-modal.component';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
@@ -14,15 +13,15 @@ import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
-import { SendEmailModalComponent } from './send-email-modal/send-email-modal.component';
+import { VolunteerForActivityEventModalComponent } from './volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
-  selector: 'kofc-activity-events',
-  templateUrl: './activity-events.component.html',
-  styleUrls: ['./activity-events.component.scss']
+  selector: 'kofc-event-volunteering',
+  templateUrl: './event-volunteering.component.html',
+  styleUrls: ['./event-volunteering.component.scss']
 })
-export class ActivityEventsComponent implements OnInit, OnDestroy {
+export class EventVolunteeringComponent implements OnInit, OnDestroy {
   activityEventsSubscription?: Subscription;
   getAllKnightsSubscription?: Subscription;
   getAllActivitiesSubscription?: Subscription;
@@ -127,38 +126,19 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
   }
 
-  openEditActivityEventModal(activityEvent: ActivityEvent) {
-    const modalRef = this.modalService.open(EditActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
+  openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
+    const modalRef = this.modalService.open(VolunteerForActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
 
     modalRef.componentInstance.activityEvent = activityEvent;
-    modalRef.componentInstance.allActivities = this.allActivities;
     modalRef.componentInstance.allKnights = this.allKnights;
-    modalRef.componentInstance.modalHeaderText = 'Editing Activity Event';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
+    modalRef.componentInstance.modalHeaderText = 'Volunteer For Activity Event';
     modalRef.result.then((result) => {
       if (result) {
         this.updateActivityEventInList(result);
       }
     }).catch((error) => {
       if (error !== 0) {
-        this.logError('Error from Edit Activity Event Modal.', error);
-      }
-    });
-  }
-
-  openSendEmailModal(activityEvent: ActivityEvent) {
-    const modalRef = this.modalService.open(SendEmailModalComponent, {size: 'xl', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.activityEvent = activityEvent;
-    modalRef.componentInstance.modalHeaderText = 'Send Email For Activity Event';
-
-    modalRef.result.then((result) => {
-      if (result) {
-        this.showEmailSentMessage();
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        this.logError('Error from Send Email for Activity Event Modal.', error);
+        this.logError('Error from Volunteer For Activity Event Modal.', error);
       }
     });
   }
@@ -169,24 +149,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     if (this.activityEvents && index !== undefined && index >= 0) {
       this.activityEvents[index] = activityEvent;
     }
-  }
-
-  openCreateActivityEventModal() {
-    const modalRef = this.modalService.open(EditActivityEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.allActivities = this.allActivities;
-    modalRef.componentInstance.allKnights = this.allKnights;
-    modalRef.componentInstance.modalHeaderText = 'Adding Activity Category';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Create;
-    modalRef.result.then((result: ActivityEvent) => {
-      if (result) {
-        this.activityEvents?.push(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        this.logError('Error from Create Activity Event Modal.', error);
-      }
-    });
   }
 
   isHovered(date: NgbDate) {

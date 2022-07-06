@@ -20,6 +20,10 @@ export class ActivityEventsService {
         return this.http.get<ActivityEvent[]>(`activityEvents/byDateRange?beginDate=${beginDate}&endDate=${endDate}`);
     }
 
+    getAllActivityEventsForVolunteering(beginDate: string, endDate: string): Observable<ActivityEvent[]> {
+        return this.http.get<ActivityEvent[]>(`activityEvents/forVolunteering/byDateRange?beginDate=${beginDate}&endDate=${endDate}`);
+    }
+
     getAllUpcomingEvents(beginDate: string, endDate: string): Observable<UpcomingEvent[]> {
         return this.http.get<UpcomingEvent[]>(`activityEvents/upcomingEvents?beginDate=${beginDate}&endDate=${endDate}`);
     }

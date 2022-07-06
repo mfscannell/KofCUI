@@ -29,7 +29,8 @@ import { OurCouncilComponent } from './components/our-council/our-council.compon
 import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.component';
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
-import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
+//import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
+import { VolunteerForActivityEventModalComponent } from './components/admin/event-volunteering/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { ConfigsComponent } from './components/admin/configs/configs.component';
 
 import { AccountComponent } from './components/account/account.component';
@@ -47,6 +48,8 @@ import { EditAccountPersonalInfoModalComponent } from './components/account/edit
 import { EditAccountInterestsModalComponent } from './components/account/edit-account-interests-modal/edit-account-interests-modal.component';
 import { EditAccountSecurityModalComponent } from './components/account/edit-account-security-modal/edit-account-security-modal.component';
 import { NavFooterComponent } from './components/nav-footer/nav-footer.component';
+import { EventVolunteeringComponent } from './components/admin/event-volunteering/event-volunteering.component';
+import { EventVolunteeringGuard } from './guards/eventVolunteering.guard';
 
 @NgModule({
   declarations: [
@@ -74,6 +77,7 @@ import { NavFooterComponent } from './components/nav-footer/nav-footer.component
     EditLeadershipRoleModalComponent,
     ConfigsComponent,
     ActivityEventsComponent,
+    EventVolunteeringComponent,
     SendEmailModalComponent,
     VolunteerForActivityEventModalComponent,
     EditActivityEventModalComponent
@@ -96,6 +100,7 @@ import { NavFooterComponent } from './components/nav-footer/nav-footer.component
       { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },
       { path: 'admin/leadershipRoles', component: LeadershipRolesComponent, pathMatch: 'full', canActivate: [LeadershipRolesGuard] },
       { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full', canActivate: [ActivityEventsGuard] },
+      { path: 'admin/eventVolunteering', component: EventVolunteeringComponent, pathMatch: 'full', canActivate: [EventVolunteeringGuard] },
       { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full', canActivate: [ConfigsGuard] },
       { path: '**', redirectTo: '/' }
     ]),

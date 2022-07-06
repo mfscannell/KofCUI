@@ -11,6 +11,9 @@
   <div class="row" *ngIf="canActivateActiviyEvents()">
     <a class="nav-link nav-link-kofc-blue" routerLink="/admin/activityEvents" routerLinkActiver="active">Events</a>
   </div>
+  <div class="row" *ngIf="canActivateEventVolunteering()">
+    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/eventVolunteering" routerLinkActiver="active">Volunteer</a>
+  </div>
   <div class="row" *ngIf="canActivateConfigs()">
     <a class="nav-link nav-link-kofc-blue" routerLink="/admin/configSettings" routerLinkActiver="active">Configuration</a>
   </div>
