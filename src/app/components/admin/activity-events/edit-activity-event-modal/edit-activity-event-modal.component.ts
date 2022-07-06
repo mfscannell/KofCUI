@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -36,7 +36,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   createActivityEventSubscription?: Subscription;
   getCouncilTImeZoneSubscription?: Subscription;
   councilTimeZone: TimeZone = new TimeZone();
-  editActivityEventForm: FormGroup;
+  editActivityEventForm: UntypedFormGroup;
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
   errorSaving: boolean = false;
@@ -48,45 +48,45 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     private configsService: ConfigsService,
     private permissionsService: PermissionsService) {
       var today = new Date();
-      this.editActivityEventForm = new FormGroup({
-        activityEventId: new FormControl(''),
-        activityId: new FormControl(''),
-        activityCategory: new FormControl(''),
-        eventName: new FormControl(''),
-        eventDescription: new FormControl(''),
-        startDate: new FormControl({
+      this.editActivityEventForm = new UntypedFormGroup({
+        activityEventId: new UntypedFormControl(''),
+        activityId: new UntypedFormControl(''),
+        activityCategory: new UntypedFormControl(''),
+        eventName: new UntypedFormControl(''),
+        eventDescription: new UntypedFormControl(''),
+        startDate: new UntypedFormControl({
           year: today.getFullYear(),
           month: today.getMonth() + 1,
           day: today.getDate()
         }),
-        startTime: new FormControl({
+        startTime: new UntypedFormControl({
           "hour": 6,
           "minute": 0
         }),
-        endDate: new FormControl({
+        endDate: new UntypedFormControl({
           year: today.getFullYear(),
           month: today.getMonth() + 1,
           day: today.getDate()
         }),
-        endTime: new FormControl({
+        endTime: new UntypedFormControl({
           "hour": 7,
           "minute": 0
         }),
-        locationAddress: new FormGroup({
-          streetAddressId: new FormControl(''),
-          addressName: new FormControl(''),
-          address1: new FormControl(''),
-          address2: new FormControl(''),
-          city: new FormControl(''),
-          stateCode: new FormControl(''),
-          postalCode: new FormControl(''),
-          countryCode: new FormControl('')
+        locationAddress: new UntypedFormGroup({
+          streetAddressId: new UntypedFormControl(''),
+          addressName: new UntypedFormControl(''),
+          address1: new UntypedFormControl(''),
+          address2: new UntypedFormControl(''),
+          city: new UntypedFormControl(''),
+          stateCode: new UntypedFormControl(''),
+          postalCode: new UntypedFormControl(''),
+          countryCode: new UntypedFormControl('')
         }),
-        showInCalendar: new FormControl(null),
-        canceled: new FormControl(null),
-        canceledReason: new FormControl(''),
-        notes: new FormControl(''),
-        volunteerSignUpRoles: new FormArray([])
+        showInCalendar: new UntypedFormControl(null),
+        canceled: new UntypedFormControl(null),
+        canceledReason: new UntypedFormControl(''),
+        notes: new UntypedFormControl(''),
+        volunteerSignUpRoles: new UntypedFormArray([])
        });
 
        this.getCouncilTimeZone();
@@ -128,29 +128,29 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
        });
 
        this.activityEvent.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
-        const volunteerSignUpRole = new FormGroup({
-          volunteerSignUpRoleId: new FormControl(role.volunteerSignupRoleId),
-          roleTitle: new FormControl(role.roleTitle),
-          startDate: new FormControl({
+        const volunteerSignUpRole = new UntypedFormGroup({
+          volunteerSignUpRoleId: new UntypedFormControl(role.volunteerSignupRoleId),
+          roleTitle: new UntypedFormControl(role.roleTitle),
+          startDate: new UntypedFormControl({
             year: DateTimeFormatter.getYear(role.startDateTime),
             month: DateTimeFormatter.getMonth(role.startDateTime),
             day: DateTimeFormatter.getDay(role.startDateTime)
           }),
-          startTime: new FormControl({
+          startTime: new UntypedFormControl({
             hour: DateTimeFormatter.getHour(role.startDateTime),
             minute: DateTimeFormatter.getMinute(role.startDateTime)
           }),
-          endDate: new FormControl({
+          endDate: new UntypedFormControl({
             year: DateTimeFormatter.getYear(role.endDateTime),
             month: DateTimeFormatter.getMonth(role.endDateTime),
             day: DateTimeFormatter.getDay(role.endDateTime)
           }),
-          endTime: new FormControl({
+          endTime: new UntypedFormControl({
             hour: DateTimeFormatter.getHour(role.endDateTime),
             minute: DateTimeFormatter.getMinute(role.endDateTime)
           }),
-          numberOfVolunteersNeeded: new FormControl(role.numberOfVolunteersNeeded),
-          eventVolunteers: new FormArray(this.initEventVolunteersForm(role.eventVolunteers))
+          numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
+          eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers))
         });
     
         this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
@@ -159,13 +159,13 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   }
 
   private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    let eventVolunteersArray: FormGroup[] = [];
+    let eventVolunteersArray: UntypedFormGroup[] = [];
 
     if (eventVolunteers) {
       eventVolunteers.forEach((eventVolunteer) => {
-        const eventVolunteerFormGroup = new FormGroup({
-          eventVolunteerId: new FormControl(eventVolunteer.eventVolunteerId),
-          knightId: new FormControl(eventVolunteer.knightId)
+        const eventVolunteerFormGroup = new UntypedFormGroup({
+          eventVolunteerId: new UntypedFormControl(eventVolunteer.eventVolunteerId),
+          knightId: new UntypedFormControl(eventVolunteer.knightId)
         });
 
         eventVolunteersArray.push(eventVolunteerFormGroup);
@@ -224,7 +224,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
+    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
       vsurControl.patchValue({
         startDate: {
           year: event.year,
@@ -248,7 +248,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
+    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
       vsurControl.patchValue({
         startTime: {
           hour: event.hour,
@@ -264,7 +264,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
   onChangeEventEndTime(event: any) {
     //TODO need to limit end time to one hour past start time
-    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: FormGroup) {
+    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
       vsurControl.patchValue({
         endTime: {
           hour: event.hour,
@@ -290,56 +290,56 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   }
 
   getEventVolunteers(volunteerSignUpRole: AbstractControl) {
-    const something = volunteerSignUpRole as FormGroup;
-    const eventVolunteers = something.controls["eventVolunteers"] as FormArray;
+    const something = volunteerSignUpRole as UntypedFormGroup;
+    const eventVolunteers = something.controls["eventVolunteers"] as UntypedFormArray;
 
     return eventVolunteers.controls;
   }
 
   get volunteerSignUpRolesForm() {
-    return this.editActivityEventForm.controls["volunteerSignUpRoles"] as FormArray;
+    return this.editActivityEventForm.controls["volunteerSignUpRoles"] as UntypedFormArray;
   }
 
   private getEventStartDate() {
-    let formControl = this.editActivityEventForm.controls["startDate"] as FormControl;
+    let formControl = this.editActivityEventForm.controls["startDate"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   private getEventStartTime() {
-    let formControl = this.editActivityEventForm.controls["startTime"] as FormControl;
+    let formControl = this.editActivityEventForm.controls["startTime"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   private getEventEndDate() {
-    let formControl = this.editActivityEventForm.controls["endDate"] as FormControl;
+    let formControl = this.editActivityEventForm.controls["endDate"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   private getEventEndTime() {
-    let formControl = this.editActivityEventForm.controls["endTime"] as FormControl;
+    let formControl = this.editActivityEventForm.controls["endTime"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   addVolunteerSignUpRole() {
-    const volunteerSignUpRole = new FormGroup({
-      volunteerSignUpRoleId: new FormControl(''),
-      roleTitle: new FormControl(''),
-      startDate: new FormControl(this.getEventStartDate()),
-      startTime: new FormControl({
+    const volunteerSignUpRole = new UntypedFormGroup({
+      volunteerSignUpRoleId: new UntypedFormControl(''),
+      roleTitle: new UntypedFormControl(''),
+      startDate: new UntypedFormControl(this.getEventStartDate()),
+      startTime: new UntypedFormControl({
         "hour": this.getEventStartTime().hour,
         "minute": this.getEventStartTime().minute
       }),
-      endDate: new FormControl(this.getEventEndDate()),
-      endTime: new FormControl({
+      endDate: new UntypedFormControl(this.getEventEndDate()),
+      endTime: new UntypedFormControl({
         "hour": this.getEventEndTime().hour,
         "minute": this.getEventEndTime().minute
       }),
-      numberOfVolunteersNeeded: new FormControl(''),
-      eventVolunteers: new FormArray([])
+      numberOfVolunteersNeeded: new UntypedFormControl(''),
+      eventVolunteers: new UntypedFormArray([])
     });
 
     this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
@@ -350,19 +350,19 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   }
 
   addEventVolunteer(volunteerSignUpRoleIndex: number) {
-    const eventVolunteerFormGroup = new FormGroup({
-      eventVolunteerId: new FormControl(''),
-      knightId: new FormControl('')
+    const eventVolunteerFormGroup = new UntypedFormGroup({
+      eventVolunteerId: new UntypedFormControl(''),
+      knightId: new UntypedFormControl('')
     })
 
-    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as FormGroup;
-    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
+    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
     eventVolunteerFormArray.push(eventVolunteerFormGroup);
   }
 
   deleteEventVolunteer(roleIndex: number, volunteerIndex: number) {
-    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(roleIndex) as FormGroup;
-    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as FormArray;
+    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(roleIndex) as UntypedFormGroup;
+    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
     eventVolunteerFormArray.removeAt(volunteerIndex);
   }
 

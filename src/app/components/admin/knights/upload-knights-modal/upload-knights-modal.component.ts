@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Knight } from 'src/app/models/knight';
@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class UploadKnightsModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
-  uploadKnightsForm: FormGroup;
+  uploadKnightsForm: UntypedFormGroup;
   filePath?: Blob;
   showExampleFile: boolean = false;
   toggleExampleFileText: string = "Show Example File";
@@ -26,7 +26,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy {
     public activeModal: NgbActiveModal,
     private knightsService: KnightsService
   ) {
-    this.uploadKnightsForm = new FormGroup({});
+    this.uploadKnightsForm = new UntypedFormGroup({});
   }
 
   ngOnInit() {

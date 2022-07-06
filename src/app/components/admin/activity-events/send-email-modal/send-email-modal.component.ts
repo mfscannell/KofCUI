@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from 'src/app/models/activityEvent';
@@ -16,16 +16,16 @@ export class SendEmailModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() activityEvent?: ActivityEvent;
   private activitiesSubscription?: Subscription;
-  public sendEmailForm: FormGroup;
+  public sendEmailForm: UntypedFormGroup;
   public errorSending: boolean = false;
   public errorMessages: string[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
     private activitiesService: ActivitiesService) {
-    this.sendEmailForm = new FormGroup({
-      subject: new FormControl(''),
-      body: new FormControl('')
+    this.sendEmailForm = new UntypedFormGroup({
+      subject: new UntypedFormControl(''),
+      body: new UntypedFormControl('')
     });
   }
 
