@@ -9,7 +9,7 @@ import { PermissionsService } from '../services/permissions.service';
   providedIn: 'root'
 })
 
-export class ActivityEventsGuard implements CanActivate {
+export class EventVolunteeringGuard implements CanActivate {
   constructor(
     private permissionsService: PermissionsService,
     private router: Router) {
@@ -17,7 +17,7 @@ export class ActivityEventsGuard implements CanActivate {
   }
 
   canActivate(): boolean {
-    let permit = this.permissionsService.canActivateActiviyEvents();
+    let permit = this.permissionsService.canActivateEventVolunteering();
 
     if (permit) {
       return true;

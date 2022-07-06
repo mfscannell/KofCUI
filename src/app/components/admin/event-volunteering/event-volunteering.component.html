@@ -58,7 +58,6 @@
             <th>Event Name</th>
             <th>Event Date</th>
             <th></th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -67,27 +66,13 @@
             <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
             <td>{{formatDate(activityEvent.startDateTime)}}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openSendEmailModal(activityEvent)">
-                <svg class="bi" width="24" height="24" fill="currentColor">
-                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
-                </svg>
-              </button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
-                <svg class="bi" width="24" height="24" fill="currentColor">
-                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
-                </svg>
+              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openVolunteerForActivityEventModal(activityEvent)">
+                Volunteer
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
-  <div class="row" *ngIf="canAddEvent()">
-    <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityEventModal()">Add</button>
     </div>
   </div>
   <div id="activityEventSpacer"></div>

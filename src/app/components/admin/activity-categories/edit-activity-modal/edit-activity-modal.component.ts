@@ -44,7 +44,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityCategory: new FormControl(null, [
         Validators.required
       ]),
-      activityCoordinatorsList: new FormArray([])
+      activityCoordinatorsList: new FormArray([]),
+      activityEventNotesList: new FormArray([]),
+      notes: new FormControl('')
     });
 
     this.getAllActiveKnightsNames();
@@ -56,7 +58,8 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
         activityId: this.activity.activityId,
         activityName: this.activity.activityName,
         activityDescription: this.activity.activityDescription,
-        activityCategory: this.activity.activityCategory
+        activityCategory: this.activity.activityCategory,
+        notes: this.activity.notes
        });
 
        let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as FormArray;
@@ -66,7 +69,17 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
           activityCoordinatorId: new FormControl(coordinator.activityCoordinatorId),
           knightId: new FormControl(coordinator.knightId)
         });
-         activityCoordinatorsList.push(activityCoordinatorFg)
+         activityCoordinatorsList.push(activityCoordinatorFg);
+       });
+
+       let activityEventNotes = this.editActivityForm.get('activityEventNotesList') as FormArray;
+
+       this.activity.activityEventNotes.map(function(note) {
+        const activityEventNotesFg = new FormGroup({
+          startDateTime: new FormControl(note.startDateTime),
+          notes: new FormControl(note.notes)
+        });
+         activityEventNotes.push(activityEventNotesFg);
        });
     }
   }
@@ -97,6 +110,10 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
 
   get activityCoordinators() {
     return this.editActivityForm.controls["activityCoordinatorsList"] as FormArray;
+  }
+
+  get activityEventNotes() {
+    return this.editActivityForm.controls["activityEventNotesList"] as FormArray;
   }
 
   addActivityCoordinator() {
@@ -141,7 +158,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityName: rawForm.activityName,
       activityDescription: rawForm.activityDescription,
       activityCategory: rawForm.activityCategory,
-      activityCoordinators: activityCoordinators
+      activityCoordinators: activityCoordinators,
+      activityEventNotes: [],
+      notes: rawForm.notes
     });
 
     return activity;

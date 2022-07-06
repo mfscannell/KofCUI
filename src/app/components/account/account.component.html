@@ -69,7 +69,7 @@
         </div>
         <div *ngFor="let activityCategory of activityCategories">
           <div class="row">
-            <h6>{{activityCategory}}</h6>
+            <h6 class="text-decoration-underline">{{activityCategory}}</h6>
           </div>
           <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategory)">
             <div class="col-12 ms-2">

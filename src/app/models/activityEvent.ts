@@ -16,7 +16,7 @@ export class ActivityEvent {
     showInCalendar: boolean = false;
     canceled: boolean = false;
     canceledReason?: string;
-
+    notes?: string;
     public constructor(
         fields?: {
             activityEventId? : number,
@@ -30,7 +30,8 @@ export class ActivityEvent {
             volunteerSignUpRoles: VolunteerSignUpRole[],
             showInCalendar: boolean,
             canceled: boolean,
-            canceledReason: string
+            canceledReason: string,
+            notes?: string
     }) {
         if (fields) {
             this.activityEventId = fields.activityEventId || this.activityEventId;
@@ -45,6 +46,7 @@ export class ActivityEvent {
             this.showInCalendar = fields.showInCalendar || this.showInCalendar;
             this.canceled = fields.canceled || this.canceled;
             this.canceledReason = fields.canceledReason || this.canceledReason;
+            this.notes = fields.notes || this.notes;
         }
     }
 }

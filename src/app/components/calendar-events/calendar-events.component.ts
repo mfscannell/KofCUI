@@ -52,7 +52,7 @@ export class CalendarEventsComponent implements OnInit {
     let endDateDate = new Date(beginDateDate.getTime());
     endDateDate.setMonth(beginDateDate.getMonth() + 6);
     let beginDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, 1);
-    let endDate = DateTimeFormatter.ToIso8601Date(endDateDate.getFullYear(), endDateDate.getMonth(), 1);
+    let endDate = DateTimeFormatter.ToIso8601Date(endDateDate.getFullYear(), endDateDate.getMonth() + 1, 1);
 
     if (beginDate && endDate) {
       this.getAllUpcomingEventsSubscription = this.activityEventsService.getAllUpcomingEvents(beginDate, endDate).subscribe(activityEventsObserver);

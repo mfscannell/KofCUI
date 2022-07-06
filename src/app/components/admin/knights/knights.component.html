@@ -8,16 +8,14 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Name</th>
         <th></th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
-        <td>{{knight.firstName}}</td>
-        <td>{{knight.lastName}}</td>
+        <td>{{knight.firstName}} {{knight.lastName}}</td>
         <td>
           <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditKnightModal(knight)">
             <svg class="bi" width="24" height="24" fill="currentColor">
