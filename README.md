@@ -24,6 +24,8 @@ npm install -g @angular/cli@latest
 
 Then create a new project:
 ng new TestAngularUI
+OR
+ng update
 
 
 ## Development server
