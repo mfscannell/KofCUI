@@ -227,4 +227,14 @@ export class PermissionsService {
 
     return false;
   }
+
+  canActivateAssets() {
+    let roles = this.accountsService.getRoles();
+
+    if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
+      return true;
+    }
+
+    return false;
+  }
 }

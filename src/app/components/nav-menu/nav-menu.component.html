@@ -27,7 +27,7 @@
           <a ngbDropdownToggle class="nav-link nav-link-kofc-white dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Links</a>
           <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li ngbDropdownItem class="nav-link-kofc-blue" *ngFor="let extLink of externalLinks">
-              <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}">{{extLink.websiteName}}</a>
+              <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}" target="_blank" rel="noopener noreferrer">{{extLink.websiteName}}</a>
             </li>
           </ul>
         </li>

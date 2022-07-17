@@ -36,4 +36,8 @@ export class AdminComponent implements OnInit {
   canActivateConfigs() {
     return this.permissionsService.canActivateConfigs();
   }
+
+  canActivateAssets() {
+    return this.permissionsService.canActivateAssets();
+  }
 }

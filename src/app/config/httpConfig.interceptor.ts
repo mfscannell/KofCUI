@@ -27,6 +27,15 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         let url = `${apiBaseUrl}${tenantId}/${httpRequest.url}`;
         let token = this.accountsService.getToken();
 
+        if (httpRequest.url.startsWith('assets')) {
+            return next.handle(httpRequest.clone({
+                url: url,
+                setHeaders: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }));
+        }
+
         return next.handle(httpRequest.clone({
             url: url,
             setHeaders: {

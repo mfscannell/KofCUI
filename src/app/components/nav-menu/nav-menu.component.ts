@@ -7,6 +7,7 @@ import { ExternalLink } from 'src/app/models/externalLink';
 import { LogInRequest } from 'src/app/models/requests/logInRequest';
 import { LogInResponse } from 'src/app/models/responses/logInResponse';
 import { AccountsService } from 'src/app/services/accounts.service';
+import { AssetsService } from 'src/app/services/assets.service';
 import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
@@ -18,6 +19,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   public isMenuCollapsed = true;
   public isAccountDropDownOpen = false;
   private externalLinksSubscription?: Subscription;
+  private getWebsiteContentSubscription?: Subscription;
   private logInSubscription?: Subscription;
   public externalLinks: ExternalLink[] = [];
   public errorMessages: string[] = [];
@@ -26,11 +28,13 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   constructor(
     private configsService: ConfigsService,
     public accountsService: AccountsService,
+    private assetsService: AssetsService,
     private router: Router) {
   }
 
   ngOnInit() {
     this.getAllExternalLinks();
+    this.getWebsiteContent();
   }
 
   ngOnDestroy() {
@@ -40,6 +44,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
     if (this.logInSubscription) {
       this.logInSubscription.unsubscribe();
+    }
+
+    if (this.getWebsiteContentSubscription) {
+      this.getWebsiteContentSubscription.unsubscribe();
     }
   }
 
@@ -65,13 +73,25 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     let externalLinksObserver = {
       next: (externalLinks: ExternalLink[]) => this.setExternalLinks(externalLinks),
       error: (err: any) => this.logError('Error getting all external links.', err),
-      complete: () => console.log('Activity Categories loaded.')
+      complete: () => console.log('External links loaded.')
     };
     this.externalLinksSubscription = this.configsService.getAllExternalLinks().subscribe(externalLinksObserver);
   }
 
+  private getWebsiteContent() {
+    let observer = {
+      next: (externalLinks: void) => this.handleGetWebsiteContent(),
+      error: (err: any) => this.logError('Error getting website content.', err),
+      complete: () => console.log('Website content loaded.')
+    };
+    this.getWebsiteContentSubscription = this.assetsService.getAllWebsiteContent().subscribe(observer);
+  }
+
   private setExternalLinks(externalLinks: ExternalLink[]) {
     this.externalLinks = externalLinks;
+  }
+
+  private handleGetWebsiteContent() {
   }
 
   private logError(message: string, err: any) {
