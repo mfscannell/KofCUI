@@ -12,6 +12,7 @@ import { EventVolunteer } from '../models/eventVolunteer';
 })
 
 export class ActivityEventsService {
+    private upcomingEvents?: Observable<UpcomingEvent[]>;
     constructor(private http: HttpClient) {
 
     }
