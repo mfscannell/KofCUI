@@ -50,6 +50,8 @@ import { EditAccountSecurityModalComponent } from './components/account/edit-acc
 import { NavFooterComponent } from './components/nav-footer/nav-footer.component';
 import { EventVolunteeringComponent } from './components/admin/event-volunteering/event-volunteering.component';
 import { EventVolunteeringGuard } from './guards/eventVolunteering.guard';
+import { AssetsComponent } from './components/admin/assets/assets.component';
+import { AssetsGuard } from './guards/assets.guard';
 
 @NgModule({
   declarations: [
@@ -76,6 +78,7 @@ import { EventVolunteeringGuard } from './guards/eventVolunteering.guard';
     LeadershipRolesComponent,
     EditLeadershipRoleModalComponent,
     ConfigsComponent,
+    AssetsComponent,
     ActivityEventsComponent,
     EventVolunteeringComponent,
     SendEmailModalComponent,
@@ -102,6 +105,7 @@ import { EventVolunteeringGuard } from './guards/eventVolunteering.guard';
       { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full', canActivate: [ActivityEventsGuard] },
       { path: 'admin/eventVolunteering', component: EventVolunteeringComponent, pathMatch: 'full', canActivate: [EventVolunteeringGuard] },
       { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full', canActivate: [ConfigsGuard] },
+      { path: 'admin/assets', component: AssetsComponent, pathMatch: 'full', canActivate: [AssetsGuard] },
       { path: '**', redirectTo: '/' }
     ]),
     NgbModule,

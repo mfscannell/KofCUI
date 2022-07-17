@@ -36,8 +36,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
     let rawForm = this.loginForm.getRawValue();
-    console.log(rawForm.username);
-    console.log(rawForm.password);
 
     var loginRequest = new LogInRequest({
       username: rawForm.username,

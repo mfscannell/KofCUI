@@ -7,7 +7,12 @@
     [keyboard]="true"
     [wrap]="true"
     [activeId]="'slideOne'"
-    <ng-template ngbSlide id="slideOne">
+    <ng-template ngbSlide *ngFor="let carouselImage of this.assetsService.getHomePageCarouselImages()">
+      <div class="picsum-img-wrapper">
+        <img [src]="imageSource(carouselImage)" class="img-fluid" alt="Random first slide">
+    </div>
+    </ng-template>
+    <!-- <ng-template ngbSlide id="slideOne">
         <div class="picsum-img-wrapper">
             <img src="assets/images/FRWL01.jpg" class="img-fluid" alt="Random first slide">
         </div>
@@ -42,6 +47,28 @@
           <h3>Fourth slide label</h3>
           <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
       </div>
-    </ng-template>
+    </ng-template> -->
   </ngb-carousel>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center" >
+        <h3>Our Programs</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 col-md-3">
+        <img src="assets/images/faith.png" class="img-fluid" alt="Random first slide">
+      </div>
+      <div class="col-6 col-md-3">
+        <img src="assets/images/family.png" class="img-fluid" alt="Random first slide">
+      </div>
+      <div class="col-6 col-md-3">
+        <img src="assets/images/community.png" class="img-fluid" alt="Random first slide">
+      </div>
+      <div class="col-6 col-md-3">
+        <img src="assets/images/life.png" class="img-fluid" alt="Random first slide">
+      </div>
+    </div>
+  </div>
+  <div class="container" id="homePageSpacer"></div>
 </div>
