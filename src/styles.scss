@@ -3,15 +3,19 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
-
 .accordion-button:not(.collapsed) {
   background-color: #fbda8a !important;
 }
 
 /* Buttons */
 .btn-kofc-blue {
+  background-color: #112866;
+  border-color: #112866;
+  color: white;
+}
+
+.btn-kofc-blue:disabled
+.btn-kofc-blue[disabled] {
   background-color: #112866;
   border-color: #112866;
   color: white;

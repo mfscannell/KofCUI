@@ -10,7 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpConfigInterceptor } from './config/httpConfig.interceptor';
+import { HttpConfigInterceptor } from './interceptors/httpConfig.interceptor';
 
 import { ActivityCategoriesComponent } from 'src/app/components/admin/activity-categories/activity-categories.component';
 import { EditActivityModalComponent } from './components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
@@ -52,6 +52,8 @@ import { EventVolunteeringComponent } from './components/admin/event-volunteerin
 import { EventVolunteeringGuard } from './guards/eventVolunteering.guard';
 import { AssetsComponent } from './components/admin/assets/assets.component';
 import { AssetsGuard } from './guards/assets.guard';
+import { UploadHomePageCarouselImageModalComponent } from './components/admin/assets/upload-home-page-carousel-image-modal/upload-home-page-carousel-image-modal.component';
+import { DeleteHomePageCarouselImageModalComponent } from './components/admin/assets/delete-home-page-carousel-image-modal/delete-home-page-carousel-image-modal.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +81,8 @@ import { AssetsGuard } from './guards/assets.guard';
     EditLeadershipRoleModalComponent,
     ConfigsComponent,
     AssetsComponent,
+    UploadHomePageCarouselImageModalComponent,
+    DeleteHomePageCarouselImageModalComponent,
     ActivityEventsComponent,
     EventVolunteeringComponent,
     SendEmailModalComponent,

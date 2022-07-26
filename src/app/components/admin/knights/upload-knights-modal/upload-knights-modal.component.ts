@@ -40,7 +40,6 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy {
 
   addFile(event: any) {
     this.filePath = event.target.files[0];
-    let something = 5;
   }
 
   onSubmitUploadKnights() {
