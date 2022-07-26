@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="deleteImageForm" (ngSubmit)="onSubmitDeleteFile()">
+    <div class="form-group row mb-1">
+      <div class="col-md-8">
+        Are you sure you want to delete this file?
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="container">
+        <div class="row" *ngIf="errorSaving">
+          <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+        </div>
+      </div>
+      <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-danger">Confirm</button>
+      <button id="cancelUploadHomePageCarouselImage" type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -1,8 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { EncodedFile } from 'src/app/models/encodedFile';
 import { UploadHomePageImageResponse } from 'src/app/models/responses/uploadHomePageImageResponse';
 import { AssetsService } from 'src/app/services/assets.service';
+import { DeleteHomePageCarouselImageModalComponent } from './delete-home-page-carousel-image-modal/delete-home-page-carousel-image-modal.component';
+import { UploadHomePageCarouselImageModalComponent } from './upload-home-page-carousel-image-modal/upload-home-page-carousel-image-modal.component';
 
 @Component({
   selector: 'app-assets',
@@ -10,13 +13,14 @@ import { AssetsService } from 'src/app/services/assets.service';
   styleUrls: ['./assets.component.scss']
 })
 export class AssetsComponent implements OnInit, OnDestroy {
-  homePageImages: EncodedFile[] = [];
   showErrorMessage: boolean = false;
   errorMessages: string[] = [];
   showSuccessMessage: boolean = false;
   private uploadHomePageImageSubscription?: Subscription;
 
-  constructor(public assetsService: AssetsService) { }
+  constructor(
+    public assetsService: AssetsService,
+    private modalService: NgbModal) { }
 
   ngOnInit() {
   }
@@ -32,33 +36,38 @@ export class AssetsComponent implements OnInit, OnDestroy {
     return imgSrc;
   }
 
-  uploadFile(files: FileList | null) {
-    console.log(files);
-    //console.log(event.target.files[0]);
+  openUploadHomePageCarouselImageModal() {
+    const modalRef = this.modalService.open(UploadHomePageCarouselImageModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
 
-    //const formData = new FormData();
-
-    if (files) {
-      let fileToUpload = <File>files[0];
-      const formData = new FormData();
-      formData.append('file', fileToUpload, fileToUpload.name);
-
-      let imageUploadObserver = {
-        next: (response: EncodedFile) => this.handleUploadHomePageImageResponse(response),
-        error: (err: any) => this.logError("Error Uploading image.", err),
-        complete: () => console.log('Image uploaded.')
-      };
-
-      this.uploadHomePageImageSubscription = this.assetsService.uploadHomePageImage(formData).subscribe(imageUploadObserver);
-
-      // for (const file of files) {
-      //   formData.append(file.name, file);
-      // }
-    }
+    modalRef.result.then((result: EncodedFile) => {
+      if (result) {
+        this.handleUploadHomePageImageResponse(result);
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        this.logError('Error from uploading home page carousel modal.', error);
+      }
+    });
   }
 
-  handleUploadHomePageImageResponse(response: EncodedFile) {
-    //this.homePageImages.push(response);
+  openConfirmDeleteHomePageCarouselImage(index: number) {
+    const modalRef = this.modalService.open(DeleteHomePageCarouselImageModalComponent, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
+
+    let homePageImage = this.assetsService.getHomePageCarouselImages()[index];
+    let fileName = homePageImage.fileName;
+    modalRef.componentInstance.fileName = fileName;
+    modalRef.result.then((result: boolean) => {
+      if (result) {
+        this.assetsService.removeHomePageCarouselImage(index);
+      }
+    }).catch((error) => {
+      if (error !== 0) {
+        this.logError('Error from deleting home page carousel modal.', error);
+      }
+    });
+  }
+
+  private handleUploadHomePageImageResponse(response: EncodedFile) {
     this.assetsService.appendHomePageCarouselImage(response);
   }
 

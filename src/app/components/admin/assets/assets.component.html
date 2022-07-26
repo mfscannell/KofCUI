@@ -18,14 +18,21 @@
             <div class="row mb-1">
               <div class="col-12">It is recommended that all images are the same dimensions and have a minimum width of 2,000 pixels.</div>
             </div>
-            <div class="row mb-1" *ngFor="let homePageImage of assetsService.getHomePageCarouselImages()">
-              <div class="col-12">
+            <div class="row mb-1" *ngFor="let homePageImage of assetsService.getHomePageCarouselImages(); let i = index;">
+              <div class="col-8 col-sm-6 col-md-4">
                 <img [src]="imageSource(homePageImage)" class="img-fluid img-kofc-preview">
+              </div>
+              <div class="col-4 col-sm-6 col-md-8">
+                <button type="button" class="btn btn-danger" (click)="openConfirmDeleteHomePageCarouselImage(i)">
+                  <svg class="bi" width="24" height="24" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                  </svg>
+                </button>
               </div>
             </div>
             <div class="form-group row mb-1">
-              <div class="col-md-8">
-                <input #imgFile type="file" class="form-control" (change)="uploadFile(imgFile.files)" placeholder="Upload file" accept="image/png, image/jpeg">
+              <div class="col-12">
+                <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openUploadHomePageCarouselImageModal()">Upload</button>
               </div>
             </div>
           </ng-container>
