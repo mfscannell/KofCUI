@@ -222,6 +222,34 @@
         </ng-template>
       </ng-container>
 
+      <ng-container ngbNavItem>
+        <a ngbNavLink class="nav-item-kofc-blue">Member Dues</a>
+        <ng-template ngbNavContent>
+          <ng-container formArrayName="memberDues">
+            <div class="form-group row mb-1">
+              <div class="col-5">
+                <h5 class="text-decoration-underline">Year</h5>
+              </div>
+              <div class="col-7">
+                <h5 class="text-decoration-underline">Paid</h5>
+              </div>
+            </div>
+            <ng-container *ngFor="let memberDue of memberDuesForm.controls; let i = index" [formGroupName]="i">
+              <div class="form-group row mb-1">
+                <div class="col-5">
+                  <input readonly type="text" class="form-control" formControlName="year" id="year" placeholder="Title" autocomplete="off">
+                </div>
+                <div class="col-7">
+                  <select class="form-select" id="paidStatus" formControlName="paidStatus">
+                    <option *ngFor="let memberDuesPaymentStatusEnum of memberDuesPaymentStatusEnums" [value]="memberDuesPaymentStatusEnum">{{memberDuesPaymentStatusEnum}}</option>
+                  </select>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+      </ng-container>
+
     </nav>
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
     <div class="modal-footer">
