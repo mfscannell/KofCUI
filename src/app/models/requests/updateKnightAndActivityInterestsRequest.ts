@@ -2,6 +2,7 @@ import { UserTypeEnums } from "src/app/enums/userTypeEnums";
 import { StreetAddress } from "src/app/models/streetAddress";
 import { KnightInfo } from "src/app/models/knightInfo";
 import { ActivityInterest } from "src/app/models/activityInterest";
+import { MemberDues } from "../memberDues";
 
 export class UpdateKnightAndActivityInterestsRequest {
     knightId?: number;
@@ -15,7 +16,7 @@ export class UpdateKnightAndActivityInterestsRequest {
     homeAddress: StreetAddress = new StreetAddress();
     knightInfo: KnightInfo = new KnightInfo();
     activityInterests: ActivityInterest[] = [];
-
+    memberDues: MemberDues[] = [];
 
     public constructor(
         fields?: {
@@ -30,7 +31,8 @@ export class UpdateKnightAndActivityInterestsRequest {
             homeAddressId?: number,
             homeAddress?: StreetAddress,
             knightInfo?: KnightInfo,
-            activityInterests?: ActivityInterest[]
+            activityInterests?: ActivityInterest[],
+            memberDues?: MemberDues[]
     }) {
         if (fields) {
             this.knightId = fields.knightId || this.knightId;
@@ -44,6 +46,7 @@ export class UpdateKnightAndActivityInterestsRequest {
             this.homeAddress = fields.homeAddress || this.homeAddress;
             this.knightInfo = fields.knightInfo || this.knightInfo;
             this.activityInterests = fields.activityInterests || this.activityInterests;
+            this.memberDues = fields.memberDues || this.memberDues;
         }
     }
 }

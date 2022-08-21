@@ -3,6 +3,7 @@ import { StreetAddress } from "./streetAddress";
 import { KnightInfo } from "src/app/models/knightInfo";
 import { ActivityInterest } from "src/app/models/activityInterest";
 import { KnightUser } from "./knightUser";
+import { MemberDues } from "./memberDues";
 
 export class Knight {
     knightId?: number;
@@ -17,7 +18,7 @@ export class Knight {
     knightInfo: KnightInfo = new KnightInfo();
     knightUser: KnightUser = new KnightUser();
     activityInterests: ActivityInterest[] = [];
-
+    memberDues: MemberDues[] = [];
 
     public constructor(
         fields?: {
@@ -33,7 +34,8 @@ export class Knight {
             homeAddress?: StreetAddress,
             knightInfo?: KnightInfo,
             knightUser?: KnightUser,
-            activityInterests?: ActivityInterest[]
+            activityInterests?: ActivityInterest[],
+            memberDues?: MemberDues[]
     }) {
         if (fields) {
             this.knightId = fields.knightId || this.knightId;
@@ -48,6 +50,7 @@ export class Knight {
             this.knightInfo = fields.knightInfo || this.knightInfo;
             this.knightUser = fields.knightUser || this.knightUser;
             this.activityInterests = fields.activityInterests || this.activityInterests;
+            this.memberDues = fields.memberDues || this.memberDues;
         }
     }
 }

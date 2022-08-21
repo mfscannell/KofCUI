@@ -168,6 +168,11 @@ export class DateTimeFormatter {
         if (hour > 12) {
             hour = hour - 12;
             meridian = 'PM';
+        } else if (hour === 12) {
+            meridian = 'Noon';
+        } else if (hour === 0) {
+            hour = 12;
+            meridian = 'Midnight';
         }
 
         if (minute === undefined || minute === null) {

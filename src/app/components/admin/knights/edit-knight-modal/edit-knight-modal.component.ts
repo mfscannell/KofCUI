@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -18,6 +18,8 @@ import { KnightInfo } from 'src/app/models/knightInfo';
 import { KnightMemberClassEnums } from 'src/app/enums/knightMemberClassEnums';
 import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 import { UpdateKnightAndActivityInterestsRequest } from 'src/app/models/requests/updateKnightAndActivityInterestsRequest';
+import { MemberDues } from 'src/app/models/memberDues';
+import { MemberDuesPaymentStatus } from 'src/app/enums/memberDuesPaymentStatus';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -31,6 +33,7 @@ export class EditKnightModalComponent implements OnInit {
   public knightDegrees = Object.values(KnightDegreeEnums);
   public knightMemberTypeEnums = Object.values(KnightMemberTypeEnums);
   public knightMemberClassEnums = Object.values(KnightMemberClassEnums);
+  public memberDuesPaymentStatusEnums = Object.values(MemberDuesPaymentStatus);
   getKnightActivitiesSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
   createKnightSubscription?: Subscription;
@@ -113,7 +116,8 @@ export class EditKnightModalComponent implements OnInit {
           }),
           memberType: new UntypedFormControl(KnightMemberTypeEnums.Associate),
           memberClass: new UntypedFormControl(KnightMemberClassEnums.Paying)
-        })
+        }),
+        memberDues: new UntypedFormArray([])
       });
     }
 
@@ -153,12 +157,39 @@ export class EditKnightModalComponent implements OnInit {
           }
          });
 
+         this.knight.memberDues.forEach((memberDue: MemberDues) => {
+          const memberDueFormGroup = new UntypedFormGroup({
+            memberDuesId: new UntypedFormControl(memberDue.memberDuesId),
+            year: new UntypedFormControl(memberDue.year),
+            paidStatus: new UntypedFormControl(memberDue.paidStatus)
+          });
+
+          this.memberDuesForm.push(memberDueFormGroup);
+         });
+
          this.allActivities = this.knight.activityInterests;
       } else {
         this.knight = new Knight();
 
         this.getAllKnightActivityInterestsForNewKnight();
+        let thisYear = new Date().getFullYear();
+        let startYear = thisYear - 9;
+        let endYear = thisYear + 1;
+
+        for (let year = startYear; year <= endYear; year++) {
+          const memberDueFormGroup = new UntypedFormGroup({
+            memberDuesId: new UntypedFormControl(0),
+            year: new UntypedFormControl(year),
+            paidStatus: new UntypedFormControl(MemberDuesPaymentStatus.Unpaid)
+          });
+
+          this.memberDuesForm.push(memberDueFormGroup);
+        }
       }
+    }
+
+    get memberDuesForm() {
+      return this.editKnightForm.controls["memberDues"] as UntypedFormArray;
     }
 
     private getAllKnightActivityInterestsForNewKnight() {
@@ -231,6 +262,15 @@ export class EditKnightModalComponent implements OnInit {
         memberType: rawForm.knightInfo.memberType,
         memberClass: rawForm.knightInfo.memberClass
       });
+
+      let _memberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any) {
+        return new MemberDues({
+          memberDuesId: md.memberDuesId,
+          year: md.year,
+          paidStatus: md.paidStatus
+        })
+      });
+
       let knight = new UpdateKnightAndActivityInterestsRequest({
         knightId: rawForm.knightId,
         firstName: rawForm.firstName,
@@ -245,7 +285,8 @@ export class EditKnightModalComponent implements OnInit {
         cellPhoneNumber: rawForm.cellPhoneNumber,
         homeAddress: homeAddress,
         knightInfo: knightInfo,
-        activityInterests: this.allActivities
+        activityInterests: this.allActivities,
+        memberDues: _memberDues
       });
 
       return knight;
@@ -279,6 +320,13 @@ export class EditKnightModalComponent implements OnInit {
         memberType: rawForm.knightInfo.memberType,
         memberClass: rawForm.knightInfo.memberClass
       });
+      let _memberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any) {
+        return new MemberDues({
+          memberDuesId: md.memberDuesId,
+          year: md.year,
+          paidStatus: md.paidStatus
+        })
+      });
       let knight = new Knight({
         knightId: rawForm.knightId,
         firstName: rawForm.firstName,
@@ -293,7 +341,8 @@ export class EditKnightModalComponent implements OnInit {
         cellPhoneNumber: rawForm.cellPhoneNumber,
         homeAddress: homeAddress,
         knightInfo: knightInfo,
-        activityInterests: this.allActivities
+        activityInterests: this.allActivities,
+        memberDues: _memberDues
       });
 
       return knight;
