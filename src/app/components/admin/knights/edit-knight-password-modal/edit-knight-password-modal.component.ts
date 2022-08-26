@@ -76,6 +76,16 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatKnightName() {
+    let knightName = `${this.knight?.firstName} ${this.knight?.lastName}`;
+
+    if (this.knight?.nameSuffix) {
+      knightName += `, ${this.knight.nameSuffix}`;
+    }
+
+    return knightName;
+  }
+
   private getPasswordRequirements() {
     let getPasswordRequirementsObserver = {
       next: (response: PasswordRequirements) => this.passwordRequirements = response,
