@@ -175,6 +175,47 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
     return eventVolunteersArray;
   }
 
+  formatEventStartTime() {
+    return DateTimeFormatter.ToDisplayTime(this.activityEvent?.startDateTime);
+  }
+
+  formatEventEndTime() {
+    return DateTimeFormatter.ToDisplayTime(this.activityEvent?.endDateTime);
+  }
+
+  formatVolunteerRole(index: number) {
+    if (this.activityEvent?.volunteerSignUpRoles) {
+      let role = this.activityEvent.volunteerSignUpRoles[index];
+      let volunteerRole = `${role.numberOfVolunteersNeeded} ${role.roleTitle}(s)`;
+
+      return volunteerRole;
+    }
+
+    return '';
+  }
+
+  formatVolunteerRoleStartTime(index: number) {
+    if (this.activityEvent?.volunteerSignUpRoles) {
+      let role = this.activityEvent.volunteerSignUpRoles[index];
+      let formattedTime = DateTimeFormatter.ToDisplayTime(role.startDateTime);
+
+      return formattedTime;
+    }
+
+    return '';
+  }
+
+  formatVolunteerRoleEndTime(index: number) {
+    if (this.activityEvent?.volunteerSignUpRoles) {
+      let role = this.activityEvent.volunteerSignUpRoles[index];
+      let formattedTime = DateTimeFormatter.ToDisplayTime(role.endDateTime);
+
+      return formattedTime;
+    }
+
+    return '';
+  }
+
   get volunteerSignUpRolesForm() {
     return this.volunteerForActivityEventForm.controls["volunteerSignUpRoles"] as UntypedFormArray;
   }

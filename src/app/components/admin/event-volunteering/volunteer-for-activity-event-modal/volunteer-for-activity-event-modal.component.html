@@ -48,7 +48,8 @@
               <label for="startTime" class="col-form-label">Start Time</label>
             </div>
             <div class="col-8 col-md-9">
-              <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
+              <!-- <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker> -->
+              {{formatEventStartTime()}}
             </div>
           </div>
           <div class="form-group row mb-1">
@@ -56,7 +57,8 @@
               <label for="endTime" class="col-form-label">End Time</label>
             </div>
             <div class="col-8 col-md-9">
-              <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
+              <!-- <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker> -->
+              {{formatEventEndTime()}}
             </div>
           </div>
           <div class="form-group row mb-1">
@@ -151,24 +153,13 @@
           <ng-container formArrayName="volunteerSignUpRoles">
             <ng-container *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
                 <div class="form-group row">
-                  <div class="col-9 col-sm-6 col-md-6 col-lg-4 mb-1">
-                    <input readonly type="text" class="form-control" formControlName="roleTitle" id="roleTitle" placeholder="Title" autocomplete="off">
-                  </div>
-                  <div class="col-3 col-sm-6 col-md-6 col-lg-2 mb-1">
-                    <input readonly type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
-                  </div>
-                  <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-1">
-                    <ngb-timepicker readonly [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
-                  </div>
-                  <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-1">
-                    <ngb-timepicker readonly [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker>
-                  </div>
+                  <div class="col-12 mb-1">{{formatVolunteerRole(i)}} {{formatVolunteerRoleStartTime(i)}} - {{formatVolunteerRoleEndTime(i)}}</div>
                 </div>
                 <div class="form-group row mb-1">
-                  <div class="col-4 col-md-4 col-lg-3">
+                  <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                     <label for="volunteerRole_volunteerFor" class="col-form-label">Volunteer for Role?</label>
                   </div>
-                  <div class="col-8 col-md-8 col-lg-9">
+                  <div class="col-6 col-sm-6 col-md-8 col-lg-9">
                     <input type="checkbox" class="form-check-input" formControlName="volunteerForRole" id="volunteerRole_volunteerFor" (change)="changeVolunteerForRole($event, i)">
                   </div>
                 </div>
