@@ -18,7 +18,7 @@ import { ConfigsService } from 'src/app/services/configs.service';
 export class NavMenuComponent implements OnInit, OnDestroy {
   public isMenuCollapsed = true;
   public isAccountDropDownOpen = false;
-  private externalLinksSubscription?: Subscription;
+  private getWebsiteTextSubscription?: Subscription;
   private getWebsiteContentSubscription?: Subscription;
   private logInSubscription?: Subscription;
   public externalLinks: ExternalLink[] = [];
@@ -33,13 +33,17 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getAllExternalLinks();
+    if (this.configsService.hasCachedWebsiteConfigs()) {
+      this.externalLinks = this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
+    } else {
+      this.getWebsiteText();
+    }
     this.getWebsiteContent();
   }
 
   ngOnDestroy() {
-    if (this.externalLinksSubscription) {
-      this.externalLinksSubscription.unsubscribe();
+    if (this.getWebsiteTextSubscription) {
+      this.getWebsiteTextSubscription.unsubscribe();
     }
 
     if (this.logInSubscription) {
@@ -69,26 +73,26 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.isMenuCollapsed = true;
   }
 
-  private getAllExternalLinks() {
-    let externalLinksObserver = {
-      next: (externalLinks: ExternalLink[]) => this.setExternalLinks(externalLinks),
-      error: (err: any) => this.logError('Error getting all external links.', err),
-      complete: () => console.log('External links loaded.')
+  private getWebsiteText() {
+    let websiteTextObserver = {
+      next: (result: void) => this.handleGetWebsiteTextResult(),
+      error: (err: any) => this.logError('Error getting all website text.', err),
+      complete: () => console.log('Website text loaded.')
     };
-    this.externalLinksSubscription = this.configsService.getAllExternalLinks().subscribe(externalLinksObserver);
+    this.getWebsiteTextSubscription = this.configsService.getAllWebsiteConfigs().subscribe(websiteTextObserver);
+  }
+
+  private handleGetWebsiteTextResult() {
+    this.externalLinks = this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
   }
 
   private getWebsiteContent() {
     let observer = {
-      next: (externalLinks: void) => this.handleGetWebsiteContent(),
+      next: (result: void) => this.handleGetWebsiteContent(),
       error: (err: any) => this.logError('Error getting website content.', err),
       complete: () => console.log('Website content loaded.')
     };
     this.getWebsiteContentSubscription = this.assetsService.getAllWebsiteContent().subscribe(observer);
-  }
-
-  private setExternalLinks(externalLinks: ExternalLink[]) {
-    this.externalLinks = externalLinks;
   }
 
   private handleGetWebsiteContent() {

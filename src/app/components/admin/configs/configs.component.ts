@@ -9,6 +9,8 @@ import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
 import { TimeZone } from 'src/app/models/timeZone';
 import { ConfigInputTypeEnums } from 'src/app/enums/configInputTypeEnums';
 import { StringDropDownOption } from 'src/app/models/stringDropDownOption';
+import { UpdateConfigsResultModalComponent } from './update-configs-result-modal/update-configs-result-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'kofc-configs',
@@ -22,11 +24,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   configGroups: ConfigGroup[] = [];
   timeZones: TimeZone[] = [];
   editConfigsForm: UntypedFormGroup;
-  showErrorMessage: boolean = false;
-  errorMessages: string[] = [];
-  showSuccessMessage: boolean = false;
 
-  constructor(private configsService: ConfigsService) {
+  constructor(
+    private configsService: ConfigsService,
+    private modalService: NgbModal) {
     this.editConfigsForm = new UntypedFormGroup({
       configGroups: new UntypedFormArray([])
     });
@@ -166,32 +167,37 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private logError(message: string, err: any) {
     console.error(message);
     console.error(err);
-
-    this.errorMessages = [];
-
-    if (typeof err?.error === 'string') {
-      this.errorMessages.push(err.error);
-    } else {
-      for (let key in err?.error?.errors) {
-        this.errorMessages.push(err?.error?.errors[key][0]);
-      }
-    }
-    
-    this.showSuccessMessage = false;
-    this.showErrorMessage = true;
   }
 
-  private passBack(configSettings: ConfigSetting[]) {
-    this.showSuccessMessage = true;
-    this.showErrorMessage = false;
+  private showErrorModal(err: any) {
+    const modalRef = this.modalService.open(UpdateConfigsResultModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
+    modalRef.componentInstance.success = false;
+
+    if (typeof err?.error === 'string') {
+      modalRef.componentInstance.errorMessages = [err?.err];
+    } else {
+      let errors = [];
+
+      for (let key in err?.error?.errors) {
+        errors.push(err?.error?.errors[key][0]);
+      }
+
+      modalRef.componentInstance.errorMessages = errors;
+    }
+  }
+
+  private showSuccessModal() {
+    const modalRef = this.modalService.open(UpdateConfigsResultModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
+    modalRef.componentInstance.success = true;
+    modalRef.componentInstance.errorMessages = [];
   }
 
   onSubmitEditConfigSettings() {
     let updateActivityEventRequest = this.mapFormToConfigSettings();
 
     let updateConfigSettingsObserver = {
-      next: (configSettings: ConfigSetting[]) => this.passBack(configSettings),
-      error: (err: any) => this.logError('Error updating Config Settings.', err),
+      next: (configSettings: ConfigSetting[]) => this.showSuccessModal(),
+      error: (err: any) => {this.logError('Error updating Config Settings.', err); this.showErrorModal(err)},
       complete: () => console.log('Config settings updated.')
     };
 

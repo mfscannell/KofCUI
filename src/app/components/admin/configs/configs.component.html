@@ -1,10 +1,4 @@
 <div class="container">
-  <div class="row" *ngIf="showErrorMessage">
-    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-  </div>
-  <div class="row" *ngIf="showSuccessMessage">
-    <div class="col-12 alert alert-success">Successfully saved settings.</div>
-  </div>
   <form [formGroup]="editConfigsForm" (ngSubmit)="onSubmitEditConfigSettings()">
     <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
       <ng-container formArrayName="configGroups">

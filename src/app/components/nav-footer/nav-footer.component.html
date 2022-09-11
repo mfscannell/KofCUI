@@ -1,8 +1,20 @@
 <footer id="navFooter">
   <div class="container">
     <div class="row">
-      <div class="col-12">
-        &copy; COPYRIGHT 2022, KNIGHTS OF COLUMBUS COUNCIL 6673.ALL RIGHTS RESERVED.
+      <div class="col-12 col-sm-8 mt-1 mb-1">
+        &copy; COPYRIGHT 2022, KNIGHTS OF COLUMBUS COUNCIL 6673.  ALL RIGHTS RESERVED.
+      </div>
+      <div class="col-12 col-sm-4 mt-1 mb-1">
+        <a *ngIf="this.configsService.getCachedWebsiteConfigs()?.facebookUrl" href="{{this.configsService.getCachedWebsiteConfigs()?.facebookUrl}}" class="btn-link-kofc-blue footer-link" target="_blank" rel="noopener noreferrer">
+          <svg class="bi" width="24" height="24" fill="currentColor">
+            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#facebook"/>
+          </svg>
+        </a>
+        <a *ngIf="this.configsService.getCachedWebsiteConfigs()?.twitterUrl" href="{{this.configsService.getCachedWebsiteConfigs()?.twitterUrl}}" class="btn-link-kofc-blue footer-link" target="_blank" rel="noopener noreferrer">
+          <svg class="bi" width="24" height="24" fill="currentColor">
+            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#twitter"/>
+          </svg>
+        </a>
       </div>
     </div>
   </div>
