@@ -29,9 +29,9 @@ import { OurCouncilComponent } from './components/our-council/our-council.compon
 import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.component';
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
 import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
-//import { VolunteerForActivityEventModalComponent } from './components/admin/activity-events/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { VolunteerForActivityEventModalComponent } from './components/admin/event-volunteering/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { ConfigsComponent } from './components/admin/configs/configs.component';
+import { UpdateConfigsResultModalComponent } from './components/admin/configs/update-configs-result-modal/update-configs-result-modal.component';
 
 import { AccountComponent } from './components/account/account.component';
 import { SendEmailModalComponent } from './components/admin/activity-events/send-email-modal/send-email-modal.component';
@@ -80,6 +80,7 @@ import { DeleteHomePageCarouselImageModalComponent } from './components/admin/as
     LeadershipRolesComponent,
     EditLeadershipRoleModalComponent,
     ConfigsComponent,
+    UpdateConfigsResultModalComponent,
     AssetsComponent,
     UploadHomePageCarouselImageModalComponent,
     DeleteHomePageCarouselImageModalComponent,

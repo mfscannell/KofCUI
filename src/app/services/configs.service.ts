@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -6,12 +6,15 @@ import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
 import { ExternalLink } from '../models/externalLink';
 import { TimeZone } from '../models/timeZone';
+import { WebsiteConfigs } from '../models/websiteConfigs';
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class ConfigsService {
+    private allWebsiteConfigs?: WebsiteConfigs;
+
     constructor(private http: HttpClient) {
 
     }
@@ -24,8 +27,20 @@ export class ConfigsService {
         return this.http.put<ConfigSetting[]>('configs', updatedConfigs);
     }
 
-    getAllExternalLinks(): Observable<ExternalLink[]> {
-        return this.http.get<ExternalLink[]>('configs/externalLinks');
+    getAllWebsiteConfigs(): Observable<void> {
+        return this.http.get<WebsiteConfigs>('configs/allWebsiteConfigs').pipe(
+            map((response: WebsiteConfigs) => {
+              this.allWebsiteConfigs = response;
+            })
+          );
+    }
+
+    getCachedWebsiteConfigs() {
+        return this.allWebsiteConfigs;
+    }
+
+    hasCachedWebsiteConfigs() {
+        return this.allWebsiteConfigs !== undefined;
     }
 
     getAllTimeZones(): Observable<TimeZone[]> {
