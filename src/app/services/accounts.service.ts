@@ -29,7 +29,7 @@ export class AccountsService {
           this.loggedInUser = response;
           this.currentUserSource.next(response);
         })
-      )
+      );
   }
 
   changePassword(changePasswordRequest: ChangePassWordRequest) : Observable<ChangePasswordResponse> {
