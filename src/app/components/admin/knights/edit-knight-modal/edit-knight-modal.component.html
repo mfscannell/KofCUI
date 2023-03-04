@@ -192,7 +192,7 @@
               <label for="memberClass" class="col-5 col-md-3 col-form-label">Member Class</label>
               <div class="col-7 col-md-9">
                 <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
-                  <option *ngFor="let knightMemberClassEnum of knightMemberClassEnums" [value]="knightMemberClassEnum">{{knightMemberClassEnum}}</option>
+                  <option *ngFor="let knightMemberClass of knightMemberClassSelectOptions" [value]="knightMemberClass.value">{{knightMemberClass.displayName}}</option>
                 </select>
               </div>
             </div>
@@ -241,7 +241,7 @@
                 </div>
                 <div class="col-7">
                   <select class="form-select" id="paidStatus" formControlName="paidStatus">
-                    <option *ngFor="let memberDuesPaymentStatusEnum of memberDuesPaymentStatusEnums" [value]="memberDuesPaymentStatusEnum">{{memberDuesPaymentStatusEnum}}</option>
+                    <option *ngFor="let memberDuesPaymentStatusOption of memberDuesPaymentStatusSelectOptions" [value]="memberDuesPaymentStatusOption.value">{{memberDuesPaymentStatusOption.displayName}}</option>
                   </select>
                 </div>
               </div>
