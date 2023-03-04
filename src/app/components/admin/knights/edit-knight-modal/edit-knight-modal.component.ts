@@ -20,6 +20,8 @@ import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 import { UpdateKnightAndActivityInterestsRequest } from 'src/app/models/requests/updateKnightAndActivityInterestsRequest';
 import { MemberDues } from 'src/app/models/memberDues';
 import { MemberDuesPaymentStatus } from 'src/app/enums/memberDuesPaymentStatus';
+import { KnightMemberClassSelectOption } from 'src/app/htmlElements/KnightMemberClassSelectOption';
+import { MemberDuesSelectOption } from 'src/app/htmlElements/MemberDuesSelectOption';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -32,7 +34,8 @@ export class EditKnightModalComponent implements OnInit {
   @Input() knight?: Knight;
   public knightDegrees = Object.values(KnightDegreeEnums);
   public knightMemberTypeEnums = Object.values(KnightMemberTypeEnums);
-  public knightMemberClassEnums = Object.values(KnightMemberClassEnums);
+  public knightMemberClassSelectOptions = KnightMemberClassSelectOption.AllOptions;
+  public memberDuesPaymentStatusSelectOptions = MemberDuesSelectOption.AllOptions;
   public memberDuesPaymentStatusEnums = Object.values(MemberDuesPaymentStatus);
   getKnightActivitiesSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
