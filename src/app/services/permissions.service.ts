@@ -79,7 +79,7 @@ export class PermissionsService {
       if (r.startsWith('__ActivityCoordinator__')) {
         let id = r.substring(23);
 
-        if (Number(id) !== NaN) {
+        if (!Number.isNaN(id)) {
           isActivityCoordinator = true;
         }
       }
@@ -139,7 +139,7 @@ export class PermissionsService {
       if (r.startsWith('__ActivityCoordinator__')) {
         let id = r.substring(23);
 
-        if (Number(id) !== NaN) {
+        if (!Number.isNaN(id)) {
           isActivityCoordinator = true;
         }
       }
