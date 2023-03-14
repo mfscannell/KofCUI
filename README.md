@@ -24,7 +24,7 @@ npm install -g @angular/cli@latest
 
 Then create a new project:
 ng new TestAngularUI
-OR
+or the easier thing to do when updating from a version that has not reached end of life.
 ng update
 
 
