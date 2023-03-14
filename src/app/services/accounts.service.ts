@@ -71,7 +71,12 @@ export class AccountsService {
 
     if (this.loggedInUser) {
       let tokenRoles = this.getDecodedToken(this.loggedInUser.webToken).role;
-      Array.isArray(tokenRoles) ? roles = tokenRoles : roles.push(tokenRoles);
+
+      if (Array.isArray(tokenRoles)) {
+        roles = tokenRoles;
+      } else if (tokenRoles) {
+        roles.push(tokenRoles);
+      }
     }
 
     return roles;
