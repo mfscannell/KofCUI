@@ -139,14 +139,14 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
     return knight;
   }
 
-  private updateKnightPersonalInfo(knight: UpdateKnightPersonalInfoRequest) {
+  private updateKnightPersonalInfo(knightPersonalInfo: UpdateKnightPersonalInfoRequest) {
     let knightObserver = {
       next: (response: Knight) => this.passBackResponse(response),
       error: (err: any) => this.logError("Error Updating Knight.", err),
       complete: () => console.log('Knight updated.')
     };
 
-    this.updateKnightSubscription = this.knightsService.updateKnightPersonalInfo(knight).subscribe(knightObserver);
+    this.updateKnightSubscription = this.knightsService.updateKnightPersonalInfo(knightPersonalInfo).subscribe(knightObserver);
   }
 
   private passBackResponse(knight: Knight) {

@@ -6,22 +6,22 @@ export class KnightInfo {
     knightInfoId?: number;
     memberNumber?: number;
     mailReturned: boolean = false;
-    degree: KnightDegreeEnums = KnightDegreeEnums.First;
+    degree: string = 'First';
     firstDegreeDate?: string;
     reentryDate?: string;
-    memberType: KnightMemberTypeEnums = KnightMemberTypeEnums.Associate;
-    memberClass: KnightMemberClassEnums = KnightMemberClassEnums.Paying
+    memberType: string = 'Associate';
+    memberClass: string = 'Paying'
 
     public constructor(
         fields?: {
             knightInfoId? : number,
             memberNumber?: number,
             mailReturned?: boolean,
-            degree?: KnightDegreeEnums,
+            degree?: string,
             firstDegreeDate?: string,
             reentryDate?: string,
-            memberType?: KnightMemberTypeEnums,
-            memberClass?: KnightMemberClassEnums
+            memberType?: string,
+            memberClass?: string
     }) {
         if (fields) {
             this.knightInfoId = fields.knightInfoId || this.knightInfoId;

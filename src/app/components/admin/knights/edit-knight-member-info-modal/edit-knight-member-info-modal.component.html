@@ -1,0 +1,96 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="editKnightMemberInfoForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
+    <div class="form-group row mb-1">
+      <label for="memberNumber" class="col-5 col-md-3 col-form-label">Member Number</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="memberNumber" id="memberNumber">
+      </div>
+    </div>
+
+    <div class="form-group row mb-1">
+      <label for="mailReturned" class="col-5 col-md-3 col-form-label">Mail Returned</label>
+      <div class="col-7 col-md-9">
+        <input type="checkbox" class="form-check-input" formControlName="mailReturned" id="mailReturned">
+      </div>
+    </div>
+
+    <div class="form-group row mb-1">
+      <label for="degree" class="col-5 col-md-3 col-form-label">Degree</label>
+      <div class="col-7 col-md-9">
+        <select class="form-select" id="knightInfo_degree" formControlName="degree">
+          <option *ngFor="let knightDegreeInputOption of knightDegreeInputOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row mb-1">
+      <div class="col-5 col-md-3">
+        <label for="firstDegreeDate" class="col-form-label">First Degree Date</label>
+      </div>
+      <div class="col-7 col-md-9">
+        <div class="input-group">
+          <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="firstDegreeDate" id="firstDegreeDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #fdd="ngbDatepicker" [firstDayOfWeek]="7" (click)="fdd.toggle()">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="fdd.toggle()" type="button">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row mb-1">
+      <div class="col-5 col-md-3">
+        <label for="reentryDate" class="col-form-label">Reentry Date</label>
+      </div>
+      <div class="col-7 col-md-9">
+        <div class="input-group">
+          <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="reentryDate" id="reentryDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #rd="ngbDatepicker" [firstDayOfWeek]="7" (click)="rd.toggle()">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="rd.toggle()" type="button">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row mb-1">
+      <label for="memberType" class="col-5 col-md-3 col-form-label">Member Type</label>
+      <div class="col-7 col-md-9">
+        <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
+          <option *ngFor="let knightMemberTypeInputOption of knightMemberTypeInputOptions" [value]="knightMemberTypeInputOption.value">{{knightMemberTypeInputOption.displayName}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row mb-1">
+      <label for="memberClass" class="col-5 col-md-3 col-form-label">Member Class</label>
+      <div class="col-7 col-md-9">
+        <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
+          <option *ngFor="let knightMemberClassInputOption of knightMemberClassInputOptions" [value]="knightMemberClassInputOption.value">{{knightMemberClassInputOption.displayName}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="container">
+        <div class="row" *ngIf="errorSaving">
+          <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+      </div>
+  </form>
+</div>

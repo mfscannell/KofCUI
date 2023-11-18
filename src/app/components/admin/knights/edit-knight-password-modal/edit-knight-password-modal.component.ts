@@ -18,7 +18,9 @@ import { KnightsService } from 'src/app/services/knights.service';
 })
 export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
-  @Input() knight?: Knight;
+  @Input() knightsFullName: string = '';
+  @Input() knightId: number = 0;
+  @Input() knightUser?: KnightUser;
   editKnightPasswordForm: UntypedFormGroup;
   public passwordRequirements: PasswordRequirements = new PasswordRequirements({
     requireUppercase: false,
@@ -39,11 +41,6 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     private knightsService: KnightsService,
     private accountsService: AccountsService) {
     this.editKnightPasswordForm = new UntypedFormGroup({
-      knightId: new UntypedFormControl(),
-      firstName: new UntypedFormControl(),
-      middleName: new UntypedFormControl(),
-      lastName: new UntypedFormControl(),
-      nameSuffix: new UntypedFormControl(),
       accountActivated: new UntypedFormControl(),
       password: new UntypedFormControl(''),
       resetPasswordAtNextLogin: new UntypedFormControl()
@@ -51,15 +48,10 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.knight) {
+    if (this.knightUser) {
       this.editKnightPasswordForm.patchValue({
-        knightId: this.knight.knightId,
-        firstName: this.knight.firstName,
-        middleName: this.knight.middleName,
-        lastName: this.knight.lastName,
-        nameSuffix: this.knight.nameSuffix,
-        accountActivated: this.knight.knightUser.accountActivated,
-        resetPasswordAtNextLogin: this.knight.knightUser.resetPasswordAtNextLogin
+        accountActivated: this.knightUser.accountActivated,
+        resetPasswordAtNextLogin: this.knightUser.resetPasswordAtNextLogin
       });
     }
 
@@ -74,16 +66,6 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     if (this.getPasswordRequirementsSubscription) {
       this.getPasswordRequirementsSubscription.unsubscribe();
     }
-  }
-
-  formatKnightName() {
-    let knightName = `${this.knight?.firstName} ${this.knight?.lastName}`;
-
-    if (this.knight?.nameSuffix) {
-      knightName += `, ${this.knight.nameSuffix}`;
-    }
-
-    return knightName;
   }
 
   private getPasswordRequirements() {
@@ -173,7 +155,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   private mapFormToRequest() {
     let rawForm = this.editKnightPasswordForm.getRawValue();
     let request = new UpdateKnightPasswordRequest({
-      knightId: rawForm.knightId,
+      knightId: this.knightId,
       accountActivated: rawForm.accountActivated,
       password: rawForm.password,
       resetPasswordAtNextLogin: rawForm.resetPasswordAtNextLogin

@@ -2,10 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 import { ActivityInterest } from 'src/app/models/activityInterest';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
-import { KnightsService } from 'src/app/services/knights.service';
+import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 
 @Component({
   selector: 'kofc-edit-account-interests-modal',
@@ -16,14 +16,14 @@ export class EditAccountInterestsModalComponent implements OnInit, OnDestroy {
   @Input() knightId?: number;
   @Input() allActivities: ActivityInterest[] = [];
   public editKnightActivityInterestsForm: UntypedFormGroup;
-  public activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  public activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   public errorMessages: string[] = [];
   public errorSaving: boolean = false;
   private updateKnightActivityInterestSubscription?: Subscription;
 
   constructor(
     public activeModal: NgbActiveModal,
-    private knightsService: KnightsService
+    private knightActivityInterestsService: KnightActivityInterestsService
   ) {
     this.editKnightActivityInterestsForm = new UntypedFormGroup({});
   }
@@ -37,8 +37,8 @@ export class EditAccountInterestsModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
-    return this.allActivities.filter(x => x.activityCategory === activityCategory);
+  filterActivitiesByCategory(activityCategoryValue: string) {
+    return this.allActivities.filter(x => x.activityCategory === activityCategoryValue);
   }
 
   toggleInterestCheckbox(interestChangeEvent: any, activity: ActivityInterest) {
@@ -57,11 +57,11 @@ export class EditAccountInterestsModalComponent implements OnInit, OnDestroy {
         complete: () => console.log('Knight Activity Interests updated.')
       };
   
-      let request = new UpdateKnightActivityInterestsRequest({
+      let request = {
         knightId: this.knightId,
-        activityInterests: knightActivityInterests});
+        activityInterests: knightActivityInterests};
   
-      this.updateKnightActivityInterestSubscription = this.knightsService.updateKnightActivityInterest(request).subscribe(knightObserver);
+      this.updateKnightActivityInterestSubscription = this.knightActivityInterestsService.updateKnightActivityInterests(request).subscribe(knightObserver);
     }
   }
 

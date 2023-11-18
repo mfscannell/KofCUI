@@ -67,11 +67,11 @@
             <h4 class="text-decoration-underline">Interests</h4>
           </div>
         </div>
-        <div *ngFor="let activityCategory of activityCategories">
+        <div *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
           <div class="row">
-            <h6 class="text-decoration-underline">{{activityCategory}}</h6>
+            <h6 class="text-decoration-underline">{{activityCategoryInputOption.displayName}}</h6>
           </div>
-          <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategory)">
+          <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategoryInputOption.value)">
             <div class="col-12 ms-2">
               {{interestedActivity.activityName}}
             </div>

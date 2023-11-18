@@ -9,7 +9,7 @@ import { Knight } from 'src/app/models/knight';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 
 @Component({
   selector: 'app-edit-activity-modal',
@@ -20,7 +20,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
   @Input() activity?: Activity;
-  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   allKnights: Knight[] = [];
   updateActivitySubscription?: Subscription;
   createActivitySubscription?: Subscription;

@@ -1,12 +1,11 @@
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
-import { ActivityCategoryEnums } from '../enums/activityCategoryEnums';
 import { EventVolunteer } from './eventVolunteer';
 
 export class ActivityEvent {
     activityEventId: number = 0;
     activityId: number = 0;
-    activityCategory: ActivityCategoryEnums = ActivityCategoryEnums.Miscellaneous;
+    activityCategory: string = 'Community';
     eventName: string = '';
     eventDescription: string = '';
     startDateTime?: string;
@@ -21,7 +20,7 @@ export class ActivityEvent {
         fields?: {
             activityEventId? : number,
             activityId?: number,
-            activityCategory: ActivityCategoryEnums,
+            activityCategory: string,
             eventName: string,
             eventDescription: string,
             startDateTime: string,
