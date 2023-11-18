@@ -1,38 +1,48 @@
-<div class="container">
+<div class="container d-grid gap-2">
   <form>
     <div class="form-group form-inline" *ngIf="knightsLoaded">
       <label for="nameSearch" class="col-form-label">Name Search:</label>
       <input class="form-control ms-2" id="nameSearch" type="text" (input)=searchPartialName($event)/>
     </div>
   </form>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
-        <td>{{knight.firstName}} {{knight.lastName}}</td>
-        <td>
-          <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditKnightModal(knight)">
-            <svg class="bi" width="24" height="24" fill="currentColor">
-              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
-            </svg>
-          </button>
-        </td>
-        <td>
-          <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openEditKnightPassword(knight)">
-            <svg class="bi" width="24" height="24" fill="currentColor">
-              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
-            </svg>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="row bg-light border" *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
+    <div class="col-12 col-sm-7 pt-2 pb-2">{{knight.firstName}} {{knight.lastName}}</div>
+    <div class="col-2 col-sm-1 pt-2 pb-2">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit personal info" (click)="openEditKnightPersonalInfoModal(knight)">
+        <svg class="bi" width="24" height="24" fill="currentColor">
+          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#person"/>
+        </svg>
+      </button>
+    </div>
+    <div class="col-2 col-sm-1 pt-2 pb-2">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit knight info" (click)="openEditKnightMemberInfoModal(knight)">
+        <svg class="bi" width="24" height="24" fill="currentColor">
+          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
+        </svg>
+      </button>
+    </div>
+    <div class="col-2 col-sm-1 pt-2 pb-2">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit activity interests" (click)="openEditKnightActivityInterestsModal(knight)">
+        <svg class="bi" width="24" height="24" fill="currentColor">
+          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
+        </svg>
+      </button>
+    </div>
+    <div class="col-2 col-sm-1 pt-2 pb-2">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit member dues" (click)="openEditKnightMemberDuesModal(knight)">
+        <svg class="bi" width="24" height="24" fill="currentColor">
+          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
+        </svg>
+      </button>
+    </div>
+    <div class="col-2 col-sm-1 pt-2 pb-2">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit password" (click)="openEditKnightPassword(knight)">
+        <svg class="bi" width="24" height="24" fill="currentColor">
+          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
+        </svg>
+      </button>
+    </div>
+  </div>
   <ngb-pagination [collectionSize]="displayedKnights.length" [(page)]="page" [maxSize]="maxSize" [pageSize]="pageSize" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
   </ngb-pagination>
   <div class="form-group row mb-1">

@@ -15,13 +15,13 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { KnightInfo } from 'src/app/models/knightInfo';
-import { KnightMemberClassEnums } from 'src/app/enums/knightMemberClassEnums';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
-import { UpdateKnightAndActivityInterestsRequest } from 'src/app/models/requests/updateKnightAndActivityInterestsRequest';
 import { MemberDues } from 'src/app/models/memberDues';
 import { MemberDuesPaymentStatus } from 'src/app/enums/memberDuesPaymentStatus';
-import { KnightMemberClassSelectOption } from 'src/app/htmlElements/KnightMemberClassSelectOption';
-import { MemberDuesSelectOption } from 'src/app/htmlElements/MemberDuesSelectOption';
+import { MemberDuesPayStatusInputOption } from 'src/app/models/inputOptions/memberDuesPayStatusInputOption';
+import { KnightMemberClassInputOption } from 'src/app/models/inputOptions/knightMemberClassInputOption';
+import { KnightMemberTypeInputOption } from 'src/app/models/inputOptions/knightMemberTypeInputOption';
+import { KnightDegreeInputOption } from 'src/app/models/inputOptions/knightDegreeInputOption';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -29,13 +29,12 @@ import { MemberDuesSelectOption } from 'src/app/htmlElements/MemberDuesSelectOpt
   styleUrls: ['./edit-knight-modal.component.scss']
 })
 export class EditKnightModalComponent implements OnInit {
-  @Input() modalHeaderText: string = '';
-  @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
+  public modalHeaderText: string = 'Adding Knight';
   @Input() knight?: Knight;
-  public knightDegrees = Object.values(KnightDegreeEnums);
-  public knightMemberTypeEnums = Object.values(KnightMemberTypeEnums);
-  public knightMemberClassSelectOptions = KnightMemberClassSelectOption.AllOptions;
-  public memberDuesPaymentStatusSelectOptions = MemberDuesSelectOption.AllOptions;
+  public knightDegreeInputOptions: KnightDegreeInputOption[] = KnightDegreeInputOption.options
+  public knightMemberTypeInputOptions: KnightMemberTypeInputOption[] = KnightMemberTypeInputOption.options
+  public knightMemberClassInputOptions: KnightMemberClassInputOption[] = KnightMemberClassInputOption.options;
+  public memberDuesPaymentStatusInputOptions: MemberDuesPayStatusInputOption[] = MemberDuesPayStatusInputOption.options;
   public memberDuesPaymentStatusEnums = Object.values(MemberDuesPaymentStatus);
   getKnightActivitiesSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
@@ -44,7 +43,7 @@ export class EditKnightModalComponent implements OnInit {
   editKnightForm: UntypedFormGroup;
   countries: Country[] = Country.AllCountries;
   states: AddressState[] = AddressState.AllStates;
-  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   allActivities: ActivityInterest[] = [];
   errorSaving: boolean = false;
   errorMessages: string[] = [];
@@ -106,7 +105,7 @@ export class EditKnightModalComponent implements OnInit {
           knightInfoId: new UntypedFormControl(0),
           memberNumber: new UntypedFormControl(0),
           mailReturned: new UntypedFormControl(false),
-          degree: new UntypedFormControl(KnightDegreeEnums.First),
+          degree: new UntypedFormControl('First'),
           firstDegreeDate: new UntypedFormControl({
             year: today.getFullYear(),
             month: today.getMonth() + 1,
@@ -117,8 +116,8 @@ export class EditKnightModalComponent implements OnInit {
             month: today.getMonth() + 1,
             day: today.getDate()
           }),
-          memberType: new UntypedFormControl(KnightMemberTypeEnums.Associate),
-          memberClass: new UntypedFormControl(KnightMemberClassEnums.Paying)
+          memberType: new UntypedFormControl('Associate'),
+          memberClass: new UntypedFormControl('Paying')
         }),
         memberDues: new UntypedFormArray([])
       });
@@ -162,7 +161,6 @@ export class EditKnightModalComponent implements OnInit {
 
          this.knight.memberDues.forEach((memberDue: MemberDues) => {
           const memberDueFormGroup = new UntypedFormGroup({
-            memberDuesId: new UntypedFormControl(memberDue.memberDuesId),
             year: new UntypedFormControl(memberDue.year),
             paidStatus: new UntypedFormControl(memberDue.paidStatus)
           });
@@ -183,7 +181,7 @@ export class EditKnightModalComponent implements OnInit {
           const memberDueFormGroup = new UntypedFormGroup({
             memberDuesId: new UntypedFormControl(0),
             year: new UntypedFormControl(year),
-            paidStatus: new UntypedFormControl(MemberDuesPaymentStatus.Unpaid)
+            paidStatus: new UntypedFormControl('Unpaid')
           });
 
           this.memberDuesForm.push(memberDueFormGroup);
@@ -228,71 +226,8 @@ export class EditKnightModalComponent implements OnInit {
     }
 
     onSubmitEditKnight() {
-      if (this.modalAction === ModalActionEnums.Edit) {
-        let updatedKnight = this.mapFormToUpdateKnightRequest();
-        this.updateKnight(updatedKnight);
-      } else if (this.modalAction === ModalActionEnums.Create) {
-        let createdKnight = this.mapFormToKnight();
-        this.createKnight(createdKnight);
-      }
-    }
-
-    private mapFormToUpdateKnightRequest() {
-      let rawForm = this.editKnightForm.getRawValue();
-      let homeAddress = new StreetAddress({
-        streetAddressId: rawForm.homeAddress.streetAddressId,
-        addressName: rawForm.homeAddress.addressName,
-        address1: rawForm.homeAddress.address1,
-        address2: rawForm.homeAddress.address2,
-        city: rawForm.homeAddress.city,
-        stateCode: rawForm.homeAddress.stateCode,
-        postalCode: rawForm.homeAddress.postalCode,
-        countryCode: rawForm.homeAddress.countryCode
-      });
-      let knightInfo = new KnightInfo({
-        knightInfoId: rawForm.knightInfo.knightInfoId,
-        memberNumber: rawForm.knightInfo.memberNumber,
-        mailReturned: rawForm.knightInfo.mailReturned,
-        degree: rawForm.knightInfo.degree,
-        firstDegreeDate: DateTimeFormatter.ToIso8601Date(
-          rawForm.knightInfo.firstDegreeDate.year, 
-          rawForm.knightInfo.firstDegreeDate.month, 
-          rawForm.knightInfo.firstDegreeDate.day),
-        reentryDate: DateTimeFormatter.ToIso8601Date(
-          rawForm.knightInfo.reentryDate.year, 
-          rawForm.knightInfo.reentryDate.month, 
-          rawForm.knightInfo.reentryDate.day),
-        memberType: rawForm.knightInfo.memberType,
-        memberClass: rawForm.knightInfo.memberClass
-      });
-
-      let _memberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any) {
-        return new MemberDues({
-          memberDuesId: md.memberDuesId,
-          year: md.year,
-          paidStatus: md.paidStatus
-        })
-      });
-
-      let knight = new UpdateKnightAndActivityInterestsRequest({
-        knightId: rawForm.knightId,
-        firstName: rawForm.firstName,
-        middleName: rawForm.middleName,
-        lastName: rawForm.lastName,
-        nameSuffix: rawForm.nameSuffix,
-        dateOfBirth: DateTimeFormatter.ToIso8601Date(
-          rawForm.dateOfBirth.year, 
-          rawForm.dateOfBirth.month, 
-          rawForm.dateOfBirth.day),
-        emailAddress: rawForm.emailAddress,
-        cellPhoneNumber: rawForm.cellPhoneNumber,
-        homeAddress: homeAddress,
-        knightInfo: knightInfo,
-        activityInterests: this.allActivities,
-        memberDues: _memberDues
-      });
-
-      return knight;
+      let createdKnight = this.mapFormToKnight();
+      this.createKnight(createdKnight);
     }
 
     private mapFormToKnight() {
@@ -325,7 +260,6 @@ export class EditKnightModalComponent implements OnInit {
       });
       let _memberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any) {
         return new MemberDues({
-          memberDuesId: md.memberDuesId,
           year: md.year,
           paidStatus: md.paidStatus
         })
@@ -361,22 +295,12 @@ export class EditKnightModalComponent implements OnInit {
       this.createKnightSubscription = this.knightsService.createKnightAndActivityInterest(knight).subscribe(knightObserver);
     }
 
-    private updateKnight(knight: UpdateKnightAndActivityInterestsRequest) {
-      let knightObserver = {
-        next: (response: Knight) => this.passBackResponse(response),
-        error: (err: any) => this.logError("Error Updating Knight", err),
-        complete: () => console.log('Knight updated.')
-      };
-  
-      this.updateKnightSubscription = this.knightsService.updateKnightAndActivityInterests(knight).subscribe(knightObserver);
-    }
-
     private passBackResponse(knight: Knight) {
       this.activeModal.close(knight);
     }
 
-    filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
-      return this.allActivities.filter(x => x.activityCategory === activityCategory);
+    filterActivitiesByCategory(activityCategoryValue: string) {
+      return this.allActivities.filter(x => x.activityCategory === activityCategoryValue);
     }
 
     toggleInterestCheckbox(interestChangeEvent: any, activity: ActivityInterest) {

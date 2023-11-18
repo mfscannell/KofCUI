@@ -54,6 +54,10 @@ import { AssetsComponent } from './components/admin/assets/assets.component';
 import { AssetsGuard } from './guards/assets.guard';
 import { UploadHomePageCarouselImageModalComponent } from './components/admin/assets/upload-home-page-carousel-image-modal/upload-home-page-carousel-image-modal.component';
 import { DeleteHomePageCarouselImageModalComponent } from './components/admin/assets/delete-home-page-carousel-image-modal/delete-home-page-carousel-image-modal.component';
+import { EditKnightMemberInfoModalComponent } from './components/admin/knights/edit-knight-member-info-modal/edit-knight-member-info-modal.component';
+import { EditKnightPersonalInfoModalComponent } from './components/admin/knights/edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
+import { EditKnightMemberDuesModalComponent } from './components/admin/knights/edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
+import { EditKnightActivityInterestsModalComponent } from './components/admin/knights/edit-knight-activity-interests-modal/edit-knight-activity-interests-modal.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +79,10 @@ import { DeleteHomePageCarouselImageModalComponent } from './components/admin/as
     EditActivityModalComponent,
     KnightsComponent,
     EditKnightModalComponent,
+    EditKnightActivityInterestsModalComponent,
+    EditKnightMemberDuesModalComponent,
+    EditKnightMemberInfoModalComponent,
+    EditKnightPersonalInfoModalComponent,
     EditKnightPasswordModalComponent,
     UploadKnightsModalComponent,
     LeadershipRolesComponent,

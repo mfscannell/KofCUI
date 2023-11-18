@@ -10,6 +10,10 @@ import { UpdateKnightPasswordResponse } from '../models/responses/updateKnightPa
 import { UpdateKnightAndActivityInterestsRequest } from '../models/requests/updateKnightAndActivityInterestsRequest';
 import { KnightUser } from '../models/knightUser';
 import { UpdateKnightPersonalInfoRequest } from '../models/requests/updateKnightPersonalInfoRequest';
+import { KnightInfo } from '../models/knightInfo';
+import { MemberDues } from '../models/memberDues';
+import { UpdateKnightMembershipInfoRequest } from '../models/requests/updateKnightMembershipInfoRequest';
+import { UpdateKnightMemberDuesRequest } from '../models/requests/updateKnightMemberDuesRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -45,18 +49,17 @@ export class KnightsService {
     }
 
     updateKnightPersonalInfo(knight: UpdateKnightPersonalInfoRequest) : Observable<Knight> {
-        return this.http.put<Knight>(`knights/${knight?.knightId}/personalInfo`, knight);
+        return this.http.put<Knight>(`knights/personalInfo`, knight);
     }
 
+    updateKnightMembershipInfo(updateKnightMembershipInfoRequest: UpdateKnightMembershipInfoRequest): Observable<KnightInfo> {
+        return this.http.put<KnightInfo>(`knights/knightMembershipInfo`, updateKnightMembershipInfoRequest);
+    }
     updateKnightAndActivityInterests(knight: UpdateKnightAndActivityInterestsRequest) : Observable<Knight> {
         return this.http.put<Knight>(`knights/${knight?.knightId}/withAllActivities`, knight);
     }
 
     updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<KnightUser> {
         return this.http.put<KnightUser>(`knights/${request?.knightId}/password`, request);
-    }
-
-    updateKnightActivityInterest(updateKnightActivityInterestsRequest: UpdateKnightActivityInterestsRequest) : Observable<ActivityInterest[]> {
-        return this.http.put<ActivityInterest[]>(`knights/${updateKnightActivityInterestsRequest.knightId}/activities`, updateKnightActivityInterestsRequest);
     }
 }

@@ -1,0 +1,116 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="editKnightPersonalInfoForm" (ngSubmit)="onSubmitEditKnightPersonalInfo()">
+    <div class="form-group row mb-1">
+      <label for="firstName" class="col-5 col-md-3 col-form-label">First Name</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="firstName" id="firstName">
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <label for="middleName" class="col-5 col-md-3 col-form-label">Middle Name</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="middleName" id="middleName">
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <label for="lastName" class="col-5 col-md-3 col-form-label">Last Name</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="lastName" id="lastName">
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <label for="nameSuffix" class="col-5 col-md-3 col-form-label">Suffix</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix">
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <div class="col-5 col-md-3">
+        <label for="dateOfBirth" class="col-form-label">Date of Birth</label>
+      </div>
+      <div class="col-7 col-md-9">
+        <div class="input-group">
+          <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="dob.toggle()" type="button">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <label for="emailAddress" class="col-5 col-md-3 col-form-label">Email Address</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress">
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <label for="cellPhoneNumber" class="col-5 col-md-3 col-form-label">Cell Phone</label>
+      <div class="col-7 col-md-9">
+        <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber">
+      </div>
+    </div>
+
+    <div class="panel-body" formGroupName="homeAddress">
+      <div class="form-group row mb-1">
+        <label for="countryCode" class="col-5 col-md-3 col-form-label">Country</label>
+        <div class="col-7 col-md-9">
+          <select class="form-select" id="countryCode" formControlName="countryCode">
+            <option *ngFor="let country of countryInputOptions" [value]="country.countryCode">{{country.displayName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row mb-1">
+        <label for="address1" class="col-5 col-md-3 col-form-label">Address 1</label>
+        <div class="col-7 col-md-9">
+          <input type="text" class="form-control" formControlName="address1" id="address1">
+        </div>
+      </div>
+      <div class="form-group row mb-1">
+        <label for="address2" class="col-5 col-md-3 col-form-label">Address 2</label>
+        <div class="col-7 col-md-9">
+          <input type="text" class="form-control" formControlName="address2" id="address2">
+        </div>
+      </div>
+      <div class="form-group row mb-1">
+        <label for="city" class="col-5 col-md-3 col-form-label">City</label>
+        <div class="col-7 col-md-9">
+          <input type="text" class="form-control" formControlName="city" id="city">
+        </div>
+      </div>
+      <div class="form-group row mb-1">
+        <label for="stateCode" class="col-5 col-md-3 col-form-label">State</label>
+        <div class="col-7 col-md-9">
+          <select class="form-select" id="stateCode" formControlName="stateCode">
+            <option *ngFor="let state of stateInputOptions" [value]="state.stateCode">{{state.displayName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row mb-1">
+        <label for="postalCode" class="col-5 col-md-3 col-form-label">Zip Code</label>
+        <div class="col-7 col-md-9">
+          <input type="text" class="form-control" formControlName="postalCode" id="postalCode">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="container">
+        <div class="row" *ngIf="errorSaving">
+          <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+      </div>
+  </form>
+</div>

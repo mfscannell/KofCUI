@@ -17,7 +17,7 @@ import { Knight } from 'src/app/models/knight';
 import { TimeZone } from 'src/app/models/timeZone';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 
 @Component({
   selector: 'kofc-edit-activity-event-modal',
@@ -31,7 +31,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() allKnights: Knight[] = [];
   @Input() allActivities: Activity[] = [];
   selectableActivities: Activity[] = [];
-  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   updateActivityEventSubscription?: Subscription;
   createActivityEventSubscription?: Subscription;
   getCouncilTImeZoneSubscription?: Subscription;

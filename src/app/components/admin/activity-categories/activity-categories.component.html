@@ -1,14 +1,14 @@
 <div class="container">
   <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
-    <ngb-panel *ngFor="let activityCategory of activityCategories">
+    <ngb-panel *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
       <ng-template ngbPanelTitle>
         <div class="row">
-          <button type="button" class="btn btn-link btn-link-kofc-blue" >{{activityCategory}}</button>
+          <button type="button" class="btn btn-link btn-link-kofc-blue" >{{activityCategoryInputOption.displayName}}</button>
         </div>
       </ng-template>
       <ng-template ngbPanelContent>
         <div class="container">
-          <div class="row" *ngFor='let activity of filterActivitiesByCategory(activityCategory)'>
+          <div class="row" *ngFor='let activity of filterActivitiesByCategory(activityCategoryInputOption.value)'>
             <div class="col-9 col-md-6">
               {{activity.activityName}}
             </div>
@@ -29,7 +29,7 @@
   <div class="row">
     <div class="col-md-12 mt-1">
       <div class="btn-toolbar text-center mt-1">
-        <button type="button" *ngIf="canAddActivity() && activityCategories.length > 0" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityModal()">Add Activity</button>
+        <button type="button" *ngIf="canAddActivity() && activityCategoryInputOptions.length > 0" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityModal()">Add Activity</button>
       </div>
     </div>
   </div>

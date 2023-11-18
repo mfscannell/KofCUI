@@ -12,12 +12,12 @@ import { KnightInfo } from 'src/app/models/knightInfo';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditAccountPersonalInfoModalComponent } from './edit-account-personalInfo-modal/edit-account-personalInfo-modal.component';
 import { EditAccountInterestsModalComponent } from './edit-account-interests-modal/edit-account-interests-modal.component';
 import { EditAccountSecurityModalComponent } from './edit-account-security-modal/edit-account-security-modal.component';
 import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 
 @Component({
   selector: 'kofc-account',
@@ -28,7 +28,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';
   knightId?: number;
   knight?: Knight;
-  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   getKnightSubscription?: Subscription;
   updateKnightSubscription?: Subscription;
   updateKnightActivityInterestSubscription?: Subscription;
@@ -62,16 +62,16 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
-    return this.knight?.activityInterests.filter(x => x.activityCategory === activityCategory);
+  filterActivitiesByCategory(activityCategoryValue: string) {
+    return this.knight?.activityInterests.filter(x => x.activityCategory === activityCategoryValue);
   }
 
   filterActivitiesInterested() {
     return this.knight?.activityInterests.filter(x => x.interested);
   }
 
-  filterActivitiesInterestedInCategory(activityCategory: ActivityCategoryEnums) {
-    return this.knight?.activityInterests.filter(x => x.interested && x.activityCategory === activityCategory);
+  filterActivitiesInterestedInCategory(activityCategoryValue: string) {
+    return this.knight?.activityInterests.filter(x => x.interested && x.activityCategory === activityCategoryValue);
   }
 
   formatDate(date: string | undefined) {
