@@ -8,7 +8,7 @@ import { EditActivityModalComponent } from 'src/app/components/admin/activity-ca
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 
 @Component({
   selector: 'activity-categories',
@@ -17,7 +17,7 @@ import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   activitiesSubscription?: Subscription;
-  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   activities?: Activity[];
   closeModalResult = '';
 
@@ -57,7 +57,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   openCreateActivityModal() {
     const modalRef = this.modalService.open(EditActivityModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
     modalRef.componentInstance.activity = new Activity({
-      activityCategory: this.activityCategories[0],
+      activityCategory: this.activityCategoryInputOptions[0].value,
       activityCoordinators: [],
       activityEventNotes: []
     });
@@ -100,9 +100,9 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterActivitiesByCategory(activityCategory: ActivityCategoryEnums) {
+  filterActivitiesByCategory(activityCategoryValue: string) {
     if (this.activities) {
-      return this.activities.filter(x => x.activityCategory === activityCategory).sort(function(a, b){
+      return this.activities.filter(x => x.activityCategory === activityCategoryValue).sort(function(a, b){
         if (a.activityName.toLowerCase() < b.activityName.toLowerCase()) {
           return -1;
         }

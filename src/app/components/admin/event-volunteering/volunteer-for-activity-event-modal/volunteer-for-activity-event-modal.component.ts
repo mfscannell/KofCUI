@@ -16,7 +16,7 @@ import { EventVolunteer } from 'src/app/models/eventVolunteer';
 import { Knight } from 'src/app/models/knight';
 import { VolunteerForActivityEventRequest } from 'src/app/models/requests/volunteerForActivityEventRequest';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { ActivityCategoryEnums } from 'src/app/enums/activityCategoryEnums';
+import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 
 @Component({
   selector: 'kofc-volunteer-for-activity-event-modal',
@@ -27,7 +27,7 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   @Input() modalHeaderText: string = '';
   @Input() activityEvent?: ActivityEvent;
   @Input() allKnights: Knight[] = [];
-  activityCategories: ActivityCategoryEnums[] = Object.values(ActivityCategoryEnums);
+  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   knightId?: number;
   updateVolunteerForActivityEventSubscription?: Subscription;
   volunteerForActivityEventForm: UntypedFormGroup;

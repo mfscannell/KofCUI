@@ -1,12 +1,11 @@
 import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
-import { ActivityCategoryEnums } from '../enums/activityCategoryEnums';
 import { ActivityEventNotes } from './activityEventNotes';
 
 export class Activity {
     activityId?: number;
     activityName: string = "";
     activityDescription: string = "";
-    activityCategory: ActivityCategoryEnums = ActivityCategoryEnums.Miscellaneous;
+    activityCategory: string = 'Community';
     activityCoordinators: ActivityCoordinator[] = [];
     activityEventNotes: ActivityEventNotes[] = [];
     notes: string = '';
@@ -16,7 +15,7 @@ export class Activity {
             activityId? : number,
             activityName?: string,
             activityDescription?: string,
-            activityCategory?: ActivityCategoryEnums,
+            activityCategory?: string,
             activityCoordinators: ActivityCoordinator[],
             activityEventNotes: ActivityEventNotes[],
             notes?: string

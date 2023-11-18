@@ -138,7 +138,7 @@
               <label for="degree" class="col-5 col-md-3 col-form-label">Degree</label>
               <div class="col-7 col-md-9">
                 <select class="form-select" id="knightInfo_degree" formControlName="degree">
-                  <option *ngFor="let knightDegreeEnum of knightDegrees" [value]="knightDegreeEnum">{{knightDegreeEnum}}</option>
+                  <option *ngFor="let knightDegreeInputOption of knightDegreeInputOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
                 </select>
               </div>
             </div>
@@ -183,7 +183,7 @@
               <label for="memberType" class="col-5 col-md-3 col-form-label">Member Type</label>
               <div class="col-7 col-md-9">
                 <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
-                  <option *ngFor="let knightMemberTypeEnum of knightMemberTypeEnums" [value]="knightMemberTypeEnum">{{knightMemberTypeEnum}}</option>
+                  <option *ngFor="let knightMemberTypeInputOption of knightMemberTypeInputOptions" [value]="knightMemberTypeInputOption.value">{{knightMemberTypeInputOption.displayName}}</option>
                 </select>
               </div>
             </div>
@@ -192,7 +192,7 @@
               <label for="memberClass" class="col-5 col-md-3 col-form-label">Member Class</label>
               <div class="col-7 col-md-9">
                 <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
-                  <option *ngFor="let knightMemberClass of knightMemberClassSelectOptions" [value]="knightMemberClass.value">{{knightMemberClass.displayName}}</option>
+                  <option *ngFor="let knightMemberClassInputOption of knightMemberClassInputOptions" [value]="knightMemberClassInputOption.value">{{knightMemberClassInputOption.displayName}}</option>
                 </select>
               </div>
             </div>
@@ -204,12 +204,12 @@
       <ng-container ngbNavItem>
         <a ngbNavLink class="nav-item-kofc-blue">Activities</a>
         <ng-template ngbNavContent>
-          <div class="form-group row mb-1" *ngFor="let activityCategory of activityCategories">
+          <div class="form-group row mb-1" *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
             <div class="container">
-              <h4 class="col-5 col-md-3 col-form-label text-decoration-underline">{{activityCategory}}</h4>
+              <h4 class="col-5 col-md-3 col-form-label text-decoration-underline">{{activityCategoryInputOption.displayName}}</h4>
             </div>
             <div class="container">
-              <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategory)">
+              <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategoryInputOption.value)">
                 <div class="form-group row mb-1">
                   <label class="col-5 col-md-3 form-label">{{activity.activityName}}</label>
                   <div class="col-7 col-md-9">
@@ -241,7 +241,7 @@
                 </div>
                 <div class="col-7">
                   <select class="form-select" id="paidStatus" formControlName="paidStatus">
-                    <option *ngFor="let memberDuesPaymentStatusOption of memberDuesPaymentStatusSelectOptions" [value]="memberDuesPaymentStatusOption.value">{{memberDuesPaymentStatusOption.displayName}}</option>
+                    <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusInputOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
                   </select>
                 </div>
               </div>
