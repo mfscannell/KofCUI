@@ -1,15 +1,15 @@
-import { KnightMemberTypeEnums } from "../enums/knightMemberTypeEnums";
+import { KnightMemberTypeType } from "../types/knight-member-type.type";
 
 export class KnightMemberTypeEnumMapper {
-    public static Map(value: string | undefined) {
+    public static Map(value: string | undefined): KnightMemberTypeType {
         if (value === undefined) {
-            return KnightMemberTypeEnums.Associate;
+            return 'Associate';
         }
 
         if (value.toLowerCase() === "insurance") {
-            return KnightMemberTypeEnums.Insurance;
+            return 'Insurance';
         }
 
-        return KnightMemberTypeEnums.Associate;
+        return 'Associate';
     }
 }

@@ -1,7 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
   </button>
 </div>
 <div class="modal-body">
@@ -162,7 +161,7 @@
               </div>
               <div class="col-8 col-md-9">
                 <select class="form-select" id="locationAddress_stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
+                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
                 </select>
               </div>
             </div>
@@ -179,8 +178,8 @@
                 <label for="locationAddress_countryCode" class="col-form-label">Country</label>
               </div>
               <div class="col-8 col-md-9">
-                <select class="form-select" id="locationAddress_countryCode" formControlName="countryCode">
-                  <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
+                <select class="form-select" id="locationAddress_countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
+                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
                 </select>
               </div>
             </div>

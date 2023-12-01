@@ -87,19 +87,28 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy {
     return this.leadershipRole?.leadershipRoleCategory === LeadershipRoleCategoryEnums.Officer;
   }
 
-  private getDefaultLeadershipRole() {
-    return new LeadershipRole({
+  private getDefaultLeadershipRole(): LeadershipRole {
+    let defaultLeadershipRole: LeadershipRole = {
       leadershipRoleId: 0,
       title: '',
       knightId: 0,
       occupied: false,
       leadershipRoleCategory: LeadershipRoleCategoryEnums.Director
-    });
+    };
+
+    return defaultLeadershipRole;
   }
 
   onSubmitEditLeadershipRole() {
     if (this.modalAction === ModalActionEnums.Edit) {
-      let updatedLeadershipRole = new LeadershipRole(this.editLeadershipRoleForm.getRawValue());
+      let rawForm = this.editLeadershipRoleForm.getRawValue();
+      let updatedLeadershipRole: LeadershipRole = {
+        leadershipRoleId: rawForm.LeadershipRoleId,
+        title: rawForm.title,
+        knightId: rawForm.knightId,
+        occupied: rawForm.occupied,
+        leadershipRoleCategory: rawForm.leadershipRoleCategory
+      };
       this.updateLeadershipRole(updatedLeadershipRole);
     }
   }

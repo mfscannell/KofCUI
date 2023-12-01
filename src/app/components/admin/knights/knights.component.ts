@@ -1,12 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
-import { Router, Routes, RouterModule } from '@angular/router';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
 
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-knight-modal/edit-knight-modal.component';

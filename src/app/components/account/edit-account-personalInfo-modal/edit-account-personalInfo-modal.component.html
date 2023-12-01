@@ -1,7 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">Edit Personal Info</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
   </button>
 </div>
 <div class="modal-body">
@@ -71,6 +70,14 @@
         <ng-template ngbNavContent>
           <div class="panel-body" formGroupName="homeAddress">
             <div class="form-group row mb-1">
+              <label for="countryCode" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">Country</label>
+              <div class="col-7 col-sm-8 col-md-8 col-lg-9">
+                <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
+                  <option *ngFor="let countryFormOption of countryFormOptions" [value]="countryFormOption.value">{{countryFormOption.displayName}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row mb-1">
               <label for="address1" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">Address 1</label>
               <div class="col-7 col-sm-8 col-md-8 col-lg-9">
                 <input type="text" class="form-control" formControlName="address1" id="address1">
@@ -92,7 +99,7 @@
               <label for="stateCode" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">State</label>
               <div class="col-7 col-sm-8 col-md-8 col-lg-9">
                 <select class="form-select" id="stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
+                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
                 </select>
               </div>
             </div>
@@ -100,14 +107,6 @@
               <label for="postalCode" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">Zip Code</label>
               <div class="col-7 col-sm-8 col-md-8 col-lg-9">
                 <input type="text" class="form-control" formControlName="postalCode" id="postalCode">
-              </div>
-            </div>
-            <div class="form-group row mb-1">
-              <label for="countryCode" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">Country</label>
-              <div class="col-7 col-sm-8 col-md-8 col-lg-9">
-                <select class="form-select" id="countryCode" formControlName="countryCode">
-                  <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
-                </select>
               </div>
             </div>
           </div>

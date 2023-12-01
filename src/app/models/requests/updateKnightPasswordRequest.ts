@@ -1,20 +1,6 @@
-export class UpdateKnightPasswordRequest {
-  knightId: number = 0;
-  accountActivated: boolean = false;
-  password: string = '';
-  resetPasswordAtNextLogin: boolean = false;
-
-  constructor(fields?: {
-    knightId: number,
-    accountActivated: boolean,
-    password: string,
-    resetPasswordAtNextLogin: boolean
-  }) {
-    if (fields) {
-      this.knightId = fields.knightId || this.knightId;
-      this.accountActivated = fields.accountActivated;
-      this.password = fields.password || this.password;
-      this.resetPasswordAtNextLogin = fields.resetPasswordAtNextLogin;
-    }
-  }
+export interface UpdateKnightPasswordRequest {
+  knightId: number;
+  accountActivated: boolean;
+  password: string;
+  resetPasswordAtNextLogin: boolean;
 }

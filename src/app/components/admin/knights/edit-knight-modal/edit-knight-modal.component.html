@@ -1,7 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
   </button>
 </div>
 <div class="modal-body">
@@ -13,25 +12,25 @@
           <div class="form-group row mb-1">
             <label for="firstName" class="col-5 col-md-3 col-form-label">First Name</label>
             <div class="col-7 col-md-9">
-              <input type="text" class="form-control" formControlName="firstName" id="firstName">
+              <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off">
             </div>
           </div>
           <div class="form-group row mb-1">
             <label for="middleName" class="col-5 col-md-3 col-form-label">Middle Name</label>
             <div class="col-7 col-md-9">
-              <input type="text" class="form-control" formControlName="middleName" id="middleName">
+              <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off">
             </div>
           </div>
           <div class="form-group row mb-1">
             <label for="lastName" class="col-5 col-md-3 col-form-label">Last Name</label>
             <div class="col-7 col-md-9">
-              <input type="text" class="form-control" formControlName="lastName" id="lastName">
+              <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off">
             </div>
           </div>
           <div class="form-group row mb-1">
             <label for="nameSuffix" class="col-5 col-md-3 col-form-label">Suffix</label>
             <div class="col-7 col-md-9">
-              <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix">
+              <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off">
             </div>
           </div>
 
@@ -41,7 +40,7 @@
               </div>
               <div class="col-7 col-md-9">
                 <div class="input-group">
-                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
+                  <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" autocomplete="off" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="dob.toggle()" type="button">
                       <svg class="bi" width="24" height="24" fill="currentColor">
@@ -56,66 +55,64 @@
           <div class="form-group row mb-1">
             <label for="emailAddress" class="col-5 col-md-3 col-form-label">Email Address</label>
             <div class="col-7 col-md-9">
-              <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress">
+              <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off">
             </div>
           </div>
           <div class="form-group row mb-1">
             <label for="cellPhoneNumber" class="col-5 col-md-3 col-form-label">Cell Phone</label>
             <div class="col-7 col-md-9">
-              <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber">
+              <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off">
             </div>
           </div>
-        </ng-template>
-      </ng-container>
-
-      <ng-container ngbNavItem>
-        <a ngbNavLink class="nav-item-kofc-blue">Address</a>
-        <ng-template ngbNavContent>
+          <div class="form-group row mb-1">
+            <div class="col-12">
+              <h5 class="text-decoration-underline fw-bold">Home Address</h5>
+            </div>
+          </div>
           <div class="panel-body" formGroupName="homeAddress">
+            <div class="form-group row mb-1">
+              <label for="countryCode" class="col-5 col-md-3 col-form-label">Country</label>
+              <div class="col-7 col-md-9">
+                <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
+                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+                </select>
+              </div>
+            </div>
             <div class="form-group row mb-1">
               <label for="address1" class="col-5 col-md-3 col-form-label">Address 1</label>
               <div class="col-7 col-md-9">
-                <input type="text" class="form-control" formControlName="address1" id="address1">
+                <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off">
               </div>
             </div>
             <div class="form-group row mb-1">
               <label for="address2" class="col-5 col-md-3 col-form-label">Address 2</label>
               <div class="col-7 col-md-9">
-                <input type="text" class="form-control" formControlName="address2" id="address2">
+                <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off">
               </div>
             </div>
             <div class="form-group row mb-1">
               <label for="city" class="col-5 col-md-3 col-form-label">City</label>
               <div class="col-7 col-md-9">
-                <input type="text" class="form-control" formControlName="city" id="city">
+                <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off">
               </div>
             </div>
             <div class="form-group row mb-1">
               <label for="stateCode" class="col-5 col-md-3 col-form-label">State</label>
               <div class="col-7 col-md-9">
                 <select class="form-select" id="stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of states" [value]="state.stateCode">{{state.displayName}}</option>
+                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
                 </select>
               </div>
             </div>
             <div class="form-group row mb-1">
               <label for="postalCode" class="col-5 col-md-3 col-form-label">Zip Code</label>
               <div class="col-7 col-md-9">
-                <input type="text" class="form-control" formControlName="postalCode" id="postalCode">
-              </div>
-            </div>
-            <div class="form-group row mb-1">
-              <label for="countryCode" class="col-5 col-md-3 col-form-label">Country</label>
-              <div class="col-7 col-md-9">
-                <select class="form-select" id="countryCode" formControlName="countryCode">
-                  <option *ngFor="let country of countries" [value]="country.countryCode">{{country.displayName}}</option>
-                </select>
+                <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off">
               </div>
             </div>
           </div>
         </ng-template>
       </ng-container>
-
       <ng-container ngbNavItem>
         <a ngbNavLink class="nav-item-kofc-blue">Knight Info</a>
         <ng-template ngbNavContent>
@@ -200,23 +197,26 @@
           </div>
         </ng-template>
       </ng-container>
-
       <ng-container ngbNavItem>
         <a ngbNavLink class="nav-item-kofc-blue">Activities</a>
         <ng-template ngbNavContent>
-          <div class="form-group row mb-1" *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
-            <div class="container">
-              <h4 class="col-5 col-md-3 col-form-label text-decoration-underline">{{activityCategoryInputOption.displayName}}</h4>
-            </div>
-            <div class="container">
-              <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategoryInputOption.value)">
-                <div class="form-group row mb-1">
-                  <label class="col-5 col-md-3 form-label">{{activity.activityName}}</label>
+          <div class="panel-body" formGroupName="activityInterests">
+            <div *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
+              <div class="form-group row mb-1">
+                <div class="col-12">
+                  <h5 class="text-decoration-underline fw-bold">{{activityCategoryInputOption.displayName}}</h5>
+                </div>
+              </div>
+              <div formArrayName="{{getFormArrayName(activityCategoryInputOption)}}">
+                <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(getFormArrayName(activityCategoryInputOption)).controls; let i = index" [formGroupName]="i">
+                  <div class="form-group row mb-1">
+                    <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
                   <div class="col-7 col-md-9">
-                    <input class="form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+                    <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
+                  </div>
                   </div>
                 </div>
-              </ng-container>
+              </div>
             </div>
           </div>
         </ng-template>

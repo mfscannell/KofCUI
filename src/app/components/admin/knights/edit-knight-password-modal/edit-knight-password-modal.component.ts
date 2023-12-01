@@ -3,11 +3,9 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
-import { Knight } from 'src/app/models/knight';
 import { KnightUser } from 'src/app/models/knightUser';
 import { UpdateKnightPasswordRequest } from 'src/app/models/requests/updateKnightPasswordRequest';
 import { PasswordRequirements } from 'src/app/models/responses/passwordRequirements';
-import { UpdateKnightPasswordResponse } from 'src/app/models/responses/updateKnightPasswordResponse';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { KnightsService } from 'src/app/services/knights.service';
 
@@ -22,7 +20,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   @Input() knightId: number = 0;
   @Input() knightUser?: KnightUser;
   editKnightPasswordForm: UntypedFormGroup;
-  public passwordRequirements: PasswordRequirements = new PasswordRequirements({
+  public passwordRequirements: PasswordRequirements = {
     requireUppercase: false,
     requireLowercase: false,
     requiredUniqueChars: 1,
@@ -30,7 +28,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
     requiredLength: 1,
     requireNonAlphanumeric: false,
     allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?'
-  });
+  };
   private updateKnightPasswordSubscription?: Subscription;
   private getPasswordRequirementsSubscription?: Subscription;
   errorSaving: boolean = false;
@@ -154,12 +152,12 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
 
   private mapFormToRequest() {
     let rawForm = this.editKnightPasswordForm.getRawValue();
-    let request = new UpdateKnightPasswordRequest({
+    let request: UpdateKnightPasswordRequest = {
       knightId: this.knightId,
       accountActivated: rawForm.accountActivated,
       password: rawForm.password,
       resetPasswordAtNextLogin: rawForm.resetPasswordAtNextLogin
-    });
+    };
 
     return request;
   }

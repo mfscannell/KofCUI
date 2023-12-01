@@ -17,7 +17,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
   public editAccountSecurityForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
-  public passwordRequirements: PasswordRequirements = new PasswordRequirements({
+  public passwordRequirements: PasswordRequirements = {
     requireUppercase: false,
     requireLowercase: false,
     requiredUniqueChars: 1,
@@ -25,7 +25,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     requiredLength: 1,
     requireNonAlphanumeric: false,
     allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?'
-  });
+  };
   private updateAccountSecuritySubscription?: Subscription;
   private getPasswordRequirementsSubscription?: Subscription;
 
@@ -70,7 +70,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     this.getPasswordRequirementsSubscription = this.accountsService.getPasswordRequirements().subscribe(getPasswordRequirementsObserver);
   }
 
-  hasRequiredLength() {
+  public hasRequiredLength() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;
     let hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
@@ -78,13 +78,13 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return hasLength;
   }
 
-  isPasswordDirty() {
+  public isPasswordDirty() {
     let newPasswordInput = this.editAccountSecurityForm.get('newPassword');
 
     return newPasswordInput?.dirty;
   }
 
-  hasDistinctCharacters() {
+  public hasDistinctCharacters() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;
     let numDistinctCharacters = new Set(newPassword).size;
@@ -92,7 +92,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars;
   }
 
-  hasUpperCase() {
+  public hasUpperCase() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;
     let hasUpper = /[A-Z]/.test(newPassword);
@@ -100,7 +100,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return hasUpper;
   }
 
-  hasLowerCase() {
+  public hasLowerCase() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;
     let hasLower = /[a-z]/.test(newPassword);
@@ -108,7 +108,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return hasLower;
   }
 
-  hasDigit() {
+  public hasDigit() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;
     let hasDigitChar = /[0-9]/.test(newPassword);
@@ -116,7 +116,7 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return hasDigitChar;
   }
 
-  hasAllowedSpecialCharacter() {
+  public hasAllowedSpecialCharacter() {
     let rawForm = this.editAccountSecurityForm.getRawValue();
     let newPassword = rawForm.newPassword as string;
     let hasSpecialCharacter = false;
@@ -132,19 +132,19 @@ export class EditAccountSecurityModalComponent implements OnInit, OnDestroy {
     return hasSpecialCharacter;
   }
 
-  onSubmitUpdateSecurity() {
+  public onSubmitUpdateSecurity() {
     let changePasswordRequest = this.mapFormToChangePasswordRequest();
     this.updateAccountSecurity(changePasswordRequest);
   }
 
-  private mapFormToChangePasswordRequest() {
+  private mapFormToChangePasswordRequest(): ChangePassWordRequest {
     let rawForm = this.editAccountSecurityForm.getRawValue();
-    let changePasswordRequest = new ChangePassWordRequest({
+    let changePasswordRequest: ChangePassWordRequest = {
       knightId: rawForm.knightId,
       oldPassword: rawForm.oldPassword,
       newPassword: rawForm.newPassword,
       confirmPassword: rawForm.confirmPassword
-    })
+    };
 
     return changePasswordRequest;
   }
