@@ -2,9 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
-import { KnightMemberClassEnums } from 'src/app/enums/knightMemberClassEnums';
-import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
 import { KnightDegreeInputOption } from 'src/app/models/inputOptions/knightDegreeInputOption';
 import { KnightMemberClassInputOption } from 'src/app/models/inputOptions/knightMemberClassInputOption';
 import { KnightMemberTypeInputOption } from 'src/app/models/inputOptions/knightMemberTypeInputOption';
@@ -38,7 +35,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
         knightInfoId: new UntypedFormControl(0),
         memberNumber: new UntypedFormControl(0),
         mailReturned: new UntypedFormControl(false),
-        degree: new UntypedFormControl(KnightDegreeEnums.First),
+        degree: new UntypedFormControl('First'),
         firstDegreeDate: new UntypedFormControl({
           year: today.getFullYear(),
           month: today.getMonth() + 1,
@@ -49,8 +46,8 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
           month: today.getMonth() + 1,
           day: today.getDate()
         }),
-        memberType: new UntypedFormControl(KnightMemberTypeEnums.Associate),
-        memberClass: new UntypedFormControl(KnightMemberClassEnums.Paying)
+        memberType: new UntypedFormControl('Associate'),
+        memberClass: new UntypedFormControl('Paying')
       })
   }
 

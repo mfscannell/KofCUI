@@ -38,22 +38,6 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
 
   ngOnInit() {
     if (this.activityInterests) {
-      let communityActivities = this.activityInterests.filter(activityInterest => {
-        return activityInterest.activityCategory === 'Community';
-      });
-      let faithActivities = this.activityInterests.filter(activityInterest => {
-        return activityInterest.activityCategory === 'Faith';
-      });
-      let familyActivities = this.activityInterests.filter(activityInterest => {
-        return activityInterest.activityCategory === 'Family';
-      });
-      let lifeActivities = this.activityInterests.filter(activityInterest => {
-        return activityInterest.activityCategory === 'Life';
-      });
-      let miscellaneousActivities = this.activityInterests.filter(activityInterest => {
-        return activityInterest.activityCategory === 'Miscellaneous';
-      });
-
       this.activityCategoryInputOptions.forEach(activityCategoryInputOption => {
         let activityInterestsFormArray = this.getActivityInterestsFormArray(`${activityCategoryInputOption.value.toLowerCase()}ActivityInterests`);
         let filteredActivities = this.activityInterests?.filter(activityInterest => {
@@ -69,17 +53,6 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
           activityInterestsFormArray.push(activityInterestFormGroup);
         });
       });
-
-      // this.activityInterests.forEach((activityInterest: ActivityInterest) => {
-      //   const activityInterestFormGroup = new UntypedFormGroup({
-      //     activityId: new UntypedFormControl(activityInterest.activityId),
-      //     activityName: new UntypedFormControl(activityInterest.activityName),
-      //     activityCategory: new UntypedFormControl(activityInterest.activityCategory),
-      //     interested: new UntypedFormControl(activityInterest.interested),
-      //   });
-
-      //   this.activityInterestsFormArray.push(activityInterestFormGroup);
-      //  });
     }
   }
 
@@ -107,29 +80,9 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
     return `${activityCategoryInputOption.value.toLowerCase()}ActivityInterests`;
   }
 
-  public filterActivityInterestsByCategory(activityCategory: string): AbstractControl[] {
-    let something = this.activityInterestsFormArray.controls.filter(control => {
-      let controlRawValue = control.getRawValue();
-
-      return (controlRawValue.activityCategory as string) === activityCategory;
-    });
-
-    return something;
-  }
-
   public getActivityName(activityInterest: AbstractControl): string {
     let rawValue = activityInterest.getRawValue();
     let activityName = rawValue.activityName;
-    //console.log(`getActivityName: ${activityName}`);
-    //console.log(activityInterest);
-
-    // let filteredActivities = this.activityInterests?.filter(activityInterest => activityName === activityName);
-
-    // let returnedActivityName = '';
-
-    // if (filteredActivities && filteredActivities.length > 0) {
-    //   returnedActivityName = filteredActivities[0].activityName;
-    // }
 
     return activityName as string;
   }
@@ -146,45 +99,6 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   private mapFormToActivityInterests(): UpdateKnightActivityInterestsRequest {
-    // let rawForm = this.editKnightActivityInterestsForm.getRawValue();
-    // console.log('mapFormToActivityInterests');
-    // console.log(rawForm);
-    // let mappedActivityInterests: ActivityInterest[] = rawForm?.activityInterests?.map(function(ai: any) {
-    //   console.log(`mapped ActivityInterest: ${ai.activityName}: ${ai.interested}`)
-    //   return new ActivityInterest({
-    //     activityId: ai.activityId,
-    //     activityName: ai.activityName,
-    //     activityCategory: ai.activityCategory,
-    //     interested: ai.interested
-    //   })
-    // });
-    // let request = {
-    //   knightId: this.knightId,
-    //   activityInterests: mappedActivityInterests
-    // };
-
-    // return request;
-
-    // this.activityCategoryInputOptions.forEach(activityCategoryInputOption => {
-    //   let activityInterestsFormArray = this.getActivityInterestsFormArray(activityCategoryInputOption.value);
-    //   console.log(`Getting activities for : ${activityCategoryInputOption.value}`);
-    //   let filteredActivities = this.activityInterests?.filter(activityInterest => {
-    //     return activityInterest.activityCategory === activityCategoryInputOption.value;
-    //   });
-    //   console.log(filteredActivities);
-    //   filteredActivities?.forEach((activityInterest: ActivityInterest) =>{
-    //     const activityInterestFormGroup = new UntypedFormGroup({
-    //       activityId: new UntypedFormControl(activityInterest.activityId),
-    //       activityName: new UntypedFormControl(activityInterest.activityName),
-    //       activityCategory: new UntypedFormControl(activityInterest.activityCategory),
-    //       interested: new UntypedFormControl(activityInterest.interested),
-    //     });
-    //     activityInterestsFormArray.push(activityInterestFormGroup);
-    //   });
-    // });
-
-
-
     let rawForm = this.editKnightActivityInterestsForm.getRawValue();
     console.log('mapFormToActivityInterests');
     console.log(rawForm);

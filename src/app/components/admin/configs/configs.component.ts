@@ -193,7 +193,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   onSubmitEditConfigSettings() {
-    let updateActivityEventRequest = this.mapFormToConfigSettings();
+    let updateConfigSettingsRequest = this.mapFormToConfigSettings();
 
     let updateConfigSettingsObserver = {
       next: (configSettings: ConfigSetting[]) => this.showSuccessModal(),
@@ -201,7 +201,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       complete: () => console.log('Config settings updated.')
     };
 
-    this.updateConfigsSubscription = this.configsService.updateConfigSettings(updateActivityEventRequest).subscribe(updateConfigSettingsObserver);
+    this.updateConfigsSubscription = this.configsService.updateConfigSettings(updateConfigSettingsRequest).subscribe(updateConfigSettingsObserver);
   }
 
   mapFormToConfigSettings() {
@@ -210,7 +210,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     
     rawForm?.configGroups?.map((configGroup: any) => {
       configGroup.configSettings?.forEach((configSetting: any) => {
-        configSettings.push(new ConfigSetting({
+        let updatedConfig: ConfigSetting = {
           configSettingId: configSetting.configSettingId,
           configGroupId: configSetting.configGroupId,
           configName: configSetting.configName,
@@ -223,11 +223,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
           stringValue: configSetting.stringValue,
           dateTimeValue: configSetting.dateTimeValue,
           inputType: configSetting.inputType
-        }));
+        };
+        configSettings.push(updatedConfig);
       });
     });
-
-    let something = 5;
 
     return configSettings;
   }

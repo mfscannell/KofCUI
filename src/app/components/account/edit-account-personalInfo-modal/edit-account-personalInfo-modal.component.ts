@@ -2,13 +2,13 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AddressState } from 'src/app/models/addressState';
-import { Country } from 'src/app/models/country';
+import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
+import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { Knight } from 'src/app/models/knight';
 import { MonthName } from 'src/app/models/monthName';
 import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
 import { StreetAddress } from 'src/app/models/streetAddress';
-import { AccountsService } from 'src/app/services/accounts.service';
+import { FormsService } from 'src/app/services/forms.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
@@ -23,12 +23,13 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   public months: MonthName[] = MonthName.AllMonths;
-  public states: AddressState[] = AddressState.AllStates;
-  public countries: Country[] = Country.AllCountries;
+  public countryFormOptions: CountryFormOption[] = [];
   private updateKnightSubscription?: Subscription;
+  private getCountryFormOptionsSubscription?: Subscription;
 
   constructor(
     public activeModal: NgbActiveModal,
+    private formsService: FormsService,
     private knightsService: KnightsService) {
     var today = new Date();
     this.editKnightPersonalInfoForm = new UntypedFormGroup({
@@ -81,6 +82,32 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
   }
 
   ngOnInit() {
+    this.getCountryFormOptions();
+  }
+
+  ngOnDestroy() {
+    if (this.updateKnightSubscription) {
+      this.updateKnightSubscription.unsubscribe();
+    }
+
+    if (this.getCountryFormOptionsSubscription) {
+      this.getCountryFormOptionsSubscription.unsubscribe();
+    }
+  }
+
+  private getCountryFormOptions() {
+    let getCountryFormOptionsObserver = {
+      next: (response: CountryFormOption[]) => this.handleGetCountryFormOptions(response),
+      error: (err: any) => this.logError("Error getting Country Form Options", err),
+      complete: () => console.log('Country Form Options retrieved.')
+    }
+
+    this.getCountryFormOptionsSubscription = this.formsService.getCountryFormOptions().subscribe(getCountryFormOptionsObserver);
+  }
+
+  private handleGetCountryFormOptions(response: CountryFormOption[]) {
+    this.countryFormOptions = response;
+
     if (this.knight) {
       this.editKnightPersonalInfoForm.patchValue({
         knightId: this.knight.knightId,
@@ -96,12 +123,8 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
         homeAddress: this.knight.homeAddress
        });
     }
-  }
 
-  ngOnDestroy() {
-    if (this.updateKnightSubscription) {
-      this.updateKnightSubscription.unsubscribe();
-    }
+    this.enableDisableAdministrativeDivisions();
   }
 
   onSubmitEditKnight() {
@@ -109,9 +132,36 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
     this.updateKnightPersonalInfo(updatedKnight);
   }
 
-  private mapEditKnightFormToKnight() {
+  public enableDisableAdministrativeDivisions(): void {
+    let countryCode = this.getCountryCode();
+    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+
+    if (hasCountryCode) {
+      this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
+    } else {
+      this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.disable();
+    }
+  }
+
+  private getCountryCode(): string {
+    return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
+  }
+
+  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
+    let countryCode = this.getCountryCode();
+
+    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+
+    if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
+      return filteredCountryFormOptions[0].administrativeDivisions;
+    }
+
+    return [];
+  }
+
+  private mapEditKnightFormToKnight(): UpdateKnightPersonalInfoRequest {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
-    let homeAddress = new StreetAddress({
+    let homeAddress: StreetAddress = {
       streetAddressId: rawForm.homeAddress.streetAddressId,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
@@ -120,8 +170,8 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
       stateCode: rawForm.homeAddress.stateCode,
       postalCode: rawForm.homeAddress.postalCode,
       countryCode: rawForm.homeAddress.countryCode
-    });
-    let knight = new UpdateKnightPersonalInfoRequest({
+    };
+    let knight: UpdateKnightPersonalInfoRequest = {
       knightId: rawForm.knightId,
       firstName: rawForm.firstName,
       middleName: rawForm.middleName,
@@ -134,7 +184,7 @@ export class EditAccountPersonalInfoModalComponent implements OnInit, OnDestroy 
       emailAddress: rawForm.emailAddress,
       cellPhoneNumber: rawForm.cellPhoneNumber,
       homeAddress: homeAddress
-    });
+    };
 
     return knight;
   }

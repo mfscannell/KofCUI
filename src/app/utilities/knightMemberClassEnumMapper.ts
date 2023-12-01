@@ -1,15 +1,15 @@
-import { KnightMemberClassEnums } from "../enums/knightMemberClassEnums";
+import { KnightMemberClassType } from "../types/knight-member-class.type";
 
 export class KnightMemberClassEnumMapper {
-    public static Map(value: string | undefined) {
+    public static Map(value: string | undefined): KnightMemberClassType {
         if (value === undefined) {
-            return KnightMemberClassEnums.Paying;
+            return 'Paying';
         }
 
         if (value.toLowerCase() === "honorarylife" || value.toLowerCase() === "honorary life") {
-            return KnightMemberClassEnums.HonoraryLife;
+            return 'HonoraryLife';
         }
 
-        return KnightMemberClassEnums.Paying;
+        return 'Paying';
     }
 }

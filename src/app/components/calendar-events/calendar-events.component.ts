@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { StreetAddress } from 'src/app/models/streetAddress';
 import { Month } from 'src/app/models/calendar/month';
 import { UpcomingEvent } from 'src/app/models/upcomingEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';

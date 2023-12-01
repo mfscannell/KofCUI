@@ -5,7 +5,6 @@ import { StreetAddress } from 'src/app/models/streetAddress';
 import { Knight } from 'src/app/models/knight';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { KnightDegreeEnumMapper } from 'src/app/utilities/knightDegreeEnumMapper'
 import { KnightMemberTypeEnumMapper } from 'src/app/utilities/knightMemberTypeEnumMapper';
 import { KnightMemberClassEnumMapper } from 'src/app/utilities/knightMemberClassEnumMapper';
 
@@ -48,12 +47,21 @@ export class ExcelFileReader {
 
                     let memberNumber = rawKnight['Member Number'];
                     let mailReturned = rawKnight['Mail Returned'];
-                    let degree = KnightDegreeEnumMapper.Map(rawKnight['Degree']);
+                    let degree = rawKnight['Degree'];
                     let firstDegreeDate = DateTimeFormatter.MapNumberToIso8601Date(rawKnight['First Degree Date'], true);
                     let reentryDate = DateTimeFormatter.MapNumberToIso8601Date(rawKnight['Reentry Date'], true);
                     let memberType = KnightMemberTypeEnumMapper.Map(rawKnight['Member Type']);
                     let memberClass = KnightMemberClassEnumMapper.Map(rawKnight['Member Class']);
-                    let mappedKnight = new Knight({
+                    let knightInfo: KnightInfo = {
+                        memberNumber: memberNumber,
+                        mailReturned: mailReturned,
+                        degree: degree,
+                        firstDegreeDate: firstDegreeDate,
+                        reentryDate: reentryDate,
+                        memberType: memberType,
+                        memberClass: memberClass
+                    };
+                    let mappedKnight: Knight = {
                         firstName: firstName,
                         middleName: middleName,
                         lastName: lastName,
@@ -61,24 +69,18 @@ export class ExcelFileReader {
                         dateOfBirth: dateOfBirth,
                         emailAddress: emailAddress,
                         cellPhoneNumber: cellPhoneNumber,
-                        homeAddress: new StreetAddress({
+                        homeAddress: {
                             address1: homeAddress1,
                             address2: homeAddress2,
                             city: city,
                             stateCode: stateCode,
                             postalCode: postalCode,
                             countryCode: countryCode
-                        }),
-                        knightInfo: new KnightInfo({
-                            memberNumber: memberNumber,
-                            mailReturned: mailReturned,
-                            degree: degree,
-                            firstDegreeDate: firstDegreeDate,
-                            reentryDate: reentryDate,
-                            memberType: memberType,
-                            memberClass: memberClass
-                        })
-                    });
+                        },
+                        knightInfo: knightInfo,
+                        activityInterests: [],
+                        memberDues: []
+                    };
 
                     readKnights.push(mappedKnight);
                 });

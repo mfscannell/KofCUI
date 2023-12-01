@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { EncodedFile } from '../models/encodedFile';
 import { GetAllWebsiteContentResponse } from '../models/responses/getAllWebsiteContentResponse';
-import { ExternalLink } from '../models/externalLink';
 import { DeleteHomePageCarouselImageResponse } from '../models/responses/deleteHomePageCarouselImageResponse';
 
 @Injectable({

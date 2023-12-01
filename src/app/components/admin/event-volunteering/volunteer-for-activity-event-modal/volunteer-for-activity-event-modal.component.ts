@@ -3,12 +3,8 @@ import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup
 import { Subscription } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
-import { Activity } from 'src/app/models/activity';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
-import { AddressState } from 'src/app/models/addressState';
-import { Country } from 'src/app/models/country';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
@@ -31,8 +27,6 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   knightId?: number;
   updateVolunteerForActivityEventSubscription?: Subscription;
   volunteerForActivityEventForm: UntypedFormGroup;
-  countries: Country[] = Country.AllCountries;
-  states: AddressState[] = AddressState.AllStates;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
   disableTime: boolean = true;
@@ -268,11 +262,11 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
       }
     }
 
-    let request = new VolunteerForActivityEventRequest({
+    let request: VolunteerForActivityEventRequest = {
       activityEventId: activityEventId,
       knightId: knightId,
       volunteerSignUpRoles: volunteerSignUpRoles
-    });
+    };
 
     let activityEvent = this.mapFormToActivityEvent();
 
@@ -288,21 +282,24 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
   private mapFormToActivityEvent() {
     let rawForm = this.volunteerForActivityEventForm.getRawValue();
       let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
-        return new VolunteerSignUpRole({
+        let volunteerSignUpRole: VolunteerSignUpRole = {
           volunteerSignupRoleId: role.volunteerSignUpRoleId,
           roleTitle: role.roleTitle,
           startDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.startTime.hour, role.startTime.minute),
           endDateTime: DateTimeFormatter.ToIso8601DateTime(role.endDate.year, role.endDate.month, role.endDate.day, role.endTime.hour, role.endTime.minute),
           numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-          eventVolunteers: role.eventVolunteers.map(function(eventVolunteer: any) {
-            return new EventVolunteer({
-              eventVolunteerId: eventVolunteer.eventVolunteerId,
-              knightId: eventVolunteer.knightId
-            });
+          eventVolunteers: role.eventVolunteers.map(function(ev: any) {
+            let eventVolunteer: EventVolunteer = {
+              eventVolunteerId: ev.eventVolunteerId,
+              knightId: ev.knightId
+            };
+            return eventVolunteer;
           })
-        })
+        };
+
+        return volunteerSignUpRole;
       });
-      let locationAddress = new StreetAddress({
+      let locationAddress: StreetAddress = {
         streetAddressId: rawForm.locationAddress.streetAddressId,
         addressName: rawForm.locationAddress.addressName,
         address1: rawForm.locationAddress.address1,
@@ -311,8 +308,8 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
         stateCode: rawForm.locationAddress.stateCode,
         postalCode: rawForm.locationAddress.postalCode,
         countryCode: rawForm.locationAddress.countryCode
-      });
-      let activityEvent = new ActivityEvent({
+      };
+      let activityEvent: ActivityEvent = {
         activityEventId: rawForm.activityEventId,
         activityId: rawForm.activityId,
         activityCategory: rawForm.activityCategory,
@@ -325,7 +322,7 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
         showInCalendar: rawForm.showInCalendar,
         canceled: rawForm.canceled,
         canceledReason: rawForm.canceledReason
-      });
+      };
 
       return activityEvent;
   }

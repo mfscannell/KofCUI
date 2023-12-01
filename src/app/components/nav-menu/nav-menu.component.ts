@@ -1,11 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from 'src/app/models/externalLink';
-import { LogInRequest } from 'src/app/models/requests/logInRequest';
-import { LogInResponse } from 'src/app/models/responses/logInResponse';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { AssetsService } from 'src/app/services/assets.service';
 import { ConfigsService } from 'src/app/services/configs.service';

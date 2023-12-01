@@ -1,14 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { KnightDegreeEnums } from 'src/app/enums/knightDegreeEnums';
-import { KnightMemberTypeEnums } from 'src/app/enums/knightMemberTypeEnums';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { StreetAddress } from 'src/app/models/streetAddress';
-import { AddressState } from 'src/app/models/addressState';
-import { Country } from 'src/app/models/country';
 import { Knight } from 'src/app/models/knight';
-import { KnightInfo } from 'src/app/models/knightInfo';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -18,6 +11,8 @@ import { EditAccountInterestsModalComponent } from './edit-account-interests-mod
 import { EditAccountSecurityModalComponent } from './edit-account-security-modal/edit-account-security-modal.component';
 import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
 import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
+import { KnightDegreeInputOption } from 'src/app/models/inputOptions/knightDegreeInputOption';
+import { KnightMemberTypeInputOption } from 'src/app/models/inputOptions/knightMemberTypeInputOption';
 
 @Component({
   selector: 'kofc-account',
@@ -33,10 +28,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   updateKnightSubscription?: Subscription;
   updateKnightActivityInterestSubscription?: Subscription;
   errorMessages: string[] = [];
-  public knightDegrees = Object.values(KnightDegreeEnums);
-  public knightMemberTypeEnums = Object.values(KnightMemberTypeEnums);
-  countries: Country[] = Country.AllCountries;
-  states: AddressState[] = AddressState.AllStates;
+  public knightDegreeInputOptions: KnightDegreeInputOption[] = KnightDegreeInputOption.options;
+  public knightMemberTypeInputOptions: KnightMemberTypeInputOption[] = KnightMemberTypeInputOption.options;
   showErrorSavingInfo: boolean = false;
   showSuccessSavingInfo: boolean = false;
   showErrorSavingInterests: boolean = false;

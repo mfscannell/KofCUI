@@ -7,8 +7,6 @@ import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { Activity } from 'src/app/models/activity';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
-import { AddressState } from 'src/app/models/addressState';
-import { Country } from 'src/app/models/country';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
@@ -18,6 +16,9 @@ import { TimeZone } from 'src/app/models/timeZone';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
+import { FormsService } from 'src/app/services/forms.service';
+import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
+import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
 
 @Component({
   selector: 'kofc-edit-activity-event-modal',
@@ -32,19 +33,20 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   @Input() allActivities: Activity[] = [];
   selectableActivities: Activity[] = [];
   activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
-  updateActivityEventSubscription?: Subscription;
-  createActivityEventSubscription?: Subscription;
-  getCouncilTImeZoneSubscription?: Subscription;
+  private updateActivityEventSubscription?: Subscription;
+  private createActivityEventSubscription?: Subscription;
+  private getCouncilTImeZoneSubscription?: Subscription;
+  private getCountryFormOptionsSubscription?: Subscription;
   councilTimeZone: TimeZone = new TimeZone();
   editActivityEventForm: UntypedFormGroup;
-  countries: Country[] = Country.AllCountries;
-  states: AddressState[] = AddressState.AllStates;
+  countryFormOptions: CountryFormOption[] = [];
   errorSaving: boolean = false;
   errorMessages: string[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
     private activityEventsService: ActivityEventsService,
+    private formsService: FormsService,
     private configsService: ConfigsService,
     private permissionsService: PermissionsService) {
       var today = new Date();
@@ -94,6 +96,50 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.selectableActivities = this.permissionsService.filterActivitiesByEventCreation(this.allActivities);
+    this.getCountryFormOptions();
+  }
+
+  private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
+    let eventVolunteersArray: UntypedFormGroup[] = [];
+
+    if (eventVolunteers) {
+      eventVolunteers.forEach((eventVolunteer) => {
+        const eventVolunteerFormGroup = new UntypedFormGroup({
+          eventVolunteerId: new UntypedFormControl(eventVolunteer.eventVolunteerId),
+          knightId: new UntypedFormControl(eventVolunteer.knightId)
+        });
+
+        eventVolunteersArray.push(eventVolunteerFormGroup);
+      });
+    }
+
+    return eventVolunteersArray;
+  }
+
+  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
+    let countryCode = this.getCountryCode();
+
+    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+
+    if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
+      return filteredCountryFormOptions[0].administrativeDivisions;
+    }
+
+    return [];
+  }
+
+  private getCountryFormOptions() {
+    let getCountryFormOptionsObserver = {
+      next: (response: CountryFormOption[]) => this.handleGetCountryFormOptions(response),
+      error: (err: any) => this.logError("Error getting Country Form Options", err),
+      complete: () => console.log('Country Form Options retrieved.')
+    }
+
+    this.getCountryFormOptionsSubscription = this.formsService.getCountryFormOptions().subscribe(getCountryFormOptionsObserver);
+  }
+
+  private handleGetCountryFormOptions(response: CountryFormOption[]) {
+    this.countryFormOptions = response;
 
     if (this.activityEvent) {
       this.editActivityEventForm.patchValue({
@@ -152,27 +198,27 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
           numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
           eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers))
         });
-    
+
         this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
        });
     }
+
+    this.enableDisableAdministrativeDivisions();
   }
 
-  private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    let eventVolunteersArray: UntypedFormGroup[] = [];
+  public enableDisableAdministrativeDivisions(): void {
+    let countryCode = this.getCountryCode();
+    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
 
-    if (eventVolunteers) {
-      eventVolunteers.forEach((eventVolunteer) => {
-        const eventVolunteerFormGroup = new UntypedFormGroup({
-          eventVolunteerId: new UntypedFormControl(eventVolunteer.eventVolunteerId),
-          knightId: new UntypedFormControl(eventVolunteer.knightId)
-        });
-
-        eventVolunteersArray.push(eventVolunteerFormGroup);
-      });
+    if (hasCountryCode) {
+      this.editActivityEventForm.get('locationAddress.stateCode')?.enable();
+    } else {
+      this.editActivityEventForm.get('locationAddress.stateCode')?.disable();
     }
+  }
 
-    return eventVolunteersArray;
+  private getCountryCode(): string {
+    return this.editActivityEventForm.get('locationAddress.countryCode')?.value;
   }
 
   ngOnDestroy() {
@@ -186,6 +232,10 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
 
     if (this.getCouncilTImeZoneSubscription) {
       this.getCouncilTImeZoneSubscription.unsubscribe();
+    }
+
+    if (this.getCountryFormOptionsSubscription) {
+      this.getCountryFormOptionsSubscription.unsubscribe();
     }
   }
 
@@ -378,24 +428,27 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private mapFormToActivityEvent() {
+  private mapFormToActivityEvent(): ActivityEvent {
     let rawForm = this.editActivityEventForm.getRawValue();
     let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
-      return new VolunteerSignUpRole({
+      let volunteerSignUpRole: VolunteerSignUpRole = {
         volunteerSignupRoleId: role.volunteerSignUpRoleId,
         roleTitle: role.roleTitle,
         startDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.startTime.hour, role.startTime.minute),
         endDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.endTime.hour, role.endTime.minute),
         numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-        eventVolunteers: role.eventVolunteers.map(function(eventVolunteer: any) {
-          return new EventVolunteer({
-            eventVolunteerId: eventVolunteer.eventVolunteerId,
-            knightId: eventVolunteer.knightId
-          });
+        eventVolunteers: role.eventVolunteers.map(function(ev: any) {
+          let eventVolunteer: EventVolunteer = {
+            eventVolunteerId: ev.eventVolunteerId,
+            knightId: ev.knightId
+          };
+          return eventVolunteer;
         })
-      })
+      }
+
+      return volunteerSignUpRole;
     });
-    let locationAddress = new StreetAddress({
+    let locationAddress: StreetAddress = {
       streetAddressId: rawForm.locationAddress.streetAddressId,
       addressName: rawForm.locationAddress.addressName,
       address1: rawForm.locationAddress.address1,
@@ -404,8 +457,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       stateCode: rawForm.locationAddress.stateCode,
       postalCode: rawForm.locationAddress.postalCode,
       countryCode: rawForm.locationAddress.countryCode
-    });
-    let activityEvent = new ActivityEvent({
+    };
+    let activityEvent: ActivityEvent = {
       activityEventId: rawForm.activityEventId,
       activityId: rawForm.activityId,
       activityCategory: rawForm.activityCategory,
@@ -419,7 +472,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       canceled: rawForm.canceled,
       canceledReason: rawForm.canceledReason,
       notes: rawForm.notes
-    });
+    };
 
     return activityEvent;
   }
