@@ -1,5 +1,3 @@
-import { KnightMemberTypeEnums } from "src/app/enums/knightMemberTypeEnums";
-
 export class KnightMemberTypeInputOption {
   static options: KnightMemberTypeInputOption[] = [
     new KnightMemberTypeInputOption({

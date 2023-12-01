@@ -37,10 +37,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     let rawForm = this.loginForm.getRawValue();
 
-    var loginRequest = new LogInRequest({
+    var loginRequest: LogInRequest = {
       username: rawForm.username,
       password: rawForm.password
-    });
+    };
     let logInObserver = {
       next: (logInResult: void) => this.handleLogInResult(),
       error: (err: any) => this.logError('Error logging in.', err),

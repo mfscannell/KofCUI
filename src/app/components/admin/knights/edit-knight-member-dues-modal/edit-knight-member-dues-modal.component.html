@@ -1,7 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
   </button>
 </div>
 <div class="modal-body">
@@ -9,10 +8,10 @@
     <div formArrayName="memberDues">
       <div class="form-group row mb-1">
         <div class="col-5">
-          <h5 class="text-decoration-underline">Year</h5>
+          <h5 class="text-decoration-underline fw-bold">Year</h5>
         </div>
         <div class="col-7">
-          <h5 class="text-decoration-underline">Paid</h5>
+          <h5 class="text-decoration-underline fw-bold">Paid</h5>
         </div>
       </div>
       <div *ngFor="let memberDue of memberDuesFormArray.controls; let i = index" [formGroupName]="i">

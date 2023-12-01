@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
-import { ExternalLink } from '../models/externalLink';
 import { TimeZone } from '../models/timeZone';
 import { WebsiteConfigs } from '../models/websiteConfigs';
 

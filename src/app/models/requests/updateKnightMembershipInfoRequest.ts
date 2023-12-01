@@ -1,14 +1,14 @@
-import { KnightDegreeEnums } from "src/app/enums/knightDegreeEnums";
-import { KnightMemberClassEnums } from "src/app/enums/knightMemberClassEnums";
-import { KnightMemberTypeEnums } from "src/app/enums/knightMemberTypeEnums";
+import { KnightDegree } from "src/app/types/knight-degree.type";
+import { KnightMemberClassType } from "src/app/types/knight-member-class.type";
+import { KnightMemberTypeType } from "src/app/types/knight-member-type.type";
 
 export interface UpdateKnightMembershipInfoRequest {
   knightId: number;
   memberNumber?: number;
   mailReturned: boolean;
-  degree: KnightDegreeEnums;
+  degree: KnightDegree;
   firstDegreeDate?: string;
   reentryDate?: string;
-  memberType: KnightMemberTypeEnums;
-  memberClass: KnightMemberClassEnums;
+  memberType: KnightMemberTypeType;
+  memberClass: KnightMemberClassType;
 }

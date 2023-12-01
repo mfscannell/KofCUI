@@ -1,12 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { CountryInputOption } from 'src/app/models/inputOptions/countryInputOption';
-import { StateInputOption } from 'src/app/models/inputOptions/stateInputOption';
+import { Subscription, filter } from 'rxjs';
+import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
+import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { Knight } from 'src/app/models/knight';
 import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
 import { StreetAddress } from 'src/app/models/streetAddress';
+import { FormsService } from 'src/app/services/forms.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
@@ -21,12 +22,13 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
   public editKnightPersonalInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
-  public countryInputOptions: CountryInputOption[] = CountryInputOption.AllCountries;
-  public stateInputOptions: StateInputOption[] = StateInputOption.AllStates;
+  public countryFormOptions: CountryFormOption[] = [];
+  private getCountryFormOptionsSubscription?: Subscription;
   private updateKnightPersonalInfoSubscription?: Subscription;
 
   constructor(
     public activeModal: NgbActiveModal,
+    private formsService: FormsService,
     private knightsService: KnightsService) {
       var today = new Date();
       this.editKnightPersonalInfoForm = new UntypedFormGroup({
@@ -81,6 +83,60 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
+    this.enableDisableAdministrativeDivisions();
+    this.getCountryFormOptions();
+  }
+
+  ngOnDestroy(): void {
+    if (this.updateKnightPersonalInfoSubscription) {
+      this.updateKnightPersonalInfoSubscription.unsubscribe();
+    }
+
+    if (this.getCountryFormOptionsSubscription) {
+      this.getCountryFormOptionsSubscription.unsubscribe();
+    }
+  }
+
+  private getCountryCode(): string {
+    return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
+  }
+
+  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
+    let countryCode = this.getCountryCode();
+
+    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+
+    if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
+      return filteredCountryFormOptions[0].administrativeDivisions;
+    }
+
+    return [];
+  }
+
+  public enableDisableAdministrativeDivisions(): void {
+    let countryCode = this.getCountryCode();
+    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+
+    if (hasCountryCode) {
+      this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
+    } else {
+      this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.disable();
+    }
+  }
+
+  private getCountryFormOptions() {
+    let getCountryFormOptionsObserver = {
+      next: (response: CountryFormOption[]) => this.handleGetCountryFormOptions(response),
+      error: (err: any) => this.logError("Error getting Country Form Options", err),
+      complete: () => console.log('Country Form Options retrieved.')
+    }
+
+    this.getCountryFormOptionsSubscription = this.formsService.getCountryFormOptions().subscribe(getCountryFormOptionsObserver);
+  }
+
+  private handleGetCountryFormOptions(response: CountryFormOption[]) {
+    this.countryFormOptions = response;
+
     if (this.knight) {
       this.editKnightPersonalInfoForm.patchValue({
         knightId: this.knight.knightId,
@@ -100,12 +156,6 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    if (this.updateKnightPersonalInfoSubscription) {
-      this.updateKnightPersonalInfoSubscription.unsubscribe();
-    }
-  }
-
   public onSubmitEditKnightPersonalInfo() {
     let updateKnightPersonalInfoRequest = this.mapFormToKnightPersonalInfo();
     let knightMemberInfoObserver = {
@@ -119,7 +169,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
 
   private mapFormToKnightPersonalInfo(): UpdateKnightPersonalInfoRequest {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
-      let homeAddress = new StreetAddress({
+      let homeAddress: StreetAddress = {
         streetAddressId: rawForm.homeAddress.streetAddressId,
         addressName: rawForm.homeAddress.addressName,
         address1: rawForm.homeAddress.address1,
@@ -128,8 +178,8 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
         stateCode: rawForm.homeAddress.stateCode,
         postalCode: rawForm.homeAddress.postalCode,
         countryCode: rawForm.homeAddress.countryCode
-      });
-      let knight = new UpdateKnightPersonalInfoRequest({
+      };
+      let knight: UpdateKnightPersonalInfoRequest = {
         knightId: rawForm.knightId,
         firstName: rawForm.firstName,
         middleName: rawForm.middleName,
@@ -142,7 +192,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
         emailAddress: rawForm.emailAddress,
         cellPhoneNumber: rawForm.cellPhoneNumber,
         homeAddress: homeAddress
-      });
+      };
 
       return knight;
   }

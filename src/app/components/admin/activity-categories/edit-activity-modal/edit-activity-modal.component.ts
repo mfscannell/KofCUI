@@ -148,12 +148,13 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
   private mapFormToActivity() {
     let rawForm = this.editActivityForm.getRawValue();
     let activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: any) {
-      return new ActivityCoordinator({
+      let activityCoordinator: ActivityCoordinator = {
         activityCoordinatorId: coordinator.activityCoordinatorId,
         knightId: coordinator.knightId
-      });
+      };
+      return activityCoordinator;
     });
-    let activity = new Activity({
+    let activity: Activity = {
       activityId: rawForm.activityId,
       activityName: rawForm.activityName,
       activityDescription: rawForm.activityDescription,
@@ -161,7 +162,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy {
       activityCoordinators: activityCoordinators,
       activityEventNotes: [],
       notes: rawForm.notes
-    });
+    };
 
     return activity;
   }

@@ -67,11 +67,13 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy {
 
   private mapFormToUpdateKnightMemberDuesRequest(): UpdateKnightMemberDuesRequest {
     let rawForm = this.editKnightMemberDuesForm.getRawValue();
-    let mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any) {
-      return new MemberDues({
+    let mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any): MemberDues {
+      let memberDues: MemberDues = {
         year: md.year,
         paidStatus: md.paidStatus
-      })
+      };
+
+      return memberDues;
     });
     let request: UpdateKnightMemberDuesRequest = {
       knightId: this.knightId,

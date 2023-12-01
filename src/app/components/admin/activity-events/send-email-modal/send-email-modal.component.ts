@@ -30,12 +30,6 @@ export class SendEmailModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // if (this.activityEvent) {
-    //   this.sendEmailForm.patchValue({
-    //     subject: this.activityCategory.activityCategoryId,
-    //     body: this.activityCategory.categoryName
-    //    });
-    // }
   }
 
   ngOnDestroy() {
@@ -59,11 +53,11 @@ export class SendEmailModalComponent implements OnInit, OnDestroy {
   private mapFormToRequest() {
     let rawForm = this.sendEmailForm.getRawValue();
 
-    let request = new SendEmailRequest({
-      activityId: this.activityEvent?.activityId,
+    let request: SendEmailRequest = {
+      activityId: this.activityEvent?.activityId || 0,
       subject: rawForm.subject,
       body: rawForm.body
-    });
+    };
 
     return request;
   }

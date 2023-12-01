@@ -1,26 +1,14 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
-    <span aria-hidden="true">&times;</span>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
   </button>
 </div>
 <div class="modal-body">
   <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditKnightActivityInterests()">
-    <!-- <div *ngFor="let activityCategoryInputOption of activityCategoryInputOptions" formGroupName="{{getActivityCategoryFormGroupName(activityCategoryInputOption.value)}}">
-      <div formArrayName="activityInterests">
-        <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(activityCategoryInputOption.value).controls; let i = index" [formGroupName]="i">
-          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-          <div class="col-7 col-md-9">
-            <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <div *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
       <div class="form-group row mb-1">
         <div class="col-12">
-          <h5 class="text-decoration-underline">{{activityCategoryInputOption.displayName}}</h5>
+          <h5 class="text-decoration-underline fw-bold">{{activityCategoryInputOption.displayName}}</h5>
         </div>
       </div>
       <div formArrayName="{{getFormArrayName(activityCategoryInputOption)}}">
@@ -34,58 +22,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div formArrayName="communityActivityInterests">
-      <div *ngFor="let activityInterestControl of getActivityInterestsFormArray('communityActivityInterests').controls; let i = index" [formGroupName]="i">
-        <div class="form-group row mb-1">
-          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-        <div class="col-7 col-md-9">
-          <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-        </div>
-        </div>
-      </div>
-    </div>
-    <div formArrayName="faithActivityInterests">
-      <div *ngFor="let activityInterestControl of getActivityInterestsFormArray('faithActivityInterests').controls; let i = index" [formGroupName]="i">
-        <div class="form-group row mb-1">
-          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-          <div class="col-7 col-md-9">
-            <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div formArrayName="familyActivityInterests">
-      <div *ngFor="let activityInterestControl of getActivityInterestsFormArray('familyActivityInterests').controls; let i = index" [formGroupName]="i">
-        <div class="form-group row mb-1">
-          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-          <div class="col-7 col-md-9">
-            <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div formArrayName="lifeActivityInterests">
-      <div *ngFor="let activityInterestControl of getActivityInterestsFormArray('lifeActivityInterests').controls; let i = index" [formGroupName]="i">
-        <div class="form-group row mb-1">
-          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-          <div class="col-7 col-md-9">
-            <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div formArrayName="miscellaneousActivityInterests">
-      <div *ngFor="let activityInterestControl of getActivityInterestsFormArray('miscellaneousActivityInterests').controls; let i = index" [formGroupName]="i">
-        <div class="form-group row mb-1">
-          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-          <div class="col-7 col-md-9">
-            <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <div class="modal-footer">
       <div class="container">
         <div class="row" *ngIf="errorSaving">

@@ -1,4 +1,4 @@
-import { KnightDegreeEnums } from "src/app/enums/knightDegreeEnums";
+import { KnightDegree } from "src/app/types/knight-degree.type";
 
 export class KnightDegreeInputOption {
   static options: KnightDegreeInputOption[] = [
@@ -21,11 +21,11 @@ export class KnightDegreeInputOption {
   ];
 
   displayName: string = '';
-  value: string = 'First';
+  value: KnightDegree = 'First';
 
   constructor(fields: {
     displayName: string,
-    value: string
+    value: KnightDegree
   }) {
     if (fields) {
       this.displayName = fields.displayName;
