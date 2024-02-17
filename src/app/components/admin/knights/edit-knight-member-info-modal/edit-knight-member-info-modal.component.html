@@ -23,7 +23,7 @@
       <label for="degree" class="col-5 col-md-3 col-form-label">Degree</label>
       <div class="col-7 col-md-9">
         <select class="form-select" id="knightInfo_degree" formControlName="degree">
-          <option *ngFor="let knightDegreeInputOption of knightDegreeInputOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+          <option *ngFor="let knightDegreeInputOption of knightDegreeFormOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
         </select>
       </div>
     </div>
@@ -68,7 +68,7 @@
       <label for="memberType" class="col-5 col-md-3 col-form-label">Member Type</label>
       <div class="col-7 col-md-9">
         <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
-          <option *ngFor="let knightMemberTypeInputOption of knightMemberTypeInputOptions" [value]="knightMemberTypeInputOption.value">{{knightMemberTypeInputOption.displayName}}</option>
+          <option *ngFor="let knightMemberTypeFormOption of knightMemberTypeFormOptions" [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
         </select>
       </div>
     </div>
@@ -77,7 +77,7 @@
       <label for="memberClass" class="col-5 col-md-3 col-form-label">Member Class</label>
       <div class="col-7 col-md-9">
         <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
-          <option *ngFor="let knightMemberClassInputOption of knightMemberClassInputOptions" [value]="knightMemberClassInputOption.value">{{knightMemberClassInputOption.displayName}}</option>
+          <option *ngFor="let knightMemberClassFormOption of knightMemberClassFormOptions" [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
         </select>
       </div>
     </div>
