@@ -21,7 +21,7 @@
           </div>
           <div class="col-7">
             <select class="form-select" id="paidStatus" formControlName="paidStatus">
-              <option *ngFor="let memberDuesPaymentStatusOption of memberDuesPayStatusInputOptions" [value]="memberDuesPaymentStatusOption.value">{{memberDuesPaymentStatusOption.displayName}}</option>
+              <option *ngFor="let memberDuesPaymentStatusFormOption of memberDuesPayStatusFormOptions" [value]="memberDuesPaymentStatusFormOption.value">{{memberDuesPaymentStatusFormOption.displayName}}</option>
             </select>
           </div>
         </div>

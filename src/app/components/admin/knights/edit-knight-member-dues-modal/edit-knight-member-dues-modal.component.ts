@@ -2,9 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { MemberDuesPayStatusInputOption } from 'src/app/models/inputOptions/memberDuesPayStatusInputOption';
+import { MemberDuesPaymentStatusFormOption } from 'src/app/models/inputOptions/memberDuesPaymentStatusFormOption';
 import { MemberDues } from 'src/app/models/memberDues';
 import { UpdateKnightMemberDuesRequest } from 'src/app/models/requests/updateKnightMemberDuesRequest';
+import { FormsService } from 'src/app/services/forms.service';
 import { MemberDuesService } from 'src/app/services/memberDues.service';
 
 @Component({
@@ -19,11 +20,13 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy {
   public editKnightMemberDuesForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
-  public memberDuesPayStatusInputOptions: MemberDuesPayStatusInputOption[] = MemberDuesPayStatusInputOption.options;
+  public memberDuesPayStatusFormOptions: MemberDuesPaymentStatusFormOption[] = [];
   private updateKnightMemberDuesSubscription?: Subscription;
+  private getMemberDuesPaymentStatusFormOptionsSubscription?: Subscription
 
   constructor(
     public activeModal: NgbActiveModal,
+    private formsService: FormsService,
     private memberDuesService: MemberDuesService
   ) {
     this.editKnightMemberDuesForm = new UntypedFormGroup({
@@ -32,6 +35,37 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getFormData();
+  }
+
+  ngOnDestroy() {
+    if (this.updateKnightMemberDuesSubscription) {
+      this.updateKnightMemberDuesSubscription.unsubscribe();
+    }
+
+    if (this.getMemberDuesPaymentStatusFormOptionsSubscription) {
+      this.getMemberDuesPaymentStatusFormOptionsSubscription.unsubscribe();
+    }
+  }
+
+  get memberDuesFormArray() {
+    return this.editKnightMemberDuesForm.controls["memberDues"] as UntypedFormArray;
+  }
+
+  private getFormData() {
+    let formsObserver = {
+      next: ( memberDuesPaymentStatusResponse : MemberDuesPaymentStatusFormOption[]) => {
+        this.memberDuesPayStatusFormOptions = memberDuesPaymentStatusResponse;
+        this.populateForm();
+      },
+      error: (err: any) => this.logError("Error getting Member Dues Form Options", err),
+      complete: () => console.log('Member Dues Form Options retrieved.')
+    };
+
+    this.getMemberDuesPaymentStatusFormOptionsSubscription = this.formsService.getMemberDuesPaymentStatusFormOptions().subscribe(formsObserver);
+  }
+
+  private populateForm() {
     if (this.memberDues) {
       this.memberDues.forEach((memberDue: MemberDues) => {
         const memberDueFormGroup = new UntypedFormGroup({
@@ -42,16 +76,6 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy {
         this.memberDuesFormArray.push(memberDueFormGroup);
        });
     }
-  }
-
-  ngOnDestroy() {
-    if (this.updateKnightMemberDuesSubscription) {
-      this.updateKnightMemberDuesSubscription.unsubscribe();
-    }
-  }
-
-  get memberDuesFormArray() {
-    return this.editKnightMemberDuesForm.controls["memberDues"] as UntypedFormArray;
   }
 
   public onSubmitEditKnightMemberInfo() {

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { AbstractControl, FormArray, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ActivityInterest } from 'src/app/models/activityInterest';
@@ -11,14 +11,14 @@ import { KnightActivityInterestsService } from 'src/app/services/knightActivityI
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { MemberDues } from 'src/app/models/memberDues';
-import { MemberDuesPayStatusInputOption } from 'src/app/models/inputOptions/memberDuesPayStatusInputOption';
-import { KnightMemberClassInputOption } from 'src/app/models/inputOptions/knightMemberClassInputOption';
-import { KnightMemberTypeInputOption } from 'src/app/models/inputOptions/knightMemberTypeInputOption';
-import { KnightDegreeInputOption } from 'src/app/models/inputOptions/knightDegreeInputOption';
 import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { FormsService } from 'src/app/services/forms.service';
 import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
+import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
+import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
+import { MemberDuesPaymentStatusFormOption } from 'src/app/models/inputOptions/memberDuesPaymentStatusFormOption';
+import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
 
 @Component({
   selector: 'edit-knight-modal',
@@ -27,17 +27,17 @@ import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/ad
 })
 export class EditKnightModalComponent implements OnInit {
   public modalHeaderText: string = 'Adding Knight';
-  public knightDegreeInputOptions: KnightDegreeInputOption[] = KnightDegreeInputOption.options
-  public knightMemberTypeInputOptions: KnightMemberTypeInputOption[] = KnightMemberTypeInputOption.options
-  public knightMemberClassInputOptions: KnightMemberClassInputOption[] = KnightMemberClassInputOption.options;
-  public memberDuesPaymentStatusInputOptions: MemberDuesPayStatusInputOption[] = MemberDuesPayStatusInputOption.options;
+  public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
+  public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
+  public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
+  public memberDuesPaymentStatusFormOptions: MemberDuesPaymentStatusFormOption[] = [];
   public editKnightForm: UntypedFormGroup;
   public countryFormOptions: CountryFormOption[] = [];
   public activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
-  private getCountryFormOptionsSubscription?: Subscription;
+  private getFormsSubscription?: Subscription;
   private getKnightActivitiesSubscription?: Subscription;
   private createKnightSubscription?: Subscription;
 
@@ -126,7 +126,7 @@ export class EditKnightModalComponent implements OnInit {
 
     ngOnInit() {
       this.enableDisableAdministrativeDivisions();
-      this.getCountryFormOptions();
+      this.getFormOptions();
       this.getAllKnightActivityInterestsForNewKnight();
       let thisYear = new Date().getFullYear();
       let startYear = thisYear - 9;
@@ -178,14 +178,24 @@ export class EditKnightModalComponent implements OnInit {
       }
     }
 
-    private getCountryFormOptions() {
-      let getCountryFormOptionsObserver = {
-        next: (response: CountryFormOption[]) => this.countryFormOptions = response,
-        error: (err: any) => this.logError("Error getting Country Form Options", err),
-        complete: () => console.log('Country Form Options retrieved.')
-      }
+    private getFormOptions() {
+      let formsObserver = {
+        next: ([ knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse ]: [KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[]]) => {
+          this.knightDegreeFormOptions = knightDegreeResponse;
+          this.knightMemberTypeFormOptions = knightMemberTypeResponse;
+          this.knightMemberClassFormOptions = knightMemberClassResponse;
+          this.countryFormOptions = countryResponse;
+        },
+        error: (err: any) => this.logError("Error getting Knight Degree Form Options", err),
+        complete: () => console.log('Knight Degree Form Options retrieved.')
+      };
   
-      this.getCountryFormOptionsSubscription = this.formsService.getCountryFormOptions().subscribe(getCountryFormOptionsObserver);
+      this.getFormsSubscription = forkJoin([
+        this.formsService.getKnightDegreeFormOptions(),
+        this.formsService.getKnightMemberTypeFormOptions(),
+        this.formsService.getKnightMemberClassFormOptions(),
+        this.formsService.getCountryFormOptions()
+      ]).subscribe(formsObserver);
     }
 
     private getAllKnightActivityInterestsForNewKnight() {
@@ -247,8 +257,8 @@ export class EditKnightModalComponent implements OnInit {
         this.getKnightActivitiesSubscription.unsubscribe();
       }
 
-      if (this.getCountryFormOptionsSubscription) {
-        this.getCountryFormOptionsSubscription.unsubscribe();
+      if (this.getFormsSubscription) {
+        this.getFormsSubscription.unsubscribe();
       }
     }
 
