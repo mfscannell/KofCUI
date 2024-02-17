@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
@@ -11,8 +11,11 @@ import { EditAccountInterestsModalComponent } from './edit-account-interests-mod
 import { EditAccountSecurityModalComponent } from './edit-account-security-modal/edit-account-security-modal.component';
 import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
 import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
-import { KnightDegreeInputOption } from 'src/app/models/inputOptions/knightDegreeInputOption';
-import { KnightMemberTypeInputOption } from 'src/app/models/inputOptions/knightMemberTypeInputOption';
+import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
+import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
+import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
+import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
+import { FormsService } from 'src/app/services/forms.service';
 
 @Component({
   selector: 'kofc-account',
@@ -24,12 +27,13 @@ export class AccountComponent implements OnInit, OnDestroy {
   knightId?: number;
   knight?: Knight;
   activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
-  getKnightSubscription?: Subscription;
-  updateKnightSubscription?: Subscription;
-  updateKnightActivityInterestSubscription?: Subscription;
+  private getFormOptionsSubscriptions?: Subscription;
+  private getKnightSubscription?: Subscription;
   errorMessages: string[] = [];
-  public knightDegreeInputOptions: KnightDegreeInputOption[] = KnightDegreeInputOption.options;
-  public knightMemberTypeInputOptions: KnightMemberTypeInputOption[] = KnightMemberTypeInputOption.options;
+  public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
+  public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
+  public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
+  public countryFormOptions: CountryFormOption[] = [];
   showErrorSavingInfo: boolean = false;
   showSuccessSavingInfo: boolean = false;
   showErrorSavingInterests: boolean = false;
@@ -40,18 +44,24 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: NgbModal,
+    private formsService: FormsService,
     private knightsService: KnightsService,
     private accountsService: AccountsService) {
   }
 
   ngOnInit() {
+    this.getFormOptions();
     this.knightId = this.accountsService.getKnightId();
     this.getKnight();
   }
 
   ngOnDestroy() {
     if (this.getKnightSubscription) {
-      this.getKnightSubscription.unsubscribe;
+      this.getKnightSubscription.unsubscribe();
+    }
+
+    if (this.getFormOptionsSubscriptions) {
+      this.getFormOptionsSubscriptions.unsubscribe();
     }
   }
 
@@ -123,6 +133,26 @@ export class AccountComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     });
+  }
+
+  private getFormOptions() {
+    let formsObserver = {
+      next: ([ knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse ]: [KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[]]) => {
+        this.knightDegreeFormOptions = knightDegreeResponse;
+        this.knightMemberTypeFormOptions = knightMemberTypeResponse;
+        this.knightMemberClassFormOptions = knightMemberClassResponse;
+        this.countryFormOptions = countryResponse;
+      },
+      error: (err: any) => this.logError("Error getting Knight Degree Form Options", err),
+      complete: () => console.log('Knight Degree Form Options retrieved.')
+    };
+
+    this.getFormOptionsSubscriptions = forkJoin([
+      this.formsService.getKnightDegreeFormOptions(),
+      this.formsService.getKnightMemberTypeFormOptions(),
+      this.formsService.getKnightMemberClassFormOptions(),
+      this.formsService.getCountryFormOptions()
+    ]).subscribe(formsObserver);
   }
 
   private getKnight() {
