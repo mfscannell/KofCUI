@@ -1,41 +1,43 @@
 <div class="container">
   <form [formGroup]="editConfigsForm" (ngSubmit)="onSubmitEditConfigSettings()">
-    <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" activeIds="ngb-panel-0">
-      <ng-container formArrayName="configGroups">
-        <ngb-panel *ngFor="let configGroupFormGroup of configGroupsForm.controls; let i = index;" [formGroupName]="i">
-          <ng-template ngbPanelTitle>
-            <div class="row">
-              <button type="button" class="btn btn-link btn-link-kofc-blue" >{{getConfigGroupName(i)}}</button>
+    <div formArrayName="configGroups">
+      <div ngbAccordion [closeOthers]="true">
+        <div ngbAccordionItem *ngFor="let configGroupFormGroup of configGroupsForm.controls; let i = index;" [formGroupName]="i">
+          <h2 ngbAccordionHeader>
+            <button ngbAccordionButton>{{ getConfigGroupName(i) }}</button>
+          </h2>
+          <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+              <ng-template>
+                <ng-container formArrayName="configSettings">
+                  <ng-container *ngFor="let configSetting of getConfigSettings(configGroupFormGroup); let j = index" [formGroupName]="j">
+                    <div class="form-group row mb-1">
+                      <div class="col-12 col-sm-4">
+                        <label for="configSetting_value" class="col-form-label">{{getConfigName(i, j)}}</label>
+                      </div>
+                      <div class="col-10 col-sm-7">
+                        <input *ngIf="isCheckBox(i, j)" type="checkbox" class="form-check-input" formControlName="booleanValue" id="configSetting_booleanValue">
+                        <input *ngIf="isStringInput(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
+                        <select *ngIf="isStringDropDown(i, j)" class="form-select" id="configSetting_stringDropDown" formControlName="stringValue">
+                          <option *ngFor="let selectOption of getStringDropDownList(i, j)" [value]="selectOption.id">{{selectOption.displayName}}</option>
+                        </select>
+                      </div>
+                      <div class="col-2 col-sm-1">
+                        <button type="button" class="btn btn-primary btn-kofc-blue rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">
+                          <svg class="bi" width="22" height="22" fill="currentColor">
+                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#question"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-template>
             </div>
-          </ng-template>
-          <ng-template ngbPanelContent>
-            <ng-container formArrayName="configSettings">
-              <ng-container *ngFor="let configSetting of getConfigSettings(configGroupFormGroup); let j = index" [formGroupName]="j">
-                <div class="form-group row mb-1">
-                  <div class="col-12 col-sm-4">
-                    <label for="configSetting_value" class="col-form-label">{{getConfigName(i, j)}}</label>
-                  </div>
-                  <div class="col-10 col-sm-7">
-                    <input *ngIf="isCheckBox(i, j)" type="checkbox" class="form-check-input" formControlName="booleanValue" id="configSetting_booleanValue">
-                    <input *ngIf="isStringInput(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
-                    <select *ngIf="isStringDropDown(i, j)" class="form-select" id="configSetting_stringDropDown" formControlName="stringValue">
-                      <option *ngFor="let selectOption of getStringDropDownList(i, j)" [value]="selectOption.id">{{selectOption.displayName}}</option>
-                    </select>
-                  </div>
-                  <div class="col-2 col-sm-1">
-                    <button type="button" class="btn btn-primary btn-kofc-blue rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">
-                      <svg class="bi" width="22" height="22" fill="currentColor">
-                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#question"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </ng-container>
-            </ng-container>
-          </ng-template>
-        </ngb-panel>
-      </ng-container>
-    </ngb-accordion>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="form-group row mb-1">
       <div class="col-12 mt-1">
         <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
