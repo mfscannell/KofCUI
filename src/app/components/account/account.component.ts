@@ -29,7 +29,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   private getFormOptionsSubscriptions?: Subscription;
   private getKnightSubscription?: Subscription;
-  errorMessages: string[] = [];
+  public errorMessages: string[] = [];
   public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
   public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
   public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
