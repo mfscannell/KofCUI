@@ -17,6 +17,9 @@ To Start up locally, run the command
 ng serve --disable-host-check --configuration development
 ng serve --host mynewtenant.localhost --port 4200 --open --configuration development
 
+## When Ran From Docker
+mynewtenant.localhost:9081
+
 ## Updating Angular
 Run the following commands at Powershell:
 npm uninstall -g @angular/cli

@@ -1,4 +1,4 @@
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -59,74 +59,68 @@ import { EditKnightPersonalInfoModalComponent } from './components/admin/knights
 import { EditKnightMemberDuesModalComponent } from './components/admin/knights/edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
 import { EditKnightActivityInterestsModalComponent } from './components/admin/knights/edit-knight-activity-interests-modal/edit-knight-activity-interests-modal.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    NavFooterComponent,
-    NavMenuComponent,
-    HomePageComponent,
-    LoginComponent,
-    AboutKnightsComponent,
-    AccountComponent,
-    EditAccountPersonalInfoModalComponent,
-    EditAccountInterestsModalComponent,
-    EditAccountSecurityModalComponent,
-    OurCouncilComponent,
-    CalendarEventsComponent,
-    ViewUpcomingEventModalComponent,
-    AdminComponent,
-    ActivityCategoriesComponent,
-    EditActivityModalComponent,
-    KnightsComponent,
-    EditKnightModalComponent,
-    EditKnightActivityInterestsModalComponent,
-    EditKnightMemberDuesModalComponent,
-    EditKnightMemberInfoModalComponent,
-    EditKnightPersonalInfoModalComponent,
-    EditKnightPasswordModalComponent,
-    UploadKnightsModalComponent,
-    LeadershipRolesComponent,
-    EditLeadershipRoleModalComponent,
-    ConfigsComponent,
-    UpdateConfigsResultModalComponent,
-    AssetsComponent,
-    UploadHomePageCarouselImageModalComponent,
-    DeleteHomePageCarouselImageModalComponent,
-    ActivityEventsComponent,
-    EventVolunteeringComponent,
-    SendEmailModalComponent,
-    VolunteerForActivityEventModalComponent,
-    EditActivityEventModalComponent
-  ],
-  imports: [
-    YouTubePlayerModule,
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: HomePageComponent, pathMatch: 'full' },
-      { path: 'login', component: LoginComponent, pathMatch: 'full' },
-      { path: 'aboutKnights', component: AboutKnightsComponent, pathMatch: 'full' },
-      { path: 'aboutOurCouncil', component: OurCouncilComponent, pathMatch: 'full' },
-      { path: 'upcomingEvents', component: CalendarEventsComponent, pathMatch: 'full' },
-      { path: 'account', component: AccountComponent, pathMatch: 'full', canActivate: [AccountGuard] },
-      { path: 'admin', component: AdminComponent, pathMatch: 'full', canActivate: [AdminGuard] },
-      { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full', canActivate: [ActivitiesGuard] },
-      { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },
-      { path: 'admin/leadershipRoles', component: LeadershipRolesComponent, pathMatch: 'full', canActivate: [LeadershipRolesGuard] },
-      { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full', canActivate: [ActivityEventsGuard] },
-      { path: 'admin/eventVolunteering', component: EventVolunteeringComponent, pathMatch: 'full', canActivate: [EventVolunteeringGuard] },
-      { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full', canActivate: [ConfigsGuard] },
-      { path: 'admin/assets', component: AssetsComponent, pathMatch: 'full', canActivate: [AssetsGuard] },
-      { path: '**', redirectTo: '/' }
-    ]),
-    NgbModule,
-    ReactiveFormsModule
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        NavFooterComponent,
+        NavMenuComponent,
+        HomePageComponent,
+        LoginComponent,
+        AboutKnightsComponent,
+        AccountComponent,
+        EditAccountPersonalInfoModalComponent,
+        EditAccountInterestsModalComponent,
+        EditAccountSecurityModalComponent,
+        OurCouncilComponent,
+        CalendarEventsComponent,
+        ViewUpcomingEventModalComponent,
+        AdminComponent,
+        ActivityCategoriesComponent,
+        EditActivityModalComponent,
+        KnightsComponent,
+        EditKnightModalComponent,
+        EditKnightActivityInterestsModalComponent,
+        EditKnightMemberDuesModalComponent,
+        EditKnightMemberInfoModalComponent,
+        EditKnightPersonalInfoModalComponent,
+        EditKnightPasswordModalComponent,
+        UploadKnightsModalComponent,
+        LeadershipRolesComponent,
+        EditLeadershipRoleModalComponent,
+        ConfigsComponent,
+        UpdateConfigsResultModalComponent,
+        AssetsComponent,
+        UploadHomePageCarouselImageModalComponent,
+        DeleteHomePageCarouselImageModalComponent,
+        ActivityEventsComponent,
+        EventVolunteeringComponent,
+        SendEmailModalComponent,
+        VolunteerForActivityEventModalComponent,
+        EditActivityEventModalComponent
+    ],
+    bootstrap: [AppComponent], imports: [YouTubePlayerModule,
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        RouterModule.forRoot([
+            { path: '', component: HomePageComponent, pathMatch: 'full' },
+            { path: 'login', component: LoginComponent, pathMatch: 'full' },
+            { path: 'aboutKnights', component: AboutKnightsComponent, pathMatch: 'full' },
+            { path: 'aboutOurCouncil', component: OurCouncilComponent, pathMatch: 'full' },
+            { path: 'upcomingEvents', component: CalendarEventsComponent, pathMatch: 'full' },
+            { path: 'account', component: AccountComponent, pathMatch: 'full', canActivate: [AccountGuard] },
+            { path: 'admin', component: AdminComponent, pathMatch: 'full', canActivate: [AdminGuard] },
+            { path: 'admin/activities', component: ActivityCategoriesComponent, pathMatch: 'full', canActivate: [ActivitiesGuard] },
+            { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },
+            { path: 'admin/leadershipRoles', component: LeadershipRolesComponent, pathMatch: 'full', canActivate: [LeadershipRolesGuard] },
+            { path: 'admin/activityEvents', component: ActivityEventsComponent, pathMatch: 'full', canActivate: [ActivityEventsGuard] },
+            { path: 'admin/eventVolunteering', component: EventVolunteeringComponent, pathMatch: 'full', canActivate: [EventVolunteeringGuard] },
+            { path: 'admin/configSettings', component: ConfigsComponent, pathMatch: 'full', canActivate: [ConfigsGuard] },
+            { path: 'admin/assets', component: AssetsComponent, pathMatch: 'full', canActivate: [AssetsGuard] },
+            { path: '**', redirectTo: '/' }
+        ]),
+        NgbModule,
+        ReactiveFormsModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
