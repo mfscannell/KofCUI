@@ -42,20 +42,12 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
       activityCategory: new UntypedFormControl(''),
       eventName: new UntypedFormControl(''),
       eventDescription: new UntypedFormControl(''),
-      startDate: new UntypedFormControl({
-        year: today.getFullYear(),
-        month: today.getMonth() + 1,
-        day: today.getDate()
-      }),
+      startDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
       startTime: new UntypedFormControl({
         "hour": 6,
         "minute": 0
       }),
-      endDate: new UntypedFormControl({
-        year: today.getFullYear(),
-        month: today.getMonth() + 1,
-        day: today.getDate()
-      }),
+      endDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
       endTime: new UntypedFormControl({
         "hour": 7,
         "minute": 0
@@ -87,20 +79,12 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
         activityCategory: this.activityEvent.activityCategory,
         eventName: this.activityEvent.eventName,
         eventDescription: this.activityEvent.eventDescription,
-        startDate: {
-          year: DateTimeFormatter.getYear(this.activityEvent.startDateTime),
-          month: DateTimeFormatter.getMonth(this.activityEvent.startDateTime),
-          day: DateTimeFormatter.getDay(this.activityEvent.startDateTime)
-        },
+        startDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEvent.startDateTime),
         startTime: {
           hour: DateTimeFormatter.getHour(this.activityEvent.startDateTime),
           minute: DateTimeFormatter.getMinute(this.activityEvent.startDateTime)
         },
-        endDate: {
-          year: DateTimeFormatter.getYear(this.activityEvent.endDateTime),
-          month: DateTimeFormatter.getMonth(this.activityEvent.endDateTime),
-          day: DateTimeFormatter.getDay(this.activityEvent.endDateTime)
-        },
+        endDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEvent.endDateTime),
         endTime: {
           hour: DateTimeFormatter.getHour(this.activityEvent.endDateTime),
           minute: DateTimeFormatter.getMinute(this.activityEvent.endDateTime)
@@ -167,6 +151,10 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
     }
 
     return eventVolunteersArray;
+  }
+
+  formatEventStartDate() {
+    return DateTimeFormatter.ToDisplayedDate(this.activityEvent?.startDateTime);
   }
 
   formatEventStartTime() {
@@ -285,8 +273,8 @@ export class VolunteerForActivityEventModalComponent implements OnInit, OnDestro
         let volunteerSignUpRole: VolunteerSignUpRole = {
           volunteerSignupRoleId: role.volunteerSignUpRoleId,
           roleTitle: role.roleTitle,
-          startDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.startTime.hour, role.startTime.minute),
-          endDateTime: DateTimeFormatter.ToIso8601DateTime(role.endDate.year, role.endDate.month, role.endDate.day, role.endTime.hour, role.endTime.minute),
+          startDateTime: DateTimeFormatter.DateToIso8601DateTime(role.startDate, role.startTime.hour, role.startTime.minute),
+          endDateTime: DateTimeFormatter.DateToIso8601DateTime(role.endDate, role.endTime.hour, role.endTime.minute),
           numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
           eventVolunteers: role.eventVolunteers.map(function(ev: any) {
             let eventVolunteer: EventVolunteer = {

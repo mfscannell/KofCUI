@@ -208,6 +208,31 @@ export class DateTimeFormatter {
         return iso8601Date;
     }
 
+    /// Converts ISO 8601 Date-Time to ISO 8601 Date.
+    static DateTimeToIso8601Date(dateTime: string | undefined) {
+        if (!dateTime) {
+            return undefined;
+        }
+
+        if (!dateTime.includes("T")) {
+            return dateTime;
+        }
+
+        return dateTime.split("T")[0];
+    }
+
+    static DateTimeToIso8601Time(dateTime: string | undefined) {
+        if (!dateTime) {
+            return undefined;
+        }
+
+        if (!dateTime.includes("T")) {
+            return undefined;
+        }
+
+        return dateTime.split("T")[1];
+    }
+
     static ToIso8601DateTime(year: number, month: number, day: number, hour: number, minute: number) {
         if (year === undefined || month === undefined || day === undefined || year === null || month === null || day === null) {
             return undefined;
@@ -232,6 +257,22 @@ export class DateTimeFormatter {
         let iso8601DateTime = `${yearString}-${monthString}-${dayString}T${hourString}:${minuteString}`;
 
         return iso8601DateTime;
+    }
+
+    static DateToIso8601DateTime(date: string, hour: number, minute: number) {
+        if (date === undefined || date === null) {
+            return undefined;
+        }
+
+        let hourString = hour < 10 ? `0${hour}` : `${hour}`;
+        let minuteString = minute < 10 ? `0${minute}` : `${minute}`;
+        let iso8601DateTime = `${date}T${hourString}:${minuteString}`;
+
+        return iso8601DateTime;
+    }
+
+    static DateAndTimeToIso8601DateTime(date: string, time: string) {
+        return `${date}T${time}`;
     }
 
     /// converts a number to a date in 'YYYY-MM-DD' format. 
