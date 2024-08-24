@@ -10,58 +10,33 @@
         <h5 class="text-decoration-underline fw-bold">Personal Information</h5>
       </div>
     </div>
-    <div class="form-group row mb-1">
-      <label for="firstName" class="col-5 col-md-3 col-form-label">First Name</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off" placeholder="John">
+      <label for="firstName">First Name</label>
     </div>
-    <div class="form-group row mb-1">
-      <label for="middleName" class="col-5 col-md-3 col-form-label">Middle Name</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off" placeholder="John">
+      <label for="middleName">Middle Name</label>
     </div>
-    <div class="form-group row mb-1">
-      <label for="lastName" class="col-5 col-md-3 col-form-label">Last Name</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off" placeholder="Doe">
+      <label for="lastName">Last Name</label>
     </div>
-    <div class="form-group row mb-1">
-      <label for="nameSuffix" class="col-5 col-md-3 col-form-label">Suffix</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off" placeholder="Jr">
+      <label for="nameSuffix">Suffix</label>
     </div>
-    <div class="form-group row mb-1">
-      <div class="col-5 col-md-3">
-        <label for="dateOfBirth" class="col-form-label">Date of Birth</label>
-      </div>
-      <div class="col-7 col-md-9">
-        <div class="input-group">
-          <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="dateOfBirth" id="dateOfBirth" autocomplete="off" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #dob="ngbDatepicker" [firstDayOfWeek]="7" (click)="dob.toggle()">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="dob.toggle()" type="button">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="date" formControlName="dateOfBirth" id="dateOfBirth" class="form-control" min="1900-01-01" max="2050-12-31" />
+      <label for="dateOfBirth">Date of Birth</label>
     </div>
-    <div class="form-group row mb-1">
-      <label for="emailAddress" class="col-5 col-md-3 col-form-label">Email Address</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off" placeholder="jd@jd.com">
+      <label for="emailAddress">Email Address</label>
     </div>
-    <div class="form-group row mb-1">
-      <label for="cellPhoneNumber" class="col-5 col-md-3 col-form-label">Cell Phone</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off" placeholder="John">
+      <label for="cellPhoneNumber">Cell Phone</label>
     </div>
     <div class="form-group row mb-1">
       <div class="col-12">
@@ -69,45 +44,33 @@
       </div>
     </div>
     <div class="panel-body" formGroupName="homeAddress">
-      <div class="form-group row mb-1">
-        <label for="countryCode" class="col-5 col-md-3 col-form-label">Country</label>
-        <div class="col-7 col-md-9">
-          <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
-            <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
-          </select>
-        </div>
+      <div class="form-floating row mb-1">
+        <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
+          <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+        </select>
+        <label for="countryCode">Country</label>
       </div>
-      <div class="form-group row mb-1">
-        <label for="address1" class="col-5 col-md-3 col-form-label">Address 1</label>
-        <div class="col-7 col-md-9">
-          <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off">
-        </div>
+      <div class="form-floating row mb-1">
+        <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off" placeholder="123 Main St">
+        <label for="address1">Address 1</label>
       </div>
-      <div class="form-group row mb-1">
-        <label for="address2" class="col-5 col-md-3 col-form-label">Address 2</label>
-        <div class="col-7 col-md-9">
-          <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off">
-        </div>
+      <div class="form-floating row mb-1">
+        <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off" placeholder="Apt 2">
+        <label for="address2">Address 2</label>
       </div>
-      <div class="form-group row mb-1">
-        <label for="city" class="col-5 col-md-3 col-form-label">City</label>
-        <div class="col-7 col-md-9">
-          <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off">
-        </div>
+      <div class="form-floating row mb-1">
+        <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off" placeholder="Kansas City">
+        <label for="city">City</label>
       </div>
-      <div class="form-group row mb-1">
-        <label for="stateCode" class="col-5 col-md-3 col-form-label">State</label>
-        <div class="col-7 col-md-9">
-          <select class="form-select" id="stateCode" formControlName="stateCode">
-            <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
-          </select>
-        </div>
+      <div class="form-floating row mb-1">
+        <select class="form-select" id="stateCode" formControlName="stateCode">
+          <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
+        </select>
+        <label for="stateCode">State</label>
       </div>
-      <div class="form-group row mb-1">
-        <label for="postalCode" class="col-5 col-md-3 col-form-label">Zip Code</label>
-        <div class="col-7 col-md-9">
-          <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off">
-        </div>
+      <div class="form-floating row mb-1">
+        <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off" placeholder="11111">
+        <label for="postalCode">Zip Code</label>
       </div>
     </div>
 

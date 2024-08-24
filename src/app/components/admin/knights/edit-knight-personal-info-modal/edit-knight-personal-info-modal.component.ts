@@ -46,11 +46,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
         nameSuffix: new UntypedFormControl('', [
           Validators.maxLength(7)
         ]),
-        dateOfBirth: new UntypedFormControl({
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate()
-        }),
+        dateOfBirth: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
         emailAddress: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
@@ -144,11 +140,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
         nameSuffix: this.knight.nameSuffix,
-        dateOfBirth: {
-          year: DateTimeFormatter.getYear(this.knight.dateOfBirth),
-          month: DateTimeFormatter.getMonth(this.knight.dateOfBirth),
-          day: DateTimeFormatter.getDay(this.knight.dateOfBirth)
-        },
+        dateOfBirth: this.knight.dateOfBirth,
         emailAddress: this.knight.emailAddress,
         cellPhoneNumber: this.knight.cellPhoneNumber,
         homeAddress: this.knight.homeAddress
@@ -169,6 +161,8 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
 
   private mapFormToKnightPersonalInfo(): UpdateKnightPersonalInfoRequest {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
+    console.log('mapFormToKnight');
+    console.log(rawForm);
       let homeAddress: StreetAddress = {
         streetAddressId: rawForm.homeAddress.streetAddressId,
         addressName: rawForm.homeAddress.addressName,
@@ -185,10 +179,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
         middleName: rawForm.middleName,
         lastName: rawForm.lastName,
         nameSuffix: rawForm.nameSuffix,
-        dateOfBirth: DateTimeFormatter.ToIso8601Date(
-          rawForm.dateOfBirth.year, 
-          rawForm.dateOfBirth.month, 
-          rawForm.dateOfBirth.day),
+        dateOfBirth: rawForm.dateOfBirth,
         emailAddress: rawForm.emailAddress,
         cellPhoneNumber: rawForm.cellPhoneNumber,
         homeAddress: homeAddress

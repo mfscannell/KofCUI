@@ -9,56 +9,19 @@
       <ng-container ngbNavItem>
         <a ngbNavLink class="nav-item-kofc-blue">Information</a>
         <ng-template ngbNavContent>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="eventName" class="col-form-label">Event Name</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <input readonly type="text" class="form-control" formControlName="eventName" id="eventName" autocomplete="off">
-            </div>
+          <div class="form-floating row mb-1">
+            <input readonly type="text" class="form-control" formControlName="eventName" id="eventName" autocomplete="off">
+            <label for="eventName">Event Name</label>
+          </div>
+          <div class="form-floating row mb-1">
+            <textarea readonly class="form-control" formControlName="eventDescription" id="eventDescription" rows="4"></textarea>
+            <label for="eventName">Event Description</label>
           </div>
           <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="eventDescription" class="col-form-label">Event Description</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <textarea readonly class="form-control" formControlName="eventDescription" id="eventDescription" rows="4"></textarea>
-            </div>
+            {{formatEventStartDate()}}
           </div>
           <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="startDate" class="col-form-label">Start Date</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <div class="input-group">
-                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" type="button">
-                    <svg class="bi" width="20" height="20" fill="currentColor">
-                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="startTime" class="col-form-label">Start Time</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <!-- <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker> -->
-              {{formatEventStartTime()}}
-            </div>
-          </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="endTime" class="col-form-label">End Time</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <!-- <ngb-timepicker [disabled]="disableTime" [spinners]=false formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true></ngb-timepicker> -->
-              {{formatEventEndTime()}}
-            </div>
+            {{formatEventStartTime()}} - {{formatEventEndTime()}}
           </div>
           <div class="form-group row mb-1">
             <div class="col-4 col-md-3">

@@ -10,31 +10,19 @@
         <ng-container ngbNavItem>
           <a ngbNavLink class="nav-item-kofc-blue">Information</a>
           <ng-template ngbNavContent>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="activityName" class="col-form-label">Activity Name</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <input type="text" class="form-control" formControlName="activityName" id="activityName" autocomplete="off">
-              </div>
+            <div class="form-floating row mb-1">
+              <input type="text" class="form-control" formControlName="activityName" id="activityName" autocomplete="off" placeholder="Pancake Breakfast">
+              <label for="activityName">Activity Name</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="activityDescription" class="col-form-label">Activity Description</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <textarea class="form-control" formControlName="activityDescription" id="activityDescription" rows="4"></textarea>
-              </div>
+            <div class="form-floating row mb-1">
+              <textarea class="form-control text-area-height-200" type="text" formControlName="activityDescription" id="activityDescription" placeholder="Leave a comment here"></textarea>
+              <label for="activityDescription">Activity Description</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="activityCategory" class="col-form-label">Activity Category</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <select class="form-select" id="activityCategory" formControlName="activityCategory">
-                  <option *ngFor="let activityCategoryInputOption of activityCategoryInputOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
-                </select>
-              </div>
+            <div class="form-floating row mb-1">
+              <select class="form-select" id="activityCategory" formControlName="activityCategory">
+                <option *ngFor="let activityCategoryInputOption of activityCategoryInputOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
+              </select>
+              <label for="activityCategory">Activity Category</label>
             </div>
           </ng-template>
         </ng-container>
@@ -71,15 +59,9 @@
         <ng-container ngbNavItem>
           <a ngbNavLink class="nav-item-kofc-blue">Event Notes</a>
           <ng-template ngbNavContent>
-            <div class="form-group row mb-1">
-              <div class="col-12">
-                <label for="notes" class="col-form-label">Activity Notes</label>
-              </div>
-            </div>
-            <div class="form-group row mb-1">
-              <div class="col-12">
-                <textarea class="form-control" formControlName="notes" id="notes" autocomplete="off" rows="4"></textarea>
-              </div>
+            <div class="form-floating row mb-1">
+              <textarea class="form-control text-area-height-200" type="text" formControlName="notes" id="notes" placeholder="Leave a comment here"></textarea>
+              <label for="notes">Actiivity Notes</label>
             </div>
             <div class="form-group row mb-1">
               <div class="col-12">

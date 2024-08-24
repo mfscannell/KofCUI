@@ -56,24 +56,18 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         activityCategory: new UntypedFormControl(''),
         eventName: new UntypedFormControl(''),
         eventDescription: new UntypedFormControl(''),
-        startDate: new UntypedFormControl({
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate()
-        }),
-        startTime: new UntypedFormControl({
-          "hour": 6,
-          "minute": 0
-        }),
-        endDate: new UntypedFormControl({
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate()
-        }),
-        endTime: new UntypedFormControl({
-          "hour": 7,
-          "minute": 0
-        }),
+        startDate: new UntypedFormControl(''),
+        startTime: new UntypedFormControl(''),
+        // startTime: new UntypedFormControl({
+        //   "hour": 6,
+        //   "minute": 0
+        // }),
+        endDate: new UntypedFormControl(''),
+        endTime: new UntypedFormControl(''),
+        // endTime: new UntypedFormControl({
+        //   "hour": 7,
+        //   "minute": 0
+        // }),
         locationAddress: new UntypedFormGroup({
           streetAddressId: new UntypedFormControl(''),
           addressName: new UntypedFormControl(''),
@@ -148,24 +142,18 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         activityCategory: this.activityEvent.activityCategory,
         eventName: this.activityEvent.eventName,
         eventDescription: this.activityEvent.eventDescription,
-        startDate: {
-          year: DateTimeFormatter.getYear(this.activityEvent.startDateTime),
-          month: DateTimeFormatter.getMonth(this.activityEvent.startDateTime),
-          day: DateTimeFormatter.getDay(this.activityEvent.startDateTime)
-        },
-        startTime: {
-          hour: DateTimeFormatter.getHour(this.activityEvent.startDateTime),
-          minute: DateTimeFormatter.getMinute(this.activityEvent.startDateTime)
-        },
-        endDate: {
-          year: DateTimeFormatter.getYear(this.activityEvent.endDateTime),
-          month: DateTimeFormatter.getMonth(this.activityEvent.endDateTime),
-          day: DateTimeFormatter.getDay(this.activityEvent.endDateTime)
-        },
-        endTime: {
-          hour: DateTimeFormatter.getHour(this.activityEvent.endDateTime),
-          minute: DateTimeFormatter.getMinute(this.activityEvent.endDateTime)
-        },
+        startDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEvent.startDateTime),
+        startTime: DateTimeFormatter.DateTimeToIso8601Time(this.activityEvent.startDateTime),
+        // startTime: {
+        //   hour: DateTimeFormatter.getHour(this.activityEvent.startDateTime),
+        //   minute: DateTimeFormatter.getMinute(this.activityEvent.startDateTime)
+        // },
+        endDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEvent.endDateTime),
+        endTime: DateTimeFormatter.DateTimeToIso8601Time(this.activityEvent.endDateTime),
+        // endTime: {
+        //   hour: DateTimeFormatter.getHour(this.activityEvent.endDateTime),
+        //   minute: DateTimeFormatter.getMinute(this.activityEvent.endDateTime)
+        // },
         locationAddress: this.activityEvent.locationAddress,
         showInCalendar: this.activityEvent.showInCalendar,
         canceled: this.activityEvent.canceled,
@@ -177,24 +165,18 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
         const volunteerSignUpRole = new UntypedFormGroup({
           volunteerSignUpRoleId: new UntypedFormControl(role.volunteerSignupRoleId),
           roleTitle: new UntypedFormControl(role.roleTitle),
-          startDate: new UntypedFormControl({
-            year: DateTimeFormatter.getYear(role.startDateTime),
-            month: DateTimeFormatter.getMonth(role.startDateTime),
-            day: DateTimeFormatter.getDay(role.startDateTime)
-          }),
-          startTime: new UntypedFormControl({
-            hour: DateTimeFormatter.getHour(role.startDateTime),
-            minute: DateTimeFormatter.getMinute(role.startDateTime)
-          }),
-          endDate: new UntypedFormControl({
-            year: DateTimeFormatter.getYear(role.endDateTime),
-            month: DateTimeFormatter.getMonth(role.endDateTime),
-            day: DateTimeFormatter.getDay(role.endDateTime)
-          }),
-          endTime: new UntypedFormControl({
-            hour: DateTimeFormatter.getHour(role.endDateTime),
-            minute: DateTimeFormatter.getMinute(role.endDateTime)
-          }),
+          startDate: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Date(role.startDateTime)),
+          startTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time(role.startDateTime)),
+          // startTime: new UntypedFormControl({
+          //   hour: DateTimeFormatter.getHour(role.startDateTime),
+          //   minute: DateTimeFormatter.getMinute(role.startDateTime)
+          // }),
+          endDate: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Date(role.endDateTime)),
+          endTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time(role.endDateTime)),
+          // endTime: new UntypedFormControl({
+          //   hour: DateTimeFormatter.getHour(role.endDateTime),
+          //   minute: DateTimeFormatter.getMinute(role.endDateTime)
+          // }),
           numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
           eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers))
         });
@@ -266,74 +248,84 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
   }
 
   onChangeEventStartDate(event: any) {
-    this.editActivityEventForm.patchValue({
-      endDate: {
-        year: event.year,
-        month: event.month,
-        day: event.day
-      }
-    });
+    console.log("onChangeEventStartDate");
+    console.log(event);
+    // this.editActivityEventForm.patchValue({
+    //   endDate: {
+    //     year: event.year,
+    //     month: event.month,
+    //     day: event.day
+    //   }
+    // });
 
-    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
-      vsurControl.patchValue({
-        startDate: {
-          year: event.year,
-          month: event.month,
-          day: event.day
-        },
-        endDate: {
-          year: event.year,
-          month: event.month,
-          day: event.day
-        }
-      });
-    });
+    // this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
+    //   vsurControl.patchValue({
+    //     startDate: {
+    //       year: event.year,
+    //       month: event.month,
+    //       day: event.day
+    //     },
+    //     endDate: {
+    //       year: event.year,
+    //       month: event.month,
+    //       day: event.day
+    //     }
+    //   });
+    // });
   }
 
   onChangeEventStartTime(event: any) {
-    this.editActivityEventForm.patchValue({
-      endTime: {
-        hour: event.hour + 1,
-        minute: event.minute
-      }
-    });
+    console.log("onChangeEventStartTime");
+    console.log(event);
+    // this.editActivityEventForm.patchValue({
+    //   endTime: {
+    //     hour: event.hour + 1,
+    //     minute: event.minute
+    //   }
+    // });
 
-    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
-      vsurControl.patchValue({
-        startTime: {
-          hour: event.hour,
-          minute: event.minute
-        },
-        endTime: {
-          hour: event.hour + 1,
-          minute: event.minute,
-        }
-      });
-    });
+    // this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
+    //   vsurControl.patchValue({
+    //     startTime: {
+    //       hour: event.hour,
+    //       minute: event.minute
+    //     },
+    //     endTime: {
+    //       hour: event.hour + 1,
+    //       minute: event.minute,
+    //     }
+    //   });
+    // });
   }
 
   onChangeEventEndTime(event: any) {
+    console.log("onChangeEventEndTime");
+    console.log(event);
     //TODO need to limit end time to one hour past start time
-    this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
-      vsurControl.patchValue({
-        endTime: {
-          hour: event.hour,
-          minute: event.minute,
-        }
-      });
-    });
+    // this.volunteerSignUpRolesForm.controls.forEach(vsurControl => function(vsurControl: UntypedFormGroup) {
+    //   vsurControl.patchValue({
+    //     endTime: {
+    //       hour: event.hour,
+    //       minute: event.minute,
+    //     }
+    //   });
+    // });
   }
 
   onChangeVolunteerRoleStartTime(event: any, index: number) {
-    this.volunteerSignUpRolesForm.at(index).patchValue({
-      endTime: {
-        hour: event.hour,
-        minute: event.minute
-      }
-    })
+    console.log("onChangeVolunteerRoleStartTime");
+    console.log(event);
+    // this.volunteerSignUpRolesForm.at(index).patchValue({
+    //   endTime: {
+    //     hour: event.hour,
+    //     minute: event.minute
+    //   }
+    // });
   }
 
   onChangeVolunteerRoleEndTime(event: any, index: number) {
+    console.log("onChangeVolunteerRoleEndTime");
+    console.log(event);
     let something = 5;
 
     //TODO need to limit end time to be after start time.
@@ -379,15 +371,17 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       volunteerSignUpRoleId: new UntypedFormControl(''),
       roleTitle: new UntypedFormControl(''),
       startDate: new UntypedFormControl(this.getEventStartDate()),
-      startTime: new UntypedFormControl({
-        "hour": this.getEventStartTime().hour,
-        "minute": this.getEventStartTime().minute
-      }),
+      startTime: new UntypedFormControl(this.getEventStartTime()),
+      // startTime: new UntypedFormControl({
+      //   "hour": this.getEventStartTime().hour,
+      //   "minute": this.getEventStartTime().minute
+      // }),
       endDate: new UntypedFormControl(this.getEventEndDate()),
-      endTime: new UntypedFormControl({
-        "hour": this.getEventEndTime().hour,
-        "minute": this.getEventEndTime().minute
-      }),
+      endTime: new UntypedFormControl(this.getEventEndTime()),
+      // endTime: new UntypedFormControl({
+      //   "hour": this.getEventEndTime().hour,
+      //   "minute": this.getEventEndTime().minute
+      // }),
       numberOfVolunteersNeeded: new UntypedFormControl(''),
       eventVolunteers: new UntypedFormArray([])
     });
@@ -432,24 +426,24 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
     let rawForm = this.editActivityEventForm.getRawValue();
     let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
       let volunteerSignUpRole: VolunteerSignUpRole = {
-        volunteerSignupRoleId: role.volunteerSignUpRoleId,
+        volunteerSignupRoleId: role.volunteerSignUpRoleId | 0,
         roleTitle: role.roleTitle,
-        startDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.startTime.hour, role.startTime.minute),
-        endDateTime: DateTimeFormatter.ToIso8601DateTime(role.startDate.year, role.startDate.month, role.startDate.day, role.endTime.hour, role.endTime.minute),
+        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.startTime),
+        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.endTime),
         numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
         eventVolunteers: role.eventVolunteers.map(function(ev: any) {
           let eventVolunteer: EventVolunteer = {
-            eventVolunteerId: ev.eventVolunteerId,
+            eventVolunteerId: ev.eventVolunteerId | 0,
             knightId: ev.knightId
-          };
+          } as EventVolunteer;
           return eventVolunteer;
         })
-      }
+      } as VolunteerSignUpRole;
 
       return volunteerSignUpRole;
     });
     let locationAddress: StreetAddress = {
-      streetAddressId: rawForm.locationAddress.streetAddressId,
+      streetAddressId: rawForm.locationAddress.streetAddressId | 0,
       addressName: rawForm.locationAddress.addressName,
       address1: rawForm.locationAddress.address1,
       address2: rawForm.locationAddress.address2,
@@ -457,22 +451,25 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy {
       stateCode: rawForm.locationAddress.stateCode,
       postalCode: rawForm.locationAddress.postalCode,
       countryCode: rawForm.locationAddress.countryCode
-    };
+    } as StreetAddress;
     let activityEvent: ActivityEvent = {
-      activityEventId: rawForm.activityEventId,
+      activityEventId: rawForm.activityEventId | 0,
       activityId: rawForm.activityId,
       activityCategory: rawForm.activityCategory,
       eventName: rawForm.eventName,
       eventDescription: rawForm.eventDescription,
-      startDateTime: DateTimeFormatter.ToIso8601DateTime(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day, rawForm.startTime.hour, rawForm.startTime.minute) || '1999-01-01T00:00',
-      endDateTime: DateTimeFormatter.ToIso8601DateTime(rawForm.startDate.year, rawForm.startDate.month, rawForm.startDate.day, rawForm.endTime.hour, rawForm.endTime.minute) || '1999-01-01T00:00',
+      startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(rawForm.startDate, rawForm.startTime) || '1999-01-01T00:00',
+      endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(rawForm.startDate, rawForm.endTime) || '1999-01-01T00:00',
       locationAddress: locationAddress,
       volunteerSignUpRoles: volunteerRoles,
-      showInCalendar: rawForm.showInCalendar,
-      canceled: rawForm.canceled,
+      showInCalendar: rawForm.showInCalendar? rawForm.showInCalendar : false,
+      canceled: rawForm.canceled? rawForm.canceled : false,
       canceledReason: rawForm.canceledReason,
       notes: rawForm.notes
-    };
+    } as ActivityEvent;
+
+    console.log("mapFormToActivityEvent");
+    console.log(activityEvent);
 
     return activityEvent;
   }

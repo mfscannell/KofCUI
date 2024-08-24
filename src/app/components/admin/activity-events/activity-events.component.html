@@ -2,48 +2,12 @@
   <div class="row">
     <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-2">
       <div class="input-group">
-        <input #dpFromDate
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              [(ngModel)]="fromDate"
-              [value]="formatter.format(fromDate)"
-              name="dpFromDate"
-              (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
-              ngbDatepicker
-              [minDate]="{year: 1900, month: 1, day: 1}"
-              [firstDayOfWeek]="7"
-              outsideDays="hidden"
-              #fromDatepicker="ngbDatepicker">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="fromDatepicker.toggle()" type="button">
-            <svg class="bi" width="20" height="20" fill="currentColor">
-              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-            </svg>
-          </button>
-        </div>
+        <input type="date" [(ngModel)]="fromDate" id="fromDate" class="form-control" min="1900-01-01" max="2050-12-31" />
       </div>
     </div>
     <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-2">
       <div class="input-group">
-        <input #dpToDate
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              [(ngModel)]="toDate"
-              [value]="formatter.format(toDate)"
-              name="dpToDate"
-              (input)="fromDate = validateInput(toDate, dpToDate.value)"
-              ngbDatepicker
-              [minDate]="{year: 1900, month: 1, day: 1}"
-              [firstDayOfWeek]="7"
-              outsideDays="hidden"
-              #toDatepicker="ngbDatepicker">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="toDatepicker.toggle()" type="button">
-            <svg class="bi" width="20" height="20" fill="currentColor">
-              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-            </svg>
-          </button>
-        </div>
+        <input type="date" [(ngModel)]="toDate" id="toDate" class="form-control" min="1900-01-01" max="2050-12-31" />
       </div>
     </div>
     <div class="col-4 col-sm-2 mb-2">
