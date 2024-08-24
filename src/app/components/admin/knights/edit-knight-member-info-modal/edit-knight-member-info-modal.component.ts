@@ -39,16 +39,8 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
         memberNumber: new UntypedFormControl(0),
         mailReturned: new UntypedFormControl(false),
         degree: new UntypedFormControl('First'),
-        firstDegreeDate: new UntypedFormControl({
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate()
-        }),
-        reentryDate: new UntypedFormControl({
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate()
-        }),
+        firstDegreeDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
+        reentryDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
         memberType: new UntypedFormControl('Associate'),
         memberClass: new UntypedFormControl('Paying')
       })
@@ -74,6 +66,8 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
       error: (err: any) => this.logError("Error Updating Knight Membership Info", err),
       complete: () => console.log('Knight Membership Info updated.')
     };
+
+    console.log(knightMembershipInfo);
 
     this.updateKnightMembershipInfoSubscription = this.knightsService.updateKnightMembershipInfo(knightMembershipInfo).subscribe(knightMemberInfoObserver);
   }
@@ -106,16 +100,8 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
         memberNumber: this.knightInfo.memberNumber,
         mailReturned: this.knightInfo.mailReturned,
         degree: this.knightInfo.degree,
-        firstDegreeDate: {
-          year: DateTimeFormatter.getYear(this.knightInfo.firstDegreeDate),
-          month: DateTimeFormatter.getMonth(this.knightInfo.firstDegreeDate),
-          day: DateTimeFormatter.getDay(this.knightInfo.firstDegreeDate)
-        }, 
-        reentryDate: {
-          year: DateTimeFormatter.getYear(this.knightInfo.reentryDate),
-          month: DateTimeFormatter.getMonth(this.knightInfo.reentryDate),
-          day: DateTimeFormatter.getDay(this.knightInfo.reentryDate)
-        },
+        firstDegreeDate: DateTimeFormatter.DateTimeToIso8601Date(this.knightInfo.firstDegreeDate), 
+        reentryDate: DateTimeFormatter.DateTimeToIso8601Date(this.knightInfo.reentryDate),
         memberType: this.knightInfo.memberType,
         memberClass: this.knightInfo.memberClass
       })
@@ -131,14 +117,8 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
       memberNumber: rawForm.memberNumber,
       mailReturned: rawForm.mailReturned,
       degree: rawForm.degree,
-      firstDegreeDate: DateTimeFormatter.ToIso8601Date(
-        rawForm.firstDegreeDate.year, 
-        rawForm.firstDegreeDate.month, 
-        rawForm.firstDegreeDate.day),
-      reentryDate: DateTimeFormatter.ToIso8601Date(
-        rawForm.reentryDate.year, 
-        rawForm.reentryDate.month, 
-        rawForm.reentryDate.day),
+      firstDegreeDate: rawForm.firstDegreeDate,
+      reentryDate: rawForm.reentryDate,
       memberType: rawForm.memberType,
       memberClass: rawForm.memberClass
     };

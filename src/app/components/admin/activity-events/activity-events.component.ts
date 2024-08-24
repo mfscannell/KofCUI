@@ -29,11 +29,8 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   activityEvents: ActivityEvent[] = [];
   allActivities: Activity[] = [];
   allKnights: Knight[] = [];
-  // beginDate: Date = new Date();
-  // endDate: Date = new Date();
-  fromDate: NgbDate | null;
-  toDate: NgbDate | null;
-  hoveredDate: NgbDate | null = null;
+  fromDate: string | undefined;
+  toDate: string | undefined;
   page = 1;
   pageSize = 5;
   maxSize = 10;
@@ -46,9 +43,15 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter,
     private modalService: NgbModal) {
-      this.fromDate = calendar.getToday();
-      this.fromDate = calendar.getPrev(this.fromDate, 'm', 2);
-      this.toDate = calendar.getNext(calendar.getToday(), 'm', 6);
+      var initialDate = new Date();
+      initialDate.setMonth(initialDate.getMonth() - 3);
+      var finalDate = new Date(initialDate);
+      finalDate.setMonth(finalDate.getMonth() + 6);
+      this.fromDate = DateTimeFormatter.ToIso8601Date(initialDate.getFullYear(), initialDate.getMonth() + 1, initialDate.getDate());
+      this.toDate = DateTimeFormatter.ToIso8601Date(finalDate.getFullYear(), finalDate.getMonth() + 1, finalDate.getDate());
+      console.log("Exiting constructor");
+      console.log(this.fromDate);
+      console.log(this.toDate);
   }
 
   ngOnInit() {
@@ -84,6 +87,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   getAllActivityEvents() {
+    console.log("getAllActivityEvents");
     console.log(this.fromDate);
     console.log(this.toDate);
 
@@ -93,19 +97,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       complete: () => console.log('Activity Events loaded.')
     };
 
-    if (this.fromDate?.year && 
-      this.fromDate?.month && 
-      this.fromDate?.day &&
-      this.toDate?.year && 
-      this.toDate?.month && 
-      this.toDate?.day) {
-        let beginDate = DateTimeFormatter.ToIso8601Date(this.fromDate.year, this.fromDate.month, this.fromDate.day);
-        let endDate = DateTimeFormatter.ToIso8601Date(this.toDate.year, this.toDate.month, this.toDate.day);
-
-        if (beginDate && endDate) {
-          this.activityEventsSubscription = this.activityEventsService.getAllActivityEvents(beginDate, endDate).subscribe(activityEventsObserver);
-        }
-      }
+    if (this.fromDate && this.toDate) {
+      this.activityEventsSubscription = this.activityEventsService.getAllActivityEvents(this.fromDate, this.toDate).subscribe(activityEventsObserver);
+    }
   }
 
   private getAllActivities() {
@@ -187,18 +181,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         this.logError('Error from Create Activity Event Modal.', error);
       }
     });
-  }
-
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-  }
-
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
   }
 
   validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {

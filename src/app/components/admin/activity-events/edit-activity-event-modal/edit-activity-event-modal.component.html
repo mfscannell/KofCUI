@@ -12,78 +12,37 @@
           <div class="form-group row mb-1">
             <div class="col-12">All times are in {{councilTimeZone.displayName}} time zone.</div>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="activityId" class="col-form-label">Activity</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <select class="form-select" id="activityId" formControlName="activityId" (change)='onChangeActivity($event)'>
-                <option *ngFor="let activity of selectableActivities" [value]="activity.activityId">{{activity.activityName}}</option>
-              </select>
-            </div>
+          <div class="form-floating row mb-1">
+            <select class="form-select" id="activityId" formControlName="activityId" (change)='onChangeActivity($event)' placeholder="Pancake Breakfast">
+              <option *ngFor="let activity of selectableActivities" [value]="activity.activityId">{{activity.activityName}}</option>
+            </select>
+            <label for="activityId">Activity</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="activityCategory" class="col-form-label">Activity Category</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <select class="form-select" id="activityCategory" formControlName="activityCategory">
-                <option *ngFor="let activityCategoryInputOption of activityCategoryInputOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
-              </select>
-            </div>
+          <div class="form-floating row mb-1">
+            <select class="form-select" id="activityCategory" formControlName="activityCategory">
+              <option *ngFor="let activityCategoryInputOption of activityCategoryInputOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
+            </select>
+            <label for="activityId">Activity Category</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="eventName" class="col-form-label">Event Name</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <input type="text" class="form-control" formControlName="eventName" id="eventName" autocomplete="off">
-            </div>
+          <div class="form-floating row mb-1">
+            <input type="text" class="form-control" formControlName="eventName" id="eventName" autocomplete="off" placeholder="Pancake Breakfast">
+            <label for="eventName">Event Name</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="eventDescription" class="col-form-label">Event Description</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <textarea class="form-control" formControlName="eventDescription" id="eventDescription" rows="4"></textarea>
-            </div>
+          <div class="form-floating row mb-1">
+            <textarea class="form-control text-area-height-200" type="text" formControlName="eventDescription" id="eventDescription" placeholder="Leave a comment here"></textarea>
+            <label for="eventDescription">Event Description</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="startDate" class="col-form-label">Start Date</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <div class="input-group">
-                <input [readonly]=true type="text" class="form-control" placeholder="yyyy-mm-dd" formControlName="startDate" id="startDate" ngbDatepicker [minDate]="{year: 1900, month: 1, day: 1}" #sd="ngbDatepicker" [firstDayOfWeek]="7" (click)="sd.toggle()" (ngModelChange)='onChangeEventStartDate($event)'>
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary calendar" (click)="sd.toggle()" type="button">
-                    <svg class="bi" width="20" height="20" fill="currentColor">
-                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div class="form-floating row mb-1">
+            <input type="date" formControlName="startDate" id="startDate" class="form-control" min="1900-01-01" max="2050-12-31" />
+            <label for="startDate">Start Date</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="startTime" class="col-form-label">Start Time</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <div class="input-group">
-                <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeEventStartTime($event)'></ngb-timepicker>
-              </div>
-            </div>
+          <div class="form-floating row mb-1">
+            <input type="time" formControlName="startTime" id="startTime" class="form-control" min="0:00" max="23:30" step="900" />
+            <label for="startTime">Start Time</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="endTime" class="col-form-label">End Time</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <div class="input-group">
-                <ngb-timepicker formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeEventEndTime($event)'></ngb-timepicker>
-              </div>
-            </div>
+          <div class="form-floating row mb-1">
+            <input type="time" formControlName="endTime" id="endTime" class="form-control" min="0:00" max="23:30" step="900" />
+            <label for="endTime">End Time</label>
           </div>
           <div class="form-group row mb-1">
             <div class="col-4 col-md-3">
@@ -101,87 +60,52 @@
               <input type="checkbox" class="form-check-input" formControlName="canceled" id="canceled">
             </div>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="canceledReason" class="col-form-label">Reason for Cancelation</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <input type="text" class="form-control" formControlName="canceledReason" id="canceledReason">
-            </div>
+          <div class="form-floating row mb-1">
+            <input type="text" class="form-control" formControlName="canceledReason" id="canceledReason" autocomplete="off" placeholder="Rain">
+            <label for="canceledReason">Reason for Cancelation</label>
           </div>
-          <div class="form-group row mb-1">
-            <div class="col-4 col-md-3">
-              <label for="canceledReason" class="col-form-label">Notes</label>
-            </div>
-            <div class="col-8 col-md-9">
-              <textarea type="text" class="form-control" formControlName="notes" id="notes" rows="6"></textarea>
-            </div>
+          <div class="form-floating row mb-1">
+            <textarea type="text" class="form-control text-area-height-200" formControlName="notes" id="notes" placeholder="Leave a comment here"></textarea>
+            <label for="notes">Private Notes</label>
           </div>
         </ng-template>
       </ng-container>
+
       <ng-container ngbNavItem>
         <a ngbNavLink class="nav-item-kofc-blue">Location</a>
         <ng-template ngbNavContent>
           <ng-container formGroupName=locationAddress>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_addressName" class="col-form-label">Location Name</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <input type="text" class="form-control" formControlName="addressName" id="locationAddress_addressName" autocomplete="off">
-              </div>
+            <div class="form-floating row mb-1">
+              <input type="text" class="form-control" formControlName="addressName" id="locationAddress_addressName" autocomplete="off" placeholder="Church">
+              <label for="locationAddress_addressName">Location Name</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_address1" class="col-form-label">Address 1</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <input type="text" class="form-control" formControlName="address1" id="locationAddress_address1" autocomplete="off">
-              </div>
+            <div class="form-floating row mb-1">
+              <input type="text" class="form-control" formControlName="address1" id="locationAddress_address1" autocomplete="off" placeholder="123 Main St">
+              <label for="locationAddress_address1">Address 1</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_address2" class="col-form-label">Address 2</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <input type="text" class="form-control" formControlName="address2" id="locationAddress_address2" autocomplete="off">
-              </div>
+            <div class="form-floating row mb-1">
+              <input type="text" class="form-control" formControlName="address2" id="locationAddress_address2" autocomplete="off" placeholder="Apt. 1">
+              <label for="locationAddress_address2">Address 2</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_city" class="col-form-label">City</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <input type="text" class="form-control" formControlName="city" id="locationAddress_city" autocomplete="off">
-              </div>
+            <div class="form-floating row mb-1">
+              <select class="form-select" id="locationAddress_countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()" placeholder="US">
+                <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+              </select>
+              <label for="locationAddress_countryCode">Country</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_stateCode" class="col-form-label">State</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <select class="form-select" id="locationAddress_stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
-                </select>
-              </div>
+            <div class="form-floating row mb-1">
+              <input type="text" class="form-control" formControlName="city" id="locationAddress_city" autocomplete="off" placeholder="Kansas City">
+              <label for="locationAddress_city">City</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_postalCode" class="col-form-label">Zip Code</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <input type="text" class="form-control" formControlName="postalCode" id="locationAddress_postalCode" autocomplete="off">
-              </div>
+            <div class="form-floating row mb-1">
+              <select class="form-select" id="locationAddress_stateCode" formControlName="stateCode" placeholder="Kansas">
+                <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
+              </select>
+              <label for="locationAddress_stateCode">State</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-3">
-                <label for="locationAddress_countryCode" class="col-form-label">Country</label>
-              </div>
-              <div class="col-8 col-md-9">
-                <select class="form-select" id="locationAddress_countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
-                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
-                </select>
-              </div>
+            <div class="form-floating row mb-1">
+              <input type="text" class="form-control" formControlName="postalCode" id="locationAddress_postalCode" autocomplete="off" placeholder="12345">
+              <label for="locationAddress_postalCode">Zip Code</label>
             </div>
           </ng-container>
         </ng-template>
@@ -211,11 +135,15 @@
                   </div>
                 </div>
                 <div class="form-group row mb-1">
-                  <div class="col-6 col-md-3">
-                    <ngb-timepicker formControlName="startTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleStartTime($event, i)'></ngb-timepicker>
+                  <div class="form-floating row mb-1">
+                    <input type="time" formControlName="startTime" id="startTime" class="form-control" min="0:00" max="23:30" step="900" />
+                    <label for="startTime">Start Time</label>
                   </div>
-                  <div class="col-6 col-md-3">
-                    <ngb-timepicker formControlName="endTime" [meridian]=true [minuteStep]=30 [readonlyInputs]=true (ngModelChange)='onChangeVolunteerRoleEndTime($event, i)'></ngb-timepicker>
+                </div>
+                <div class="form-group row mb-1">
+                  <div class="form-floating row mb-1">
+                    <input type="time" formControlName="endTime" id="endTime" class="form-control" min="0:00" max="23:30" step="900" />
+                    <label for="endTime">End Time</label>
                   </div>
                 </div>
                 <ng-container formArrayName="eventVolunteers">

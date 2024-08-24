@@ -5,11 +5,9 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="editKnightMemberInfoForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
-    <div class="form-group row mb-1">
-      <label for="memberNumber" class="col-5 col-md-3 col-form-label">Member Number</label>
-      <div class="col-7 col-md-9">
-        <input type="text" class="form-control" formControlName="memberNumber" id="memberNumber">
-      </div>
+    <div class="form-floating row mb-1">
+      <input type="text" class="form-control" formControlName="memberNumber" id="memberNumber" autocomplete="off" placeholder="1111">
+      <label for="memberNumber">Member Number</label>
     </div>
 
     <div class="form-group row mb-1">
@@ -19,16 +17,23 @@
       </div>
     </div>
 
-    <div class="form-group row mb-1">
-      <label for="degree" class="col-5 col-md-3 col-form-label">Degree</label>
-      <div class="col-7 col-md-9">
-        <select class="form-select" id="knightInfo_degree" formControlName="degree">
-          <option *ngFor="let knightDegreeInputOption of knightDegreeFormOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
-        </select>
-      </div>
+    <div class="form-floating row mb-1">
+      <select class="form-select" id="degree" formControlName="degree">
+        <option *ngFor="let knightDegreeInputOption of knightDegreeFormOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+      </select>
+      <label for="degree">Degree</label>
     </div>
 
-    <div class="form-group row mb-1">
+    <div class="form-floating row mb-1">
+      <input type="date" formControlName="firstDegreeDate" id="firstDegreeDate" class="form-control" min="1900-01-01" max="2050-12-31" />
+      <label for="firstDegreeDate">First Degree Date</label>
+    </div>
+    <div class="form-floating row mb-1">
+      <input type="date" formControlName="reentryDate" id="reentryDate" class="form-control" min="1900-01-01" max="2050-12-31" />
+      <label for="reentryDate">Reentry Date</label>
+    </div>
+
+    <!-- <div class="form-group row mb-1">
       <div class="col-5 col-md-3">
         <label for="firstDegreeDate" class="col-form-label">First Degree Date</label>
       </div>
@@ -44,9 +49,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="form-group row mb-1">
+    <!-- <div class="form-group row mb-1">
       <div class="col-5 col-md-3">
         <label for="reentryDate" class="col-form-label">Reentry Date</label>
       </div>
@@ -62,24 +67,20 @@
           </div>
         </div>
       </div>
+    </div> -->
+
+    <div class="form-floating row mb-1">
+      <select class="form-select" id="memberType" formControlName="memberType">
+        <option *ngFor="let knightMemberTypeFormOption of knightMemberTypeFormOptions" [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
+      </select>
+      <label for="memberType">Member Type</label>
     </div>
 
-    <div class="form-group row mb-1">
-      <label for="memberType" class="col-5 col-md-3 col-form-label">Member Type</label>
-      <div class="col-7 col-md-9">
-        <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
-          <option *ngFor="let knightMemberTypeFormOption of knightMemberTypeFormOptions" [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group row mb-1">
-      <label for="memberClass" class="col-5 col-md-3 col-form-label">Member Class</label>
-      <div class="col-7 col-md-9">
-        <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
-          <option *ngFor="let knightMemberClassFormOption of knightMemberClassFormOptions" [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
-        </select>
-      </div>
+    <div class="form-floating row mb-1">
+      <select class="form-select" id="memberClass" formControlName="memberClass">
+        <option *ngFor="let knightMemberClassFormOption of knightMemberClassFormOptions" [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
+      </select>
+      <label for="memberClass">Member Class</label>
     </div>
 
     <div class="modal-footer">
