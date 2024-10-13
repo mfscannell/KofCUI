@@ -20,7 +20,7 @@ export class AssetsService {
     getAllWebsiteContent() {
         return this.http.get<GetAllWebsiteContentResponse>('assets/allWebsiteContent').pipe(
             map((response: GetAllWebsiteContentResponse) => {
-                this.homePageCarouselImages = response.homePageCarouselImages;
+                this.homePageCarouselImages = response.response;
             })
           )
     }

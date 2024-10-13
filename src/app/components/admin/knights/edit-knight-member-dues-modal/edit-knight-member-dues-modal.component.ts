@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { MemberDuesPaymentStatusFormOption } from 'src/app/models/inputOptions/memberDuesPaymentStatusFormOption';
@@ -50,6 +50,10 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy {
 
   get memberDuesFormArray() {
     return this.editKnightMemberDuesForm.controls["memberDues"] as UntypedFormArray;
+  }
+
+  getMemberDuesYear(memberDueYear: AbstractControl): string {
+    return memberDueYear.getRawValue().year || '';
   }
 
   private getFormData() {

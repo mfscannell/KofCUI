@@ -140,7 +140,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
         nameSuffix: this.knight.nameSuffix,
-        dateOfBirth: this.knight.dateOfBirth,
+        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(this.knight.dateOfBirth),
         emailAddress: this.knight.emailAddress,
         cellPhoneNumber: this.knight.cellPhoneNumber,
         homeAddress: this.knight.homeAddress
@@ -161,31 +161,29 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
 
   private mapFormToKnightPersonalInfo(): UpdateKnightPersonalInfoRequest {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
-    console.log('mapFormToKnight');
-    console.log(rawForm);
-      let homeAddress: StreetAddress = {
-        streetAddressId: rawForm.homeAddress.streetAddressId,
-        addressName: rawForm.homeAddress.addressName,
-        address1: rawForm.homeAddress.address1,
-        address2: rawForm.homeAddress.address2,
-        city: rawForm.homeAddress.city,
-        stateCode: rawForm.homeAddress.stateCode,
-        postalCode: rawForm.homeAddress.postalCode,
-        countryCode: rawForm.homeAddress.countryCode
-      };
-      let knight: UpdateKnightPersonalInfoRequest = {
-        knightId: rawForm.knightId,
-        firstName: rawForm.firstName,
-        middleName: rawForm.middleName,
-        lastName: rawForm.lastName,
-        nameSuffix: rawForm.nameSuffix,
-        dateOfBirth: rawForm.dateOfBirth,
-        emailAddress: rawForm.emailAddress,
-        cellPhoneNumber: rawForm.cellPhoneNumber,
-        homeAddress: homeAddress
-      };
+    let homeAddress: StreetAddress = {
+      streetAddressId: rawForm.homeAddress.streetAddressId,
+      addressName: rawForm.homeAddress.addressName,
+      address1: rawForm.homeAddress.address1,
+      address2: rawForm.homeAddress.address2,
+      city: rawForm.homeAddress.city,
+      stateCode: rawForm.homeAddress.stateCode,
+      postalCode: rawForm.homeAddress.postalCode,
+      countryCode: rawForm.homeAddress.countryCode
+    };
+    let knight: UpdateKnightPersonalInfoRequest = {
+      knightId: rawForm.knightId,
+      firstName: rawForm.firstName,
+      middleName: rawForm.middleName,
+      lastName: rawForm.lastName,
+      nameSuffix: rawForm.nameSuffix,
+      dateOfBirth: rawForm.dateOfBirth,
+      emailAddress: rawForm.emailAddress,
+      cellPhoneNumber: rawForm.cellPhoneNumber,
+      homeAddress: homeAddress
+    };
 
-      return knight;
+    return knight;
   }
 
   private passBackResponse(response: Knight) {

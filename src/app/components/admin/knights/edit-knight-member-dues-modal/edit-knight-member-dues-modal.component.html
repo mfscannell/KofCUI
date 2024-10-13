@@ -6,29 +6,15 @@
 <div class="modal-body">
   <form [formGroup]="editKnightMemberDuesForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
     <div formArrayName="memberDues">
-      <div class="form-group row mb-1">
-        <div class="col-5">
-          <h5 class="text-decoration-underline fw-bold">Year</h5>
-        </div>
-        <div class="col-7">
-          <h5 class="text-decoration-underline fw-bold">Paid</h5>
-        </div>
-      </div>
       <div *ngFor="let memberDue of memberDuesFormArray.controls; let i = index" [formGroupName]="i">
-        <div class="form-group row mb-1">
-          <div class="col-5">
-            <input readonly type="text" class="form-control" formControlName="year" id="year" placeholder="Title" autocomplete="off">
-          </div>
-          <div class="col-7">
-            <select class="form-select" id="paidStatus" formControlName="paidStatus">
-              <option *ngFor="let memberDuesPaymentStatusFormOption of memberDuesPayStatusFormOptions" [value]="memberDuesPaymentStatusFormOption.value">{{memberDuesPaymentStatusFormOption.displayName}}</option>
-            </select>
-          </div>
+        <div class="form-floating mb-3">
+          <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
+            <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPayStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
+          </select>
+          <label for="stateCode">{{getMemberDuesYear(memberDue)}}</label>
         </div>
       </div>
     </div>
-    
-
     <div class="modal-footer">
       <div class="container">
         <div class="row" *ngIf="errorSaving">

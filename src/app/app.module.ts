@@ -13,7 +13,6 @@ import { AppComponent } from './app.component';
 import { HttpConfigInterceptor } from './interceptors/httpConfig.interceptor';
 
 import { ActivityCategoriesComponent } from 'src/app/components/admin/activity-categories/activity-categories.component';
-import { EditActivityModalComponent } from './components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
 import { NavMenuComponent } from 'src/app/components/nav-menu/nav-menu.component';
 
 import { AdminComponent } from 'src/app/components/admin/admin.component';
@@ -22,19 +21,13 @@ import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-
 import { UploadKnightsModalComponent } from 'src/app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
 import { HomePageComponent } from 'src/app/components/home-page/home-page.component';
 import { LeadershipRolesComponent } from './components/admin/leadership-roles/leadership-roles.component';
-import { EditLeadershipRoleModalComponent } from './components/admin/leadership-roles/edit-leadership-role-modal/edit-leadership-role-modal.component';
 import { ActivityEventsComponent } from './components/admin/activity-events/activity-events.component';
-import { EditActivityEventModalComponent } from './components/admin/activity-events/edit-activity-event-modal/edit-activity-event-modal.component';
 import { OurCouncilComponent } from './components/our-council/our-council.component';
 import { AboutKnightsComponent } from './components/aboutKnights/aboutKnights.component';
 import { CalendarEventsComponent } from './components/calendar-events/calendar-events.component';
-import { ViewUpcomingEventModalComponent } from './components/calendar-events/view-upcoming-event-modal/view-upcoming-event-modal.component';
-import { VolunteerForActivityEventModalComponent } from './components/admin/event-volunteering/volunteer-for-activity-event-modal/volunteer-for-activity-event-modal.component';
 import { ConfigsComponent } from './components/admin/configs/configs.component';
-import { UpdateConfigsResultModalComponent } from './components/admin/configs/update-configs-result-modal/update-configs-result-modal.component';
 
 import { AccountComponent } from './components/account/account.component';
-import { SendEmailModalComponent } from './components/admin/activity-events/send-email-modal/send-email-modal.component';
 import { KnightsGuard } from './guards/knights.guard';
 import { LeadershipRolesGuard } from './guards/leadershipRoles.guard';
 import { ActivitiesGuard } from './guards/activities.guard';
@@ -44,16 +37,11 @@ import { AdminGuard } from './guards/admin.guard';
 import { AccountGuard } from './guards/account.guard';
 import { EditKnightPasswordModalComponent } from './components/admin/knights/edit-knight-password-modal/edit-knight-password-modal.component';
 import { LoginComponent } from './components/login/login.component';
-import { EditAccountPersonalInfoModalComponent } from './components/account/edit-account-personalInfo-modal/edit-account-personalInfo-modal.component';
-import { EditAccountInterestsModalComponent } from './components/account/edit-account-interests-modal/edit-account-interests-modal.component';
-import { EditAccountSecurityModalComponent } from './components/account/edit-account-security-modal/edit-account-security-modal.component';
 import { NavFooterComponent } from './components/nav-footer/nav-footer.component';
 import { EventVolunteeringComponent } from './components/admin/event-volunteering/event-volunteering.component';
 import { EventVolunteeringGuard } from './guards/eventVolunteering.guard';
 import { AssetsComponent } from './components/admin/assets/assets.component';
 import { AssetsGuard } from './guards/assets.guard';
-import { UploadHomePageCarouselImageModalComponent } from './components/admin/assets/upload-home-page-carousel-image-modal/upload-home-page-carousel-image-modal.component';
-import { DeleteHomePageCarouselImageModalComponent } from './components/admin/assets/delete-home-page-carousel-image-modal/delete-home-page-carousel-image-modal.component';
 import { EditKnightMemberInfoModalComponent } from './components/admin/knights/edit-knight-member-info-modal/edit-knight-member-info-modal.component';
 import { EditKnightPersonalInfoModalComponent } from './components/admin/knights/edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
 import { EditKnightMemberDuesModalComponent } from './components/admin/knights/edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
@@ -67,15 +55,10 @@ import { EditKnightActivityInterestsModalComponent } from './components/admin/kn
         LoginComponent,
         AboutKnightsComponent,
         AccountComponent,
-        EditAccountPersonalInfoModalComponent,
-        EditAccountInterestsModalComponent,
-        EditAccountSecurityModalComponent,
         OurCouncilComponent,
         CalendarEventsComponent,
-        ViewUpcomingEventModalComponent,
         AdminComponent,
         ActivityCategoriesComponent,
-        EditActivityModalComponent,
         KnightsComponent,
         EditKnightModalComponent,
         EditKnightActivityInterestsModalComponent,
@@ -85,17 +68,10 @@ import { EditKnightActivityInterestsModalComponent } from './components/admin/kn
         EditKnightPasswordModalComponent,
         UploadKnightsModalComponent,
         LeadershipRolesComponent,
-        EditLeadershipRoleModalComponent,
         ConfigsComponent,
-        UpdateConfigsResultModalComponent,
         AssetsComponent,
-        UploadHomePageCarouselImageModalComponent,
-        DeleteHomePageCarouselImageModalComponent,
         ActivityEventsComponent,
-        EventVolunteeringComponent,
-        SendEmailModalComponent,
-        VolunteerForActivityEventModalComponent,
-        EditActivityEventModalComponent
+        EventVolunteeringComponent
     ],
     bootstrap: [AppComponent], imports: [YouTubePlayerModule,
         BrowserModule,
