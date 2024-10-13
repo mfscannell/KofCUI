@@ -27,7 +27,7 @@
         </div>
         <div class="row mb-2">
           <div class="col-12">
-            <button class="btn btn-primary btn-kofc-blue" (click)="openEditAccountPersonalInfoModal()">Edit</button>
+            <button class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editAccountPersonalInfoModal" (click)="openEditAccountPersonalInfoModal()">Edit</button>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
 
         <div class="row mb-2">
           <div class="col-12">
-            <button class="btn btn-primary btn-kofc-blue" (click)="openEditAccountActivityInterestsModal()">Edit</button>
+            <button class="btn btn-primary btn-kofc-blue" (click)="openEditAccountActivityInterestsModal()" data-bs-toggle="modal" data-bs-target="#editAccountInterestsModal">Edit</button>
           </div>
         </div>
       </div>
@@ -96,13 +96,286 @@
         </div>
         <div class="row mb-2">
           <div class="col-12">
-            <button class="btn btn-primary btn-kofc-blue" (click)="openEditAccountSecurityModal()">Edit</button>
+            <button class="btn btn-primary btn-kofc-blue" (click)="openEditAccountSecurityModal()" data-bs-toggle="modal" data-bs-target="#editAccountSecurityModal">Edit</button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="row border">
+  </div>
+  <!-- EDIT ACCOUNT PERSONAL INFO MODAL -->
+  <div class="modal fade" id="editAccountPersonalInfoModal" tabindex="-1" aria-labelledby="editAccountPersonalInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Edit Personal Info</h4>
+          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" #cancelEditPersonalInfoModal>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editKnightPersonalInfoForm" (ngSubmit)="onSubmitEditKnight()">
+            <div class="form-group mb-3">
+              <div class="col-12">
+                <h5 class="text-decoration-underline fw-bold">Home Address</h5>
+              </div>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off" placeholder="John">
+              <label for="firstName">First Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off" placeholder="John">
+              <label for="middleName">Middle Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off" placeholder="Doe">
+              <label for="lastName">Last Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off" placeholder="Jr">
+              <label for="nameSuffix">Suffix</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="date" formControlName="dateOfBirth" id="dateOfBirth" class="form-control" min="1900-01-01" max="2050-12-31" />
+              <label for="dateOfBirth">Date of Birth</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off" placeholder="jd@jd.com">
+              <label for="emailAddress">Email Address</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off" placeholder="John">
+              <label for="cellPhoneNumber">Cell Phone</label>
+            </div>
+            <div class="form-group mb-3">
+              <div class="col-12">
+                <h5 class="text-decoration-underline fw-bold">Home Address</h5>
+              </div>
+            </div>
+            <div formGroupName="homeAddress">
+              <div class="form-floating mb-3">
+                <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
+                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+                </select>
+                <label for="countryCode">Country</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off" placeholder="123 Main St">
+                <label for="address1">Address 1</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off" placeholder="Apt 2">
+                <label for="address2">Address 2</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off" placeholder="Kansas City">
+                <label for="city">City</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select" id="stateCode" formControlName="stateCode">
+                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
+                </select>
+                <label for="stateCode">State</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off" placeholder="11111">
+                <label for="postalCode">Zip Code</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="container">
+                  <div class="row" *ngIf="errorSaving">
+                    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                  </div>
+              </div>
+              <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+              <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- EDIT ACCOUNT INTERESTS MODAL -->
+  <div class="modal fade" id="editAccountInterestsModal" tabindex="-1" aria-labelledby="editAccountInterestsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Edit Activity Interests</h4>
+          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" #cancelEditActivityInterestsModal>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditActivityInterests()">
+            <div class="form-group row mb-1" *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
+              <div class="container">
+                <h4 class="col-12 col-form-label text-decoration-underline">{{activityCategoryInputOption.displayName}}</h4>
+              </div>
+              <div class="container">
+                <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategoryInputOption.value)">
+                  <div class="form-group row mb-1">
+                    <label class="col-6 col-sm-5 col-lg-4 form-label">{{activity.activityName}}</label>
+                    <div class="col-6 col-sm-7 col-lg-8">
+                      <input class="form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="container">
+                  <div class="row" *ngIf="errorSaving">
+                    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                  </div>
+              </div>
+              <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+              <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- EDIT ACCOUNT SECURITY MODAL -->
+  <div class="modal fade" id="editAccountSecurityModal" tabindex="-1" aria-labelledby="editAccountSecurityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Edit Account Password</h4>
+          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" #cancelEditSecurityModal>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="editAccountSecurityForm" (ngSubmit)="onSubmitUpdateSecurity()">
+            <div class="form-group row mb-1">
+              <label for="oldPassword" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">Old Password</label>
+              <div class="col-7 col-sm-8 col-md-8 col-lg-9">
+                <input type="password" autocomplete="off" class="form-control" formControlName="oldPassword" id="oldPassword">
+              </div>
+            </div>
+            <div class="form-group row mb-1">
+              <label for="newPassword" class="col-5 col-sm-4 col-md-4 col-lg-3 col-form-label">New Password</label>
+              <div class="col-7 col-sm-8 col-md-8 col-lg-9">
+                <input type="password" autocomplete="off" class="form-control" formControlName="newPassword" id="newPassword">
+              </div>
+            </div>
+            <div class="form-group row mb-1">
+              <label for="confirmPassword" class="col-5  col-sm-4 col-md-4 col-lg-3 col-form-label">Confirm Password</label>
+              <div class="col-7 col-sm-8 col-md-8 col-lg-9">
+                <input type="password" autocomplete="off" class="form-control" formControlName="confirmPassword" id="confirmPassword">
+              </div>
+            </div>
+        
+            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
+              <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && !hasRequiredLength()" class="alert alert-danger d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+              </svg>
+              <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && hasRequiredLength()" class="alert alert-success d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+              </svg>
+              <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
+            </div>
+        
+            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
+              <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && !hasDistinctCharacters()" class="alert alert-danger d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+              </svg>
+              <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && hasDistinctCharacters()" class="alert alert-success d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+              </svg>
+              <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
+            </div>
+        
+            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
+              <div>At least one upper case character required.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && !hasUpperCase() && passwordRequirements.requireUppercase" class="alert alert-danger d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+              </svg>
+              <div>At least one upper case character required.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && hasUpperCase() && passwordRequirements.requireUppercase" class="alert alert-success d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+              </svg>
+              <div>At least one upper case character required.</div>
+            </div>
+        
+            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
+              <div>At least one lower case character required.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && !hasLowerCase() && passwordRequirements.requireLowercase" class="alert alert-danger d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+              </svg>
+              <div>At least one lower case character required.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && hasLowerCase() && passwordRequirements.requireLowercase" class="alert alert-success d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+              </svg>
+              <div>At least one lower case character required.</div>
+            </div>
+        
+            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
+              <div>At least one digit 0-9 required.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && !hasDigit() && passwordRequirements.requireDigit" class="alert alert-danger d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+              </svg>
+              <div>At least one digit 0-9 required.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && hasDigit() && passwordRequirements.requireDigit" class="alert alert-success d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+              </svg>
+              <div>At least one digit 0-9 required.</div>
+            </div>
+        
+            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
+              <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && !hasAllowedSpecialCharacter() && passwordRequirements.requireNonAlphanumeric" class="alert alert-danger d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+              </svg>
+              <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
+            </div>
+            <div *ngIf="isPasswordDirty() && hasAllowedSpecialCharacter() && passwordRequirements.requireNonAlphanumeric" class="alert alert-success d-flex" role="alert">
+              <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+              </svg>
+              <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
+            </div>
+        
+            <div class="modal-footer">
+              <div class="container">
+                  <div class="row" *ngIf="errorSaving">
+                    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                  </div>
+              </div>
+              <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+              <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="accountSpacer"></div>
 </div>

@@ -9,8 +9,6 @@ import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
 import { TimeZone } from 'src/app/models/timeZone';
 import { ConfigInputTypeEnums } from 'src/app/enums/configInputTypeEnums';
 import { StringDropDownOption } from 'src/app/models/stringDropDownOption';
-import { UpdateConfigsResultModalComponent } from './update-configs-result-modal/update-configs-result-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'kofc-configs',
@@ -25,9 +23,13 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   timeZones: TimeZone[] = [];
   editConfigsForm: UntypedFormGroup;
 
+  showSaveMessage: boolean = false;
+  success: boolean = true;
+  errorMessages: string[] = [];
+  modalHeaderText: string = '';
+
   constructor(
-    private configsService: ConfigsService,
-    private modalService: NgbModal) {
+    private configsService: ConfigsService) {
     this.editConfigsForm = new UntypedFormGroup({
       configGroups: new UntypedFormArray([])
     });
@@ -170,11 +172,11 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   private showErrorModal(err: any) {
-    const modalRef = this.modalService.open(UpdateConfigsResultModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-    modalRef.componentInstance.success = false;
+    this.showSaveMessage = true;
+    this.success = false;
 
     if (typeof err?.error === 'string') {
-      modalRef.componentInstance.errorMessages = [err?.err];
+      this.errorMessages = [err?.err];
     } else {
       let errors = [];
 
@@ -182,14 +184,14 @@ export class ConfigsComponent implements OnInit, OnDestroy {
         errors.push(err?.error?.errors[key][0]);
       }
 
-      modalRef.componentInstance.errorMessages = errors;
+      this.errorMessages = errors;
     }
   }
 
   private showSuccessModal() {
-    const modalRef = this.modalService.open(UpdateConfigsResultModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-    modalRef.componentInstance.success = true;
-    modalRef.componentInstance.errorMessages = [];
+    this.showSaveMessage = true;
+    this.success = true;
+    this.errorMessages = [];
   }
 
   onSubmitEditConfigSettings() {

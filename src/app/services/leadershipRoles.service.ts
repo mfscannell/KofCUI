@@ -18,6 +18,6 @@ export class LeadershipRolesService {
     }
 
     updateLeadershipRole(updatedLeadershipRole: LeadershipRole): Observable<LeadershipRole> {
-        return this.http.put<LeadershipRole>(`leadershipRoles/${updatedLeadershipRole.leadershipRoleId}`, updatedLeadershipRole);
+        return this.http.put<LeadershipRole>(`leadershipRoles`, updatedLeadershipRole);
     }
 }
