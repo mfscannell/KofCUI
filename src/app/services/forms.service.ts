@@ -7,6 +7,7 @@ import { KnightDegreeFormOption } from '../models/inputOptions/knightDegreeFormO
 import { KnightMemberTypeFormOption } from '../models/inputOptions/knightMemberTypeFormOption';
 import { KnightMemberClassFormOption } from '../models/inputOptions/knightMemberClassFormOption';
 import { MemberDuesPaymentStatusFormOption } from '../models/inputOptions/memberDuesPaymentStatusFormOption';
+import { ActivityCategoryFormOption } from '../models/inputOptions/activityCategoryFormOption';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,10 @@ export class FormsService {
 
   getCountryFormOptions(): Observable<CountryFormOption[]> {
     return this.http.get<CountryFormOption[]>('forms/countryFormOptions');
+  }
+
+  getActivityCategoryFormOptions(): Observable<ActivityCategoryFormOption[]> {
+    return this.http.get<ActivityCategoryFormOption[]>('forms/activityCategoryFormOptions');
   }
 
   getKnightDegreeFormOptions(): Observable<KnightDegreeFormOption[]> {

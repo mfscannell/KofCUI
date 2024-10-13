@@ -2,48 +2,12 @@
   <div class="row">
     <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-2">
       <div class="input-group">
-        <input #dpFromDate
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              [(ngModel)]="fromDate"
-              [value]="formatter.format(fromDate)"
-              name="dpFromDate"
-              (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
-              ngbDatepicker
-              [minDate]="{year: 1900, month: 1, day: 1}"
-              [firstDayOfWeek]="7"
-              outsideDays="hidden"
-              #fromDatepicker="ngbDatepicker">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="fromDatepicker.toggle()" type="button">
-            <svg class="bi" width="20" height="20" fill="currentColor">
-              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-            </svg>
-          </button>
-        </div>
+        <input type="date" [(ngModel)]="fromDate" id="fromDate" class="form-control" min="1900-01-01" max="2050-12-31" />
       </div>
     </div>
     <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-2">
       <div class="input-group">
-        <input #dpToDate
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              [(ngModel)]="toDate"
-              [value]="formatter.format(toDate)"
-              name="dpToDate"
-              (input)="fromDate = validateInput(toDate, dpToDate.value)"
-              ngbDatepicker
-              [minDate]="{year: 1900, month: 1, day: 1}"
-              [firstDayOfWeek]="7"
-              outsideDays="hidden"
-              #toDatepicker="ngbDatepicker">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="toDatepicker.toggle()" type="button">
-            <svg class="bi" width="20" height="20" fill="currentColor">
-              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#calendar"/>
-            </svg>
-          </button>
-        </div>
+        <input type="date" [(ngModel)]="toDate" id="toDate" class="form-control" min="1900-01-01" max="2050-12-31" />
       </div>
     </div>
     <div class="col-4 col-sm-2 mb-2">
@@ -66,13 +30,106 @@
             <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
             <td>{{formatDate(activityEvent.startDateTime)}}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openVolunteerForActivityEventModal(activityEvent)">
+              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#volunteerForEventModal" (click)="openVolunteerForActivityEventModal(activityEvent)">
                 Volunteer
               </button>
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- EVENT VOLUNTEERING MODAL -->
+  <div class="modal fade" id="volunteerForEventModal" tabindex="-1" aria-labelledby="volunteerForEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Volunteer For Activity Event</h4>
+          <button #cancelEditActiveModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="volunteerForActivityEventForm" (ngSubmit)="onSubmitVolunteerForActivityEvent()">
+            <div class="row mb-1">
+              <div class="col-12">
+                <h5 *ngIf="!activityEvent?.canceled">{{activityEvent?.eventName}}</h5>
+                <h5 *ngIf="activityEvent?.canceled">{{activityEvent?.eventName}} (CANCELED)</h5>
+              </div>
+            </div>
+            <div class="row mb-1" *ngIf="activityEvent?.canceled">
+              <div class="col-12">Reason for cancelation: {{activityEvent?.canceledReason}}</div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-12">
+                {{activityEvent?.eventDescription}}
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              {{formatEventStartDate()}}, {{formatEventStartTime()}} - {{formatEventEndTime()}}
+            </div>
+            <div formGroupName="locationAddress">
+              <div class="row mb-1">
+                <h5>Location</h5>
+              </div>
+              <div class="form-group row mb-1">
+                <div class="col-12">
+                  {{activityEvent?.locationAddress?.addressName}}
+                </div>
+              </div>
+              <div class="form-group row mb-1">
+                <div class="col-12">
+                  {{activityEvent?.locationAddress?.address1}} {{activityEvent?.locationAddress?.address2}}
+                </div>
+              </div>
+              <div class="form-group row mb-1">
+                <div class="col-12">
+                  {{activityEvent?.locationAddress?.city}}, {{activityEvent?.locationAddress?.stateCode}} {{activityEvent?.locationAddress?.postalCode}}
+                </div>
+              </div>
+            </div>
+            <div formArrayName="volunteerSignUpRoles">
+              <div class="row mb-1">
+                <h5>Volunteers</h5>
+              </div>
+              <div *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
+                <div class="form-group row">
+                  <div class="col-12 mb-1">{{formatVolunteerRole(i)}} {{formatVolunteerRoleStartTime(i)}} - {{formatVolunteerRoleEndTime(i)}}</div>
+                </div>
+                <div class="form-group row mb-3">
+                  <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                    <label for="volunteerRole_volunteerFor" class="col-form-label">Volunteer for Role?</label>
+                  </div>
+                  <div class="col-6 col-sm-6 col-md-8 col-lg-9">
+                    <input type="checkbox" class="form-check-input" formControlName="volunteerForRole" id="volunteerRole_volunteerFor" (change)="changeVolunteerForRole($event, i)">
+                  </div>
+                </div>
+                <ng-container formArrayName="eventVolunteers">
+                  <ng-container *ngFor="let eventVolunteer of getEventVolunteers(volunteerSignUpRole); let j = index" [formGroupName]="j">
+                    <div class="form-group row mb-3">
+                      <div class="col-8 col-md-3">
+                        <select readonly class="form-control" id="activityId" formControlName="knightId">
+                          <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <hr *ngIf="i !== volunteerSignUpRolesForm.controls.length-1" class="my-12"/>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="container">
+                <div class="row" *ngIf="errorSaving">
+                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
   <div id="activityEventSpacer"></div>

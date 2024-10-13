@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { Month } from 'src/app/models/calendar/month';
 import { UpcomingEvent } from 'src/app/models/upcomingEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { CalendarUtilities } from 'src/app/utilities/calendarUtilities';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { ViewUpcomingEventModalComponent } from './view-upcoming-event-modal/view-upcoming-event-modal.component';
 
 @Component({
   selector: 'kofc-calendar-events',
@@ -16,14 +14,15 @@ import { ViewUpcomingEventModalComponent } from './view-upcoming-event-modal/vie
 export class CalendarEventsComponent implements OnInit {
   getAllUpcomingEventsSubscription?: Subscription;
   upcomingEvents: UpcomingEvent[] = [];
+  upcomingEventsOnDate: UpcomingEvent[] = [];
   currentYear: number = new Date().getFullYear();
   currentMonth: number = new Date().getMonth() + 1;
   currentMonthName: string = CalendarUtilities.getNameOfMonth(this.currentMonth);
   calendarMonth: Month = new Month();
+  modalHeaderText: string | undefined;
 
   constructor(
-    private activityEventsService: ActivityEventsService,
-    private modalService: NgbModal) {
+    private activityEventsService: ActivityEventsService) {
 
   }
 
@@ -92,10 +91,8 @@ export class CalendarEventsComponent implements OnInit {
   viewUpcomingEvents(dayOfMonth: number) {
     let selectedDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, dayOfMonth);
     let eventsForDate = this.upcomingEvents.filter(upcomingEvent => DateTimeFormatter.sameDate(upcomingEvent.startDateTime, selectedDate));
+    this.upcomingEventsOnDate = eventsForDate;
 
-    const modalRef = this.modalService.open(ViewUpcomingEventModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-
-    modalRef.componentInstance.upcomingEvents = eventsForDate;
     let date = new Date(this.currentYear, this.currentMonth - 1, dayOfMonth);
     let dateString = date.toLocaleDateString("en-US", {
       weekday: 'long',
@@ -103,14 +100,11 @@ export class CalendarEventsComponent implements OnInit {
       month: 'long',
       day: 'numeric'
     });
-    modalRef.componentInstance.modalHeaderText = `Events for ${dateString}`;
-    modalRef.result.then((result) => {
-    }).catch((error) => {
-      if (error !== 0) {
-        console.log('Error from View Upcoming Events Modal');
-        console.log(error);
-      }
-    });
+    this.modalHeaderText = `Events for ${dateString}`
+  }
+
+  formatTime(dateTime: string | undefined) {
+    return DateTimeFormatter.ToDisplayTime(dateTime);
   }
 
   logError(message: string, err: any) {

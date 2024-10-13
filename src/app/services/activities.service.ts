@@ -24,7 +24,7 @@ export class ActivitiesService {
     }
 
     updateActivity(updatedActivity: Activity): Observable<Activity> {
-        return this.http.put<Activity>(`activities/${updatedActivity.activityId}`, updatedActivity);
+        return this.http.put<Activity>('activities/', updatedActivity);
     }
 
     sendEmailAboutActivity(activity: SendEmailRequest): Observable<SendEmailResponse> {

@@ -62,11 +62,7 @@ export class EditKnightModalComponent implements OnInit {
         nameSuffix: new UntypedFormControl('', [
           Validators.maxLength(7)
         ]),
-        dateOfBirth: new UntypedFormControl({
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate()
-        }),
+        dateOfBirth: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
         emailAddress: new UntypedFormControl('', [
           Validators.maxLength(63)
         ]),
@@ -100,16 +96,8 @@ export class EditKnightModalComponent implements OnInit {
           memberNumber: new UntypedFormControl(0),
           mailReturned: new UntypedFormControl(false),
           degree: new UntypedFormControl('First'),
-          firstDegreeDate: new UntypedFormControl({
-            year: today.getFullYear(),
-            month: today.getMonth() + 1,
-            day: today.getDate()
-          }),
-          reentryDate: new UntypedFormControl({
-            year: today.getFullYear(),
-            month: today.getMonth() + 1,
-            day: today.getDate()
-          }),
+          firstDegreeDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
+          reentryDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
           memberType: new UntypedFormControl('Associate'),
           memberClass: new UntypedFormControl('Paying')
         }),
@@ -147,6 +135,10 @@ export class EditKnightModalComponent implements OnInit {
       return this.editKnightForm.controls["memberDues"] as UntypedFormArray;
     }
 
+    getMemberDuesYear(memberDueYear: AbstractControl): string {
+      return memberDueYear.getRawValue().year || '';
+    }
+
     private getCountryCode(): string {
       return this.editKnightForm.get('homeAddress.countryCode')?.value;
     }
@@ -180,11 +172,12 @@ export class EditKnightModalComponent implements OnInit {
 
     private getFormOptions() {
       let formsObserver = {
-        next: ([ knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse ]: [KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[]]) => {
+        next: ([ knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse, memberDuesPaymentStatusResponse ]: [KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[], MemberDuesPaymentStatusFormOption[]]) => {
           this.knightDegreeFormOptions = knightDegreeResponse;
           this.knightMemberTypeFormOptions = knightMemberTypeResponse;
           this.knightMemberClassFormOptions = knightMemberClassResponse;
           this.countryFormOptions = countryResponse;
+          this.memberDuesPaymentStatusFormOptions = memberDuesPaymentStatusResponse;
         },
         error: (err: any) => this.logError("Error getting Knight Degree Form Options", err),
         complete: () => console.log('Knight Degree Form Options retrieved.')
@@ -194,7 +187,8 @@ export class EditKnightModalComponent implements OnInit {
         this.formsService.getKnightDegreeFormOptions(),
         this.formsService.getKnightMemberTypeFormOptions(),
         this.formsService.getKnightMemberClassFormOptions(),
-        this.formsService.getCountryFormOptions()
+        this.formsService.getCountryFormOptions(),
+        this.formsService.getMemberDuesPaymentStatusFormOptions()
       ]).subscribe(formsObserver);
     }
 
@@ -290,14 +284,8 @@ export class EditKnightModalComponent implements OnInit {
         memberNumber: rawForm.knightInfo.memberNumber,
         mailReturned: rawForm.knightInfo.mailReturned,
         degree: rawForm.knightInfo.degree,
-        firstDegreeDate: DateTimeFormatter.ToIso8601Date(
-          rawForm.knightInfo.firstDegreeDate.year, 
-          rawForm.knightInfo.firstDegreeDate.month, 
-          rawForm.knightInfo.firstDegreeDate.day),
-        reentryDate: DateTimeFormatter.ToIso8601Date(
-          rawForm.knightInfo.reentryDate.year, 
-          rawForm.knightInfo.reentryDate.month, 
-          rawForm.knightInfo.reentryDate.day),
+        firstDegreeDate: rawForm.knightInfo.firstDegreeDate,
+        reentryDate: rawForm.knightInfo.reentryDate,
         memberType: rawForm.knightInfo.memberType,
         memberClass: rawForm.knightInfo.memberClass
       };
@@ -315,10 +303,7 @@ export class EditKnightModalComponent implements OnInit {
         middleName: rawForm.middleName,
         lastName: rawForm.lastName,
         nameSuffix: rawForm.nameSuffix,
-        dateOfBirth: DateTimeFormatter.ToIso8601Date(
-          rawForm.dateOfBirth.year, 
-          rawForm.dateOfBirth.month, 
-          rawForm.dateOfBirth.day),
+        dateOfBirth: rawForm.dateOfBirth,
         emailAddress: rawForm.emailAddress,
         cellPhoneNumber: rawForm.cellPhoneNumber,
         homeAddress: homeAddress,

@@ -1,14 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { forkJoin, Subscription } from 'rxjs';
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
-import { EditActivityModalComponent } from 'src/app/components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsService } from 'src/app/services/forms.service';
+import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
+import { Knight } from 'src/app/models/knight';
+import { KnightsService } from 'src/app/services/knights.service';
+import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
 
 @Component({
   selector: 'activity-categories',
@@ -16,25 +19,72 @@ import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activit
   styleUrls: ['./activity-categories.component.scss']
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
+  getDataSubscription?: Subscription;
   activitiesSubscription?: Subscription;
-  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
+  updateActivitySubscription?: Subscription;
+  createActivitySubscription?: Subscription;
+  allKnights: Knight[] = [];
+  activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
   activities?: Activity[];
   closeModalResult = '';
 
-  constructor(private activitiesService: ActivitiesService,
-    private permissionsService: PermissionsService,
-    private modalService: NgbModal)
+  @ViewChild('cancelEditActiveModal', {static: false}) cancelEditActiveModal: ElementRef | undefined;
+  modalAction: ModalActionEnums = ModalActionEnums.Create;
+  editActivityForm: UntypedFormGroup;
+  modalHeaderText: string = '';
+  activity: Activity | undefined;
+  errorSaving: boolean = false;
+  errorMessages: string[] = [];
+
+  constructor(
+    private formsService: FormsService,
+    private activitiesService: ActivitiesService,
+    private knightsService: KnightsService,
+    private permissionsService: PermissionsService)
   {
+    this.editActivityForm = new UntypedFormGroup({});
+    this.initializeForm();
   }
 
   ngOnInit() {
-    this.getAllActivities();
+    this.getFormOptions();
   }
 
   ngOnDestroy() {
     if (this.activitiesSubscription) {
       this.activitiesSubscription.unsubscribe();
     }
+
+    if (this.getDataSubscription) {
+      this.getDataSubscription.unsubscribe();
+    }
+
+    if (this.updateActivitySubscription) {
+      this.updateActivitySubscription.unsubscribe();
+    }
+
+    if (this.createActivitySubscription) {
+      this.createActivitySubscription.unsubscribe();
+    }
+  }
+
+  initializeForm() {
+    this.editActivityForm = new UntypedFormGroup({
+      activityId: new UntypedFormControl(0),
+      activityName: new UntypedFormControl('', [
+        Validators.required,
+        Validators.maxLength(127)
+      ]),
+      activityDescription: new UntypedFormControl('', [
+        Validators.maxLength(255)
+      ]),
+      activityCategory: new UntypedFormControl(null, [
+        Validators.required
+      ]),
+      activityCoordinatorsList: new UntypedFormArray([]),
+      activityEventNotesList: new UntypedFormArray([]),
+      notes: new UntypedFormControl('')
+    });
   }
 
   canAddActivity() {
@@ -45,51 +95,169 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     return this.permissionsService.canEditActivity(activityId);
   }
 
-  private getAllActivities() {
-    let activitiesObserver = {
-      next: (activities: Activity[]) => this.activities = activities,
-      error: (err: any) => this.logError('Error getting all activities.', err),
-      complete: () => console.log('Activities loaded.')
+  private getFormOptions() {
+    let getDataObserver = {
+      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], ActivityCategoryFormOption[], Knight[]]) => {
+        this.activities = activities,
+        this.activityCategoryFormOptions = activityCategoryFormOptions,
+        this.allKnights = allKnights
+      },
+      error: (err: any) => this.logError("Error getting Activity Form Options", err),
+      complete: () => console.log('Activity Form Options retrieved.')
     };
-    this.activitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
+
+    this.getDataSubscription = forkJoin([
+      this.activitiesService.getAllActivities(),
+      this.formsService.getActivityCategoryFormOptions(),
+      this.knightsService.getAllActiveKnightsNames()
+    ]).subscribe(getDataObserver);
   }
 
   openCreateActivityModal() {
-    const modalRef = this.modalService.open(EditActivityModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
-    modalRef.componentInstance.activity = {
-      activityCategory: this.activityCategoryInputOptions[0].value,
+    this.modalHeaderText = 'Creating Activity';
+    this.activity = {
+      activityName: '',
+      activityDescription: '',
+      activityCategory: this.activityCategoryFormOptions[0].value,
       activityCoordinators: [],
-      activityEventNotes: []
+      activityEventNotes: [],
+      notes: ''
     };
-    modalRef.componentInstance.modalHeaderText = 'Creating Activity';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Create;
-    modalRef.result.then((result: Activity) => {
-      if (result) {
-        this.activities?.push(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        console.log('Error from Edit Activity Modal.');
-        console.log(error);
-      }
-    });
+    this.modalAction = ModalActionEnums.Create;
+    this.initializeForm();
   }
 
   openEditActivityModal(activity: Activity) {
-    const modalRef = this.modalService.open(EditActivityModalComponent, {size: 'lg', ariaLabelledBy: 'modal-basic-title'});
+    this.modalHeaderText = 'Editing Activity';
+    this.activity = activity;
+    this.modalAction = ModalActionEnums.Edit;
+    this.initializeForm();
 
-    modalRef.componentInstance.activity = activity;
-    modalRef.componentInstance.modalHeaderText = 'Editing Activity';
-    modalRef.componentInstance.modalAction = ModalActionEnums.Edit;
-    modalRef.result.then((result: Activity) => {
-      if (result) {
-        this.updateActivityInList(result);
-      }
-    }).catch((error) => {
-      if (error !== 0) {
-        this.logError('Error from Edit Activity Modal.', error);
-      }
+    this.editActivityForm.patchValue({
+      activityId: this.activity.activityId,
+      activityName: this.activity.activityName,
+      activityDescription: this.activity.activityDescription,
+      activityCategory: this.activity.activityCategory,
+      notes: this.activity.notes
+     });
+
+     let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
+
+     this.activity.activityCoordinators.map(function(coordinator) {
+      const activityCoordinatorFg = new UntypedFormGroup({
+        activityCoordinatorId: new UntypedFormControl(coordinator.activityCoordinatorId),
+        knightId: new UntypedFormControl(coordinator.knightId)
+      });
+       activityCoordinatorsList.push(activityCoordinatorFg);
+     });
+
+     let activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
+
+     this.activity.activityEventNotes.map(function(note) {
+      const activityEventNotesFg = new UntypedFormGroup({
+        startDateTime: new UntypedFormControl(note.startDateTime),
+        notes: new UntypedFormControl(note.notes)
+      });
+       activityEventNotes.push(activityEventNotesFg);
+     });
+  }
+
+  deleteActivityCoordinator(roleIndex: number) {
+    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
+    
+    activityCoordinators.removeAt(roleIndex);
+  }
+
+  addActivityCoordinator() {
+    const activityCoordinator = new UntypedFormGroup({
+      activityCoordinatorId: new UntypedFormControl(0),
+      knightId: new UntypedFormControl(null, [
+        Validators.required
+      ])
     });
+
+    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
+
+    activityCoordinators.push(activityCoordinator);
+  }
+
+  onSubmitEditActivity() {
+    if (this.modalAction === ModalActionEnums.Edit) {
+      let updatedActivity = this.mapFormToActivity();
+      this.updateActivity(updatedActivity);
+    } else if (this.modalAction === ModalActionEnums.Create) {
+      let newActivity = this.mapFormToActivity();
+      this.createActivity(newActivity);
+    }
+  }
+
+  private updateActivity(activity: Activity) {
+    let activityObserver = {
+      next: (updatedActivity: Activity) => this.updateActivityInList(updatedActivity),
+      error: (err: any) => this.logError('Error updating Activity', err),
+      complete: () => console.log('Activity updated.')
+    };
+
+    this.updateActivitySubscription = this.activitiesService.updateActivity(activity).subscribe(activityObserver);
+  }
+
+  private createActivity(activity: Activity) {
+    let activityObserver = {
+      next: (createdActivity: Activity) => this.addActivityToList(createdActivity),
+      error: (err: any) => this.logError('Error creating Activity', err),
+      complete: () => console.log('Activity created.')
+    };
+
+    this.createActivitySubscription = this.activitiesService.createActivity(activity).subscribe(activityObserver);
+  }
+
+  cancelModal() {
+
+  }
+
+  private mapFormToActivity() {
+    let rawForm = this.editActivityForm.getRawValue();
+    let activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: any) {
+      let activityCoordinator: ActivityCoordinator = {
+        activityCoordinatorId: coordinator.activityCoordinatorId,
+        knightId: coordinator.knightId
+      };
+      return activityCoordinator;
+    });
+    let activity: Activity = {
+      activityId: rawForm.activityId,
+      activityName: rawForm.activityName,
+      activityDescription: rawForm.activityDescription,
+      activityCategory: rawForm.activityCategory,
+      activityCoordinators: activityCoordinators,
+      activityEventNotes: [],
+      notes: rawForm.notes
+    };
+
+    return activity;
+  }
+
+  get activityCoordinators() {
+    return this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
+  }
+
+  get activityEventNotes() {
+    return this.editActivityForm.controls["activityEventNotesList"] as UntypedFormArray;
+  }
+
+  formatEventStartDate(index: number) {
+    return DateTimeFormatter.ToDisplayedDate(this.activity?.activityEventNotes[index].startDateTime);
+  }
+
+  getEventNotes(index: number) {
+    return this.activity?.activityEventNotes[index].notes;
+  }
+
+  private addActivityToList(activity: Activity) {
+    this.activities?.push(activity);
+    console.log('addActivityToList');
+    console.log(this.activities);
+    this.cancelEditActiveModal?.nativeElement.click();
   }
 
   private updateActivityInList(activity: Activity) {
@@ -97,6 +265,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
     if (this.activities && index !== undefined && index >= 0) {
       this.activities[index] = activity;
+      this.cancelEditActiveModal?.nativeElement.click();
     }
   }
 
@@ -121,5 +290,17 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   private logError(message: string, err: any) {
     console.error(message);
     console.error(err);
+
+    this.errorMessages = [];
+
+    if (typeof err?.error === 'string') {
+      this.errorMessages.push(err.error);
+    } else {
+      for (let key in err?.error?.errors) {
+        this.errorMessages.push(err?.error?.errors[key][0]);
+      }
+    }
+    
+    this.errorSaving = true;
   }
 }

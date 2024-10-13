@@ -5,7 +5,112 @@
   <div class="row" *ngIf="showSuccessMessage">
     <div class="col-12 alert alert-success">Successfully saved asset.</div>
   </div>
-  <div ngbAccordion [closeOthers]="true">
+
+
+
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomePageSlider" aria-expanded="true" aria-controls="collapseHomePageSlider">
+          Home Page Slider
+        </button>
+      </h2>
+      <div id="collapseHomePageSlider" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="row mb-1">
+            <div class="col-12">It is recommended that all images are the same dimensions and have a minimum width of 2,000 pixels.</div>
+          </div>
+          <div class="row mb-1" *ngFor="let homePageImage of assetsService.getHomePageCarouselImages(); let i = index;">
+            <div class="col-8 col-sm-6 col-md-4">
+              <img [src]="imageSource(homePageImage)" class="img-fluid img-kofc-preview">
+            </div>
+            <div class="col-4 col-sm-6 col-md-8">
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" (click)="openConfirmDeleteHomePageCarouselImage(i)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-group row mb-1">
+            <div class="col-12">
+              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editAssetModal" (click)="openUploadHomePageCarouselImageModal()">Upload</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- EDIT ASSET MODAL -->
+  <div class="modal fade" id="editAssetModal" tabindex="-1" aria-labelledby="editAssetModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Select an image to upload</h4>
+          <button #cancelEditActiveModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="uploadImageForm" (ngSubmit)="onSubmitUploadFile()">
+            <div class="form-group row mb-1">
+              <div class="col-md-8">
+                <input #imgFile type="file" class="form-control" (change)="selectFile(imgFile.files)" placeholder="Upload file" accept="image/png, image/jpeg">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="container">
+                <div class="row" *ngIf="errorSaving">
+                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                </div>
+              </div>
+              <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-primary btn-kofc-blue" [disabled]="!formData">Save</button>
+              <button id="cancelUploadHomePageCarouselImage" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- CONFIRM DELETE MODAL -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Confirm Delete</h4>
+          <button #cancelDeleteActiveModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="deleteImageForm" (ngSubmit)="onSubmitDeleteFile()">
+            <div class="form-group row mb-1">
+              <div class="col-md-8">
+                Are you sure you want to delete this file?
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="container">
+                <div class="row" *ngIf="errorSaving">
+                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                </div>
+              </div>
+              <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-danger">Confirm</button>
+              <button id="cancelUploadHomePageCarouselImage" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  <!-- <div ngbAccordion [closeOthers]="true">
     <div ngbAccordionItem>
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton>Home Page Slider</button>
@@ -39,6 +144,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+
+
+
   <div id="assetsSpacer"></div>
 </div>

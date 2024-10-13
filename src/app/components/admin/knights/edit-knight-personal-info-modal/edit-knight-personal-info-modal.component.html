@@ -5,70 +5,70 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="editKnightPersonalInfoForm" (ngSubmit)="onSubmitEditKnightPersonalInfo()">
-    <div class="form-group row mb-1">
+    <div class="form-group mb-3">
       <div class="col-12">
         <h5 class="text-decoration-underline fw-bold">Personal Information</h5>
       </div>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off" placeholder="John">
       <label for="firstName">First Name</label>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off" placeholder="John">
       <label for="middleName">Middle Name</label>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off" placeholder="Doe">
       <label for="lastName">Last Name</label>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off" placeholder="Jr">
       <label for="nameSuffix">Suffix</label>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="date" formControlName="dateOfBirth" id="dateOfBirth" class="form-control" min="1900-01-01" max="2050-12-31" />
       <label for="dateOfBirth">Date of Birth</label>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off" placeholder="jd@jd.com">
       <label for="emailAddress">Email Address</label>
     </div>
-    <div class="form-floating row mb-1">
+    <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off" placeholder="John">
       <label for="cellPhoneNumber">Cell Phone</label>
     </div>
-    <div class="form-group row mb-1">
+    <div class="form-group mb-3">
       <div class="col-12">
         <h5 class="text-decoration-underline fw-bold">Home Address</h5>
       </div>
     </div>
     <div class="panel-body" formGroupName="homeAddress">
-      <div class="form-floating row mb-1">
+      <div class="form-floating mb-3">
         <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
           <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
         </select>
         <label for="countryCode">Country</label>
       </div>
-      <div class="form-floating row mb-1">
+      <div class="form-floating mb-3">
         <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off" placeholder="123 Main St">
         <label for="address1">Address 1</label>
       </div>
-      <div class="form-floating row mb-1">
+      <div class="form-floating mb-3">
         <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off" placeholder="Apt 2">
         <label for="address2">Address 2</label>
       </div>
-      <div class="form-floating row mb-1">
+      <div class="form-floating mb-3">
         <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off" placeholder="Kansas City">
         <label for="city">City</label>
       </div>
-      <div class="form-floating row mb-1">
+      <div class="form-floating mb-3">
         <select class="form-select" id="stateCode" formControlName="stateCode">
           <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
         </select>
         <label for="stateCode">State</label>
       </div>
-      <div class="form-floating row mb-1">
+      <div class="form-floating mb-3">
         <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off" placeholder="11111">
         <label for="postalCode">Zip Code</label>
       </div>
