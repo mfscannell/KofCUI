@@ -67,11 +67,11 @@
             <h4 class="text-decoration-underline">Interests</h4>
           </div>
         </div>
-        <div *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
+        <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
           <div class="row">
-            <h6 class="text-decoration-underline">{{activityCategoryInputOption.displayName}}</h6>
+            <h6 class="text-decoration-underline">{{activityCategoryFormOption.displayName}}</h6>
           </div>
-          <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategoryInputOption.value)">
+          <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategoryFormOption.value)">
             <div class="col-12 ms-2">
               {{interestedActivity.activityName}}
             </div>
@@ -208,12 +208,12 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditActivityInterests()">
-            <div class="form-group row mb-1" *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
+            <div class="form-group row mb-1" *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
               <div class="container">
-                <h4 class="col-12 col-form-label text-decoration-underline">{{activityCategoryInputOption.displayName}}</h4>
+                <h4 class="col-12 col-form-label text-decoration-underline">{{activityCategoryFormOption.displayName}}</h4>
               </div>
               <div class="container">
-                <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategoryInputOption.value)">
+                <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategoryFormOption.value)">
                   <div class="form-group row mb-1">
                     <label class="col-6 col-sm-5 col-lg-4 form-label">{{activity.activityName}}</label>
                     <div class="col-6 col-sm-7 col-lg-8">

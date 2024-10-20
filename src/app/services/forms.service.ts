@@ -8,6 +8,7 @@ import { KnightMemberTypeFormOption } from '../models/inputOptions/knightMemberT
 import { KnightMemberClassFormOption } from '../models/inputOptions/knightMemberClassFormOption';
 import { MemberDuesPaymentStatusFormOption } from '../models/inputOptions/memberDuesPaymentStatusFormOption';
 import { ActivityCategoryFormOption } from '../models/inputOptions/activityCategoryFormOption';
+import { TimeZoneFormOption } from '../models/inputOptions/timeZoneFormOption';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,9 @@ export class FormsService {
 
   getMemberDuesPaymentStatusFormOptions(): Observable<MemberDuesPaymentStatusFormOption[]> {
     return this.http.get<MemberDuesPaymentStatusFormOption[]>('forms/memberDuesPaymentStatusFormOptions');
+  }
+
+  getTimeZoneFormOptions(): Observable<TimeZoneFormOption[]> {
+    return this.http.get<TimeZoneFormOption[]>('forms/allTimeZoneFormOptions');
   }
 }

@@ -6,7 +6,7 @@ import { KnightUser } from "./knightUser";
 import { MemberDues } from "./memberDues";
 
 export interface Knight {
-    knightId?: number;
+    id?: string;
     firstName: string;
     middleName: string;
     lastName: string;

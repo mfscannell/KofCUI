@@ -32,7 +32,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     private knightsService: KnightsService,
     private leadershipRolesService: LeadershipRolesService) {
       this.editLeadershipRoleForm = new UntypedFormGroup({
-        leadershipRoleId: new UntypedFormControl(0),
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         title: new UntypedFormControl(''),
         occupied: new UntypedFormControl(false),
         knightId: new UntypedFormControl(''),
@@ -93,7 +93,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   openEditLeadershipRoleModal(leadershipRole: LeadershipRole) {
     this.leadershipRole = leadershipRole;
     this.editLeadershipRoleForm.patchValue({
-      leadershipRoleId: this.leadershipRole.leadershipRoleId,
+      id: this.leadershipRole.id,
       title: this.leadershipRole.title,
       occupied: this.leadershipRole.occupied,
       knightId: this.leadershipRole.knightId,
@@ -108,7 +108,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   onSubmitEditLeadershipRole() {
     let rawForm = this.editLeadershipRoleForm.getRawValue();
     let updatedLeadershipRole: LeadershipRole = {
-      leadershipRoleId: rawForm.leadershipRoleId,
+      id: rawForm.id,
       title: rawForm.title,
       knightId: rawForm.knightId,
       occupied: rawForm.occupied,
@@ -129,7 +129,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   private updateLeadershipRoleInList(leadershipRole: LeadershipRole) {
-    let index = this.leadershipRoles?.findIndex(x => x.leadershipRoleId == leadershipRole.leadershipRoleId)
+    let index = this.leadershipRoles?.findIndex(x => x.id == leadershipRole.id)
 
     if (this.leadershipRoles && index !== undefined && index >= 0) {
       this.leadershipRoles[index] = leadershipRole;

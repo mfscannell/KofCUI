@@ -1,5 +1,5 @@
 export interface UpdateKnightPasswordRequest {
-  knightId: number;
+  knightId: string;
   accountActivated: boolean;
   password: string;
   resetPasswordAtNextLogin: boolean;

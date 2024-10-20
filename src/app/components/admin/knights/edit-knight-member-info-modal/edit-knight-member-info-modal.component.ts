@@ -19,7 +19,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() knightInfo?: KnightInfo;
-  @Input() knightId: number = 0;
+  @Input() knightId: string = '';
   public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
   public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
   public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
@@ -35,7 +35,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
     private knightsService: KnightsService) {
       var today = new Date();
       this.editKnightMemberInfoForm = new UntypedFormGroup({
-        knightInfoId: new UntypedFormControl(0),
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         memberNumber: new UntypedFormControl(0),
         mailReturned: new UntypedFormControl(false),
         degree: new UntypedFormControl('First'),
@@ -96,7 +96,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
       console.log('knight info:');
       console.log(this.knightInfo)
       this.editKnightMemberInfoForm.patchValue({
-        knightInfoId: this.knightInfo.knightInfoId,
+        id: this.knightInfo.id,
         memberNumber: this.knightInfo.memberNumber,
         mailReturned: this.knightInfo.mailReturned,
         degree: this.knightInfo.degree,

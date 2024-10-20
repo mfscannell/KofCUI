@@ -6,7 +6,6 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
-import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
 import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
 import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
 import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
@@ -19,6 +18,7 @@ import { StreetAddress } from 'src/app/models/streetAddress';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { PasswordRequirements } from 'src/app/models/responses/passwordRequirements';
 import { ChangePassWordRequest } from 'src/app/models/requests/changePasswordRequest';
+import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
 
 @Component({
   selector: 'kofc-account',
@@ -27,14 +27,14 @@ import { ChangePassWordRequest } from 'src/app/models/requests/changePasswordReq
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';
-  knightId?: number;
+  knightId?: string;
   knight?: Knight;
-  activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
   private getFormOptionsSubscriptions?: Subscription;
   private getKnightSubscription?: Subscription;
   private updateAccountSecuritySubscription?: Subscription;
   private getPasswordRequirementsSubscription?: Subscription;
   public errorMessages: string[] = [];
+  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
   public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
   public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
   public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
@@ -116,7 +116,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   private initEditPersonalInfoForm(): UntypedFormGroup {
     var today = new Date();
     return new UntypedFormGroup({
-      knightId: new UntypedFormControl(0),
+      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       firstName: new UntypedFormControl('', [
         Validators.required,
         Validators.maxLength(63)
@@ -138,7 +138,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         Validators.maxLength(31)
       ]),
       homeAddress: new UntypedFormGroup({
-        streetAddressId: new UntypedFormControl(0),
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         addressName: new UntypedFormControl(null),
         address1: new UntypedFormControl('', [
           Validators.maxLength(63)
@@ -164,7 +164,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private initEditSecurityForm() {
     return new UntypedFormGroup({
-      knightId: new UntypedFormControl(0),
+      knightId: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       oldPassword: new UntypedFormControl(''),
       newPassword: new UntypedFormControl(''),
       confirmPassword: new UntypedFormControl('')
@@ -194,7 +194,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     if (this.knight) {
       this.editKnightPersonalInfoForm.patchValue({
-        knightId: this.knight.knightId,
+        id: this.knight.id,
         firstName: this.knight.firstName,
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
@@ -244,7 +244,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   private mapEditKnightFormToKnight(): UpdateKnightPersonalInfoRequest {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
     let homeAddress: StreetAddress = {
-      streetAddressId: rawForm.homeAddress.streetAddressId,
+      id: rawForm.homeAddress.id,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,
@@ -440,7 +440,8 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private getFormOptions() {
     let formsObserver = {
-      next: ([ knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse ]: [KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[]]) => {
+      next: ([ activityCategoriesResponse, knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse ]: [ActivityCategoryFormOption[], KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[]]) => {
+        this.activityCategoryFormOptions = activityCategoriesResponse;
         this.knightDegreeFormOptions = knightDegreeResponse;
         this.knightMemberTypeFormOptions = knightMemberTypeResponse;
         this.knightMemberClassFormOptions = knightMemberClassResponse;
@@ -451,6 +452,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     };
 
     this.getFormOptionsSubscriptions = forkJoin([
+      this.formsService.getActivityCategoryFormOptions(),
       this.formsService.getKnightDegreeFormOptions(),
       this.formsService.getKnightMemberTypeFormOptions(),
       this.formsService.getKnightMemberClassFormOptions(),

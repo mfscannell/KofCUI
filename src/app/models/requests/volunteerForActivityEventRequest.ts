@@ -1,5 +1,5 @@
 export interface VolunteerForActivityEventRequest {
-    activityEventId: number;
-    knightId: number;
+    activityEventId: string;
+    knightId: string;
     volunteerSignUpRoles: number[];
 }

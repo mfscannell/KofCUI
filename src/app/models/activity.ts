@@ -2,7 +2,7 @@ import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
 import { ActivityEventNotes } from './activityEventNotes';
 
 export interface Activity {
-    activityId?: number;
+    activityId?: string;
     activityName: string;
     activityDescription: string;
     activityCategory: string;

@@ -1,6 +1,6 @@
 import { MemberDues } from "../memberDues";
 
 export interface UpdateKnightMemberDuesRequest {
-  knightId: number;
+  knightId: string;
   memberDues: MemberDues[];
 }

@@ -18,7 +18,7 @@ export class KnightsService {
 
     }
 
-    getKnight(knightId: number): Observable<Knight> {
+    getKnight(knightId: string): Observable<Knight> {
         return this.http.get<Knight>(`knights/${knightId}`);
     }
 
