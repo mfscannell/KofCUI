@@ -1,7 +1,7 @@
 import { KnightDegree } from '../types/knight-degree.type';
 
 export interface KnightInfo {
-    knightInfoId?: number;
+    id?: string;
     memberNumber?: number;
     mailReturned: boolean;
     degree: KnightDegree;

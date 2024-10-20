@@ -17,7 +17,6 @@ import { NavMenuComponent } from 'src/app/components/nav-menu/nav-menu.component
 
 import { AdminComponent } from 'src/app/components/admin/admin.component';
 import { KnightsComponent } from 'src/app/components/admin/knights/knights.component';
-import { EditKnightModalComponent } from 'src/app/components/admin/knights/edit-knight-modal/edit-knight-modal.component';
 import { UploadKnightsModalComponent } from 'src/app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
 import { HomePageComponent } from 'src/app/components/home-page/home-page.component';
 import { LeadershipRolesComponent } from './components/admin/leadership-roles/leadership-roles.component';
@@ -60,7 +59,6 @@ import { EditKnightActivityInterestsModalComponent } from './components/admin/kn
         AdminComponent,
         ActivityCategoriesComponent,
         KnightsComponent,
-        EditKnightModalComponent,
         EditKnightActivityInterestsModalComponent,
         EditKnightMemberDuesModalComponent,
         EditKnightMemberInfoModalComponent,

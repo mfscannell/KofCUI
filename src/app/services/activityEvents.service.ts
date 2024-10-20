@@ -30,7 +30,7 @@ export class ActivityEventsService {
     }
 
     updateActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
-        return this.http.put<ActivityEvent>(`activityEvents/${activityEvent.activityEventId}`, activityEvent);
+        return this.http.put<ActivityEvent>(`activityEvents/${activityEvent.id}`, activityEvent);
     }
 
     createActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {

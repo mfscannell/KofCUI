@@ -1,6 +1,6 @@
 import { ActivityInterest } from "../activityInterest";
 
 export interface UpdateKnightActivityInterestsRequest {
-  knightId: number;
+  knightId: string;
   activityInterests: ActivityInterest[];
 }

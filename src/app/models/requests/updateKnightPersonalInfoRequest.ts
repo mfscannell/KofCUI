@@ -1,7 +1,7 @@
 import { StreetAddress } from "../streetAddress";
 
 export interface UpdateKnightPersonalInfoRequest {
-  knightId: number;
+  knightId: string;
   firstName: string;
   middleName: string;
   lastName: string;

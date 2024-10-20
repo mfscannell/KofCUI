@@ -2,8 +2,8 @@ import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
 import { ConfigInputTypeEnums } from '../enums/configInputTypeEnums';
 
 export interface ConfigSetting {
-    configSettingId: number;
-    configGroupId: number;
+    id: string;
+    configGroupId: string;
     configName: string;
     configDisplayName: string;
     configSortValue: number;
@@ -13,5 +13,6 @@ export interface ConfigSetting {
     longValue: number;
     stringValue: string;
     dateTimeValue?: string;
+    guidValue: string;
     inputType: ConfigInputTypeEnums;
 }

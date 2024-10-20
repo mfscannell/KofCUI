@@ -1,7 +1,7 @@
 import { EventVolunteer } from "./eventVolunteer";
 
 export interface VolunteerSignUpRole {
-    volunteerSignupRoleId: number;
+    id: string;
     roleTitle: string;
     startDateTime?: string;
     endDateTime?: string;

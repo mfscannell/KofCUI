@@ -101,7 +101,7 @@ export class PermissionsService {
         roles.includes(this.lifeDirectorRole);
   }
 
-  canEditActivity(activityId?: number) {
+  canEditActivity(activityId?: string) {
     let roles = this.accountsService.getRoles();
 
     return roles.includes(this.adminRole) || 
@@ -179,7 +179,7 @@ export class PermissionsService {
     return isActivityCoordinator;
   }
 
-  canEditEvent(activityId: number) {
+  canEditEvent(activityId: string) {
     let roles = this.accountsService.getRoles();
 
     return roles.includes(this.adminRole) 

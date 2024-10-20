@@ -32,7 +32,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
     private knightsService: KnightsService) {
       var today = new Date();
       this.editKnightPersonalInfoForm = new UntypedFormGroup({
-        knightId: new UntypedFormControl(0),
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         firstName: new UntypedFormControl('', [
           Validators.required,
           Validators.maxLength(63)
@@ -54,7 +54,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
           Validators.maxLength(31)
         ]),
         homeAddress: new UntypedFormGroup({
-          streetAddressId: new UntypedFormControl(0),
+          id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
           addressName: new UntypedFormControl(null),
           address1: new UntypedFormControl('', [
             Validators.maxLength(63)
@@ -135,7 +135,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
 
     if (this.knight) {
       this.editKnightPersonalInfoForm.patchValue({
-        knightId: this.knight.knightId,
+        id: this.knight.id,
         firstName: this.knight.firstName,
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
@@ -161,8 +161,10 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
 
   private mapFormToKnightPersonalInfo(): UpdateKnightPersonalInfoRequest {
     let rawForm = this.editKnightPersonalInfoForm.getRawValue();
+    console.log("mapFormToKnightPersonalInfo");
+    console.log(rawForm);
     let homeAddress: StreetAddress = {
-      streetAddressId: rawForm.homeAddress.streetAddressId,
+      id: rawForm.homeAddress.id,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,
@@ -172,7 +174,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
       countryCode: rawForm.homeAddress.countryCode
     };
     let knight: UpdateKnightPersonalInfoRequest = {
-      knightId: rawForm.knightId,
+      knightId: rawForm.id,
       firstName: rawForm.firstName,
       middleName: rawForm.middleName,
       lastName: rawForm.lastName,

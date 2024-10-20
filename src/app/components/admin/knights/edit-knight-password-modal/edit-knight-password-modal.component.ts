@@ -17,7 +17,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() knightsFullName: string = '';
-  @Input() knightId: number = 0;
+  @Input() knightId: string = '';
   @Input() knightUser?: KnightUser;
   editKnightPasswordForm: UntypedFormGroup;
   public passwordRequirements: PasswordRequirements = {

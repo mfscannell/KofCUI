@@ -1,5 +1,5 @@
 export interface SendEmailRequest {
-  activityId: number;
+  activityId: string;
   subject: string;
   body: string;
 }

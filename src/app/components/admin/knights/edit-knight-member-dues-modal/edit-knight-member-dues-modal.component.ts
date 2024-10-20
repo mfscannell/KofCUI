@@ -16,7 +16,7 @@ import { MemberDuesService } from 'src/app/services/memberDues.service';
 export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() memberDues?: MemberDues[] = [];
-  @Input() knightId: number = 0;
+  @Input() knightId: string = '';
   public editKnightMemberDuesForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];

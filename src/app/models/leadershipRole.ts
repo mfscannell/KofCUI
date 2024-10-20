@@ -1,7 +1,7 @@
 import { LeadershipRoleCategoryEnums } from "../enums/leadershipRoleCategoryEnums";
 
 export interface LeadershipRole {
-    leadershipRoleId?: number;
+    id?: string;
     title: string;
     knightId?: number;
     occupied: boolean;

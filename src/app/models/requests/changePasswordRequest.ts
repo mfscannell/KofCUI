@@ -1,5 +1,5 @@
 export interface ChangePassWordRequest {
-  knightId: number;
+  knightId: string;
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;

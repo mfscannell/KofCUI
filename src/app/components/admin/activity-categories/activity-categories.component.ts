@@ -70,7 +70,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   initializeForm() {
     this.editActivityForm = new UntypedFormGroup({
-      activityId: new UntypedFormControl(0),
+      activityId: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       activityName: new UntypedFormControl('', [
         Validators.required,
         Validators.maxLength(127)
@@ -91,7 +91,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     return this.permissionsService.canAddActivity();
   }
 
-  canEditActivity(activityId?: number) {
+  canEditActivity(activityId?: string) {
     return this.permissionsService.canEditActivity(activityId);
   }
 
@@ -145,7 +145,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
      this.activity.activityCoordinators.map(function(coordinator) {
       const activityCoordinatorFg = new UntypedFormGroup({
-        activityCoordinatorId: new UntypedFormControl(coordinator.activityCoordinatorId),
+        id: new UntypedFormControl(coordinator.id),
         knightId: new UntypedFormControl(coordinator.knightId)
       });
        activityCoordinatorsList.push(activityCoordinatorFg);
@@ -170,7 +170,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   addActivityCoordinator() {
     const activityCoordinator = new UntypedFormGroup({
-      activityCoordinatorId: new UntypedFormControl(0),
+      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       knightId: new UntypedFormControl(null, [
         Validators.required
       ])
@@ -219,7 +219,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     let rawForm = this.editActivityForm.getRawValue();
     let activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: any) {
       let activityCoordinator: ActivityCoordinator = {
-        activityCoordinatorId: coordinator.activityCoordinatorId,
+        id: coordinator.id,
         knightId: coordinator.knightId
       };
       return activityCoordinator;

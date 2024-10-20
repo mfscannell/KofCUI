@@ -5,14 +5,14 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditKnightActivityInterests()">
-    <div *ngFor="let activityCategoryInputOption of activityCategoryInputOptions">
+    <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
       <div class="form-group row mb-1">
         <div class="col-12">
-          <h5 class="text-decoration-underline fw-bold">{{activityCategoryInputOption.displayName}}</h5>
+          <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
         </div>
       </div>
-      <div formArrayName="{{getFormArrayName(activityCategoryInputOption)}}">
-        <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(getFormArrayName(activityCategoryInputOption)).controls; let i = index" [formGroupName]="i">
+      <div formArrayName="{{getFormArrayName(activityCategoryFormOption)}}">
+        <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(getFormArrayName(activityCategoryFormOption)).controls; let i = index" [formGroupName]="i">
           <div class="form-group row mb-1">
             <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
           <div class="col-7 col-md-9">

@@ -53,7 +53,7 @@ export class AccountsService {
   }
 
   getKnightId() {
-    return this.loggedInUser?.knight?.knightId;
+    return this.loggedInUser?.knight?.id;
   }
 
   getToken() {

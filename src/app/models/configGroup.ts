@@ -1,7 +1,7 @@
 import { ConfigSetting } from 'src/app/models/configSetting';
 
 export interface ConfigGroup {
-    configGroupId: number;
+    id: string;
     configGroupName: string;
     configGroupDisplayName: string;
     configGroupSortValue: number;
