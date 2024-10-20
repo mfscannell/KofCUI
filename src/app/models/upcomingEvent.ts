@@ -1,8 +1,8 @@
 import { StreetAddress } from 'src/app/models/streetAddress';
 
 export interface UpcomingEvent {
-    activityEventId: number;
-    activityId: number;
+    activityEventId: string;
+    activityId: string;
     eventName: string;
     eventDescription: string;
     startDateTime?: string;

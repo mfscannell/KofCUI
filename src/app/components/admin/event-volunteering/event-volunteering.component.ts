@@ -40,7 +40,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   activityEvent: ActivityEvent | undefined;
   volunteerForActivityEventForm: UntypedFormGroup;
   private updateVolunteerForActivityEventSubscription?: Subscription;
-  private knightId: number | undefined;
+  private knightId: string | undefined;
   @ViewChild('cancelEditActiveModal', {static: false}) cancelEditActiveModal: ElementRef | undefined;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
@@ -78,7 +78,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
           "minute": 0
         }),
         locationAddress: new UntypedFormGroup({
-          streetAddressId: new UntypedFormControl(''),
+          id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
           addressName: new UntypedFormControl(''),
           address1: new UntypedFormControl(''),
           address2: new UntypedFormControl(''),
@@ -121,7 +121,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
         "minute": 0
       }),
       locationAddress: new UntypedFormGroup({
-        streetAddressId: new UntypedFormControl(''),
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         addressName: new UntypedFormControl(''),
         address1: new UntypedFormControl(''),
         address2: new UntypedFormControl(''),
@@ -163,7 +163,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     return this.permissionsService.canAddEvent(this.allActivities);
   }
 
-  canEditEvent(activityId: number) {
+  canEditEvent(activityId: string) {
     return this.permissionsService.canEditEvent(activityId);
   }
 
@@ -206,7 +206,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     this.activityEvent = activityEvent;
 
     this.volunteerForActivityEventForm.patchValue({
-      activityEventId: this.activityEvent.activityEventId,
+      activityEventId: this.activityEvent.id,
       activityId: this.activityEvent.activityId,
       activityCategory: this.activityEvent.activityCategory,
       eventName: this.activityEvent.eventName,
@@ -229,7 +229,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
 
      this.activityEvent.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
       const volunteerSignUpRole = new UntypedFormGroup({
-        volunteerSignUpRoleId: new UntypedFormControl(role.volunteerSignupRoleId),
+        id: new UntypedFormControl(role.id),
         roleTitle: new UntypedFormControl(role.roleTitle),
         startDate: new UntypedFormControl({
           year: DateTimeFormatter.getYear(role.startDateTime),
@@ -267,7 +267,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     if (eventVolunteers) {
       eventVolunteers.forEach((eventVolunteer) => {
         const eventVolunteerFormGroup = new UntypedFormGroup({
-          eventVolunteerId: new UntypedFormControl(eventVolunteer.eventVolunteerId),
+          id: new UntypedFormControl(eventVolunteer.id),
           knightId: new UntypedFormControl(eventVolunteer.knightId)
         });
 
@@ -334,7 +334,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     if ($event.target.checked) {
       console.log(`Check box checked:${this.knightId}`);
       const eventVolunteerFormGroup = new UntypedFormGroup({
-        eventVolunteerId: new UntypedFormControl(''),
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         knightId: new UntypedFormControl(this.knightId)
       });
 
@@ -363,7 +363,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
       return;
     }
     
-    let activityEventId = this.activityEvent?.activityEventId || 0;
+    let activityEventId = this.activityEvent?.id || '';
     let volunteerSignUpRoles: number[] = [];
 
     for (let i = 0; i < this.volunteerSignUpRolesForm.length; i++) {
@@ -372,7 +372,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
       let volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
 
       if (volunteerIndex >= 0) {
-        let volunteerSignUpRoleId = volunteerSignUpRoleControl.value.volunteerSignUpRoleId as number;
+        let volunteerSignUpRoleId = volunteerSignUpRoleControl.value.id as number;
         volunteerSignUpRoles.push(volunteerSignUpRoleId);
       }
     }
@@ -398,14 +398,14 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     let rawForm = this.volunteerForActivityEventForm.getRawValue();
       let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
         let volunteerSignUpRole: VolunteerSignUpRole = {
-          volunteerSignupRoleId: role.volunteerSignUpRoleId,
+          id: role.id,
           roleTitle: role.roleTitle,
           startDateTime: DateTimeFormatter.DateToIso8601DateTime(role.startDate, role.startTime.hour, role.startTime.minute),
           endDateTime: DateTimeFormatter.DateToIso8601DateTime(role.endDate, role.endTime.hour, role.endTime.minute),
           numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
           eventVolunteers: role.eventVolunteers.map(function(ev: any) {
             let eventVolunteer: EventVolunteer = {
-              eventVolunteerId: ev.eventVolunteerId,
+              id: ev.id,
               knightId: ev.knightId
             };
             return eventVolunteer;
@@ -415,7 +415,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
         return volunteerSignUpRole;
       });
       let locationAddress: StreetAddress = {
-        streetAddressId: rawForm.locationAddress.streetAddressId,
+        id: rawForm.locationAddress.id,
         addressName: rawForm.locationAddress.addressName,
         address1: rawForm.locationAddress.address1,
         address2: rawForm.locationAddress.address2,
@@ -425,7 +425,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
         countryCode: rawForm.locationAddress.countryCode
       };
       let activityEvent: ActivityEvent = {
-        activityEventId: rawForm.activityEventId,
+        id: rawForm.id,
         activityId: rawForm.activityId,
         activityCategory: rawForm.activityCategory,
         eventName: rawForm.eventName,
@@ -445,11 +445,11 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   private passBack(activityEvent: ActivityEvent, eventVolunteers: EventVolunteer[]) {
     if (activityEvent.volunteerSignUpRoles) {
       activityEvent.volunteerSignUpRoles.forEach((role) => {
-        if (eventVolunteers.findIndex(ev => ev.volunteerSignUpRoleId === role.volunteerSignupRoleId) >= 0) {
+        if (eventVolunteers.findIndex(ev => ev.volunteerSignUpRoleId === role.id) >= 0) {
           role.eventVolunteers.forEach((volunteer) => {
             if (volunteer.knightId === this.knightId) {
-              let eventVolunteerId = eventVolunteers.filter(ev => ev.volunteerSignUpRoleId === role.volunteerSignupRoleId)[0].eventVolunteerId;
-              volunteer.eventVolunteerId = eventVolunteerId;
+              let eventVolunteerId = eventVolunteers.filter(ev => ev.volunteerSignUpRoleId === role.id)[0].id;
+              volunteer.id = eventVolunteerId;
             }
           });
         }
@@ -461,7 +461,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   }
 
   private updateActivityEventInList(activityEvent: ActivityEvent) {
-    let index = this.activityEvents?.findIndex(x => x.activityEventId === activityEvent.activityEventId)
+    let index = this.activityEvents?.findIndex(x => x.id === activityEvent.id)
 
     if (this.activityEvents && index !== undefined && index >= 0) {
       this.activityEvents[index] = activityEvent;

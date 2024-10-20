@@ -1,5 +1,5 @@
 export interface ActivityInterest {
-    activityId: number;
+    activityId: string;
     activityName: string;
     activityCategory: string;
     interested: boolean;

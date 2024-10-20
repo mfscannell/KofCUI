@@ -30,7 +30,10 @@
                   <input *ngIf="isCheckBox(i, j)" type="checkbox" class="form-check-input" formControlName="booleanValue" id="configSetting_booleanValue">
                   <input *ngIf="isStringInput(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
                   <select *ngIf="isStringDropDown(i, j)" class="form-select" id="configSetting_stringDropDown" formControlName="stringValue">
-                    <option *ngFor="let selectOption of getStringDropDownList(i, j)" [value]="selectOption.id">{{selectOption.displayName}}</option>
+                    <option *ngFor="let selectOption of getStringDropDownList(i, j)" [value]="selectOption.value">{{selectOption.displayName}}</option>
+                  </select>
+                  <select *ngIf="isGuidDropDown(i, j)" class="form-select" id="configSetting_guidDropDown" formControlName="guidValue">
+                    <option *ngFor="let selectOption of getGuidDropDownList(i, j)" [value]="selectOption.value">{{selectOption.displayName}}</option>
                   </select>
                 </div>
                 <div class="col-2 col-sm-1">

@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { ActivityCategoryInputOption } from 'src/app/models/inputOptions/activityCategoryInputOption';
+import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
 import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
+import { FormsService } from 'src/app/services/forms.service';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { KnightsService } from 'src/app/services/knights.service';
 
@@ -16,14 +17,16 @@ import { KnightsService } from 'src/app/services/knights.service';
 export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy {
   @Input() modalHeaderText: string = '';
   @Input() activityInterests?: ActivityInterest[] = [];
-  @Input() knightId: number = 0;
-  public activityCategoryInputOptions: ActivityCategoryInputOption[] = ActivityCategoryInputOption.options;
+  @Input() knightId: string = '';
+  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
   public editKnightActivityInterestsForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightActivityInterestsSubscription?: Subscription;
+  private getFormOptionsSubscriptions?: Subscription;
 
   constructor(
+    private formsService: FormsService,
     public activeModal: NgbActiveModal,
     private knightActivityInterestsService: KnightActivityInterestsService
   ) {
@@ -37,11 +40,40 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   ngOnInit() {
+    this.getFormOptions();
+  }
+
+  ngOnDestroy() {
+    if (this.updateKnightActivityInterestsSubscription) {
+      this.updateKnightActivityInterestsSubscription.unsubscribe();
+    }
+
+    if (this.getFormOptionsSubscriptions) {
+      this.getFormOptionsSubscriptions.unsubscribe();
+    }
+  }
+
+  private getFormOptions() {
+    let formsObserver = {
+      next: ([ activityCategoriesResponse ]: [ActivityCategoryFormOption[]]) => {
+        this.activityCategoryFormOptions = activityCategoriesResponse;
+        this.fillOutActivityInterestForm();
+      },
+      error: (err: any) => this.logError("Error getting Activity Events Form Options", err),
+      complete: () => console.log('Activity Events Form Options retrieved.')
+    };
+
+    this.getFormOptionsSubscriptions = forkJoin([
+      this.formsService.getActivityCategoryFormOptions()
+    ]).subscribe(formsObserver);
+  }
+
+  private fillOutActivityInterestForm() {
     if (this.activityInterests) {
-      this.activityCategoryInputOptions.forEach(activityCategoryInputOption => {
-        let activityInterestsFormArray = this.getActivityInterestsFormArray(`${activityCategoryInputOption.value.toLowerCase()}ActivityInterests`);
+      this.activityCategoryFormOptions.forEach(activityCategoryFormOptions => {
+        let activityInterestsFormArray = this.getActivityInterestsFormArray(`${activityCategoryFormOptions.value.toLowerCase()}ActivityInterests`);
         let filteredActivities = this.activityInterests?.filter(activityInterest => {
-          return activityInterest.activityCategory === activityCategoryInputOption.value;
+          return activityInterest.activityCategory === activityCategoryFormOptions.value;
         });
         filteredActivities?.forEach((activityInterest: ActivityInterest) =>{
           const activityInterestFormGroup = new UntypedFormGroup({
@@ -53,12 +85,6 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
           activityInterestsFormArray.push(activityInterestFormGroup);
         });
       });
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.updateKnightActivityInterestsSubscription) {
-      this.updateKnightActivityInterestsSubscription.unsubscribe();
     }
   }
 
@@ -76,7 +102,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
     return activityInterestsFormArray;
   }
 
-  public getFormArrayName(activityCategoryInputOption: ActivityCategoryInputOption) {
+  public getFormArrayName(activityCategoryInputOption: ActivityCategoryFormOption) {
     return `${activityCategoryInputOption.value.toLowerCase()}ActivityInterests`;
   }
 
@@ -108,8 +134,8 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
       activityInterests: []
     };
 
-    this.activityCategoryInputOptions.forEach(activityCategoryInputOption => {
-      let activityInterests = rawForm[`${activityCategoryInputOption.value.toLowerCase()}ActivityInterests`];
+    this.activityCategoryFormOptions.forEach(activityCategoryFormOption => {
+      let activityInterests = rawForm[`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
 
       activityInterests.forEach((ai: any) => {
         console.log(ai);

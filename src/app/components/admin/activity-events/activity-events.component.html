@@ -51,7 +51,7 @@
   </div>
   <div class="row" *ngIf="canAddEvent()">
     <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityEventModal()">Add</button>
+      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editEventModal" (click)="openCreateActivityEventModal()">Add</button>
     </div>
   </div>
   <!-- SEND EMAIL MODAL -->
@@ -127,7 +127,7 @@
                 </div>
                 <div class="form-floating mb-3">
                   <select class="form-select" id="activityCategory" formControlName="activityCategory">
-                    <option *ngFor="let activityCategoryInputOption of activityCategoryInputOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
+                    <option *ngFor="let activityCategoryFormOption of activityCategoryFormOptions" [value]="activityCategoryFormOption.value">{{activityCategoryFormOption.displayName}}</option>
                   </select>
                   <label for="activityId">Activity Category</label>
                 </div>
@@ -257,7 +257,7 @@
                           <div class="form-group row mb-3">
                             <div class="col-8 col-md-4">
                               <select class="form-select" id="activityId" formControlName="knightId">
-                                <option *ngFor="let knight of allKnights" [value]="knight.knightId">{{knight.firstName}} {{knight.lastName}}</option>
+                                <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
                               </select>
                             </div>
                             <div class="col-4 col-md-2">
