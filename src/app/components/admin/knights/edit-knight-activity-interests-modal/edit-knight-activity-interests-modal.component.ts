@@ -1,33 +1,30 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
 import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
-import { FormsService } from 'src/app/services/forms.service';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
-import { KnightsService } from 'src/app/services/knights.service';
 
 @Component({
-  selector: 'app-edit-knight-activity-interests-modal',
+  selector: 'edit-knight-activity-interests-modal',
   templateUrl: './edit-knight-activity-interests-modal.component.html',
   styleUrls: ['./edit-knight-activity-interests-modal.component.scss']
 })
-export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy {
+export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
-  @Input() activityInterests?: ActivityInterest[] = [];
+  @Input() activityInterests: ActivityInterest[] = [];
   @Input() knightId: string = '';
-  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  @Input() activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  @Output() editKnightMemberDuesChanges = new EventEmitter<ActivityInterest[]>();
+  @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
+  
   public editKnightActivityInterestsForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightActivityInterestsSubscription?: Subscription;
-  private getFormOptionsSubscriptions?: Subscription;
 
   constructor(
-    private formsService: FormsService,
-    public activeModal: NgbActiveModal,
     private knightActivityInterestsService: KnightActivityInterestsService
   ) {
     this.editKnightActivityInterestsForm = new UntypedFormGroup({
@@ -40,32 +37,24 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   ngOnInit() {
-    this.getFormOptions();
   }
 
   ngOnDestroy() {
     if (this.updateKnightActivityInterestsSubscription) {
       this.updateKnightActivityInterestsSubscription.unsubscribe();
     }
-
-    if (this.getFormOptionsSubscriptions) {
-      this.getFormOptionsSubscriptions.unsubscribe();
-    }
   }
 
-  private getFormOptions() {
-    let formsObserver = {
-      next: ([ activityCategoriesResponse ]: [ActivityCategoryFormOption[]]) => {
-        this.activityCategoryFormOptions = activityCategoriesResponse;
-        this.fillOutActivityInterestForm();
-      },
-      error: (err: any) => this.logError("Error getting Activity Events Form Options", err),
-      complete: () => console.log('Activity Events Form Options retrieved.')
-    };
+  ngOnChanges() {
+    this.editKnightActivityInterestsForm = new UntypedFormGroup({
+      communityActivityInterests: new UntypedFormArray([]),
+      faithActivityInterests: new UntypedFormArray([]),
+      familyActivityInterests: new UntypedFormArray([]),
+      lifeActivityInterests: new UntypedFormArray([]),
+      miscellaneousActivityInterests: new UntypedFormArray([])
+    });
 
-    this.getFormOptionsSubscriptions = forkJoin([
-      this.formsService.getActivityCategoryFormOptions()
-    ]).subscribe(formsObserver);
+    this.fillOutActivityInterestForm();
   }
 
   private fillOutActivityInterestForm() {
@@ -155,7 +144,9 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   private passBackResponse(response: ActivityInterest[]) {
-    this.activeModal.close(response);
+    this.editKnightMemberDuesChanges.emit(response);
+    this.updateKnightActivityInterestsSubscription?.unsubscribe();
+    this.closeModal?.nativeElement.click();
   }
 
   private logError(message: string, err: any) {

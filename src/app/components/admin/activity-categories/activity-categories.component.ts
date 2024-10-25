@@ -1,17 +1,14 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormsService } from 'src/app/services/forms.service';
 import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
 
 @Component({
   selector: 'activity-categories',
@@ -21,16 +18,12 @@ import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   getDataSubscription?: Subscription;
   activitiesSubscription?: Subscription;
-  updateActivitySubscription?: Subscription;
-  createActivitySubscription?: Subscription;
   allKnights: Knight[] = [];
   activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
   activities?: Activity[];
   closeModalResult = '';
 
-  @ViewChild('cancelEditActiveModal', {static: false}) cancelEditActiveModal: ElementRef | undefined;
   modalAction: ModalActionEnums = ModalActionEnums.Create;
-  editActivityForm: UntypedFormGroup;
   modalHeaderText: string = '';
   activity: Activity | undefined;
   errorSaving: boolean = false;
@@ -42,8 +35,6 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     private knightsService: KnightsService,
     private permissionsService: PermissionsService)
   {
-    this.editActivityForm = new UntypedFormGroup({});
-    this.initializeForm();
   }
 
   ngOnInit() {
@@ -58,33 +49,6 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     if (this.getDataSubscription) {
       this.getDataSubscription.unsubscribe();
     }
-
-    if (this.updateActivitySubscription) {
-      this.updateActivitySubscription.unsubscribe();
-    }
-
-    if (this.createActivitySubscription) {
-      this.createActivitySubscription.unsubscribe();
-    }
-  }
-
-  initializeForm() {
-    this.editActivityForm = new UntypedFormGroup({
-      activityId: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      activityName: new UntypedFormControl('', [
-        Validators.required,
-        Validators.maxLength(127)
-      ]),
-      activityDescription: new UntypedFormControl('', [
-        Validators.maxLength(255)
-      ]),
-      activityCategory: new UntypedFormControl(null, [
-        Validators.required
-      ]),
-      activityCoordinatorsList: new UntypedFormArray([]),
-      activityEventNotesList: new UntypedFormArray([]),
-      notes: new UntypedFormControl('')
-    });
   }
 
   canAddActivity() {
@@ -124,148 +88,25 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
       notes: ''
     };
     this.modalAction = ModalActionEnums.Create;
-    this.initializeForm();
   }
 
   openEditActivityModal(activity: Activity) {
     this.modalHeaderText = 'Editing Activity';
     this.activity = activity;
     this.modalAction = ModalActionEnums.Edit;
-    this.initializeForm();
-
-    this.editActivityForm.patchValue({
-      activityId: this.activity.activityId,
-      activityName: this.activity.activityName,
-      activityDescription: this.activity.activityDescription,
-      activityCategory: this.activity.activityCategory,
-      notes: this.activity.notes
-     });
-
-     let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
-
-     this.activity.activityCoordinators.map(function(coordinator) {
-      const activityCoordinatorFg = new UntypedFormGroup({
-        id: new UntypedFormControl(coordinator.id),
-        knightId: new UntypedFormControl(coordinator.knightId)
-      });
-       activityCoordinatorsList.push(activityCoordinatorFg);
-     });
-
-     let activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
-
-     this.activity.activityEventNotes.map(function(note) {
-      const activityEventNotesFg = new UntypedFormGroup({
-        startDateTime: new UntypedFormControl(note.startDateTime),
-        notes: new UntypedFormControl(note.notes)
-      });
-       activityEventNotes.push(activityEventNotesFg);
-     });
   }
 
-  deleteActivityCoordinator(roleIndex: number) {
-    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
-    
-    activityCoordinators.removeAt(roleIndex);
-  }
-
-  addActivityCoordinator() {
-    const activityCoordinator = new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      knightId: new UntypedFormControl(null, [
-        Validators.required
-      ])
-    });
-
-    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
-
-    activityCoordinators.push(activityCoordinator);
-  }
-
-  onSubmitEditActivity() {
-    if (this.modalAction === ModalActionEnums.Edit) {
-      let updatedActivity = this.mapFormToActivity();
-      this.updateActivity(updatedActivity);
-    } else if (this.modalAction === ModalActionEnums.Create) {
-      let newActivity = this.mapFormToActivity();
-      this.createActivity(newActivity);
-    }
-  }
-
-  private updateActivity(activity: Activity) {
-    let activityObserver = {
-      next: (updatedActivity: Activity) => this.updateActivityInList(updatedActivity),
-      error: (err: any) => this.logError('Error updating Activity', err),
-      complete: () => console.log('Activity updated.')
-    };
-
-    this.updateActivitySubscription = this.activitiesService.updateActivity(activity).subscribe(activityObserver);
-  }
-
-  private createActivity(activity: Activity) {
-    let activityObserver = {
-      next: (createdActivity: Activity) => this.addActivityToList(createdActivity),
-      error: (err: any) => this.logError('Error creating Activity', err),
-      complete: () => console.log('Activity created.')
-    };
-
-    this.createActivitySubscription = this.activitiesService.createActivity(activity).subscribe(activityObserver);
-  }
-
-  cancelModal() {
-
-  }
-
-  private mapFormToActivity() {
-    let rawForm = this.editActivityForm.getRawValue();
-    let activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: any) {
-      let activityCoordinator: ActivityCoordinator = {
-        id: coordinator.id,
-        knightId: coordinator.knightId
-      };
-      return activityCoordinator;
-    });
-    let activity: Activity = {
-      activityId: rawForm.activityId,
-      activityName: rawForm.activityName,
-      activityDescription: rawForm.activityDescription,
-      activityCategory: rawForm.activityCategory,
-      activityCoordinators: activityCoordinators,
-      activityEventNotes: [],
-      notes: rawForm.notes
-    };
-
-    return activity;
-  }
-
-  get activityCoordinators() {
-    return this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
-  }
-
-  get activityEventNotes() {
-    return this.editActivityForm.controls["activityEventNotesList"] as UntypedFormArray;
-  }
-
-  formatEventStartDate(index: number) {
-    return DateTimeFormatter.ToDisplayedDate(this.activity?.activityEventNotes[index].startDateTime);
-  }
-
-  getEventNotes(index: number) {
-    return this.activity?.activityEventNotes[index].notes;
-  }
-
-  private addActivityToList(activity: Activity) {
+  public addActivityToList(activity: Activity) {
     this.activities?.push(activity);
     console.log('addActivityToList');
     console.log(this.activities);
-    this.cancelEditActiveModal?.nativeElement.click();
   }
 
-  private updateActivityInList(activity: Activity) {
+  public updateActivityInList(activity: Activity) {
     let index = this.activities?.findIndex(x => x.activityId == activity.activityId)
 
     if (this.activities && index !== undefined && index >= 0) {
       this.activities[index] = activity;
-      this.cancelEditActiveModal?.nativeElement.click();
     }
   }
 

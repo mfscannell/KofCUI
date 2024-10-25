@@ -1,0 +1,39 @@
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Editing Leadership Role</h4>
+      <button #cancelCustomEditActiveModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" (click)="cancelModal()">
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="editLeadershipRoleForm" (ngSubmit)="onSubmitEditLeadershipRole()">
+        <div class="form-group row mb-3">
+          <h5>{{leadershipRole?.title}} ({{leadershipRole?.leadershipRoleCategory}})</h5>
+        </div>
+        <div class="form-group row mb-1">
+          <div class="col-4 col-md-3">
+            <label for="occupied" class="col-form-label">Occupied</label>
+          </div>
+          <div class="col-8 col-md-9">
+            <input type="checkbox" class="form-check-input" formControlName="occupied" id="occupied">
+          </div>
+        </div>
+        <div class="form-floating mb-3" *ngIf="editLeadershipRoleForm.controls['occupied'].value">
+          <select class="form-select" id="leadershipRoleOccupier" formControlName="knightId">
+            <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
+          </select>
+          <label for="leadershipRoleOccupier">Occupier</label>
+        </div>
+        <div class="modal-footer">
+          <div class="container">
+            <div class="row" *ngIf="errorSaving">
+              <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

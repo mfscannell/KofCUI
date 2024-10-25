@@ -15,28 +15,28 @@
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit knight info" (click)="openEditKnightMemberInfoModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit knight info" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit activity interests" (click)="openEditKnightActivityInterestsModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit activity interests" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit member dues" (click)="openEditKnightMemberDuesModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit member dues" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit password" (click)="openEditKnightPassword(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit password" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
         </svg>
@@ -52,280 +52,63 @@
   </div>
   <div class="form-group row mb-1">
     <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="openUploadKnightsModal()">Bulk Upload</button>
+      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#uploadKnightsModal" (click)="openUploadKnightsModal()">Bulk Upload</button>
     </div>
   </div>
-  <!-- CREATE KNIGHT MODAL -->
-  <div class="modal fade" id="createKnightModal" tabindex="-1" aria-labelledby="createKnightModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Adding Knight</h4>
-          <button #cancelCreateKnightModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="createKnightForm" (ngSubmit)="onSubmitCreateKnight()">
-            <nav class="tabbable">
-              <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="personal-info-tab" data-bs-toggle="tab" data-bs-target="#personal-info-tab-pane" type="button" role="tab" aria-controls="personal-info-tab-pane" aria-selected="true">Personal Info</button>
-                <button class="nav-link" id="knight-info-tab" data-bs-toggle="tab" data-bs-target="#knight-info-tab-pane" type="button" role="tab" aria-controls="knight-info-tab-pane" aria-selected="false">Knight Info</button>
-                <button class="nav-link" id="activities-tab" data-bs-toggle="tab" data-bs-target="#activities-tab-pane" type="button" role="tab" aria-controls="activities-tab-pane" aria-selected="false">Activities</button>
-                <button class="nav-link" id="member-dues-tab" data-bs-toggle="tab" data-bs-target="#member-dues-tab-pane" type="button" role="tab" aria-controls="member-dues-tab-pane" aria-selected="false">Member Dues</button>
-              </div>
-            </nav>
-            <div class="tab-content mt-2" id="create-knight-tab-content">
-              <!-- PERSONAL INFO -->
-              <div class="tab-pane fade show active" id="personal-info-tab-pane" role="tabpanel" aria-labelledby="personal-info-tab" tabindex="0">
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off" placeholder="John">
-                  <label for="firstName">First Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off" placeholder="John">
-                  <label for="middleName">Middle Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off" placeholder="Doe">
-                  <label for="lastName">Last Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off" placeholder="Jr">
-                  <label for="nameSuffix">Suffix</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="date" formControlName="dateOfBirth" id="dateOfBirth" class="form-control" min="1900-01-01" max="2050-12-31" />
-                  <label for="dateOfBirth">Date of Birth</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off" placeholder="jd@jd.com">
-                  <label for="emailAddress">Email Address</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off" placeholder="John">
-                  <label for="cellPhoneNumber">Cell Phone</label>
-                </div>
-        
-                <div class="form-group mb-3">
-                  <div class="col-12">
-                    <h5 class="text-decoration-underline fw-bold">Home Address</h5>
-                  </div>
-                </div>
-                <div class="panel-body" formGroupName="homeAddress">
-                  <div class="form-floating mb-3">
-                    <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions(createKnightForm)">
-                      <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
-                    </select>
-                    <label for="countryCode">Country</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off" placeholder="123 Main St">
-                    <label for="address1">Address 1</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off" placeholder="Apt 2">
-                    <label for="address2">Address 2</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off" placeholder="Kansas City">
-                    <label for="city">City</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <select class="form-select" id="stateCode" formControlName="stateCode">
-                      <option *ngFor="let state of filterAdministrativeDivisionsByCountry(createKnightForm)" [value]="state.value">{{state.displayName}}</option>
-                    </select>
-                    <label for="stateCode">State</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off" placeholder="11111">
-                    <label for="postalCode">Zip Code</label>
-                  </div>
-                </div>
-              </div>
-              <!-- KNIGHT INFO -->
-              <div class="tab-pane fade" id="knight-info-tab-pane" role="tabpanel" aria-labelledby="knight-info-tab" tabindex="0">
-                <div formGroupName="knightInfo">
-                  <div class="form-floating mb-3">
-                    <input type="text" class="form-control" formControlName="memberNumber" id="knightInfo_memberNumber" autocomplete="off" placeholder="1111">
-                    <label for="knightInfo_memberNumber">Member Number</label>
-                  </div>
-                  <div class="form-group row mb-3">
-                    <label for="knightInfo_mailReturned" class="col-5 col-md-3 col-form-label">Mail Returned</label>
-                    <div class="col-7 col-md-9">
-                      <input type="checkbox" class="form-check-input" formControlName="mailReturned" id="knightInfo_mailReturned">
-                    </div>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <select class="form-select" id="knightInfo_degree" formControlName="degree">
-                      <option *ngFor="let knightDegreeInputOption of knightDegreeFormOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
-                    </select>
-                    <label for="knightInfo_degree">Degree</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="date" formControlName="firstDegreeDate" id="firstDegreeDate" class="form-control" min="1900-01-01" max="2050-12-31" />
-                    <label for="firstDegreeDate">First Degree Date</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input type="date" formControlName="reentryDate" id="reentryDate" class="form-control" min="1900-01-01" max="2050-12-31" />
-                    <label for="reentryDate">Reentry Date</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
-                      <option *ngFor="let knightMemberTypeFormOption of knightMemberTypeFormOptions" [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
-                    </select>
-                    <label for="knightInfo_memberType">Member Type</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
-                      <option *ngFor="let knightMemberClassFormOption of knightMemberClassFormOptions" [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
-                    </select>
-                    <label for="knightInfo_memberClass">Member Class</label>
-                  </div>
-                </div>
-              </div>
-              <!-- ACTIVITIES -->
-              <div class="tab-pane fade" id="activities-tab-pane" role="tabpanel" aria-labelledby="activities-tab" tabindex="0">
-                <div formGroupName="activityInterests">
-                  <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
-                    <div class="form-group mb-3">
-                      <div class="col-12">
-                        <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
-                      </div>
-                    </div>
-                    <div formArrayName="{{getFormArrayName(activityCategoryFormOption)}}">
-                      <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(createKnightForm, getFormArrayName(activityCategoryFormOption)).controls; let i = index" [formGroupName]="i">
-                        <div class="form-group mb-3">
-                          <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-                        <div class="col-7 col-md-9">
-                          <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-                        </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- MEMBER DUES -->
-              <div class="tab-pane fade" id="member-dues-tab-pane" role="tabpanel" aria-labelledby="member-dues-tab" tabindex="0">
-                <div formArrayName="memberDues">
-                  <div *ngFor="let memberDue of getMemberDuesForm(createKnightForm).controls; let i = index" [formGroupName]="i">
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
-                        <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
-                      </select>
-                      <label for="stateCode">{{getMemberDuesYear(memberDue)}}</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <div class="container">
-                  <div class="row" *ngIf="errorSaving">
-                    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-                  </div>
-              </div>
-              <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-              <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- EDIT KNIGHT PERSONAL INFO MODAL -->
-  <div class="modal fade" id="editKnightPersonalInfoModal" tabindex="-1" aria-labelledby="editKnightPersonalInfoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Edit Knight</h4>
-          <button #cancelEditKnightPersonalInfoModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="editKnightPersonalInfoForm" (ngSubmit)="onSubmitEditKnightPersonalInfo()">
-            <div class="form-group mb-3">
-              <div class="col-12">
-                <h5 class="text-decoration-underline fw-bold">Personal Information</h5>
-              </div>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="firstName" id="firstName" autocomplete="off" placeholder="John">
-              <label for="firstName">First Name</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="middleName" id="middleName" autocomplete="off" placeholder="John">
-              <label for="middleName">Middle Name</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="lastName" id="lastName" autocomplete="off" placeholder="Doe">
-              <label for="lastName">Last Name</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="nameSuffix" id="nameSuffix" autocomplete="off" placeholder="Jr">
-              <label for="nameSuffix">Suffix</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="date" formControlName="dateOfBirth" id="dateOfBirth" class="form-control" min="1900-01-01" max="2050-12-31" />
-              <label for="dateOfBirth">Date of Birth</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" autocomplete="off" placeholder="jd@jd.com">
-              <label for="emailAddress">Email Address</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off" placeholder="John">
-              <label for="cellPhoneNumber">Cell Phone</label>
-            </div>
-            <div class="form-group mb-3">
-              <div class="col-12">
-                <h5 class="text-decoration-underline fw-bold">Home Address</h5>
-              </div>
-            </div>
-            <div class="panel-body" formGroupName="homeAddress">
-              <div class="form-floating mb-3">
-                <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions(editKnightPersonalInfoForm)">
-                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
-                </select>
-                <label for="countryCode">Country</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" formControlName="address1" id="address1" autocomplete="off" placeholder="123 Main St">
-                <label for="address1">Address 1</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" formControlName="address2" id="address2" autocomplete="off" placeholder="Apt 2">
-                <label for="address2">Address 2</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" formControlName="city" id="city" autocomplete="off" placeholder="Kansas City">
-                <label for="city">City</label>
-              </div>
-              <div class="form-floating mb-3">
-                <select class="form-select" id="stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry(editKnightPersonalInfoForm)" [value]="state.value">{{state.displayName}}</option>
-                </select>
-                <label for="stateCode">State</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control" formControlName="postalCode" id="postalCode" autocomplete="off" placeholder="11111">
-                <label for="postalCode">Zip Code</label>
-              </div>
-            </div>
-        
-            <div class="modal-footer">
-              <div class="container">
-                <div class="row" *ngIf="errorSaving">
-                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  <upload-knights-modal
+    class="modal fade"
+    id="uploadKnightsModal"
+    [showModal]="showUploadKnightsModal"
+    (uploadKnightsChanges)="addKnights($event)"></upload-knights-modal>
+  <create-knight-modal
+    class="modal fade"
+    id="createKnightModal"
+    [activityCategoryFormOptions]="activityCategoryFormOptions"
+    [countryFormOptions]="countryFormOptions"
+    [knightMemberClassFormOptions]="knightMemberClassFormOptions"
+    [knightMemberTypeFormOptions]="knightMemberTypeFormOptions"
+    [knightDegreeFormOptions]="knightDegreeFormOptions"
+    [knightActivityInterestsForNewKnight]="knightActivityInterestsForNewKnight"
+    [memberDuesPaymentStatusFormOptions]="memberDuesPaymentStatusFormOptions"
+    (createKnightChanges)="addKnightToAllKnights($event)"></create-knight-modal>
+  <edit-knight-personal-info-modal
+    class="modal fade"
+    id="editKnightPersonalInfoModal"
+    [modalHeaderText]="editKnightPersonalInfoModalHeaderText"
+    [knight]="knightToEdit"
+    [countryFormOptions]="countryFormOptions"
+    (editKnightPersonalInfoChanges)="updateKnightPersonalInfoInList($event)"></edit-knight-personal-info-modal>
+  <edit-knight-activity-interests-modal
+    class="modal fade"
+    id="editKnightActivityInterestsModal"
+    [modalHeaderText]="editKnightActivityInterestsModalHeaderText"
+    [activityInterests]="activityInterestsToEdit"
+    [knightId]="knightId"
+    [activityCategoryFormOptions]="activityCategoryFormOptions"
+    (editKnightMemberDuesChanges)="updateKnightActivityInterestsInList($event)"></edit-knight-activity-interests-modal>
+  <edit-knight-member-dues-modal
+    class="modal fade"
+    id="editKnightMemberDuesModal"
+    [memberDuesPaymentStatusFormOptions]="memberDuesPaymentStatusFormOptions"
+    [modalHeaderText]="editKnightMemberDuesModalHeaderText"
+    [knightId]="knightId"
+    [memberDues]="memberDuesToEdit"
+    (editKnightMemberDuesChanges)="updateKnightMemberDuesInList($event)"></edit-knight-member-dues-modal>
+  <edit-knight-password-modal
+    class="modal fade"
+    id="editKnightPasswordModal"
+    [modalHeaderText]="editKnightPasswordModalText"
+    [knightsFullName]="knightFullName"
+    [knightId]="knightId"
+    [knightUser]="knightUser" (editKnightPasswordChanges)="updateKnightUserInList($event)"></edit-knight-password-modal>
+  <edit-knight-member-info-modal 
+    class="modal fade" 
+    id="editKnightMemberInfoModal"
+    [knightId]="knightId"
+    [knightInfo]="knightInfo"
+    [modalHeaderText]="editKnightMemberInfoModalHeaderText"
+    [knightDegreeFormOptions]="knightDegreeFormOptions"
+    [knightMemberTypeFormOptions]="knightMemberTypeFormOptions"
+    [knightMemberClassFormOptions]="knightMemberClassFormOptions" (editKnightMemberInfoChanges)="updateKnightMemberInfoInList($event)"></edit-knight-member-info-modal>
   <div id="knightsSpacer"></div>
 </div>

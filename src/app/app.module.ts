@@ -45,6 +45,12 @@ import { EditKnightMemberInfoModalComponent } from './components/admin/knights/e
 import { EditKnightPersonalInfoModalComponent } from './components/admin/knights/edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
 import { EditKnightMemberDuesModalComponent } from './components/admin/knights/edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
 import { EditKnightActivityInterestsModalComponent } from './components/admin/knights/edit-knight-activity-interests-modal/edit-knight-activity-interests-modal.component';
+import { EditLeadershipRoleModalComponent } from './components/admin/leadership-roles/edit-leadership-role-modal/edit-leadership-role-modal.component';
+import { EditActivityModalComponent } from './components/admin/activity-categories/edit-activity-modal/edit-activity-modal.component';
+import { CreateKnightModalComponent } from './components/admin/knights/create-knight-modal/create-knight-modal.component';
+import { VolunteerForEventModalComponent } from './components/admin/event-volunteering/volunteer-for-event-modal/volunteer-for-event-modal.component';
+import { EmailAboutEventModalComponent } from './components/admin/activity-events/email-about-event-modal/email-about-event-modal.component';
+import { EditActivityEventModalComponent } from './components/admin/activity-events/edit-activity-event-modal/edit-activity-event-modal.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -58,7 +64,9 @@ import { EditKnightActivityInterestsModalComponent } from './components/admin/kn
         CalendarEventsComponent,
         AdminComponent,
         ActivityCategoriesComponent,
+        EditActivityModalComponent,
         KnightsComponent,
+        CreateKnightModalComponent,
         EditKnightActivityInterestsModalComponent,
         EditKnightMemberDuesModalComponent,
         EditKnightMemberInfoModalComponent,
@@ -66,10 +74,14 @@ import { EditKnightActivityInterestsModalComponent } from './components/admin/kn
         EditKnightPasswordModalComponent,
         UploadKnightsModalComponent,
         LeadershipRolesComponent,
+        EditLeadershipRoleModalComponent,
         ConfigsComponent,
         AssetsComponent,
         ActivityEventsComponent,
-        EventVolunteeringComponent
+        EditActivityEventModalComponent,
+        EmailAboutEventModalComponent,
+        EventVolunteeringComponent,
+        VolunteerForEventModalComponent
     ],
     bootstrap: [AppComponent], imports: [YouTubePlayerModule,
         BrowserModule,

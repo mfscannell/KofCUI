@@ -1,116 +1,118 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
-  </button>
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Upload Knights From File</h4>
+      <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="uploadKnightsForm" (ngSubmit)="onSubmitUploadKnights()">
+        <div class="form-group row mb-1">
+          <div class="col-md-8">
+            <input type="file" class="form-control" (change)="addFile($event)" placeholder="Upload file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          </div>
+        </div>
+        <div *ngIf="showExampleFile">
+          <div class="row">
+            <div class="col-12">
+              * denotes required
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <h6>Column Header</h6>
+            </div>
+            <div class="col-6">
+              <h6>Column Data</h6>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">First Name</div>
+            <div class="col-6">John</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Middle Name</div>
+            <div class="col-6">David</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Last Name</div>
+            <div class="col-6">Anderson</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Suffix</div>
+            <div class="col-6">Jr.</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Birth Date</div>
+            <div class="col-6">2/28/2021</div>
+          </div>
+          <div class="row">
+            <div class="col-6">*Email Address</div>
+            <div class="col-6">janderson&#64;email.com</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Cell Phone Number</div>
+            <div class="col-6">8885554444</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Address 1</div>
+            <div class="col-6">123 Main St.</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Address 2</div>
+            <div class="col-6">Apt. 5</div>
+          </div>
+          <div class="row">
+            <div class="col-6">City</div>
+            <div class="col-6">Chicago</div>
+          </div>
+          <div class="row">
+            <div class="col-6">State</div>
+            <div class="col-6">IL</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Postal Code</div>
+            <div class="col-6">66111</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Country Code</div>
+            <div class="col-6">US</div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">Member Number</div>
+            <div class="col-6">1234</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Degree</div>
+            <div class="col-6">First | Second | Third | Fourth</div>
+          </div>
+          <div class="row">
+            <div class="col-6">First Degree Date</div>
+            <div class="col-6">2/28/2021</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Member Type</div>
+            <div class="col-6">Associate | Insurance</div>
+          </div>
+          <div class="row">
+            <div class="col-6">Member Class</div>
+            <div class="col-6">Paying | HonoraryLife</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="container">
+            <div class="row" *ngIf="errorSaving">
+              <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+            </div>
+          </div>
+          <button id="toggleExampleFile" type="button" class="btn btn-secondary" (click)="toggleExampleFile()">{{toggleExampleFileText}}</button>
+          <button id="uploadKnights" type="submit" class="btn btn-primary btn-kofc-blue" [disabled]="uploadKnightsForm.invalid">Save</button>
+          <button id="cancelUploadKnights" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
 </div>
-<div class="modal-body">
-  <form [formGroup]="uploadKnightsForm" (ngSubmit)="onSubmitUploadKnights()">
-    <div class="form-group row mb-1">
-      <div class="col-md-8">
-        <input type="file" class="form-control" (change)="addFile($event)" placeholder="Upload file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-      </div>
-    </div>
-    <div *ngIf="showExampleFile">
-      <div class="row">
-        <div class="col-12">
-          * denotes required
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <h6>Column Header</h6>
-        </div>
-        <div class="col-6">
-          <h6>Column Data</h6>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">First Name</div>
-        <div class="col-6">John</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Middle Name</div>
-        <div class="col-6">David</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Last Name</div>
-        <div class="col-6">Anderson</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Suffix</div>
-        <div class="col-6">Jr.</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Birth Date</div>
-        <div class="col-6">2/28/2021</div>
-      </div>
-      <div class="row">
-        <div class="col-6">*Email Address</div>
-        <div class="col-6">janderson&#64;email.com</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Cell Phone Number</div>
-        <div class="col-6">8885554444</div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">Address 1</div>
-        <div class="col-6">123 Main St.</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Address 2</div>
-        <div class="col-6">Apt. 5</div>
-      </div>
-      <div class="row">
-        <div class="col-6">City</div>
-        <div class="col-6">Chicago</div>
-      </div>
-      <div class="row">
-        <div class="col-6">State</div>
-        <div class="col-6">IL</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Postal Code</div>
-        <div class="col-6">66111</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Country Code</div>
-        <div class="col-6">US</div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">Member Number</div>
-        <div class="col-6">1234</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Degree</div>
-        <div class="col-6">First | Second | Third | Fourth</div>
-      </div>
-      <div class="row">
-        <div class="col-6">First Degree Date</div>
-        <div class="col-6">2/28/2021</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Member Type</div>
-        <div class="col-6">Associate | Insurance</div>
-      </div>
-      <div class="row">
-        <div class="col-6">Member Class</div>
-        <div class="col-6">Paying | HonoraryLife</div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="container">
-        <div class="row" *ngIf="errorSaving">
-          <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-        </div>
-      </div>
-      <button id="toggleExampleFile" type="button" class="btn btn-secondary" (click)="toggleExampleFile()">{{toggleExampleFileText}}</button>
-      <button id="uploadKnights" type="submit" class="btn btn-primary btn-kofc-blue" [disabled]="uploadKnightsForm.invalid">Save</button>
-      <button id="cancelUploadKnights" type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
-    </div>
-  </form>
-
-
 </div>

@@ -1,62 +1,65 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
 import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
 import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { UpdateKnightMembershipInfoRequest } from 'src/app/models/requests/updateKnightMembershipInfoRequest';
-import { FormsService } from 'src/app/services/forms.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'app-edit-knight-member-info-modal',
+  selector: 'edit-knight-member-info-modal',
   templateUrl: './edit-knight-member-info-modal.component.html',
   styleUrls: ['./edit-knight-member-info-modal.component.scss']
 })
-export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
+export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() knightInfo?: KnightInfo;
   @Input() knightId: string = '';
-  public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
-  public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
-  public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
+  @Input() knightDegreeFormOptions: KnightDegreeFormOption[] = [];
+  @Input() knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
+  @Input() knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
+  @Output() editKnightMemberInfoChanges = new EventEmitter<KnightInfo>();
+  @ViewChild('cancelEditKnightMemberInfoChanges', {static: false}) cancelEditKnightMemberInfoChanges: ElementRef | undefined;
+
   public editKnightMemberInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
-  private getFormsSubscription?: Subscription;
   private updateKnightMembershipInfoSubscription?: Subscription;
 
   constructor(
-    public activeModal: NgbActiveModal,
-    private formsService: FormsService,
     private knightsService: KnightsService) {
-      var today = new Date();
-      this.editKnightMemberInfoForm = new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        memberNumber: new UntypedFormControl(0),
-        mailReturned: new UntypedFormControl(false),
-        degree: new UntypedFormControl('First'),
-        firstDegreeDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
-        reentryDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
-        memberType: new UntypedFormControl('Associate'),
-        memberClass: new UntypedFormControl('Paying')
-      })
+      this.editKnightMemberInfoForm = this.initForm();
   }
 
   ngOnInit() {
-    this.getKnightDegreeFormOptions();
   }
 
   ngOnDestroy(): void {
-    if (this.getFormsSubscription) {
-      this.getFormsSubscription.unsubscribe();
-    }
-    if (this.updateKnightMembershipInfoSubscription) {
-      this.updateKnightMembershipInfoSubscription.unsubscribe();
-    }
+  }
+
+  ngOnChanges() {
+    this.errorSaving = false;
+    this.errorMessages = [];
+    this.editKnightMemberInfoForm = this.initForm();
+    this.populateForm();
+  }
+
+  private initForm() {
+    var today = new Date();
+
+    return new UntypedFormGroup({
+      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
+      memberNumber: new UntypedFormControl(0),
+      mailReturned: new UntypedFormControl(false),
+      degree: new UntypedFormControl('First'),
+      firstDegreeDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
+      reentryDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
+      memberType: new UntypedFormControl('Associate'),
+      memberClass: new UntypedFormControl('Paying')
+    });
   }
 
   public onSubmitEditKnightMemberInfo() {
@@ -70,25 +73,6 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
     console.log(knightMembershipInfo);
 
     this.updateKnightMembershipInfoSubscription = this.knightsService.updateKnightMembershipInfo(knightMembershipInfo).subscribe(knightMemberInfoObserver);
-  }
-
-  private getKnightDegreeFormOptions() {
-    let formsObserver = {
-      next: ([ knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse ]: [KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[]]) => {
-        this.knightDegreeFormOptions = knightDegreeResponse;
-        this.knightMemberTypeFormOptions = knightMemberTypeResponse;
-        this.knightMemberClassFormOptions = knightMemberClassResponse;
-        this.populateForm();
-      },
-      error: (err: any) => this.logError("Error getting Knight Degree Form Options", err),
-      complete: () => console.log('Knight Degree Form Options retrieved.')
-    };
-
-    this.getFormsSubscription = forkJoin([
-      this.formsService.getKnightDegreeFormOptions(),
-      this.formsService.getKnightMemberTypeFormOptions(),
-      this.formsService.getKnightMemberClassFormOptions()
-    ]).subscribe(formsObserver);
   }
 
   private populateForm() {
@@ -127,7 +111,12 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy {
   }
 
   private passBackResponse(response: KnightInfo) {
-    this.activeModal.close(response);
+    this.editKnightMemberInfoChanges.emit(response);
+    this.cancelEditKnightMemberInfoChanges?.nativeElement.click();
+
+    if (this.updateKnightMembershipInfoSubscription) {
+      this.updateKnightMembershipInfoSubscription.unsubscribe();
+    }
   }
 
   private logError(message: string, err: any) {
