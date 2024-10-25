@@ -38,7 +38,7 @@
               </button>
             </td>
             <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editEventModal" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
+              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
                 <svg class="bi" width="24" height="24" fill="currentColor">
                   <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                 </svg>
@@ -51,52 +51,35 @@
   </div>
   <div class="row" *ngIf="canAddEvent()">
     <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editEventModal" (click)="openCreateActivityEventModal()">Add</button>
+      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openCreateActivityEventModal()">Add</button>
     </div>
   </div>
   <!-- SEND EMAIL MODAL -->
-  <div class="modal fade" id="sendEmailModal" tabindex="-1" aria-labelledby="sendEmailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Send Email For Activity Event</h4>
-          <button #closeSendEmailModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="sendEmailForm" (ngSubmit)="onSubmitSendEmail()">
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-4">
-                <label for="subject" class="col-form-label">Email Subject</label>
-              </div>
-              <div class="col-8 col-md-8">
-                <input type="text" class="form-control" formControlName="subject" id="subject" autocomplete="off">
-              </div>
-            </div>
-            <div class="form-group row mb-1">
-              <div class="col-4 col-md-4">
-                <label for="body" class="col-form-label">Email Body</label>
-              </div>
-              <div class="col-8 col-md-8">
-                <textarea type="text" class="form-control" formControlName="body" id="body" autocomplete="off" rows="18"></textarea>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <div class="container">
-                <div class="row" *ngIf="errorSending">
-                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-                </div>
-              </div>
-              <button id="saveActivityCategory" type="submit" class="btn btn-primary btn-kofc-blue">Send</button>
-              <button id="cancelActivityCategoryChanges" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  <email-about-event-modal 
+    class="modal fade" 
+    id="sendEmailModal" 
+    tabindex="-1" 
+    aria-labelledby="sendEmailModalLabel" 
+    aria-hidden="true"
+    [activityEvent]="activityEventToEmailAbout"></email-about-event-modal>
+  <edit-activity-event-modal
+    class="modal fade" 
+    id="editActivityEventModal" 
+    tabindex="-1" 
+    aria-labelledby="sendEmailModalLabel" 
+    aria-hidden="true"
+    [editModalAction]="editModalAction"
+    [activityEventToEdit]="activityEventToEdit"
+    [modalHeaderText]="editModalHeaderText"
+    [countryFormOptions]="countryFormOptions"
+    [councilTimeZone]="councilTimeZone"
+    [activityCategoryFormOptions]="activityCategoryFormOptions"
+    [selectableActivities]="selectableActivities"
+    [allKnights]="allKnights"
+    (createActivityEventChanges)="appendActivityEventToList($event)"
+    (updateActivityEventChanges)="updateActivityEventInList($event)"></edit-activity-event-modal>
   <!-- ADD / EDIT EVENT MODAL -->
-  <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -114,7 +97,6 @@
               </div>
             </nav>
             <div class="tab-content mt-2" id="create-knight-tab-content">
-              <!-- INFORMATION -->
               <div class="tab-pane fade show active" id="information-tab-pane" role="tabpanel" aria-labelledby="information-tab" tabindex="0">
                 <div class="form-group row mb-3">
                   <div class="col-12">All times are in {{councilTimeZone?.displayName}} time zone.</div>
@@ -182,7 +164,6 @@
                   <label for="notes">Private Notes</label>
                 </div>
               </div>
-              <!-- LOCATION -->
               <div class="tab-pane fade" id="location-tab-pane" role="tabpanel" aria-labelledby="location-tab" tabindex="0" formGroupName="locationAddress">
                 <div class="form-floating mb-3">
                   <input type="text" class="form-control" formControlName="addressName" id="locationAddress_addressName" autocomplete="off" placeholder="Church">
@@ -217,7 +198,6 @@
                   <label for="locationAddress_postalCode">Zip Code</label>
                 </div>
               </div>
-              <!-- VOLUNTEERS -->
               <div class="tab-pane fade" id="volunteers-tab-pane" role="tabpanel" aria-labelledby="volunteers-tab" tabindex="0">
                 <div class="form-group row mb-3">
                   <div class="col-12">All times are in {{councilTimeZone?.displayName}} time zone.</div>
@@ -297,6 +277,6 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div id="activityEventSpacer"></div>
 </div>

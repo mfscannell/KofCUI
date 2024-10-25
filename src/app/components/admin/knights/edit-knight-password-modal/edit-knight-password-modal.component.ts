@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
@@ -10,16 +10,19 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { KnightsService } from 'src/app/services/knights.service';
 
 @Component({
-  selector: 'kofc-edit-knight-password-modal',
+  selector: 'edit-knight-password-modal',
   templateUrl: './edit-knight-password-modal.component.html',
   styleUrls: ['./edit-knight-password-modal.component.scss']
 })
-export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
+export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() knightsFullName: string = '';
   @Input() knightId: string = '';
   @Input() knightUser?: KnightUser;
+  @Output() editKnightPasswordChanges = new EventEmitter<KnightUser>();
+  @ViewChild('cancelEditKnightPasswordChanges', {static: false}) cancelEditKnightPasswordChanges: ElementRef | undefined;
   editKnightPasswordForm: UntypedFormGroup;
+  
   public passwordRequirements: PasswordRequirements = {
     requireUppercase: false,
     requireLowercase: false,
@@ -35,7 +38,6 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   errorMessages: string[] = [];
 
   constructor(
-    public activeModal: NgbActiveModal,
     private knightsService: KnightsService,
     private accountsService: AccountsService) {
     this.editKnightPasswordForm = new UntypedFormGroup({
@@ -63,6 +65,23 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
 
     if (this.getPasswordRequirementsSubscription) {
       this.getPasswordRequirementsSubscription.unsubscribe();
+    }
+  }
+
+  ngOnChanges() {
+    this.errorSaving = false;
+    this.errorMessages = [];
+    this.editKnightPasswordForm = new UntypedFormGroup({
+      accountActivated: new UntypedFormControl(),
+      password: new UntypedFormControl(''),
+      resetPasswordAtNextLogin: new UntypedFormControl()
+    });
+
+    if (this.knightUser) {
+      this.editKnightPasswordForm.patchValue({
+        accountActivated: this.knightUser.accountActivated,
+        resetPasswordAtNextLogin: this.knightUser.resetPasswordAtNextLogin
+      });
     }
   }
 
@@ -173,7 +192,8 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy {
   }
 
   private passBackResponse(response: KnightUser) {
-    this.activeModal.close(response);
+    this.editKnightPasswordChanges.emit(response);
+    this.cancelEditKnightPasswordChanges?.nativeElement.click();
   }
 
   private logError(message: string, err: any) {

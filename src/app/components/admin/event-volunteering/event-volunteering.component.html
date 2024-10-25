@@ -39,9 +39,15 @@
       </table>
     </div>
   </div>
+  <volunteer-for-event-modal
+    class="modal fade" id="volunteerForEventModal" 
+    [activityEvent]="activityEvent"
+    [allKnights]="allKnights"
+    [knightId]="knightId"
+    (editLeadershipRoleChanges)="updateActivityEventInList($event)"></volunteer-for-event-modal>
 
   <!-- EVENT VOLUNTEERING MODAL -->
-  <div class="modal fade" id="volunteerForEventModal" tabindex="-1" aria-labelledby="volunteerForEventModalLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="volunteerForEventModal" tabindex="-1" aria-labelledby="volunteerForEventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -131,6 +137,6 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <div id="activityEventSpacer"></div>
 </div>

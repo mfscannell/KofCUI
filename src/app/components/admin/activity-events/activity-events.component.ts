@@ -50,19 +50,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   errorSending: boolean = false;
   errorMessages: string[] = [];
-  public sendEmailForm: UntypedFormGroup;
   public activityEventToEmailAbout: ActivityEvent | undefined;
-  private activitiesSubscription?: Subscription;
-  @ViewChild('closeSendEmailModal', {static: false}) closeSendEmailModal: ElementRef | undefined;
 
-  private updateActivityEventSubscription?: Subscription;
-  private createActivityEventSubscription?: Subscription;
   private getCouncilTimeZoneSubscription?: Subscription;
   private getFormOptionsSubscriptions?: Subscription;
-  countryFormOptions: CountryFormOption[] = [];
-  activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
-  editModalHeaderText: string = '';
-  editModalAction: ModalActionEnums = ModalActionEnums.Create;
+  public countryFormOptions: CountryFormOption[] = [];
+  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  public editModalHeaderText: string = '';
+  public editModalAction: ModalActionEnums = ModalActionEnums.Create;
 
   constructor(
     private activityEventsService: ActivityEventsService,
@@ -71,7 +66,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     private permissionsService: PermissionsService,
     private configsService: ConfigsService,
     private formsService: FormsService,
-    private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter) {
       var initialDate = new Date();
       initialDate.setMonth(initialDate.getMonth() - 3);
@@ -82,10 +76,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       console.log("Exiting constructor");
       console.log(this.fromDate);
       console.log(this.toDate);
-      this.sendEmailForm = new UntypedFormGroup({
-        subject: new UntypedFormControl(''),
-        body: new UntypedFormControl('')
-      });
 
       var today = new Date();
       this.editActivityEventForm = new UntypedFormGroup({
@@ -118,9 +108,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getAllActivityEvents();
-    this.getAllActiveKnightsNames();
-    this.getAllActivities();
-    this.getCouncilTimeZone();
     this.getFormOptions();
   }
 
@@ -135,18 +122,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
     if (this.getAllActivitiesSubscription) {
       this.getAllActivitiesSubscription.unsubscribe();
-    }
-
-    if (this.activitiesSubscription) {
-      this.activitiesSubscription.unsubscribe();
-    }
-
-    if (this.updateActivityEventSubscription) {
-      this.updateActivityEventSubscription.unsubscribe();
-    }
-
-    if (this.createActivityEventSubscription) {
-      this.createActivityEventSubscription.unsubscribe();
     }
 
     if (this.getCouncilTimeZoneSubscription) {
@@ -170,7 +145,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     return this.permissionsService.canEditEvent(activityId);
   }
 
-  getAllActivityEvents() {
+  public getAllActivityEvents() {
     console.log("getAllActivityEvents");
     console.log(this.fromDate);
     console.log(this.toDate);
@@ -188,33 +163,21 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   private handleGetActivityEvents(activityEvents: ActivityEvent[]) {
     this.activityEvents = activityEvents;
+  }
+
+  private handleGetActivities(response: Activity[]) {
+    this.allActivities = response.sort((a, b)=> a.activityName.localeCompare(b.activityName));
     this.selectableActivities = this.permissionsService.filterActivitiesByEventCreation(this.allActivities);
-  }
-
-  private getAllActivities() {
-    let activitiesObserver = {
-      next: (getAllActivitiesResponse: Activity[]) => this.allActivities = getAllActivitiesResponse.sort((a, b)=> a.activityName.localeCompare(b.activityName)),
-      error: (err: any) => this.logError('Error getting all activities', err),
-      complete: () => console.log('All activities loaded.')
-    };
-    this.getAllActivitiesSubscription = this.activitiesService.getAllActivities().subscribe(activitiesObserver);
-  }
-
-  private getCouncilTimeZone() {
-    let getCouncilTimeZoneObserver = {
-      next: (councilTimeZone: TimeZoneFormOption) => this.councilTimeZone = councilTimeZone,
-      error: (err: any) => this.logError('Error getting council time zone.', err),
-      complete: () => console.log('Council time zone loaded.')
-    };
-
-    this.getCouncilTimeZoneSubscription = this.configsService.getCouncilTimeZone().subscribe(getCouncilTimeZoneObserver);
   }
 
   private getFormOptions() {
     let formsObserver = {
-      next: ([ activityCategoriesResponse, countryResponse ]: [ActivityCategoryFormOption[], CountryFormOption[]]) => {
+      next: ([ activityCategoriesResponse, countryResponse, councilTimeZone, getAllActivitiesResponse, getAllKnightsResponse ]: [ActivityCategoryFormOption[], CountryFormOption[], TimeZoneFormOption, Activity[], Knight[]]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.countryFormOptions = countryResponse;
+        this.councilTimeZone = councilTimeZone;
+        this.handleGetActivities(getAllActivitiesResponse);
+        this.allKnights = getAllKnightsResponse;
       },
       error: (err: any) => this.logError("Error getting Activity Events Form Options", err),
       complete: () => console.log('Activity Events Form Options retrieved.')
@@ -222,344 +185,48 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
     this.getFormOptionsSubscriptions = forkJoin([
       this.formsService.getActivityCategoryFormOptions(),
-      this.formsService.getCountryFormOptions()
+      this.formsService.getCountryFormOptions(),
+      this.configsService.getCouncilTimeZone(),
+      this.activitiesService.getAllActivities(),
+      this.knightsService.getAllActiveKnightsNames()
     ]).subscribe(formsObserver);
   }
 
-  private initEditEventForm() {
-    var today = new Date();
-      this.editActivityEventForm = new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        activityId: new UntypedFormControl(''),
-        activityCategory: new UntypedFormControl(''),
-        eventName: new UntypedFormControl(''),
-        eventDescription: new UntypedFormControl(''),
-        startDate: new UntypedFormControl(''),
-        startTime: new UntypedFormControl(''),
-        endDate: new UntypedFormControl(''),
-        endTime: new UntypedFormControl(''),
-        locationAddress: new UntypedFormGroup({
-          id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-          addressName: new UntypedFormControl(''),
-          address1: new UntypedFormControl(''),
-          address2: new UntypedFormControl(''),
-          city: new UntypedFormControl(''),
-          stateCode: new UntypedFormControl(''),
-          postalCode: new UntypedFormControl(''),
-          countryCode: new UntypedFormControl('')
-        }),
-        showInCalendar: new UntypedFormControl(null),
-        canceled: new UntypedFormControl(null),
-        canceledReason: new UntypedFormControl(''),
-        notes: new UntypedFormControl(''),
-        volunteerSignUpRoles: new UntypedFormArray([])
-       });
+  // private getAllActiveKnightsNames() {
+  //   let knightsObserver = {
+  //     next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
+  //     error: (err: any) => this.logError('Error getting all knights.', err),
+  //     complete: () => console.log('All knights loaded.')
+  //   };
+
+  //   this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
+  // }
+
+  public openSendEmailModal(activityEvent: ActivityEvent) {
+    this.activityEventToEmailAbout = activityEvent;
   }
 
-  private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    let eventVolunteersArray: UntypedFormGroup[] = [];
-
-    if (eventVolunteers) {
-      eventVolunteers.forEach((eventVolunteer) => {
-        const eventVolunteerFormGroup = new UntypedFormGroup({
-          id: new UntypedFormControl(eventVolunteer.id),
-          knightId: new UntypedFormControl(eventVolunteer.knightId)
-        });
-
-        eventVolunteersArray.push(eventVolunteerFormGroup);
-      });
-    }
-
-    return eventVolunteersArray;
+  public openCreateActivityEventModal() {
+    this.errorSending = false;
+    this.errorMessages = [];
+    this.activityEventToEdit = undefined;
+    this.editModalAction = ModalActionEnums.Create;
+    this.editModalHeaderText = 'Adding Activity Event';
   }
 
-  public enableDisableAdministrativeDivisions(): void {
-    let countryCode = this.getCountryCode();
-    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
-
-    if (hasCountryCode) {
-      this.editActivityEventForm.get('locationAddress.stateCode')?.enable();
-    } else {
-      this.editActivityEventForm.get('locationAddress.stateCode')?.disable();
-    }
-  }
-
-  private getCountryCode(): string {
-    return this.editActivityEventForm.get('locationAddress.countryCode')?.value;
-  }
-
-  get volunteerSignUpRolesForm() {
-    return this.editActivityEventForm.controls["volunteerSignUpRoles"] as UntypedFormArray;
-  }
-
-  private getAllActiveKnightsNames() {
-    let knightsObserver = {
-      next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
-      error: (err: any) => this.logError('Error getting all knights.', err),
-      complete: () => console.log('All knights loaded.')
-    };
-
-    this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
-  }
-
-  openEditActivityEventModal(activityEvent: ActivityEvent) {
+  public openEditActivityEventModal(activityEvent: ActivityEvent) {
     this.errorSending = false;
     this.errorMessages = [];
     this.activityEventToEdit = activityEvent;
     this.editModalAction = ModalActionEnums.Edit;
     this.editModalHeaderText = 'Editing Activity Event';
-    this.initEditEventForm();
-
-    this.editActivityEventForm.patchValue({
-      id: this.activityEventToEdit.id,
-      activityId: this.activityEventToEdit.activityId,
-      activityCategory: this.activityEventToEdit.activityCategory,
-      eventName: this.activityEventToEdit.eventName,
-      eventDescription: this.activityEventToEdit.eventDescription,
-      startDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEventToEdit.startDateTime),
-      startTime: DateTimeFormatter.DateTimeToIso8601Time(this.activityEventToEdit.startDateTime),
-      endDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEventToEdit.endDateTime),
-      endTime: DateTimeFormatter.DateTimeToIso8601Time(this.activityEventToEdit.endDateTime),
-      locationAddress: this.activityEventToEdit.locationAddress,
-      showInCalendar: this.activityEventToEdit.showInCalendar,
-      canceled: this.activityEventToEdit.canceled,
-      canceledReason: this.activityEventToEdit.canceledReason,
-      notes: this.activityEventToEdit.notes
-     });
-
-     this.activityEventToEdit.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
-      const volunteerSignUpRole = new UntypedFormGroup({
-        id: new UntypedFormControl(role.id),
-        roleTitle: new UntypedFormControl(role.roleTitle),
-        startDate: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Date(role.startDateTime)),
-        startTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time(role.startDateTime)),
-        endDate: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Date(role.endDateTime)),
-        endTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time(role.endDateTime)),
-        numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
-        eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers))
-      });
-
-      this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
-     });
-
-     this.enableDisableAdministrativeDivisions();
   }
 
-  onChangeActivity(event: any) {
-    console.log(event);
-    let eventNameIndex = this.selectableActivities.findIndex(x => x.activityId == event.target.value);
-
-    if (eventNameIndex >= 0) {
-      let eventName = this.selectableActivities[eventNameIndex].activityName;
-      this.editActivityEventForm.controls["eventName"].setValue(eventName);
-
-      let activityCategory = this.selectableActivities[eventNameIndex].activityCategory;
-      this.editActivityEventForm.controls["activityCategory"].setValue(activityCategory);
-    }
+  public appendActivityEventToList(activityEvent: ActivityEvent) {
+    this.activityEvents?.push(activityEvent)
   }
 
-  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
-    let countryCode = this.getCountryCode();
-
-    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
-
-    if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
-      return filteredCountryFormOptions[0].administrativeDivisions;
-    }
-
-    return [];
-  }
-
-  deleteVolunteerSignUpRole(roleIndex: number) {
-    this.volunteerSignUpRolesForm.removeAt(roleIndex);
-  }
-
-  getEventVolunteers(volunteerSignUpRole: AbstractControl) {
-    const something = volunteerSignUpRole as UntypedFormGroup;
-    const eventVolunteers = something.controls["eventVolunteers"] as UntypedFormArray;
-
-    return eventVolunteers.controls;
-  }
-
-  deleteEventVolunteer(roleIndex: number, volunteerIndex: number) {
-    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(roleIndex) as UntypedFormGroup;
-    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
-    eventVolunteerFormArray.removeAt(volunteerIndex);
-  }
-
-  addEventVolunteer(volunteerSignUpRoleIndex: number) {
-    const eventVolunteerFormGroup = new UntypedFormGroup({
-      id: new UntypedFormControl(''),
-      knightId: new UntypedFormControl('')
-    })
-
-    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
-    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
-    eventVolunteerFormArray.push(eventVolunteerFormGroup);
-  }
-
-  addVolunteerSignUpRole() {
-    const volunteerSignUpRole = new UntypedFormGroup({
-      id: new UntypedFormControl(''),
-      roleTitle: new UntypedFormControl(''),
-      startDate: new UntypedFormControl(this.getEventStartDate()),
-      startTime: new UntypedFormControl(this.getEventStartTime()),
-      endDate: new UntypedFormControl(this.getEventEndDate()),
-      endTime: new UntypedFormControl(this.getEventEndTime()),
-      numberOfVolunteersNeeded: new UntypedFormControl(''),
-      eventVolunteers: new UntypedFormArray([])
-    });
-
-    this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
-  }
-
-  private getEventStartDate() {
-    let formControl = this.editActivityEventForm.controls["startDate"] as UntypedFormControl;
-
-    return formControl.value;
-  }
-
-  private getEventStartTime() {
-    let formControl = this.editActivityEventForm.controls["startTime"] as UntypedFormControl;
-
-    return formControl.value;
-  }
-
-  private getEventEndDate() {
-    let formControl = this.editActivityEventForm.controls["endDate"] as UntypedFormControl;
-
-    return formControl.value;
-  }
-
-  private getEventEndTime() {
-    let formControl = this.editActivityEventForm.controls["endTime"] as UntypedFormControl;
-
-    return formControl.value;
-  }
-
-  onSubmitEditActivityEvent() {
-    if (this.editModalAction === ModalActionEnums.Edit) {
-      let updateActivityEventRequest = this.mapFormToActivityEvent();
-      
-      this.updateActivityEvent(updateActivityEventRequest);
-    } else if (this.editModalAction === ModalActionEnums.Create) {
-      let createActivityEventRequest = this.mapFormToActivityEvent();
-
-      this.createActivityEvent(createActivityEventRequest);
-    }
-  }
-
-  private createActivityEvent(activityEvent: ActivityEvent) {
-    let activityEventObserver = {
-      next: (createdActivityEvent: ActivityEvent) => this.activityEvents?.push(createdActivityEvent),
-      error: (err: any) => this.logError('Error creating Activity Event', err),
-      complete: () => console.log('Activity Event created.')
-    };
-
-    this.createActivityEventSubscription = this.activityEventsService.createActivityEvent(activityEvent).subscribe(activityEventObserver);
-  }
-
-  private updateActivityEvent(activityEvent: ActivityEvent) {
-    let activityEventObserver = {
-      next: (activityEvent: ActivityEvent) => this.updateActivityEventInList(activityEvent),
-      error: (err: any) => this.logError('Error updating Activity Event', err),
-      complete: () => console.log('Activity Event updated.')
-    };
-
-    this.updateActivityEventSubscription = this.activityEventsService.updateActivityEvent(activityEvent).subscribe(activityEventObserver);
-  }
-
-  private mapFormToActivityEvent(): ActivityEvent {
-    let rawForm = this.editActivityEventForm.getRawValue();
-    let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
-      let volunteerSignUpRole: VolunteerSignUpRole = {
-        id: role.id || '00000000-0000-0000-0000-000000000000',
-        roleTitle: role.roleTitle,
-        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.startTime),
-        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.endTime),
-        numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-        eventVolunteers: role.eventVolunteers.map(function(ev: any) {
-          let eventVolunteer: EventVolunteer = {
-            id: ev.id || '00000000-0000-0000-0000-000000000000',
-            knightId: ev.knightId
-          } as EventVolunteer;
-          return eventVolunteer;
-        })
-      } as VolunteerSignUpRole;
-
-      return volunteerSignUpRole;
-    });
-    let locationAddress: StreetAddress = {
-      id: rawForm.locationAddress.id || '00000000-0000-0000-0000-000000000000',
-      addressName: rawForm.locationAddress.addressName,
-      address1: rawForm.locationAddress.address1,
-      address2: rawForm.locationAddress.address2,
-      city: rawForm.locationAddress.city,
-      stateCode: rawForm.locationAddress.stateCode,
-      postalCode: rawForm.locationAddress.postalCode,
-      countryCode: rawForm.locationAddress.countryCode
-    } as StreetAddress;
-    let activityEvent: ActivityEvent = {
-      id: rawForm.id || '',
-      activityId: rawForm.activityId,
-      activityCategory: rawForm.activityCategory,
-      eventName: rawForm.eventName,
-      eventDescription: rawForm.eventDescription,
-      startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(rawForm.startDate, rawForm.startTime) || '1999-01-01T00:00',
-      endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(rawForm.startDate, rawForm.endTime) || '1999-01-01T00:00',
-      locationAddress: locationAddress,
-      volunteerSignUpRoles: volunteerRoles,
-      showInCalendar: rawForm.showInCalendar? rawForm.showInCalendar : false,
-      canceled: rawForm.canceled? rawForm.canceled : false,
-      canceledReason: rawForm.canceledReason,
-      notes: rawForm.notes
-    } as ActivityEvent;
-
-    console.log("mapFormToActivityEvent");
-    console.log(activityEvent);
-
-    return activityEvent;
-  }
-
-  openSendEmailModal(activityEvent: ActivityEvent) {
-    this.sendEmailForm = new UntypedFormGroup({
-      subject: new UntypedFormControl(''),
-      body: new UntypedFormControl('')
-    });
-    this.errorSending = false;
-    this.errorMessages = [];
-    this.activityEventToEmailAbout = activityEvent;
-  }
-
-  onSubmitSendEmail() {
-    let sendEmailObserver = {
-      next: (sendEmailResponse: SendEmailResponse) => this.showSendEmailResponse(sendEmailResponse),
-      error: (err: any) => this.logError('Error sending email', err),
-      complete: () => console.log('Email sent.')
-    };
-
-    let sendEmailRequest = this.mapEmailFormToRequest();
-
-    this.activitiesSubscription = this.activitiesService.sendEmailAboutActivity(sendEmailRequest).subscribe(sendEmailObserver);
-  }
-
-  private mapEmailFormToRequest() {
-    let rawForm = this.sendEmailForm.getRawValue();
-
-    let request: SendEmailRequest = {
-      activityId: this.activityEventToEmailAbout?.activityId || '',
-      subject: rawForm.subject,
-      body: rawForm.body
-    };
-
-    return request;
-  }
-
-  private showSendEmailResponse(sendEmailResponse: SendEmailResponse) {
-    this.closeSendEmailModal?.nativeElement.click();
-  }
-
-  private updateActivityEventInList(activityEvent: ActivityEvent) {
+  public updateActivityEventInList(activityEvent: ActivityEvent) {
     let index = this.activityEvents?.findIndex(x => x.id === activityEvent.id)
 
     if (this.activityEvents && index !== undefined && index >= 0) {
@@ -567,19 +234,10 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     }
   }
 
-  openCreateActivityEventModal() {
-    this.errorSending = false;
-    this.errorMessages = [];
-    this.activityEventToEdit = undefined;
-    this.editModalAction = ModalActionEnums.Create;
-    this.editModalHeaderText = 'Adding Activity Event';
-    this.initEditEventForm();
-  }
-
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
+  // validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+  //   const parsed = this.formatter.parse(input);
+  //   return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  // }
 
   private logError(message: string, err: any) {
     console.error(message);

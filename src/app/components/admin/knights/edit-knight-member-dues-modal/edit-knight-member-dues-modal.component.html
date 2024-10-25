@@ -1,28 +1,32 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
-  </button>
-</div>
-<div class="modal-body">
-  <form [formGroup]="editKnightMemberDuesForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
-    <div formArrayName="memberDues">
-      <div *ngFor="let memberDue of memberDuesFormArray.controls; let i = index" [formGroupName]="i">
-        <div class="form-floating mb-3">
-          <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
-            <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPayStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
-          </select>
-          <label for="stateCode">{{getMemberDuesYear(memberDue)}}</label>
-        </div>
-      </div>
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+      <button #closeModal type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
+      </button>
     </div>
-    <div class="modal-footer">
-      <div class="container">
-        <div class="row" *ngIf="errorSaving">
-          <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+    <div class="modal-body">
+      <form [formGroup]="editKnightMemberDuesForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
+        <div formArrayName="memberDues">
+          <div *ngFor="let memberDue of memberDuesFormArray.controls; let i = index" [formGroupName]="i">
+            <div class="form-floating mb-3">
+              <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
+                <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
+              </select>
+              <label for="stateCode">{{getMemberDuesYear(memberDue)}}</label>
+            </div>
+          </div>
         </div>
-      </div>
-      <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-      <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
-      </div>
-  </form>
+        <div class="modal-footer">
+          <div class="container">
+            <div class="row" *ngIf="errorSaving">
+              <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+          </div>
+      </form>
+    </div>
+  </div>
 </div>
