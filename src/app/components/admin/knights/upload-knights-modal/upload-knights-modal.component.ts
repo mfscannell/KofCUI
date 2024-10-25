@@ -1,6 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
@@ -8,12 +7,15 @@ import { ExcelFileReader } from 'src/app/services/excelFileReader.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'kofc-upload-knights-modal',
+  selector: 'upload-knights-modal',
   templateUrl: './upload-knights-modal.component.html',
   styleUrls: ['./upload-knights-modal.component.scss']
 })
-export class UploadKnightsModalComponent implements OnInit, OnDestroy {
-  @Input() modalHeaderText: string = '';
+export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() showModal: boolean = false;
+  @Output() uploadKnightsChanges = new EventEmitter<Knight[]>();
+  @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
+  
   uploadKnightsForm: UntypedFormGroup;
   filePath?: Blob;
   showExampleFile: boolean = false;
@@ -23,7 +25,6 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy {
   errorMessages: string[] = [];
 
   constructor(
-    public activeModal: NgbActiveModal,
     private knightsService: KnightsService
   ) {
     this.uploadKnightsForm = new UntypedFormGroup({});
@@ -33,9 +34,12 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-      if (this.createKnightsSubscription) {
-        this.createKnightsSubscription.unsubscribe();
-      }
+  }
+
+  ngOnChanges() {
+    this.showExampleFile = false;
+    this.errorSaving = false;
+    this.errorMessages = [];
   }
 
   addFile(event: any) {
@@ -64,7 +68,10 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy {
   }
 
   private passBackResponse(knights: Knight[]) {
-    this.activeModal.close(knights);
+    this.uploadKnightsChanges.emit(knights);
+    this.createKnightsSubscription?.unsubscribe();
+    this.showModal = false;
+    this.closeModal?.nativeElement.click();
   }
 
   toggleExampleFile() {

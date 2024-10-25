@@ -1,34 +1,32 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, filter } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { Knight } from 'src/app/models/knight';
 import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
 import { StreetAddress } from 'src/app/models/streetAddress';
-import { FormsService } from 'src/app/services/forms.service';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'app-edit-knight-personal-info-modal',
+  selector: 'edit-knight-personal-info-modal',
   templateUrl: './edit-knight-personal-info-modal.component.html',
   styleUrls: ['./edit-knight-personal-info-modal.component.scss']
 })
-export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
+export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() knight?: Knight;
+  @Input() countryFormOptions: CountryFormOption[] = [];
+  @Output() editKnightPersonalInfoChanges = new EventEmitter<Knight>();
+  @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
+  
   public editKnightPersonalInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
-  public countryFormOptions: CountryFormOption[] = [];
-  private getCountryFormOptionsSubscription?: Subscription;
   private updateKnightPersonalInfoSubscription?: Subscription;
 
   constructor(
-    public activeModal: NgbActiveModal,
-    private formsService: FormsService,
     private knightsService: KnightsService) {
       var today = new Date();
       this.editKnightPersonalInfoForm = new UntypedFormGroup({
@@ -79,8 +77,6 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    this.enableDisableAdministrativeDivisions();
-    this.getCountryFormOptions();
   }
 
   ngOnDestroy(): void {
@@ -88,8 +84,25 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
       this.updateKnightPersonalInfoSubscription.unsubscribe();
     }
 
-    if (this.getCountryFormOptionsSubscription) {
-      this.getCountryFormOptionsSubscription.unsubscribe();
+    this.enableDisableAdministrativeDivisions();
+  }
+
+  ngOnChanges() {
+    this.errorSaving = false;
+    this.errorMessages = [];
+
+    if (this.knight) {
+      this.editKnightPersonalInfoForm.patchValue({
+        id: this.knight.id,
+        firstName: this.knight.firstName,
+        middleName: this.knight.middleName,
+        lastName: this.knight.lastName,
+        nameSuffix: this.knight.nameSuffix,
+        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(this.knight.dateOfBirth),
+        emailAddress: this.knight.emailAddress,
+        cellPhoneNumber: this.knight.cellPhoneNumber,
+        homeAddress: this.knight.homeAddress
+       });
     }
   }
 
@@ -117,34 +130,6 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
       this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
     } else {
       this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.disable();
-    }
-  }
-
-  private getCountryFormOptions() {
-    let getCountryFormOptionsObserver = {
-      next: (response: CountryFormOption[]) => this.handleGetCountryFormOptions(response),
-      error: (err: any) => this.logError("Error getting Country Form Options", err),
-      complete: () => console.log('Country Form Options retrieved.')
-    }
-
-    this.getCountryFormOptionsSubscription = this.formsService.getCountryFormOptions().subscribe(getCountryFormOptionsObserver);
-  }
-
-  private handleGetCountryFormOptions(response: CountryFormOption[]) {
-    this.countryFormOptions = response;
-
-    if (this.knight) {
-      this.editKnightPersonalInfoForm.patchValue({
-        id: this.knight.id,
-        firstName: this.knight.firstName,
-        middleName: this.knight.middleName,
-        lastName: this.knight.lastName,
-        nameSuffix: this.knight.nameSuffix,
-        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(this.knight.dateOfBirth),
-        emailAddress: this.knight.emailAddress,
-        cellPhoneNumber: this.knight.cellPhoneNumber,
-        homeAddress: this.knight.homeAddress
-       });
     }
   }
 
@@ -189,7 +174,9 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy {
   }
 
   private passBackResponse(response: Knight) {
-    this.activeModal.close(response);
+    this.editKnightPersonalInfoChanges.emit(response);
+    this.closeModal?.nativeElement.click();
+    this.updateKnightPersonalInfoSubscription?.unsubscribe();
   }
 
   private logError(message: string, err: any) {
