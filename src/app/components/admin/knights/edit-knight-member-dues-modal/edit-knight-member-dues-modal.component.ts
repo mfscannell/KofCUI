@@ -60,7 +60,6 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   }
 
   private populateForm() {
-    let something = 5;
     if (this.memberDues) {
       this.memberDues.forEach((memberDue: MemberDues) => {
         const memberDueFormGroup = new UntypedFormGroup({
