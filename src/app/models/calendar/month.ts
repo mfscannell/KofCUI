@@ -3,6 +3,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { UpcomingEvent } from '../upcomingEvent';
 
 export class Month {
+    // TODO MFS change to interface
     weeks: Week[] = [];
     monthOfYear: number = 0;
     year: number = 0;
@@ -20,7 +21,7 @@ export class Month {
     }
 
     addEventsToMonth(upcomingEvents: UpcomingEvent[]) {
-        let eventsInMonth = upcomingEvents.filter(event => DateTimeFormatter.getMonth(event.startDateTime) === this.monthOfYear && DateTimeFormatter.getYear(event.startDateTime) === this.year);
+        const eventsInMonth = upcomingEvents.filter(event => DateTimeFormatter.getMonth(event.startDateTime) === this.monthOfYear && DateTimeFormatter.getYear(event.startDateTime) === this.year);
 
         eventsInMonth.forEach((event) => {
             this.weeks.forEach((week) => {

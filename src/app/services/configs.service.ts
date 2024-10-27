@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
-import { TimeZoneFormOption } from '../models/inputOptions/timeZoneFormOption';
 import { WebsiteConfigs } from '../models/websiteConfigs';
+import { GenericFormOption } from '../models/inputOptions/genericFormOption';
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +42,7 @@ export class ConfigsService {
         return this.allWebsiteConfigs !== undefined;
     }
 
-    getCouncilTimeZone(): Observable<TimeZoneFormOption> {
-        return this.http.get<TimeZoneFormOption>('configs/councilTimeZone');
+    getCouncilTimeZone(): Observable<GenericFormOption> {
+        return this.http.get<GenericFormOption>('configs/councilTimeZone');
     }
 }

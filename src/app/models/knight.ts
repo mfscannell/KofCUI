@@ -1,4 +1,3 @@
-import { UserTypeEnums } from "../enums/userTypeEnums";
 import { StreetAddress } from "./streetAddress";
 import { KnightInfo } from "src/app/models/knightInfo";
 import { ActivityInterest } from "src/app/models/activityInterest";

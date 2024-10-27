@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AccountsService } from '../services/accounts.service';
+import { Router } from '@angular/router';
 import { PermissionsService } from '../services/permissions.service';
 
 @Injectable({
@@ -17,7 +14,7 @@ export class ConfigsGuard  {
   }
 
   canActivate(): boolean {
-    let permit = this.permissionsService.canActivateConfigs();
+    const permit = this.permissionsService.canActivateConfigs();
 
     if (permit) {
       return true;

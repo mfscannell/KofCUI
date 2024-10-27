@@ -1,6 +1,7 @@
 import { Day } from 'src/app/models/calendar/day';
 
 export class Week {
+    // TODO MFS change to interface.
     days: Day[] = [];
 
     constructor(fields?: {

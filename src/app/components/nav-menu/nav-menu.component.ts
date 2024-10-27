@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from 'src/app/models/externalLink';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { AssetsService } from 'src/app/services/assets.service';
 import { ConfigsService } from 'src/app/services/configs.service';
@@ -71,9 +72,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   private getWebsiteText() {
-    let websiteTextObserver = {
-      next: (result: void) => this.handleGetWebsiteTextResult(),
-      error: (err: any) => this.logError('Error getting all website text.', err),
+    const websiteTextObserver = {
+      next: () => this.handleGetWebsiteTextResult(),
+      error: (err: ApiResponseError) => this.logError('Error getting all website text.', err),
       complete: () => console.log('Website text loaded.')
     };
     this.getWebsiteTextSubscription = this.configsService.getAllWebsiteConfigs().subscribe(websiteTextObserver);
@@ -84,9 +85,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   private getWebsiteContent() {
-    let observer = {
-      next: (result: void) => this.handleGetWebsiteContent(),
-      error: (err: any) => this.logError('Error getting website content.', err),
+    const observer = {
+      next: () => this.handleGetWebsiteContent(),
+      error: (err: ApiResponseError) => this.logError('Error getting website content.', err),
       complete: () => console.log('Website content loaded.')
     };
     this.getWebsiteContentSubscription = this.assetsService.getAllWebsiteContent().subscribe(observer);
@@ -95,7 +96,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private handleGetWebsiteContent() {
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -104,7 +105,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

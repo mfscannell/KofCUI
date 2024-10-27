@@ -1,10 +1,5 @@
-import { Observable, ReplaySubject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import { LogInRequest } from '../models/requests/logInRequest';
-import { LogInResponse } from '../models/responses/logInResponse';
 import { AccountsService } from './accounts.service';
 import { Activity } from '../models/activity';
 
@@ -28,19 +23,19 @@ export class PermissionsService {
   }
 
   canActivateAccount() {
-    let token = this.accountsService.getToken();
+    const token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
   }
 
   canActivateAdmin() {
-    let token = this.accountsService.getToken();
+    const token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
   }
 
   canActivateKnights() {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole) || roles.includes(this.financialSecretaryRole)) {
       return true;
@@ -50,7 +45,7 @@ export class PermissionsService {
   }
 
   canActivateLeadershipRoles() {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
       return true;
@@ -60,7 +55,7 @@ export class PermissionsService {
   }
 
   canActivateActivities() {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || 
         roles.includes(this.grandKnightRole) || 
@@ -77,7 +72,7 @@ export class PermissionsService {
 
     roles.forEach(r => {
       if (r.startsWith('__ActivityCoordinator__')) {
-        let id = r.substring(23);
+        const id = r.substring(23);
 
         if (!Number.isNaN(id)) {
           isActivityCoordinator = true;
@@ -89,7 +84,7 @@ export class PermissionsService {
   }
 
   canAddActivity() {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     return roles.includes(this.adminRole) ||
         roles.includes(this.grandKnightRole) ||
@@ -102,7 +97,7 @@ export class PermissionsService {
   }
 
   canEditActivity(activityId?: string) {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     return roles.includes(this.adminRole) || 
         roles.includes(this.grandKnightRole) || 
@@ -120,7 +115,7 @@ export class PermissionsService {
     // let token = this.accountsService.getToken();
 
     // return token !== undefined && token !== '';
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || 
         roles.includes(this.grandKnightRole) || 
@@ -137,7 +132,7 @@ export class PermissionsService {
 
     roles.forEach(r => {
       if (r.startsWith('__ActivityCoordinator__')) {
-        let id = r.substring(23);
+        const id = r.substring(23);
 
         if (!Number.isNaN(id)) {
           isActivityCoordinator = true;
@@ -149,13 +144,13 @@ export class PermissionsService {
   }
 
   canActivateEventVolunteering() {
-    let token = this.accountsService.getToken();
+    const token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
   }
 
   canAddEvent(activities: Activity[]) {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || 
         roles.includes(this.grandKnightRole) || 
@@ -180,7 +175,7 @@ export class PermissionsService {
   }
 
   canEditEvent(activityId: string) {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     return roles.includes(this.adminRole) 
     || roles.includes(this.grandKnightRole) 
@@ -194,7 +189,7 @@ export class PermissionsService {
   }
 
   filterActivitiesByEventCreation(activities: Activity[]) {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) ||
         roles.includes(this.grandKnightRole) ||
@@ -207,7 +202,7 @@ export class PermissionsService {
       return activities;
     }
 
-    let filteredActivities: Activity[]= [];
+    const filteredActivities: Activity[]= [];
 
     activities.forEach(a => {
       if (roles.includes(`__ActivityCoordinator__${a.activityId}`)) {
@@ -219,7 +214,7 @@ export class PermissionsService {
   }
 
   canActivateConfigs() {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
       return true;
@@ -229,7 +224,7 @@ export class PermissionsService {
   }
 
   canActivateAssets() {
-    let roles = this.accountsService.getRoles();
+    const roles = this.accountsService.getRoles();
 
     if (roles.includes(this.adminRole) || roles.includes(this.grandKnightRole) || roles.includes(this.deputyGrandKnightRole)) {
       return true;

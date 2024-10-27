@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LogInRequest } from 'src/app/models/requests/logInRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
@@ -35,15 +36,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    let rawForm = this.loginForm.getRawValue();
+    const rawForm = this.loginForm.getRawValue();
 
-    var loginRequest: LogInRequest = {
+    const loginRequest: LogInRequest = {
       username: rawForm.username,
       password: rawForm.password
     };
-    let logInObserver = {
-      next: (logInResult: void) => this.handleLogInResult(),
-      error: (err: any) => this.logError('Error logging in.', err),
+    const logInObserver = {
+      next: () => this.handleLogInResult(),
+      error: (err: ApiResponseError) => this.logError('Error logging in.', err),
       complete: () => console.log('Logged In.')
     };
 
@@ -60,7 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
     this.loginForm.patchValue({password: ''});
@@ -70,7 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

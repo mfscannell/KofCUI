@@ -1,11 +1,13 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
 import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
+import { ActivityCoordinatorFormGroup } from 'src/app/models/formControls/activityCoordinatorFormGroup';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
@@ -19,7 +21,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
   @Input() activity: Activity | undefined;
   @Input() allKnights: Knight[] = [];
-  @Input() activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() modalHeaderText: string = '';
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
   @Output() createActivityChanges = new EventEmitter<Activity>();
@@ -61,7 +63,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
         notes: this.activity.notes
       });
 
-      let activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
+      const activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
 
       this.activity.activityCoordinators.map(function(coordinator) {
         const activityCoordinatorFg = new UntypedFormGroup({
@@ -71,7 +73,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
         activityCoordinatorsList.push(activityCoordinatorFg);
       });
 
-      let activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
+      const activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
 
       this.activity.activityEventNotes.map(function(note) {
         const activityEventNotesFg = new UntypedFormGroup({
@@ -103,7 +105,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public deleteActivityCoordinator(roleIndex: number) {
-    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
+    const activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
     
     activityCoordinators.removeAt(roleIndex);
   }
@@ -116,7 +118,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
       ])
     });
 
-    let activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
+    const activityCoordinators = this.editActivityForm.controls["activityCoordinatorsList"] as UntypedFormArray;
 
     activityCoordinators.push(activityCoordinator);
   }
@@ -143,24 +145,24 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
   public onSubmitEditActivity() {
     if (this.modalAction === ModalActionEnums.Edit) {
-      let updatedActivity = this.mapFormToActivity();
+      const updatedActivity = this.mapFormToActivity();
       this.updateActivity(updatedActivity);
     } else if (this.modalAction === ModalActionEnums.Create) {
-      let newActivity = this.mapFormToActivity();
+      const newActivity = this.mapFormToActivity();
       this.createActivity(newActivity);
     }
   }
 
   private mapFormToActivity() {
-    let rawForm = this.editActivityForm.getRawValue();
-    let activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: any) {
-      let activityCoordinator: ActivityCoordinator = {
+    const rawForm = this.editActivityForm.getRawValue();
+    const activityCoordinators = rawForm?.activityCoordinatorsList.map(function(coordinator: ActivityCoordinatorFormGroup) {
+      const activityCoordinator: ActivityCoordinator = {
         id: coordinator.id,
         knightId: coordinator.knightId
       };
       return activityCoordinator;
     });
-    let activity: Activity = {
+    const activity: Activity = {
       activityId: rawForm.activityId,
       activityName: rawForm.activityName,
       activityDescription: rawForm.activityDescription,
@@ -174,9 +176,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private updateActivity(activity: Activity) {
-    let activityObserver = {
+    const activityObserver = {
       next: (updatedActivity: Activity) => this.passBackUpdatedActivity(updatedActivity),
-      error: (err: any) => this.logError('Error updating Activity', err),
+      error: (err: ApiResponseError) => this.logError('Error updating Activity', err),
       complete: () => console.log('Activity updated.')
     };
 
@@ -189,9 +191,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private createActivity(activity: Activity) {
-    let activityObserver = {
+    const activityObserver = {
       next: (createdActivity: Activity) => this.passBackCreatedActivity(createdActivity),
-      error: (err: any) => this.logError('Error creating Activity', err),
+      error: (err: ApiResponseError) => this.logError('Error creating Activity', err),
       complete: () => console.log('Activity created.')
     };
 
@@ -203,7 +205,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
     this.cancelEditActivityModal?.nativeElement.click();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -212,7 +214,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

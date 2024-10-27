@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 
 @Component({
@@ -68,8 +69,8 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
   }
 
   public onSubmitEditLeadershipRole() {
-    let rawForm = this.editLeadershipRoleForm.getRawValue();
-    let updatedLeadershipRole: LeadershipRole = {
+    const rawForm = this.editLeadershipRoleForm.getRawValue();
+    const updatedLeadershipRole: LeadershipRole = {
       id: rawForm.id,
       title: rawForm.title,
       knightId: rawForm.knightId,
@@ -81,9 +82,9 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
   }
 
   private updateLeadershipRole(leadershipRole: LeadershipRole) {
-    let leadershipRoleObserver = {
+    const leadershipRoleObserver = {
       next: (updatedLeadershipRole: LeadershipRole) => this.passBack(updatedLeadershipRole),
-      error: (err: any) => this.logError('Error updating leadership role.', err),
+      error: (err: ApiResponseError) => this.logError('Error updating leadership role.', err),
       complete: () => console.log('Leadership Role updated.')
     };
 
@@ -95,7 +96,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
     this.cancelCustomEditActiveModal?.nativeElement.click();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -104,7 +105,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

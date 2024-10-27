@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { SendEmailRequest } from 'src/app/models/requests/sendEmailRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { SendEmailResponse } from 'src/app/models/responses/sendEmailResponse';
 import { ActivitiesService } from 'src/app/services/activities.service';
 
@@ -45,21 +46,21 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
   }
 
   public onSubmitSendEmail() {
-    let sendEmailObserver = {
+    const sendEmailObserver = {
       next: (sendEmailResponse: SendEmailResponse) => this.showSendEmailResponse(sendEmailResponse),
-      error: (err: any) => this.logError('Error sending email', err),
+      error: (err: ApiResponseError) => this.logError('Error sending email', err),
       complete: () => console.log('Email sent.')
     };
 
-    let sendEmailRequest = this.mapEmailFormToRequest();
+    const sendEmailRequest = this.mapEmailFormToRequest();
 
     this.activitiesSubscription = this.activitiesService.sendEmailAboutActivity(sendEmailRequest).subscribe(sendEmailObserver);
   }
 
   private mapEmailFormToRequest() {
-    let rawForm = this.sendEmailForm.getRawValue();
+    const rawForm = this.sendEmailForm.getRawValue();
 
-    let request: SendEmailRequest = {
+    const request: SendEmailRequest = {
       activityId: this.activityEvent?.activityId || '',
       subject: rawForm.subject,
       body: rawForm.body
@@ -69,11 +70,12 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
   }
 
   private showSendEmailResponse(sendEmailResponse: SendEmailResponse) {
+    console.log(sendEmailResponse);
     this.activitiesSubscription?.unsubscribe();
     this.closeModal?.nativeElement.click();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -82,7 +84,7 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { MemberDuesPaymentStatusFormOption } from 'src/app/models/inputOptions/memberDuesPaymentStatusFormOption';
+import { MemberDuesFormGroup } from 'src/app/models/formControls/memberDuesFormGroup';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { MemberDues } from 'src/app/models/memberDues';
 import { UpdateKnightMemberDuesRequest } from 'src/app/models/requests/updateKnightMemberDuesRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { MemberDuesService } from 'src/app/services/memberDues.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   @Input() modalHeaderText: string = '';
   @Input() memberDues?: MemberDues[] = [];
   @Input() knightId: string = '';
-  @Input() memberDuesPaymentStatusFormOptions: MemberDuesPaymentStatusFormOption[] = [];
+  @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberDuesChanges = new EventEmitter<MemberDues[]>();
   @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
   
@@ -27,7 +28,6 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   private updateKnightMemberDuesSubscription?: Subscription;
 
   constructor(
-    public activeModal: NgbActiveModal,
     private memberDuesService: MemberDuesService
   ) {
     this.editKnightMemberDuesForm = new UntypedFormGroup({
@@ -73,10 +73,10 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   }
 
   public onSubmitEditKnightMemberInfo() {
-    let updateKnightMemberDuesRequest = this.mapFormToUpdateKnightMemberDuesRequest();
-    let knightMemberDuesObserver = {
+    const updateKnightMemberDuesRequest = this.mapFormToUpdateKnightMemberDuesRequest();
+    const knightMemberDuesObserver = {
       next: (response: MemberDues[]) => this.passBackResponse(response),
-      error: (err: any) => this.logError("Error Updating Knight Member Dues", err),
+      error: (err: ApiResponseError) => this.logError("Error Updating Knight Member Dues", err),
       complete: () => console.log('Knight Info updated.')
     };
 
@@ -84,16 +84,16 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   }
 
   private mapFormToUpdateKnightMemberDuesRequest(): UpdateKnightMemberDuesRequest {
-    let rawForm = this.editKnightMemberDuesForm.getRawValue();
-    let mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any): MemberDues {
-      let memberDues: MemberDues = {
+    const rawForm = this.editKnightMemberDuesForm.getRawValue();
+    const mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: MemberDuesFormGroup): MemberDues {
+      const memberDues: MemberDues = {
         year: md.year,
         paidStatus: md.paidStatus
       };
 
       return memberDues;
     });
-    let request: UpdateKnightMemberDuesRequest = {
+    const request: UpdateKnightMemberDuesRequest = {
       knightId: this.knightId,
       memberDues: mappedMemberDues
     };
@@ -107,7 +107,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
     this.closeModal?.nativeElement.click();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -116,7 +116,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
