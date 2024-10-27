@@ -4,6 +4,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Project Setup
 
+A few suggested VS Code extensions are these:
+Prettier
+ESLint
+Angular Files
+
 Go to the C:\Windows\System32\drivers\etc\hosts file and add the following for tenants.
 127.0.0.1    mynewtenant.localhost
 
@@ -20,9 +25,12 @@ ng serve --host mynewtenant.localhost --port 4200 --open --configuration develop
 ## When Ran From Docker
 mynewtenant.localhost:9081
 
-## Eslint
+## Eslint & Prettier
 https://eslint.org/docs/latest/use/getting-started
 Run the command `npx eslint ./` from a terminal.
+
+Run the command `npx prettier . --check` from a terminal to check stylings.
+Run the command `npm prettier . --write` from a terminal to fix stylings.
 
 ## Updating Angular
 Run the following commands at Powershell:

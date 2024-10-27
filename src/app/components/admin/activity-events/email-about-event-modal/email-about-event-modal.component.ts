@@ -1,4 +1,12 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from 'src/app/models/activityEvent';
@@ -10,11 +18,15 @@ import { ActivitiesService } from 'src/app/services/activities.service';
 @Component({
   selector: 'email-about-event-modal',
   templateUrl: './email-about-event-modal.component.html',
-  styleUrls: ['./email-about-event-modal.component.scss']
+  styleUrls: ['./email-about-event-modal.component.scss'],
 })
-export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChanges {
+export class EmailAboutEventModalComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   @Input() activityEvent?: ActivityEvent;
-  @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
+  @ViewChild('closeModal', { static: false }) closeModal:
+    | ElementRef
+    | undefined;
   public sendEmailForm: UntypedFormGroup;
   public errorSending: boolean = false;
   public errorMessages: string[] = [];
@@ -25,12 +37,9 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
     this.sendEmailForm = this.initForm();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnDestroy() {
-
-  }
+  ngOnDestroy() {}
 
   ngOnChanges() {
     this.sendEmailForm = this.initForm();
@@ -41,20 +50,24 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
   private initForm() {
     return new UntypedFormGroup({
       subject: new UntypedFormControl(''),
-      body: new UntypedFormControl('')
+      body: new UntypedFormControl(''),
     });
   }
 
   public onSubmitSendEmail() {
     const sendEmailObserver = {
-      next: (sendEmailResponse: SendEmailResponse) => this.showSendEmailResponse(sendEmailResponse),
-      error: (err: ApiResponseError) => this.logError('Error sending email', err),
-      complete: () => console.log('Email sent.')
+      next: (sendEmailResponse: SendEmailResponse) =>
+        this.showSendEmailResponse(sendEmailResponse),
+      error: (err: ApiResponseError) =>
+        this.logError('Error sending email', err),
+      complete: () => console.log('Email sent.'),
     };
 
     const sendEmailRequest = this.mapEmailFormToRequest();
 
-    this.activitiesSubscription = this.activitiesService.sendEmailAboutActivity(sendEmailRequest).subscribe(sendEmailObserver);
+    this.activitiesSubscription = this.activitiesService
+      .sendEmailAboutActivity(sendEmailRequest)
+      .subscribe(sendEmailObserver);
   }
 
   private mapEmailFormToRequest() {
@@ -63,7 +76,7 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
     const request: SendEmailRequest = {
       activityId: this.activityEvent?.activityId || '',
       subject: rawForm.subject,
-      body: rawForm.body
+      body: rawForm.body,
     };
 
     return request;
@@ -88,8 +101,7 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSending = true;
   }
-
 }

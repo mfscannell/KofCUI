@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EncodedFile } from 'src/app/models/encodedFile';
 import { AssetsService } from 'src/app/services/assets.service';
@@ -9,7 +15,7 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 @Component({
   selector: 'app-assets',
   templateUrl: './assets.component.html',
-  styleUrls: ['./assets.component.scss']
+  styleUrls: ['./assets.component.scss'],
 })
 export class AssetsComponent implements OnInit, OnDestroy {
   showErrorMessage: boolean = false;
@@ -19,22 +25,23 @@ export class AssetsComponent implements OnInit, OnDestroy {
   public formData?: FormData;
   public uploadImageForm: UntypedFormGroup;
   public errorSaving: boolean = false;
-  @ViewChild('cancelEditActiveModal', {static: false}) cancelEditActiveModal: ElementRef | undefined;
-  @ViewChild('cancelEditActiveModal', {static: false}) cancelDeleteActiveModal: ElementRef | undefined;
+  @ViewChild('cancelEditActiveModal', { static: false }) cancelEditActiveModal:
+    | ElementRef
+    | undefined;
+  @ViewChild('cancelEditActiveModal', { static: false })
+  cancelDeleteActiveModal: ElementRef | undefined;
 
   deleteImageForm: UntypedFormGroup;
   fileNameToDelete: string = '';
   indexToDelete: number = -1;
   private deleteHomePageImageSubscription?: Subscription;
 
-  constructor(
-    public assetsService: AssetsService) {
-      this.uploadImageForm = new UntypedFormGroup({});
-      this.deleteImageForm = new UntypedFormGroup({});
-    }
-
-  ngOnInit() {
+  constructor(public assetsService: AssetsService) {
+    this.uploadImageForm = new UntypedFormGroup({});
+    this.deleteImageForm = new UntypedFormGroup({});
   }
+
+  ngOnInit() {}
 
   ngOnDestroy(): void {
     if (this.uploadHomePageImageSubscription) {
@@ -51,8 +58,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
     return imgSrc;
   }
 
-  openUploadHomePageCarouselImageModal() {
-  }
+  openUploadHomePageCarouselImageModal() {}
 
   selectFile(files: FileList | null) {
     console.log(files);
@@ -67,12 +73,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
   onSubmitUploadFile() {
     if (this.formData) {
       const imageUploadObserver = {
-        next: (response: EncodedFile) => this.handleUploadHomePageImageResponse(response),
-        error: (err: ApiResponseError) => this.logError("Error Uploading image.", err),
-        complete: () => console.log('Image uploaded.')
+        next: (response: EncodedFile) =>
+          this.handleUploadHomePageImageResponse(response),
+        error: (err: ApiResponseError) =>
+          this.logError('Error Uploading image.', err),
+        complete: () => console.log('Image uploaded.'),
       };
-  
-      this.uploadHomePageImageSubscription = this.assetsService.uploadHomePageImage(this.formData).subscribe(imageUploadObserver);
+
+      this.uploadHomePageImageSubscription = this.assetsService
+        .uploadHomePageImage(this.formData)
+        .subscribe(imageUploadObserver);
     }
   }
 
@@ -92,16 +102,22 @@ export class AssetsComponent implements OnInit, OnDestroy {
   onSubmitDeleteFile() {
     if (this.fileNameToDelete) {
       const imageUploadObserver = {
-        next: (response: DeleteHomePageCarouselImageResponse) => this.handleDeleteImageSuccess(response),
-        error: (err: ApiResponseError) => this.logError("Error Deleting image.", err),
-        complete: () => console.log('Image deleted.')
+        next: (response: DeleteHomePageCarouselImageResponse) =>
+          this.handleDeleteImageSuccess(response),
+        error: (err: ApiResponseError) =>
+          this.logError('Error Deleting image.', err),
+        complete: () => console.log('Image deleted.'),
       };
-  
-      this.deleteHomePageImageSubscription = this.assetsService.deleteHomePageCarouselImage(this.fileNameToDelete).subscribe(imageUploadObserver);
+
+      this.deleteHomePageImageSubscription = this.assetsService
+        .deleteHomePageCarouselImage(this.fileNameToDelete)
+        .subscribe(imageUploadObserver);
     }
   }
 
-  private handleDeleteImageSuccess(response: DeleteHomePageCarouselImageResponse) {
+  private handleDeleteImageSuccess(
+    response: DeleteHomePageCarouselImageResponse,
+  ) {
     console.log(response);
     this.assetsService.removeHomePageCarouselImage(this.indexToDelete);
     this.cancelDeleteActiveModal?.nativeElement.click();
@@ -120,7 +136,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.showErrorMessage = true;
   }
 }

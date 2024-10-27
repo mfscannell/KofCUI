@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
-import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
@@ -13,7 +13,11 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { FormsService } from 'src/app/services/forms.service';
@@ -23,12 +27,10 @@ import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption
 @Component({
   selector: 'kofc-activity-events',
   templateUrl: './activity-events.component.html',
-  styleUrls: ['./activity-events.component.scss']
+  styleUrls: ['./activity-events.component.scss'],
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   activityEventsSubscription?: Subscription;
-  getAllKnightsSubscription?: Subscription;
-  getAllActivitiesSubscription?: Subscription;
   activityEvents: ActivityEvent[] = [];
   selectableActivities: Activity[] = [];
   allActivities: Activity[] = [];
@@ -46,7 +48,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   errorMessages: string[] = [];
   public activityEventToEmailAbout: ActivityEvent | undefined;
 
-  private getCouncilTimeZoneSubscription?: Subscription;
   private getFormOptionsSubscriptions?: Subscription;
   public countryFormOptions: CountryFormOption[] = [];
   public activityCategoryFormOptions: GenericFormOption[] = [];
@@ -60,43 +61,52 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     private permissionsService: PermissionsService,
     private configsService: ConfigsService,
     private formsService: FormsService,
-    public formatter: NgbDateParserFormatter) {
-      const initialDate = new Date();
-      initialDate.setMonth(initialDate.getMonth() - 3);
-      const finalDate = new Date(initialDate);
-      finalDate.setMonth(finalDate.getMonth() + 6);
-      this.fromDate = DateTimeFormatter.ToIso8601Date(initialDate.getFullYear(), initialDate.getMonth() + 1, initialDate.getDate());
-      this.toDate = DateTimeFormatter.ToIso8601Date(finalDate.getFullYear(), finalDate.getMonth() + 1, finalDate.getDate());
-      console.log("Exiting constructor");
-      console.log(this.fromDate);
-      console.log(this.toDate);
+    public formatter: NgbDateParserFormatter,
+  ) {
+    const initialDate = new Date();
+    initialDate.setMonth(initialDate.getMonth() - 3);
+    const finalDate = new Date(initialDate);
+    finalDate.setMonth(finalDate.getMonth() + 6);
+    this.fromDate = DateTimeFormatter.ToIso8601Date(
+      initialDate.getFullYear(),
+      initialDate.getMonth() + 1,
+      initialDate.getDate(),
+    );
+    this.toDate = DateTimeFormatter.ToIso8601Date(
+      finalDate.getFullYear(),
+      finalDate.getMonth() + 1,
+      finalDate.getDate(),
+    );
+    console.log('Exiting constructor');
+    console.log(this.fromDate);
+    console.log(this.toDate);
 
-      this.editActivityEventForm = new UntypedFormGroup({
+    this.editActivityEventForm = new UntypedFormGroup({
+      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
+      activityId: new UntypedFormControl(''),
+      activityCategory: new UntypedFormControl(''),
+      eventName: new UntypedFormControl(''),
+      eventDescription: new UntypedFormControl(''),
+      startDate: new UntypedFormControl(''),
+      startTime: new UntypedFormControl(''),
+      endDate: new UntypedFormControl(''),
+      endTime: new UntypedFormControl(''),
+      locationAddress: new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        activityId: new UntypedFormControl(''),
-        activityCategory: new UntypedFormControl(''),
-        eventName: new UntypedFormControl(''),
-        eventDescription: new UntypedFormControl(''),
-        startDate: new UntypedFormControl(''),
-        startTime: new UntypedFormControl(''),
-        endDate: new UntypedFormControl(''),
-        endTime: new UntypedFormControl(''),
-        locationAddress: new UntypedFormGroup({
-          id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-          addressName: new UntypedFormControl(''),
-          address1: new UntypedFormControl(''),
-          address2: new UntypedFormControl(''),
-          city: new UntypedFormControl(''),
-          stateCode: new UntypedFormControl(''),
-          postalCode: new UntypedFormControl(''),
-          countryCode: new UntypedFormControl('')
-        }),
-        showInCalendar: new UntypedFormControl(null),
-        canceled: new UntypedFormControl(null),
-        canceledReason: new UntypedFormControl(''),
-        notes: new UntypedFormControl(''),
-        volunteerSignUpRoles: new UntypedFormArray([])
-       });
+        addressName: new UntypedFormControl(''),
+        address1: new UntypedFormControl(''),
+        address2: new UntypedFormControl(''),
+        city: new UntypedFormControl(''),
+        stateCode: new UntypedFormControl(''),
+        postalCode: new UntypedFormControl(''),
+        countryCode: new UntypedFormControl(''),
+      }),
+      showInCalendar: new UntypedFormControl(null),
+      canceled: new UntypedFormControl(null),
+      canceledReason: new UntypedFormControl(''),
+      notes: new UntypedFormControl(''),
+      volunteerSignUpRoles: new UntypedFormArray([]),
+    });
   }
 
   ngOnInit() {
@@ -107,18 +117,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.activityEventsSubscription) {
       this.activityEventsSubscription.unsubscribe();
-    }
-
-    if (this.getAllKnightsSubscription) {
-      this.getAllKnightsSubscription.unsubscribe();
-    }
-
-    if (this.getAllActivitiesSubscription) {
-      this.getAllActivitiesSubscription.unsubscribe();
-    }
-
-    if (this.getCouncilTimeZoneSubscription) {
-      this.getCouncilTimeZoneSubscription.unsubscribe();
     }
 
     if (this.getFormOptionsSubscriptions) {
@@ -139,18 +137,22 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   public getAllActivityEvents() {
-    console.log("getAllActivityEvents");
+    console.log('getAllActivityEvents');
     console.log(this.fromDate);
     console.log(this.toDate);
 
     const activityEventsObserver = {
-      next: (activityEvents: ActivityEvent[]) => this.handleGetActivityEvents(activityEvents),
-      error: (err: ApiResponseError) => this.logError('Error getting all activity events', err),
-      complete: () => console.log('Activity Events loaded.')
+      next: (activityEvents: ActivityEvent[]) =>
+        this.handleGetActivityEvents(activityEvents),
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting all activity events', err),
+      complete: () => console.log('Activity Events loaded.'),
     };
 
     if (this.fromDate && this.toDate) {
-      this.activityEventsSubscription = this.activityEventsService.getAllActivityEvents(this.fromDate, this.toDate).subscribe(activityEventsObserver);
+      this.activityEventsSubscription = this.activityEventsService
+        .getAllActivityEvents(this.fromDate, this.toDate)
+        .subscribe(activityEventsObserver);
     }
   }
 
@@ -159,8 +161,13 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   private handleGetActivities(response: Activity[]) {
-    this.allActivities = response.sort((a, b)=> a.activityName.localeCompare(b.activityName));
-    this.selectableActivities = this.permissionsService.filterActivitiesByEventCreation(this.allActivities);
+    this.allActivities = response.sort((a, b) =>
+      a.activityName.localeCompare(b.activityName),
+    );
+    this.selectableActivities =
+      this.permissionsService.filterActivitiesByEventCreation(
+        this.allActivities,
+      );
   }
 
   private getFormOptions() {
@@ -170,13 +177,13 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         countryResponse,
         councilTimeZone,
         getAllActivitiesResponse,
-        getAllKnightsResponse
+        getAllKnightsResponse,
       ]: [
         GenericFormOption[],
         CountryFormOption[],
         GenericFormOption,
         Activity[],
-        Knight[]
+        Knight[],
       ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.countryFormOptions = countryResponse;
@@ -184,8 +191,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         this.handleGetActivities(getAllActivitiesResponse);
         this.allKnights = getAllKnightsResponse;
       },
-      error: (err: ApiResponseError) => this.logError("Error getting Activity Events Form Options", err),
-      complete: () => console.log('Activity Events Form Options retrieved.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting Activity Events Form Options', err),
+      complete: () => console.log('Activity Events Form Options retrieved.'),
     };
 
     this.getFormOptionsSubscriptions = forkJoin([
@@ -193,7 +201,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       this.formsService.getCountryFormOptions(),
       this.configsService.getCouncilTimeZone(),
       this.activitiesService.getAllActivities(),
-      this.knightsService.getAllActiveKnightsNames()
+      this.knightsService.getAllActiveKnightsNames(),
     ]).subscribe(formsObserver);
   }
 
@@ -218,11 +226,13 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   public appendActivityEventToList(activityEvent: ActivityEvent) {
-    this.activityEvents?.push(activityEvent)
+    this.activityEvents?.push(activityEvent);
   }
 
   public updateActivityEventInList(activityEvent: ActivityEvent) {
-    const index = this.activityEvents?.findIndex(x => x.id === activityEvent.id)
+    const index = this.activityEvents?.findIndex(
+      (x) => x.id === activityEvent.id,
+    );
 
     if (this.activityEvents && index !== undefined && index >= 0) {
       this.activityEvents[index] = activityEvent;
@@ -247,7 +257,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSending = true;
   }
 }

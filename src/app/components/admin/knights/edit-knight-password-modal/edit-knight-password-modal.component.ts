@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -12,17 +22,20 @@ import { KnightsService } from 'src/app/services/knights.service';
 @Component({
   selector: 'edit-knight-password-modal',
   templateUrl: './edit-knight-password-modal.component.html',
-  styleUrls: ['./edit-knight-password-modal.component.scss']
+  styleUrls: ['./edit-knight-password-modal.component.scss'],
 })
-export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnChanges {
+export class EditKnightPasswordModalComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   @Input() modalHeaderText: string = '';
   @Input() knightsFullName: string = '';
   @Input() knightId: string = '';
   @Input() knightUser?: KnightUser;
   @Output() editKnightPasswordChanges = new EventEmitter<KnightUser>();
-  @ViewChild('cancelEditKnightPasswordChanges', {static: false}) cancelEditKnightPasswordChanges: ElementRef | undefined;
+  @ViewChild('cancelEditKnightPasswordChanges', { static: false })
+  cancelEditKnightPasswordChanges: ElementRef | undefined;
   editKnightPasswordForm: UntypedFormGroup;
-  
+
   public passwordRequirements: PasswordRequirements = {
     requireUppercase: false,
     requireLowercase: false,
@@ -30,7 +43,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
     requireDigit: false,
     requiredLength: 1,
     requireNonAlphanumeric: false,
-    allowedNonAlphanumericCharacters: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?"
+    allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'",<.>/?',
   };
   private updateKnightPasswordSubscription?: Subscription;
   private getPasswordRequirementsSubscription?: Subscription;
@@ -39,11 +52,12 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
 
   constructor(
     private knightsService: KnightsService,
-    private accountsService: AccountsService) {
+    private accountsService: AccountsService,
+  ) {
     this.editKnightPasswordForm = new UntypedFormGroup({
       accountActivated: new UntypedFormControl(),
       password: new UntypedFormControl(''),
-      resetPasswordAtNextLogin: new UntypedFormControl()
+      resetPasswordAtNextLogin: new UntypedFormControl(),
     });
   }
 
@@ -51,7 +65,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
     if (this.knightUser) {
       this.editKnightPasswordForm.patchValue({
         accountActivated: this.knightUser.accountActivated,
-        resetPasswordAtNextLogin: this.knightUser.resetPasswordAtNextLogin
+        resetPasswordAtNextLogin: this.knightUser.resetPasswordAtNextLogin,
       });
     }
 
@@ -74,25 +88,29 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
     this.editKnightPasswordForm = new UntypedFormGroup({
       accountActivated: new UntypedFormControl(),
       password: new UntypedFormControl(''),
-      resetPasswordAtNextLogin: new UntypedFormControl()
+      resetPasswordAtNextLogin: new UntypedFormControl(),
     });
 
     if (this.knightUser) {
       this.editKnightPasswordForm.patchValue({
         accountActivated: this.knightUser.accountActivated,
-        resetPasswordAtNextLogin: this.knightUser.resetPasswordAtNextLogin
+        resetPasswordAtNextLogin: this.knightUser.resetPasswordAtNextLogin,
       });
     }
   }
 
   private getPasswordRequirements() {
     const getPasswordRequirementsObserver = {
-      next: (response: PasswordRequirements) => this.passwordRequirements = response,
-      error: (err: ApiResponseError) => this.logError("Error Getting password requirements.", err),
-      complete: () => console.log('Password requirements retrieved.')
+      next: (response: PasswordRequirements) =>
+        (this.passwordRequirements = response),
+      error: (err: ApiResponseError) =>
+        this.logError('Error Getting password requirements.', err),
+      complete: () => console.log('Password requirements retrieved.'),
     };
 
-    this.getPasswordRequirementsSubscription = this.accountsService.getPasswordRequirements().subscribe(getPasswordRequirementsObserver);
+    this.getPasswordRequirementsSubscription = this.accountsService
+      .getPasswordRequirements()
+      .subscribe(getPasswordRequirementsObserver);
   }
 
   isAccountActivated() {
@@ -111,7 +129,8 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
   hasRequiredLength() {
     const rawForm = this.editKnightPasswordForm.getRawValue();
     const newPassword = rawForm.password as string;
-    const hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
+    const hasLength =
+      newPassword.length >= this.passwordRequirements?.requiredLength;
 
     return hasLength;
   }
@@ -121,7 +140,9 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
     const newPassword = rawForm.password as string;
     const numDistinctCharacters = new Set(newPassword).size;
 
-    return numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars;
+    return (
+      numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars
+    );
   }
 
   hasUpperCase() {
@@ -153,8 +174,13 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
     const newPassword = rawForm.password as string;
     let hasSpecialCharacter = false;
 
-    for (let i = 0; i < this.passwordRequirements.allowedNonAlphanumericCharacters.length; i++) {
-      const specialChar = this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
+    for (
+      let i = 0;
+      i < this.passwordRequirements.allowedNonAlphanumericCharacters.length;
+      i++
+    ) {
+      const specialChar =
+        this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
 
       if (newPassword.indexOf(specialChar) > -1) {
         hasSpecialCharacter = true;
@@ -175,7 +201,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
       knightId: this.knightId,
       accountActivated: rawForm.accountActivated,
       password: rawForm.password,
-      resetPasswordAtNextLogin: rawForm.resetPasswordAtNextLogin
+      resetPasswordAtNextLogin: rawForm.resetPasswordAtNextLogin,
     };
 
     return request;
@@ -184,11 +210,14 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
   private updateKnightPassword(request: UpdateKnightPasswordRequest) {
     const knightObserver = {
       next: (response: KnightUser) => this.passBackResponse(response),
-      error: (err: ApiResponseError) => this.logError("Error Updating Knight", err),
-      complete: () => console.log('Knight updated.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error Updating Knight', err),
+      complete: () => console.log('Knight updated.'),
     };
 
-    this.updateKnightPasswordSubscription= this.knightsService.updateKnightPassword(request).subscribe(knightObserver);
+    this.updateKnightPasswordSubscription = this.knightsService
+      .updateKnightPassword(request)
+      .subscribe(knightObserver);
   }
 
   private passBackResponse(response: KnightUser) {
@@ -209,7 +238,7 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSaving = true;
   }
 }
