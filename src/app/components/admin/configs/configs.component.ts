@@ -1,6 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
 
 import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
@@ -16,7 +21,7 @@ import { ConfigGroupFormGroup } from 'src/app/models/formControls/configGroupFor
 @Component({
   selector: 'kofc-configs',
   templateUrl: './configs.component.html',
-  styleUrls: ['./configs.component.scss']
+  styleUrls: ['./configs.component.scss'],
 })
 export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllConfigsSubscription?: Subscription;
@@ -33,9 +38,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
   constructor(
     private configsService: ConfigsService,
-    private formsService: FormsService) {
+    private formsService: FormsService,
+  ) {
     this.editConfigsForm = new UntypedFormGroup({
-      configGroups: new UntypedFormArray([])
+      configGroups: new UntypedFormArray([]),
     });
   }
 
@@ -46,20 +52,27 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
   private getAllTimeZones() {
     const getAllTimeZonesObserver = {
-      next: (timeZones: GenericFormOption[]) => this.timeZones = timeZones,
-      error: (err: ApiResponseError) => this.logError('Error getting all timeZones.', err),
-      complete: () => console.log('Time zones loaded.')
+      next: (timeZones: GenericFormOption[]) => (this.timeZones = timeZones),
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting all timeZones.', err),
+      complete: () => console.log('Time zones loaded.'),
     };
-    this.getAllTimeZonesSubscription = this.formsService.getTimeZoneFormOptions().subscribe(getAllTimeZonesObserver);
+    this.getAllTimeZonesSubscription = this.formsService
+      .getTimeZoneFormOptions()
+      .subscribe(getAllTimeZonesObserver);
   }
-  
+
   private getAllConfigs() {
     const getAllConfigsObserver = {
-      next: (configGroups: ConfigGroup[]) => this.patchEditConfigGroupsForm(configGroups),
-      error: (err: ApiResponseError) => this.logError('Error getting all configs.', err),
-      complete: () => console.log('Config settings loaded.')
+      next: (configGroups: ConfigGroup[]) =>
+        this.patchEditConfigGroupsForm(configGroups),
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting all configs.', err),
+      complete: () => console.log('Config settings loaded.'),
     };
-    this.getAllConfigsSubscription = this.configsService.getAllConfigGroups().subscribe(getAllConfigsObserver);
+    this.getAllConfigsSubscription = this.configsService
+      .getAllConfigGroups()
+      .subscribe(getAllConfigsObserver);
   }
 
   private patchEditConfigGroupsForm(configGroups: ConfigGroup[]) {
@@ -68,9 +81,15 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       const configGroupFormGroup = new UntypedFormGroup({
         id: new UntypedFormControl(configGroup.id),
         configGroupName: new UntypedFormControl(configGroup.configGroupName),
-        configGroupDisplayName: new UntypedFormControl(configGroup.configGroupDisplayName),
-        configGroupSortValue: new UntypedFormControl(configGroup.configGroupSortValue),
-        configSettings: new UntypedFormArray(this.initConfigSettings(configGroup.configSettings))
+        configGroupDisplayName: new UntypedFormControl(
+          configGroup.configGroupDisplayName,
+        ),
+        configGroupSortValue: new UntypedFormControl(
+          configGroup.configGroupSortValue,
+        ),
+        configSettings: new UntypedFormArray(
+          this.initConfigSettings(configGroup.configSettings),
+        ),
       });
 
       this.configGroupsForm.push(configGroupFormGroup);
@@ -86,16 +105,22 @@ export class ConfigsComponent implements OnInit, OnDestroy {
           id: new UntypedFormControl(configSetting.id),
           configGroupId: new UntypedFormControl(configSetting.configGroupId),
           configName: new UntypedFormControl(configSetting.configName),
-          configDisplayName: new UntypedFormControl(configSetting.configDisplayName),
-          configSortValue: new UntypedFormControl(configSetting.configSortValue),
+          configDisplayName: new UntypedFormControl(
+            configSetting.configDisplayName,
+          ),
+          configSortValue: new UntypedFormControl(
+            configSetting.configSortValue,
+          ),
           helpText: new UntypedFormControl(configSetting.helpText),
-          configValueType: new UntypedFormControl(configSetting.configValueType),
+          configValueType: new UntypedFormControl(
+            configSetting.configValueType,
+          ),
           booleanValue: new UntypedFormControl(configSetting.booleanValue),
           longValue: new UntypedFormControl(configSetting.longValue),
           stringValue: new UntypedFormControl(configSetting.stringValue),
           guidValue: new UntypedFormControl(configSetting.guidValue),
           dateTimeValue: new UntypedFormControl(configSetting.dateTimeValue),
-          inputType: new UntypedFormControl(configSetting.inputType)
+          inputType: new UntypedFormControl(configSetting.inputType),
         });
 
         configSettingsArray.push(configSettingFormGroup);
@@ -106,33 +131,49 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   isCheckBox(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.CheckBox;
+    return (
+      this.configGroups[i].configSettings[j].inputType ===
+      ConfigInputTypeEnums.CheckBox
+    );
   }
 
   isStringInput(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.TextBox;
+    return (
+      this.configGroups[i].configSettings[j].inputType ===
+      ConfigInputTypeEnums.TextBox
+    );
   }
 
   isStringDropDown(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.DropDown &&
-    this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.String;
+    return (
+      this.configGroups[i].configSettings[j].inputType ===
+        ConfigInputTypeEnums.DropDown &&
+      this.configGroups[i].configSettings[j].configValueType ===
+        ConfigValueTypeEnums.String
+    );
   }
 
   isGuidDropDown(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.DropDown &&
-    this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Guid;
+    return (
+      this.configGroups[i].configSettings[j].inputType ===
+        ConfigInputTypeEnums.DropDown &&
+      this.configGroups[i].configSettings[j].configValueType ===
+        ConfigValueTypeEnums.Guid
+    );
   }
 
-  getStringDropDownList(i: number, j: number) : GenericFormOption[] {
+  getStringDropDownList(i: number, j: number): GenericFormOption[] {
     if (i > -1 && j > -1) {
       return [];
     }
-    
+
     return [];
   }
 
-  getGuidDropDownList(i: number, j: number) : GenericFormOption[] {
-    if (this.configGroups[i].configSettings[j].configName === 'CouncilTimeZone') {
+  getGuidDropDownList(i: number, j: number): GenericFormOption[] {
+    if (
+      this.configGroups[i].configSettings[j].configName === 'CouncilTimeZone'
+    ) {
       return this.timeZones;
     }
 
@@ -140,24 +181,32 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   isLong(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Long;
+    return (
+      this.configGroups[i].configSettings[j].configValueType ===
+      ConfigValueTypeEnums.Long
+    );
   }
 
   isDate(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Date;
+    return (
+      this.configGroups[i].configSettings[j].configValueType ===
+      ConfigValueTypeEnums.Date
+    );
   }
 
   get configGroupsForm() {
-    return this.editConfigsForm.controls["configGroups"] as UntypedFormArray;
+    return this.editConfigsForm.controls['configGroups'] as UntypedFormArray;
   }
 
   getConfigGroupName(index: number) {
-    return this.configGroups[index].configGroupDisplayName
+    return this.configGroups[index].configGroupDisplayName;
   }
 
   getConfigSettings(configGroup: AbstractControl) {
     const something = configGroup as UntypedFormGroup;
-    const configSettings = something.controls["configSettings"] as UntypedFormArray;
+    const configSettings = something.controls[
+      'configSettings'
+    ] as UntypedFormArray;
 
     return configSettings.controls;
   }
@@ -171,17 +220,17 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-      if (this.getAllConfigsSubscription) {
-        this.getAllConfigsSubscription.unsubscribe();
-      }
+    if (this.getAllConfigsSubscription) {
+      this.getAllConfigsSubscription.unsubscribe();
+    }
 
-      if (this.updateConfigsSubscription) {
-        this.updateConfigsSubscription.unsubscribe();
-      }
+    if (this.updateConfigsSubscription) {
+      this.updateConfigsSubscription.unsubscribe();
+    }
 
-      if (this.getAllTimeZonesSubscription) {
-        this.getAllTimeZonesSubscription.unsubscribe();
-      }
+    if (this.getAllTimeZonesSubscription) {
+      this.getAllTimeZonesSubscription.unsubscribe();
+    }
   }
 
   private logError(message: string, err: ApiResponseError) {
@@ -217,37 +266,45 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     const updateConfigSettingsRequest = this.mapFormToConfigSettings();
 
     const updateConfigSettingsObserver = {
-      next: (configSettings: ConfigSetting[]) => this.showSuccessModal(configSettings),
-      error: (err: ApiResponseError) => {this.logError('Error updating Config Settings.', err); this.showErrorModal(err)},
-      complete: () => console.log('Config settings updated.')
+      next: (configSettings: ConfigSetting[]) =>
+        this.showSuccessModal(configSettings),
+      error: (err: ApiResponseError) => {
+        this.logError('Error updating Config Settings.', err);
+        this.showErrorModal(err);
+      },
+      complete: () => console.log('Config settings updated.'),
     };
 
-    this.updateConfigsSubscription = this.configsService.updateConfigSettings(updateConfigSettingsRequest).subscribe(updateConfigSettingsObserver);
+    this.updateConfigsSubscription = this.configsService
+      .updateConfigSettings(updateConfigSettingsRequest)
+      .subscribe(updateConfigSettingsObserver);
   }
 
   mapFormToConfigSettings() {
     const rawForm = this.editConfigsForm.getRawValue();
     const configSettings: ConfigSetting[] = [];
-    
+
     rawForm?.configGroups?.map((configGroup: ConfigGroupFormGroup) => {
-      configGroup.configSettings?.forEach((configSetting: ConfigSettingFormGroup) => {
-        const updatedConfig: ConfigSetting = {
-          id: configSetting.id,
-          configGroupId: configSetting.configGroupId,
-          configName: configSetting.configName,
-          configDisplayName: configSetting.configDisplayName,
-          configSortValue: configSetting.configSortValue,
-          helpText: configSetting.helpText,
-          configValueType: configSetting.configValueType,
-          booleanValue: configSetting.booleanValue,
-          longValue: configSetting.longValue,
-          stringValue: configSetting.stringValue,
-          guidValue: configSetting.guidValue,
-          dateTimeValue: configSetting.dateTimeValue,
-          inputType: configSetting.inputType
-        };
-        configSettings.push(updatedConfig);
-      });
+      configGroup.configSettings?.forEach(
+        (configSetting: ConfigSettingFormGroup) => {
+          const updatedConfig: ConfigSetting = {
+            id: configSetting.id,
+            configGroupId: configSetting.configGroupId,
+            configName: configSetting.configName,
+            configDisplayName: configSetting.configDisplayName,
+            configSortValue: configSetting.configSortValue,
+            helpText: configSetting.helpText,
+            configValueType: configSetting.configValueType,
+            booleanValue: configSetting.booleanValue,
+            longValue: configSetting.longValue,
+            stringValue: configSetting.stringValue,
+            guidValue: configSetting.guidValue,
+            dateTimeValue: configSetting.dateTimeValue,
+            inputType: configSetting.inputType,
+          };
+          configSettings.push(updatedConfig);
+        },
+      );
     });
 
     return configSettings;

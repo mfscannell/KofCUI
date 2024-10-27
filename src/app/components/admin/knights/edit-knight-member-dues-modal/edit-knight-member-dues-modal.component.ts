@@ -1,5 +1,20 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MemberDuesFormGroup } from 'src/app/models/formControls/memberDuesFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
@@ -11,48 +26,50 @@ import { MemberDuesService } from 'src/app/services/memberDues.service';
 @Component({
   selector: 'edit-knight-member-dues-modal',
   templateUrl: './edit-knight-member-dues-modal.component.html',
-  styleUrls: ['./edit-knight-member-dues-modal.component.scss']
+  styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
 })
-export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, OnChanges {
+export class EditKnightMemberDuesModalComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   @Input() modalHeaderText: string = '';
   @Input() memberDues?: MemberDues[] = [];
   @Input() knightId: string = '';
   @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberDuesChanges = new EventEmitter<MemberDues[]>();
-  @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
-  
+  @ViewChild('closeModal', { static: false }) closeModal:
+    | ElementRef
+    | undefined;
+
   public editKnightMemberDuesForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
   private updateKnightMemberDuesSubscription?: Subscription;
 
-  constructor(
-    private memberDuesService: MemberDuesService
-  ) {
+  constructor(private memberDuesService: MemberDuesService) {
     this.editKnightMemberDuesForm = new UntypedFormGroup({
-      memberDues: new UntypedFormArray([])
+      memberDues: new UntypedFormArray([]),
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   ngOnChanges() {
     this.errorSaving = false;
     this.errorMessages = [];
     this.editKnightMemberDuesForm = new UntypedFormGroup({
-      memberDues: new UntypedFormArray([])
+      memberDues: new UntypedFormArray([]),
     });
 
     this.populateForm();
   }
 
   get memberDuesFormArray() {
-    return this.editKnightMemberDuesForm.controls["memberDues"] as UntypedFormArray;
+    return this.editKnightMemberDuesForm.controls[
+      'memberDues'
+    ] as UntypedFormArray;
   }
 
   getMemberDuesYear(memberDueYear: AbstractControl): string {
@@ -64,38 +81,44 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
       this.memberDues.forEach((memberDue: MemberDues) => {
         const memberDueFormGroup = new UntypedFormGroup({
           year: new UntypedFormControl(memberDue.year),
-          paidStatus: new UntypedFormControl(memberDue.paidStatus)
+          paidStatus: new UntypedFormControl(memberDue.paidStatus),
         });
 
         this.memberDuesFormArray.push(memberDueFormGroup);
-       });
+      });
     }
   }
 
   public onSubmitEditKnightMemberInfo() {
-    const updateKnightMemberDuesRequest = this.mapFormToUpdateKnightMemberDuesRequest();
+    const updateKnightMemberDuesRequest =
+      this.mapFormToUpdateKnightMemberDuesRequest();
     const knightMemberDuesObserver = {
       next: (response: MemberDues[]) => this.passBackResponse(response),
-      error: (err: ApiResponseError) => this.logError("Error Updating Knight Member Dues", err),
-      complete: () => console.log('Knight Info updated.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error Updating Knight Member Dues', err),
+      complete: () => console.log('Knight Info updated.'),
     };
 
-    this.updateKnightMemberDuesSubscription = this.memberDuesService.updateKnightMemberDues(updateKnightMemberDuesRequest).subscribe(knightMemberDuesObserver);
+    this.updateKnightMemberDuesSubscription = this.memberDuesService
+      .updateKnightMemberDues(updateKnightMemberDuesRequest)
+      .subscribe(knightMemberDuesObserver);
   }
 
   private mapFormToUpdateKnightMemberDuesRequest(): UpdateKnightMemberDuesRequest {
     const rawForm = this.editKnightMemberDuesForm.getRawValue();
-    const mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: MemberDuesFormGroup): MemberDues {
+    const mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function (
+      md: MemberDuesFormGroup,
+    ): MemberDues {
       const memberDues: MemberDues = {
         year: md.year,
-        paidStatus: md.paidStatus
+        paidStatus: md.paidStatus,
       };
 
       return memberDues;
     });
     const request: UpdateKnightMemberDuesRequest = {
       knightId: this.knightId,
-      memberDues: mappedMemberDues
+      memberDues: mappedMemberDues,
     };
 
     return request;
@@ -120,7 +143,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSaving = true;
   }
 }

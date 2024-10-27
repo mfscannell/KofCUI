@@ -4,11 +4,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'kofc-aboutKnights',
   templateUrl: './aboutKnights.component.html',
-  styleUrls: ['./aboutKnights.component.scss']
+  styleUrls: ['./aboutKnights.component.scss'],
 })
 export class AboutKnightsComponent implements OnInit {
   //safeUrl: SafeResourceUrl;
-  @ViewChild('player') player: {mute: () => void} | undefined;
+  @ViewChild('player') player: { mute: () => void } | undefined;
   videoId: string;
 
   constructor(private sanitizer: DomSanitizer) {
