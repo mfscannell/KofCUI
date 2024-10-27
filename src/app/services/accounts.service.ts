@@ -1,5 +1,5 @@
 import { Observable, ReplaySubject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -50,6 +50,7 @@ export class AccountsService {
   }
 
   setCurrentUser(user: LogInResponse) {
+    console.log(user);
   }
 
   getKnightId() {
@@ -70,7 +71,7 @@ export class AccountsService {
     let roles:string[] = [];
 
     if (this.loggedInUser) {
-      let tokenRoles = this.getDecodedToken(this.loggedInUser.webToken).role;
+      const tokenRoles = this.getDecodedToken(this.loggedInUser.webToken).role;
 
       if (Array.isArray(tokenRoles)) {
         roles = tokenRoles;

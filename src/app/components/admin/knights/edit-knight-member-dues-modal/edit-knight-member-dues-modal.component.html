@@ -2,7 +2,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-      <button #closeModal type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()">
+      <button #closeModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
       </button>
     </div>
     <div class="modal-body">
@@ -24,7 +24,7 @@
             </div>
           </div>
           <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-          <button type="button" class="btn btn-secondary" (click)="activeModal.close()">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           </div>
       </form>
     </div>

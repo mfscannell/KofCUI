@@ -1,6 +1,7 @@
 import { UpcomingEvent } from "../upcomingEvent";
 
 export class Day {
+    // TODO MFS change to interface
     dayOfMonth: number = 0;
     events: UpcomingEvent[] = [];
 

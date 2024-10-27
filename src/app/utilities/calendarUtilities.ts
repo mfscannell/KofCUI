@@ -8,13 +8,13 @@ export class CalendarUtilities {
     //year:  number 2021 for 2021
     //month:  number 1 for January
     static getCalendar(year: number, month: number) {
-        let numDaysInMonth = DateTimeFormatter.getDaysInMonth(year, month);
-        let weeks: Week[] = [new Week()];
+        const numDaysInMonth = DateTimeFormatter.getDaysInMonth(year, month);
+        const weeks: Week[] = [new Week()];
 
         for (let dayOfMonth = 1; dayOfMonth <= numDaysInMonth; dayOfMonth++) {
 
             if (dayOfMonth === 1) {
-                let dayOfWeek = DateTimeFormatter.getDayOfWeek(year, month, dayOfMonth);
+                const dayOfWeek = DateTimeFormatter.getDayOfWeek(year, month, dayOfMonth);
 
                 if (dayOfWeek > 0) { // if first day is not Sunday
                     //push blank days in front of first day of month

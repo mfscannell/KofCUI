@@ -2,9 +2,13 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from 'src/app/models/activityEvent';
+import { ChangeVolunteerForRoleEvent } from 'src/app/models/events/changeVolunteerForRoleEvent';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
+import { EventVolunteersFormGroup } from 'src/app/models/formControls/eventVolunteersFormGroup';
+import { VolunteerSignUpRoleFormGroup } from 'src/app/models/formControls/volunteerSignUpRoleFormGroup';
 import { Knight } from 'src/app/models/knight';
 import { VolunteerForActivityEventRequest } from 'src/app/models/requests/volunteerForActivityEventRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
@@ -43,6 +47,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
     this.errorMessages = [];
 
     if (this.activityEvent) {
+      // TODO MFS replace this startTime and endTime JSONS with string.
       this.volunteerForActivityEventForm.patchValue({
         activityEventId: this.activityEvent.id,
         activityId: this.activityEvent.activityId,
@@ -101,7 +106,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    let eventVolunteersArray: UntypedFormGroup[] = [];
+    const eventVolunteersArray: UntypedFormGroup[] = [];
 
     if (eventVolunteers) {
       eventVolunteers.forEach((eventVolunteer) => {
@@ -131,8 +136,8 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
   public formatVolunteerRole(index: number) {
     if (this.activityEvent?.volunteerSignUpRoles) {
-      let role = this.activityEvent.volunteerSignUpRoles[index];
-      let volunteerRole = `${role.numberOfVolunteersNeeded} ${role.roleTitle}(s)`;
+      const role = this.activityEvent.volunteerSignUpRoles[index];
+      const volunteerRole = `${role.numberOfVolunteersNeeded} ${role.roleTitle}(s)`;
 
       return volunteerRole;
     }
@@ -142,8 +147,8 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
   public formatVolunteerRoleStartTime(index: number) {
     if (this.activityEvent?.volunteerSignUpRoles) {
-      let role = this.activityEvent.volunteerSignUpRoles[index];
-      let formattedTime = DateTimeFormatter.ToDisplayTime(role.startDateTime);
+      const role = this.activityEvent.volunteerSignUpRoles[index];
+      const formattedTime = DateTimeFormatter.ToDisplayTime(role.startDateTime);
 
       return formattedTime;
     }
@@ -153,8 +158,8 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
   public formatVolunteerRoleEndTime(index: number) {
     if (this.activityEvent?.volunteerSignUpRoles) {
-      let role = this.activityEvent.volunteerSignUpRoles[index];
-      let formattedTime = DateTimeFormatter.ToDisplayTime(role.endDateTime);
+      const role = this.activityEvent.volunteerSignUpRoles[index];
+      const formattedTime = DateTimeFormatter.ToDisplayTime(role.endDateTime);
 
       return formattedTime;
     }
@@ -169,8 +174,9 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
     return eventVolunteers.controls;
   }
 
-  public changeVolunteerForRole($event: any, volunteerSignUpRoleIndex: number) {
-    if ($event.target.checked) {
+  public changeVolunteerForRole($event: ChangeVolunteerForRoleEvent, volunteerSignUpRoleIndex: number) {
+    console.log($event);
+    if ($event.target?.checked) {
       console.log(`Check box checked:${this.knightId}`);
       const eventVolunteerFormGroup = new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
@@ -185,7 +191,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
       console.log("Check box unchecked");
       const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
       const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
-      let volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
+      const volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
 
       if (volunteerIndex >= 0) {
         eventVolunteerFormArray.removeAt(volunteerIndex);
@@ -198,7 +204,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private initForm() {
-    var today = new Date();
+    const today = new Date();
     
     return new UntypedFormGroup({
       activityEventId: new UntypedFormControl(''),
@@ -207,15 +213,9 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
       eventName: new UntypedFormControl(''),
       eventDescription: new UntypedFormControl(''),
       startDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
-      startTime: new UntypedFormControl({
-        "hour": 6,
-        "minute": 0
-      }),
+      startTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time("2000-01-02T06:00")),
       endDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
-      endTime: new UntypedFormControl({
-        "hour": 7,
-        "minute": 0
-      }),
+      endTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time("2000-01-02T07:00")),
       locationAddress: new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         addressName: new UntypedFormControl(''),
@@ -238,31 +238,31 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
       return;
     }
     
-    let activityEventId = this.activityEvent?.id || '';
-    let volunteerSignUpRoles: number[] = [];
+    const activityEventId = this.activityEvent?.id || '';
+    const volunteerSignUpRoles: number[] = [];
 
     for (let i = 0; i < this.volunteerSignUpRolesForm.length; i++) {
       const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(i) as UntypedFormGroup;
       const eventVolunteerFormArray = volunteerSignUpRoleControl.controls["eventVolunteers"] as UntypedFormArray;
-      let volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
+      const volunteerIndex = eventVolunteerFormArray.controls.findIndex(ctrl => ctrl.value.knightId === this.knightId);
 
       if (volunteerIndex >= 0) {
-        let volunteerSignUpRoleId = volunteerSignUpRoleControl.value.id as number;
+        const volunteerSignUpRoleId = volunteerSignUpRoleControl.value.id as number;
         volunteerSignUpRoles.push(volunteerSignUpRoleId);
       }
     }
 
-    let request: VolunteerForActivityEventRequest = {
+    const request: VolunteerForActivityEventRequest = {
       activityEventId: activityEventId,
       knightId: this.knightId,
       volunteerSignUpRoles: volunteerSignUpRoles
     };
 
-    let activityEvent = this.mapFormToActivityEvent();
+    const activityEvent = this.mapFormToActivityEvent();
 
-    let activityEventObserver = {
+    const activityEventObserver = {
       next: (eventVolunteers: EventVolunteer[]) => this.passBack(activityEvent, eventVolunteers),
-      error: (err: any) => this.logError('Error volunteering for Activity Event', err),
+      error: (err: ApiResponseError) => this.logError('Error volunteering for Activity Event', err),
       complete: () => console.log('Activity Event updated.')
     };
 
@@ -270,26 +270,26 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private mapFormToActivityEvent() {
-    let rawForm = this.volunteerForActivityEventForm.getRawValue();
-      let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
-        let volunteerSignUpRole: VolunteerSignUpRole = {
-          id: role.id,
-          roleTitle: role.roleTitle,
-          startDateTime: DateTimeFormatter.DateToIso8601DateTime(role.startDate, role.startTime.hour, role.startTime.minute),
-          endDateTime: DateTimeFormatter.DateToIso8601DateTime(role.endDate, role.endTime.hour, role.endTime.minute),
-          numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-          eventVolunteers: role.eventVolunteers.map(function(ev: any) {
-            let eventVolunteer: EventVolunteer = {
-              id: ev.id,
-              knightId: ev.knightId
-            };
-            return eventVolunteer;
-          })
-        };
+    const rawForm = this.volunteerForActivityEventForm.getRawValue();
+    const volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: VolunteerSignUpRoleFormGroup) {
+      const volunteerSignUpRole: VolunteerSignUpRole = {
+        id: role.id,
+        roleTitle: role.roleTitle,
+        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.startTime),
+        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.endDate, role.endTime),
+        numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
+        eventVolunteers: role.eventVolunteers.map(function(ev: EventVolunteersFormGroup) {
+          const eventVolunteer: EventVolunteer = {
+            id: ev.id,
+            knightId: ev.knightId
+          };
+          return eventVolunteer;
+        })
+      };
 
         return volunteerSignUpRole;
       });
-      let locationAddress: StreetAddress = {
+      const locationAddress: StreetAddress = {
         id: rawForm.locationAddress.id,
         addressName: rawForm.locationAddress.addressName,
         address1: rawForm.locationAddress.address1,
@@ -299,7 +299,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
         postalCode: rawForm.locationAddress.postalCode,
         countryCode: rawForm.locationAddress.countryCode
       };
-      let activityEvent: ActivityEvent = {
+      const activityEvent: ActivityEvent = {
         id: rawForm.id,
         activityId: rawForm.activityId,
         activityCategory: rawForm.activityCategory,
@@ -323,7 +323,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
         if (eventVolunteers.findIndex(ev => ev.volunteerSignUpRoleId === role.id) >= 0) {
           role.eventVolunteers.forEach((volunteer) => {
             if (volunteer.knightId === this.knightId) {
-              let eventVolunteerId = eventVolunteers.filter(ev => ev.volunteerSignUpRoleId === role.id)[0].id;
+              const eventVolunteerId = eventVolunteers.filter(ev => ev.volunteerSignUpRoleId === role.id)[0].id;
               volunteer.id = eventVolunteerId;
             }
           });
@@ -336,7 +336,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
     this.closeModal?.nativeElement.click();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -345,7 +345,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

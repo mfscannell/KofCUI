@@ -2,16 +2,14 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
-import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
+import { ActivityInterestFormGroup } from 'src/app/models/formControls/activityInterestFormGroup';
+import { MemberDuesFormGroup } from 'src/app/models/formControls/memberDuesFormGroup';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
-import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
-import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
-import { MemberDuesPaymentStatusFormOption } from 'src/app/models/inputOptions/memberDuesPaymentStatusFormOption';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { MemberDues } from 'src/app/models/memberDues';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
@@ -22,13 +20,13 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   styleUrls: ['./create-knight-modal.component.scss']
 })
 export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() countryFormOptions: CountryFormOption[] = [];
-  @Input() knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
-  @Input() knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
-  @Input() knightDegreeFormOptions: KnightDegreeFormOption[] = [];
+  @Input() knightMemberClassFormOptions: GenericFormOption[] = [];
+  @Input() knightMemberTypeFormOptions: GenericFormOption[] = [];
+  @Input() knightDegreeFormOptions: GenericFormOption[] = [];
   @Input() knightActivityInterestsForNewKnight: ActivityInterest[] = [];
-  @Input() memberDuesPaymentStatusFormOptions: MemberDuesPaymentStatusFormOption[] = [];
+  @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
   @Output() createKnightChanges = new EventEmitter<Knight>();
   @ViewChild('cancelCreateKnightModal', {static: false}) cancelCreateKnightModal: ElementRef | undefined;
 
@@ -54,20 +52,20 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     this.errorMessages = [];
   }
 
-  public getFormArrayName(activityCategoryFormOption: ActivityCategoryFormOption) {
+  public getFormArrayName(activityCategoryFormOption: GenericFormOption) {
     return `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`;
   }
 
   public getActivityName(activityInterest: AbstractControl): string {
-    let rawValue = activityInterest.getRawValue();
-    let activityName = rawValue.activityName;
+    const rawValue = activityInterest.getRawValue();
+    const activityName = rawValue.activityName;
 
     return activityName as string;
   }
 
   public enableDisableAdministrativeDivisions(form: UntypedFormGroup): void {
-    let countryCode = this.getCountryCode(form);
-    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+    const countryCode = this.getCountryCode(form);
+    const hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
 
     console.log(`hasCOuntry: ${hasCountryCode}. countryCode ${countryCode}`);
 
@@ -85,8 +83,8 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private initCreateKnightForm() {
-    let today = new Date();
-    let createKnightForm = new UntypedFormGroup({
+    const today = new Date();
+    const createKnightForm = new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       firstName: new UntypedFormControl('', [
         Validators.required,
@@ -158,8 +156,8 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
 
   private updateFormWithActivityInterests(form: UntypedFormGroup, activityInterests: ActivityInterest[]) {
     this.activityCategoryFormOptions.forEach(activityCategoryFormOption => {
-      let activityInterestsFormArray = this.getActivityInterestsFormArray(form, `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`);
-      let filteredActivities = activityInterests?.filter(activityInterest => {
+      const activityInterestsFormArray = this.getActivityInterestsFormArray(form, `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`);
+      const filteredActivities = activityInterests?.filter(activityInterest => {
         return activityInterest.activityCategory === activityCategoryFormOption.value;
       });
       filteredActivities?.forEach((activityInterest: ActivityInterest) => {
@@ -175,25 +173,25 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private updateFormWithMemberDuesForCreateKnightForm(form: UntypedFormGroup) {
-    let thisYear = new Date().getFullYear();
-      let startYear = thisYear - 9;
-      let endYear = thisYear + 1;
+    const thisYear = new Date().getFullYear();
+    const startYear = thisYear - 9;
+    const endYear = thisYear + 1;
 
-      for (let year = startYear; year <= endYear; year++) {
-        const memberDueFormGroup = new UntypedFormGroup({
-          memberDuesId: new UntypedFormControl(0),
-          year: new UntypedFormControl(year),
-          paidStatus: new UntypedFormControl('Unpaid')
-        });
+    for (let year = startYear; year <= endYear; year++) {
+      const memberDueFormGroup = new UntypedFormGroup({
+        memberDuesId: new UntypedFormControl(0),
+        year: new UntypedFormControl(year),
+        paidStatus: new UntypedFormControl('Unpaid')
+      });
 
-        this.appendMemberDues(form, memberDueFormGroup)
-      }
+      this.appendMemberDues(form, memberDueFormGroup)
+    }
   }
 
-  public filterAdministrativeDivisionsByCountry(form: UntypedFormGroup): AdministrativeDivisionFormOption[] {
-    let countryCode = this.getCountryCode(form);
+  public filterAdministrativeDivisionsByCountry(form: UntypedFormGroup): GenericFormOption[] {
+    const countryCode = this.getCountryCode(form);
 
-    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+    const filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -203,8 +201,8 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public getActivityInterestsFormArray(form: UntypedFormGroup, activityCategory: string): UntypedFormArray {
-    let activityInterestsFormGroup = form.controls['activityInterests'] as UntypedFormGroup;
-    let activityInterestsFormArray = activityInterestsFormGroup.controls[activityCategory] as UntypedFormArray;
+    const activityInterestsFormGroup = form.controls['activityInterests'] as UntypedFormGroup;
+    const activityInterestsFormArray = activityInterestsFormGroup.controls[activityCategory] as UntypedFormArray;
 
     return activityInterestsFormArray;
   }
@@ -218,16 +216,16 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   appendMemberDues(form: UntypedFormGroup, memberDueFormGroup: UntypedFormGroup) {
-    let something = form.controls["memberDues"] as UntypedFormArray;
+    const something = form.controls["memberDues"] as UntypedFormArray;
     something.push(memberDueFormGroup);
   }
 
   onSubmitCreateKnight() {
-    let mappedKnight = this.mapCreateKnightFormToKnight();
+    const mappedKnight = this.mapCreateKnightFormToKnight();
 
-    let knightObserver = {
+    const knightObserver = {
       next: (response: Knight) => this.passBack(response),
-      error: (err: any) => this.logError("Error Creating Knight", err),
+      error: (err: ApiResponseError) => this.logError("Error Creating Knight", err),
       complete: () => console.log('Knight created.')
     };
 
@@ -235,8 +233,8 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private mapCreateKnightFormToKnight() {
-    let rawForm = this.createKnightForm.getRawValue();
-    let homeAddress: StreetAddress = {
+    const rawForm = this.createKnightForm.getRawValue();
+    const homeAddress: StreetAddress = {
       id: rawForm.homeAddress.id,
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,
@@ -245,7 +243,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       postalCode: rawForm.homeAddress.postalCode,
       countryCode: rawForm.homeAddress.countryCode
     };
-    let knightInfo: KnightInfo = {
+    const knightInfo: KnightInfo = {
       id: rawForm.knightInfo.id,
       memberNumber: rawForm.knightInfo.memberNumber,
       mailReturned: rawForm.knightInfo.mailReturned,
@@ -255,15 +253,15 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       memberType: rawForm.knightInfo.memberType,
       memberClass: rawForm.knightInfo.memberClass
     };
-    let _memberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: any): MemberDues {
-      let memberDues: MemberDues = {
+    const _memberDues: MemberDues[] = rawForm?.memberDues?.map(function(md: MemberDuesFormGroup): MemberDues {
+      const memberDues: MemberDues = {
         year: md.year,
         paidStatus: md.paidStatus
       };
 
       return memberDues;
     });
-    let knight: Knight = {
+    const knight: Knight = {
       id: rawForm.id,
       firstName: rawForm.firstName,
       middleName: rawForm.middleName,
@@ -279,9 +277,9 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     };
 
     this.activityCategoryFormOptions.forEach(activityCategoryFormOption => {
-      let activityInterests = rawForm['activityInterests'][`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
+      const activityInterests = rawForm['activityInterests'][`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
 
-      activityInterests.forEach((ai: any) => {
+      activityInterests.forEach((ai: ActivityInterestFormGroup) => {
         console.log(ai);
         knight.activityInterests.push({
           activityId: ai.activityId,
@@ -304,7 +302,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     this.createKnightSubscription?.unsubscribe();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -313,7 +311,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

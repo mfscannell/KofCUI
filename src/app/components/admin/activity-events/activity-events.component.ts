@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
-import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
@@ -13,18 +13,12 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { SendEmailResponse } from 'src/app/models/responses/sendEmailResponse';
-import { SendEmailRequest } from 'src/app/models/requests/sendEmailRequest';
-import { TimeZoneFormOption } from 'src/app/models/inputOptions/timeZoneFormOption';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { FormsService } from 'src/app/services/forms.service';
-import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
-import { EventVolunteer } from 'src/app/models/eventVolunteer';
-import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
-import { StreetAddress } from 'src/app/models/streetAddress';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -45,7 +39,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   page = 1;
   pageSize = 5;
   maxSize = 10;
-  public councilTimeZone: TimeZoneFormOption | undefined;
+  public councilTimeZone: GenericFormOption | undefined;
   editActivityEventForm: UntypedFormGroup;
 
   errorSending: boolean = false;
@@ -55,7 +49,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   private getCouncilTimeZoneSubscription?: Subscription;
   private getFormOptionsSubscriptions?: Subscription;
   public countryFormOptions: CountryFormOption[] = [];
-  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  public activityCategoryFormOptions: GenericFormOption[] = [];
   public editModalHeaderText: string = '';
   public editModalAction: ModalActionEnums = ModalActionEnums.Create;
 
@@ -67,9 +61,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     private configsService: ConfigsService,
     private formsService: FormsService,
     public formatter: NgbDateParserFormatter) {
-      var initialDate = new Date();
+      const initialDate = new Date();
       initialDate.setMonth(initialDate.getMonth() - 3);
-      var finalDate = new Date(initialDate);
+      const finalDate = new Date(initialDate);
       finalDate.setMonth(finalDate.getMonth() + 6);
       this.fromDate = DateTimeFormatter.ToIso8601Date(initialDate.getFullYear(), initialDate.getMonth() + 1, initialDate.getDate());
       this.toDate = DateTimeFormatter.ToIso8601Date(finalDate.getFullYear(), finalDate.getMonth() + 1, finalDate.getDate());
@@ -77,7 +71,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       console.log(this.fromDate);
       console.log(this.toDate);
 
-      var today = new Date();
       this.editActivityEventForm = new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         activityId: new UntypedFormControl(''),
@@ -150,9 +143,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     console.log(this.fromDate);
     console.log(this.toDate);
 
-    let activityEventsObserver = {
+    const activityEventsObserver = {
       next: (activityEvents: ActivityEvent[]) => this.handleGetActivityEvents(activityEvents),
-      error: (err: any) => this.logError('Error getting all activity events', err),
+      error: (err: ApiResponseError) => this.logError('Error getting all activity events', err),
       complete: () => console.log('Activity Events loaded.')
     };
 
@@ -171,15 +164,27 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   private getFormOptions() {
-    let formsObserver = {
-      next: ([ activityCategoriesResponse, countryResponse, councilTimeZone, getAllActivitiesResponse, getAllKnightsResponse ]: [ActivityCategoryFormOption[], CountryFormOption[], TimeZoneFormOption, Activity[], Knight[]]) => {
+    const formsObserver = {
+      next: ([
+        activityCategoriesResponse,
+        countryResponse,
+        councilTimeZone,
+        getAllActivitiesResponse,
+        getAllKnightsResponse
+      ]: [
+        GenericFormOption[],
+        CountryFormOption[],
+        GenericFormOption,
+        Activity[],
+        Knight[]
+      ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.countryFormOptions = countryResponse;
         this.councilTimeZone = councilTimeZone;
         this.handleGetActivities(getAllActivitiesResponse);
         this.allKnights = getAllKnightsResponse;
       },
-      error: (err: any) => this.logError("Error getting Activity Events Form Options", err),
+      error: (err: ApiResponseError) => this.logError("Error getting Activity Events Form Options", err),
       complete: () => console.log('Activity Events Form Options retrieved.')
     };
 
@@ -191,16 +196,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       this.knightsService.getAllActiveKnightsNames()
     ]).subscribe(formsObserver);
   }
-
-  // private getAllActiveKnightsNames() {
-  //   let knightsObserver = {
-  //     next: (getAllKnightsResponse: Knight[]) => this.allKnights = getAllKnightsResponse,
-  //     error: (err: any) => this.logError('Error getting all knights.', err),
-  //     complete: () => console.log('All knights loaded.')
-  //   };
-
-  //   this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
-  // }
 
   public openSendEmailModal(activityEvent: ActivityEvent) {
     this.activityEventToEmailAbout = activityEvent;
@@ -227,7 +222,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   public updateActivityEventInList(activityEvent: ActivityEvent) {
-    let index = this.activityEvents?.findIndex(x => x.id === activityEvent.id)
+    const index = this.activityEvents?.findIndex(x => x.id === activityEvent.id)
 
     if (this.activityEvents && index !== undefined && index >= 0) {
       this.activityEvents[index] = activityEvent;
@@ -239,7 +234,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   //   return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   // }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -248,7 +243,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

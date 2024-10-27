@@ -15,12 +15,12 @@ export class DateTimeFormatter {
     ];
 
     static sameDate(dateTime1: string | undefined, dateTime2: string | undefined) {
-        let year1 = this.getYearFromDateTime(dateTime1);
-        let month1 = this.getMonth(dateTime1);
-        let day1 = this.getDay(dateTime1);
-        let year2 = this.getYearFromDateTime(dateTime2);
-        let month2 = this.getMonth(dateTime2);
-        let day2 = this.getDay(dateTime2);
+        const year1 = this.getYearFromDateTime(dateTime1);
+        const month1 = this.getMonth(dateTime1);
+        const day1 = this.getDay(dateTime1);
+        const year2 = this.getYearFromDateTime(dateTime2);
+        const month2 = this.getMonth(dateTime2);
+        const day2 = this.getDay(dateTime2);
 
         return year1 === year2 && month1 === month2 && day1 === day2;
     }
@@ -32,12 +32,12 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let dateTimeArray = dateTime.split('T');
-        let date = dateTimeArray[0];
-        let dateArray = date.split('-');
+        const dateTimeArray = dateTime.split('T');
+        const date = dateTimeArray[0];
+        const dateArray = date.split('-');
         year = dateArray[0];
 
-        let yearNumber = Number(year);
+        const yearNumber = Number(year);
 
         return yearNumber;
     }
@@ -49,12 +49,12 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let dateTimeArray = dateTime.split('T');
-        let date = dateTimeArray[0];
-        let dateArray = date.split('-');
+        const dateTimeArray = dateTime.split('T');
+        const date = dateTimeArray[0];
+        const dateArray = date.split('-');
         year = dateArray[0];
 
-        let yearNumber = Number(year);
+        const yearNumber = Number(year);
 
         return yearNumber;
     }
@@ -68,12 +68,12 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let dateTimeArray = dateTime.split('T');
-        let date = dateTimeArray[0];
-        let dateArray = date.split('-');
+        const dateTimeArray = dateTime.split('T');
+        const date = dateTimeArray[0];
+        const dateArray = date.split('-');
         month = dateArray[1];
 
-        let monthNumber = Number(month);
+        const monthNumber = Number(month);
 
         return monthNumber;
     }
@@ -85,12 +85,12 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let dateTimeArray = dateTime.split('T');
-        let date = dateTimeArray[0];
-        let dateArray = date.split('-');
+        const dateTimeArray = dateTime.split('T');
+        const date = dateTimeArray[0];
+        const dateArray = date.split('-');
         day = dateArray[2];
 
-        let dayNumber = Number(day);
+        const dayNumber = Number(day);
 
         return dayNumber;
     }
@@ -102,12 +102,12 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let dateTimeArray = dateTime.split('T');
-        let time = dateTimeArray[1];
-        let timeArray = time.split(':');
+        const dateTimeArray = dateTime.split('T');
+        const time = dateTimeArray[1];
+        const timeArray = time.split(':');
         hour = timeArray[0];
 
-        let hourNumber = Number(hour);
+        const hourNumber = Number(hour);
 
         return hourNumber;
     }
@@ -119,12 +119,12 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let dateTimeArray = dateTime.split('T');
-        let time = dateTimeArray[1];
-        let timeArray = time.split(':');
+        const dateTimeArray = dateTime.split('T');
+        const time = dateTimeArray[1];
+        const timeArray = time.split(':');
         minute = timeArray[1];
 
-        let minuteNumber = Number(minute);
+        const minuteNumber = Number(minute);
 
         return minuteNumber;
     }
@@ -134,9 +134,9 @@ export class DateTimeFormatter {
     static ToDisplayedDate(date: string | undefined) {
         let displayedDate = '';
 
-        let year = DateTimeFormatter.getYear(date);
-        let month = DateTimeFormatter.getMonth(date);
-        let day = DateTimeFormatter.getDay(date);
+        const year = DateTimeFormatter.getYear(date);
+        const month = DateTimeFormatter.getMonth(date);
+        const day = DateTimeFormatter.getDay(date);
         let monthName = ''
 
         if (year === undefined || month === undefined || day === undefined || year === null || month === null || day === null) {
@@ -179,7 +179,7 @@ export class DateTimeFormatter {
             minute = 0;
         }
 
-        let minuteString = minute < 10 ? `0${minute}` : `${minute}`
+        const minuteString = minute < 10 ? `0${minute}` : `${minute}`
 
         return `${hour}:${minuteString} ${meridian}`;
     }
@@ -201,9 +201,9 @@ export class DateTimeFormatter {
             yearString = `${year}`;
         }
 
-        let monthString = month < 10 ? `0${month}` : `${month}`;
-        let dayString = day < 10 ? `0${day}` : `${day}`;
-        let iso8601Date = `${yearString}-${monthString}-${dayString}`;
+        const monthString = month < 10 ? `0${month}` : `${month}`;
+        const dayString = day < 10 ? `0${day}` : `${day}`;
+        const iso8601Date = `${yearString}-${monthString}-${dayString}`;
 
         return iso8601Date;
     }
@@ -250,11 +250,11 @@ export class DateTimeFormatter {
             yearString = `${year}`;
         }
 
-        let monthString = month < 10 ? `0${month}` : `${month}`;
-        let dayString = day < 10 ? `0${day}` : `${day}`;
-        let hourString = hour < 10 ? `0${hour}` : `${hour}`;
-        let minuteString = minute < 10 ? `0${minute}` : `${minute}`;
-        let iso8601DateTime = `${yearString}-${monthString}-${dayString}T${hourString}:${minuteString}`;
+        const monthString = month < 10 ? `0${month}` : `${month}`;
+        const dayString = day < 10 ? `0${day}` : `${day}`;
+        const hourString = hour < 10 ? `0${hour}` : `${hour}`;
+        const minuteString = minute < 10 ? `0${minute}` : `${minute}`;
+        const iso8601DateTime = `${yearString}-${monthString}-${dayString}T${hourString}:${minuteString}`;
 
         return iso8601DateTime;
     }
@@ -264,9 +264,9 @@ export class DateTimeFormatter {
             return undefined;
         }
 
-        let hourString = hour < 10 ? `0${hour}` : `${hour}`;
-        let minuteString = minute < 10 ? `0${minute}` : `${minute}`;
-        let iso8601DateTime = `${date}T${hourString}:${minuteString}`;
+        const hourString = hour < 10 ? `0${hour}` : `${hour}`;
+        const minuteString = minute < 10 ? `0${minute}` : `${minute}`;
+        const iso8601DateTime = `${date}T${hourString}:${minuteString}`;
 
         return iso8601DateTime;
     }
@@ -400,13 +400,13 @@ export class DateTimeFormatter {
     //year: 2021 for 2021
     //returns day of week with Sunday = 0 and Saturday = 6
     static getDayOfWeek(year: number, month: number, day: number) {
-        const numbers = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
+        // const numbers = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
         const commonYearMonthOffsets = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5];
         const leapYearMonthOffsets = [0, 3, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6];
 
-        let adjustedYear = year - 1;
+        // const adjustedYear = year - 1;
 
-        let dayOfWeek = (day + 
+        const dayOfWeek = (day + 
                 (DateTimeFormatter.isYearLeapYear(year) ? leapYearMonthOffsets[month - 1] : commonYearMonthOffsets[month - 1]) + 
                 5 * ((year - 1) % 4) + 
                 4 * ((year - 1) % 100) +

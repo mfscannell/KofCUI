@@ -47,9 +47,9 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   private getAllActiveKnightsNames() {
-    let knightsObserver = {
+    const knightsObserver = {
       next: (knights: Knight[]) => this.loadAllKnights(knights),
-      error: (err: any) => console.log(`${err}`),
+      error: (err: unknown) => console.log(`${err}`),
       complete: () => console.log('Knights loaded.')
     };
     this.knightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
@@ -61,9 +61,9 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   private getAllLeadershipRoles() {
-    let leadershipRolesObserver = {
+    const leadershipRolesObserver = {
       next: (leadershipRoles: LeadershipRole[]) => this.leadershipRoles = leadershipRoles,
-      error: (err: any) => console.log(`${err}`),
+      error: (err: unknown) => console.log(`${err}`),
       complete: () => console.log('Leadership Roles loaded.')
     };
     this.leadershipRolesSubscription = this.leadershipRolesService.getAllLeadershipRoles().subscribe(leadershipRolesObserver);
@@ -86,7 +86,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   }
 
   public updateLeadershipRoleInList(leadershipRole: LeadershipRole) {
-    let index = this.leadershipRoles?.findIndex(x => x.id == leadershipRole.id)
+    const index = this.leadershipRoles?.findIndex(x => x.id == leadershipRole.id)
 
     if (this.leadershipRoles && index !== undefined && index >= 0) {
       this.leadershipRoles[index] = leadershipRole;

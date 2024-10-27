@@ -100,7 +100,8 @@
     [modalHeaderText]="editKnightPasswordModalText"
     [knightsFullName]="knightFullName"
     [knightId]="knightId"
-    [knightUser]="knightUser" (editKnightPasswordChanges)="updateKnightUserInList($event)"></edit-knight-password-modal>
+    [knightUser]="knightUser"
+    (editKnightPasswordChanges)="updateKnightUserInList($event)"></edit-knight-password-modal>
   <edit-knight-member-info-modal 
     class="modal fade" 
     id="editKnightMemberInfoModal"
@@ -109,6 +110,7 @@
     [modalHeaderText]="editKnightMemberInfoModalHeaderText"
     [knightDegreeFormOptions]="knightDegreeFormOptions"
     [knightMemberTypeFormOptions]="knightMemberTypeFormOptions"
-    [knightMemberClassFormOptions]="knightMemberClassFormOptions" (editKnightMemberInfoChanges)="updateKnightMemberInfoInList($event)"></edit-knight-member-info-modal>
+    [knightMemberClassFormOptions]="knightMemberClassFormOptions"
+    (editKnightMemberInfoChanges)="updateKnightMemberInfoInList($event)"></edit-knight-member-info-modal>
   <div id="knightsSpacer"></div>
 </div>

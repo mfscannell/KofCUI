@@ -1,11 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
-import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
-import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { UpdateKnightMembershipInfoRequest } from 'src/app/models/requests/updateKnightMembershipInfoRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
@@ -18,9 +17,9 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
   @Input() modalHeaderText: string = '';
   @Input() knightInfo?: KnightInfo;
   @Input() knightId: string = '';
-  @Input() knightDegreeFormOptions: KnightDegreeFormOption[] = [];
-  @Input() knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
-  @Input() knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
+  @Input() knightDegreeFormOptions: GenericFormOption[] = [];
+  @Input() knightMemberTypeFormOptions: GenericFormOption[] = [];
+  @Input() knightMemberClassFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberInfoChanges = new EventEmitter<KnightInfo>();
   @ViewChild('cancelEditKnightMemberInfoChanges', {static: false}) cancelEditKnightMemberInfoChanges: ElementRef | undefined;
 
@@ -48,7 +47,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
   }
 
   private initForm() {
-    var today = new Date();
+    const today = new Date();
 
     return new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
@@ -63,10 +62,10 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
   }
 
   public onSubmitEditKnightMemberInfo() {
-    let knightMembershipInfo = this.mapFormToUpdateMembershipRequest();
-    let knightMemberInfoObserver = {
+    const knightMembershipInfo = this.mapFormToUpdateMembershipRequest();
+    const knightMemberInfoObserver = {
       next: (response: KnightInfo) => this.passBackResponse(response),
-      error: (err: any) => this.logError("Error Updating Knight Membership Info", err),
+      error: (err: ApiResponseError) => this.logError("Error Updating Knight Membership Info", err),
       complete: () => console.log('Knight Membership Info updated.')
     };
 
@@ -95,8 +94,8 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
   }
 
   private mapFormToUpdateMembershipRequest(): UpdateKnightMembershipInfoRequest {
-    let rawForm = this.editKnightMemberInfoForm.getRawValue();
-    let knightInfo: UpdateKnightMembershipInfoRequest = {
+    const rawForm = this.editKnightMemberInfoForm.getRawValue();
+    const knightInfo: UpdateKnightMembershipInfoRequest = {
       knightId: this.knightId,
       memberNumber: rawForm.memberNumber,
       mailReturned: rawForm.mailReturned,
@@ -119,7 +118,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
     }
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -128,7 +127,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

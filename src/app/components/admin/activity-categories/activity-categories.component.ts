@@ -6,9 +6,10 @@ import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { FormsService } from 'src/app/services/forms.service';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 
 @Component({
   selector: 'activity-categories',
@@ -19,7 +20,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   getDataSubscription?: Subscription;
   activitiesSubscription?: Subscription;
   allKnights: Knight[] = [];
-  activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  activityCategoryFormOptions: GenericFormOption[] = [];
   activities?: Activity[];
   closeModalResult = '';
 
@@ -60,13 +61,13 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   }
 
   private getFormOptions() {
-    let getDataObserver = {
-      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], ActivityCategoryFormOption[], Knight[]]) => {
-        this.activities = activities,
-        this.activityCategoryFormOptions = activityCategoryFormOptions,
-        this.allKnights = allKnights
+    const getDataObserver = {
+      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], GenericFormOption[], Knight[]]) => {
+        this.activities = activities;
+        this.activityCategoryFormOptions = activityCategoryFormOptions;
+        this.allKnights = allKnights;
       },
-      error: (err: any) => this.logError("Error getting Activity Form Options", err),
+      error: (err: ApiResponseError) => this.logError("Error getting Activity Form Options", err),
       complete: () => console.log('Activity Form Options retrieved.')
     };
 
@@ -103,7 +104,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   }
 
   public updateActivityInList(activity: Activity) {
-    let index = this.activities?.findIndex(x => x.activityId == activity.activityId)
+    const index = this.activities?.findIndex(x => x.activityId == activity.activityId)
 
     if (this.activities && index !== undefined && index >= 0) {
       this.activities[index] = activity;
@@ -128,7 +129,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -137,7 +138,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

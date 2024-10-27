@@ -6,19 +6,17 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
-import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
-import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
-import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { FormsService } from 'src/app/services/forms.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
 import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { PasswordRequirements } from 'src/app/models/responses/passwordRequirements';
 import { ChangePassWordRequest } from 'src/app/models/requests/changePasswordRequest';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { ToggleInterestInActivityEvent } from 'src/app/models/events/toggleInterestInActivityEvent';
 
 @Component({
   selector: 'kofc-account',
@@ -34,10 +32,10 @@ export class AccountComponent implements OnInit, OnDestroy {
   private updateAccountSecuritySubscription?: Subscription;
   private getPasswordRequirementsSubscription?: Subscription;
   public errorMessages: string[] = [];
-  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
-  public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
-  public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
-  public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
+  public activityCategoryFormOptions: GenericFormOption[] = [];
+  public knightDegreeFormOptions: GenericFormOption[] = [];
+  public knightMemberTypeFormOptions: GenericFormOption[] = [];
+  public knightMemberClassFormOptions: GenericFormOption[] = [];
   public countryFormOptions: CountryFormOption[] = [];
   showErrorSavingInfo: boolean = false;
   showSuccessSavingInfo: boolean = false;
@@ -62,7 +60,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     requireDigit: false,
     requiredLength: 1,
     requireNonAlphanumeric: false,
-    allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?'
+    allowedNonAlphanumericCharacters: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?"
   };
   public editAccountSecurityForm: UntypedFormGroup;
 
@@ -114,7 +112,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private initEditPersonalInfoForm(): UntypedFormGroup {
-    var today = new Date();
+    const today = new Date();
     return new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       firstName: new UntypedFormControl('', [
@@ -210,8 +208,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   public enableDisableAdministrativeDivisions(): void {
-    let countryCode = this.getCountryCode();
-    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+    const countryCode = this.getCountryCode();
+    const hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
 
     if (hasCountryCode) {
       this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
@@ -224,10 +222,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
   }
 
-  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
-    let countryCode = this.getCountryCode();
+  public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
+    const countryCode = this.getCountryCode();
 
-    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+    const filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -237,13 +235,13 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   public onSubmitEditKnight() {
-    let updatedKnight = this.mapEditKnightFormToKnight();
+    const updatedKnight = this.mapEditKnightFormToKnight();
     this.updateKnightPersonalInfo(updatedKnight);
   }
 
   private mapEditKnightFormToKnight(): UpdateKnightPersonalInfoRequest {
-    let rawForm = this.editKnightPersonalInfoForm.getRawValue();
-    let homeAddress: StreetAddress = {
+    const rawForm = this.editKnightPersonalInfoForm.getRawValue();
+    const homeAddress: StreetAddress = {
       id: rawForm.homeAddress.id,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
@@ -253,7 +251,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       postalCode: rawForm.homeAddress.postalCode,
       countryCode: rawForm.homeAddress.countryCode
     };
-    let knight: UpdateKnightPersonalInfoRequest = {
+    const knight: UpdateKnightPersonalInfoRequest = {
       knightId: rawForm.knightId,
       firstName: rawForm.firstName,
       middleName: rawForm.middleName,
@@ -269,9 +267,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private updateKnightPersonalInfo(knightPersonalInfo: UpdateKnightPersonalInfoRequest) {
-    let knightObserver = {
+    const knightObserver = {
       next: (response: Knight) => this.handleUpdateKnightPersonalInfoResponse(response),
-      error: (err: any) => this.logError("Error Updating Knight.", err),
+      error: (err: ApiResponseError) => this.logError("Error Updating Knight.", err),
       complete: () => console.log('Knight updated.')
     };
 
@@ -297,8 +295,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleInterestCheckbox(interestChangeEvent: any, activity: ActivityInterest) {
-    activity.interested = interestChangeEvent.target.checked;
+  toggleInterestCheckbox(interestChangeEvent: ToggleInterestInActivityEvent, activity: ActivityInterest) {
+    activity.interested = interestChangeEvent?.target?.checked || false;
   }
 
   onSubmitEditActivityInterests() {
@@ -307,13 +305,13 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private updateKnightActivityInterests(knightActivityInterests: ActivityInterest[]) {
     if (this.knightId) {
-      let knightObserver = {
+      const knightObserver = {
         next: (response: ActivityInterest[]) => this.handleUpdateActivityInterests(response),
-        error: (err: any) => this.logError("Error Updating Knight Activity Interests.", err),
+        error: (err: ApiResponseError) => this.logError("Error Updating Knight Activity Interests.", err),
         complete: () => console.log('Knight Activity Interests updated.')
       };
   
-      let request = {
+      const request = {
         knightId: this.knightId,
         activityInterests: knightActivityInterests};
   
@@ -330,9 +328,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private getPasswordRequirements() {
-    let getPasswordRequirementsObserver = {
+    const getPasswordRequirementsObserver = {
       next: (response: PasswordRequirements) => this.passwordRequirements = response,
-      error: (err: any) => this.logError("Error Getting password requirements.", err),
+      error: (err: ApiResponseError) => this.logError("Error Getting password requirements.", err),
       complete: () => console.log('Password requirements retrieved.')
     };
 
@@ -346,58 +344,58 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   public isPasswordDirty() {
-    let newPasswordInput = this.editAccountSecurityForm.get('newPassword');
+    const newPasswordInput = this.editAccountSecurityForm.get('newPassword');
 
     return newPasswordInput?.dirty;
   }
 
   public hasRequiredLength() {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let newPassword = rawForm.newPassword as string;
-    let hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const newPassword = rawForm.newPassword as string;
+    const hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
 
     return hasLength;
   }
 
   public hasDistinctCharacters() {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let newPassword = rawForm.newPassword as string;
-    let numDistinctCharacters = new Set(newPassword).size;
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const newPassword = rawForm.newPassword as string;
+    const numDistinctCharacters = new Set(newPassword).size;
 
     return numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars;
   }
 
   public hasUpperCase() {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let newPassword = rawForm.newPassword as string;
-    let hasUpper = /[A-Z]/.test(newPassword);
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const newPassword = rawForm.newPassword as string;
+    const hasUpper = /[A-Z]/.test(newPassword);
 
     return hasUpper;
   }
 
   public hasLowerCase() {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let newPassword = rawForm.newPassword as string;
-    let hasLower = /[a-z]/.test(newPassword);
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const newPassword = rawForm.newPassword as string;
+    const hasLower = /[a-z]/.test(newPassword);
 
     return hasLower;
   }
 
   public hasDigit() {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let newPassword = rawForm.newPassword as string;
-    let hasDigitChar = /[0-9]/.test(newPassword);
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const newPassword = rawForm.newPassword as string;
+    const hasDigitChar = /[0-9]/.test(newPassword);
 
     return hasDigitChar;
   }
 
   public hasAllowedSpecialCharacter() {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let newPassword = rawForm.newPassword as string;
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const newPassword = rawForm.newPassword as string;
     let hasSpecialCharacter = false;
 
     for (let i = 0; i < this.passwordRequirements.allowedNonAlphanumericCharacters.length; i++) {
-      let specialChar = this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
+      const specialChar = this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
 
       if (newPassword.indexOf(specialChar) > -1) {
         hasSpecialCharacter = true;
@@ -408,13 +406,13 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   public onSubmitUpdateSecurity() {
-    let changePasswordRequest = this.mapFormToChangePasswordRequest();
+    const changePasswordRequest = this.mapFormToChangePasswordRequest();
     this.updateAccountSecurity(changePasswordRequest);
   }
 
   private mapFormToChangePasswordRequest(): ChangePassWordRequest {
-    let rawForm = this.editAccountSecurityForm.getRawValue();
-    let changePasswordRequest: ChangePassWordRequest = {
+    const rawForm = this.editAccountSecurityForm.getRawValue();
+    const changePasswordRequest: ChangePassWordRequest = {
       knightId: rawForm.knightId,
       oldPassword: rawForm.oldPassword,
       newPassword: rawForm.newPassword,
@@ -425,9 +423,9 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private updateAccountSecurity(knight: ChangePassWordRequest) {
-    let changePasswordObserver = {
+    const changePasswordObserver = {
       next: (response: ChangePasswordResponse) => this.handleUpdateAccountSecurity(response),
-      error: (err: any) => this.logError("Error Updating Knight.", err),
+      error: (err: ApiResponseError) => this.logError("Error Updating Knight.", err),
       complete: () => console.log('Knight updated.')
     };
 
@@ -435,19 +433,33 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private handleUpdateAccountSecurity(response: ChangePasswordResponse) {
-    this.cancelEditSecurityModal?.nativeElement.click();
+    if (response.success) {
+      this.cancelEditSecurityModal?.nativeElement.click();
+    }
   }
 
   private getFormOptions() {
-    let formsObserver = {
-      next: ([ activityCategoriesResponse, knightDegreeResponse, knightMemberTypeResponse, knightMemberClassResponse, countryResponse ]: [ActivityCategoryFormOption[], KnightDegreeFormOption[], KnightMemberTypeFormOption[], KnightMemberClassFormOption[], CountryFormOption[]]) => {
+    const formsObserver = {
+      next: ([
+        activityCategoriesResponse,
+        knightDegreeResponse,
+        knightMemberTypeResponse,
+        knightMemberClassResponse,
+        countryResponse
+      ]: [
+        GenericFormOption[],
+        GenericFormOption[],
+        GenericFormOption[],
+        GenericFormOption[],
+        CountryFormOption[]
+      ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.knightDegreeFormOptions = knightDegreeResponse;
         this.knightMemberTypeFormOptions = knightMemberTypeResponse;
         this.knightMemberClassFormOptions = knightMemberClassResponse;
         this.countryFormOptions = countryResponse;
       },
-      error: (err: any) => this.logError("Error getting Knight Degree Form Options", err),
+      error: (err: ApiResponseError) => this.logError("Error getting Knight Degree Form Options", err),
       complete: () => console.log('Knight Degree Form Options retrieved.')
     };
 
@@ -462,9 +474,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private getKnight() {
     if (this.knightId) {
-      let knightObserver = {
+      const knightObserver = {
         next: (getKnightResponse: Knight) => this.knight = getKnightResponse,
-        error: (err: any) => this.logError('Error getting knight.', err),
+        error: (err: ApiResponseError) => this.logError('Error getting knight.', err),
         complete: () => console.log('Knight loaded.')
       };
       
@@ -472,7 +484,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -481,7 +493,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
