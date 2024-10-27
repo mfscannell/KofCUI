@@ -9,13 +9,11 @@ import { ActivityInterest } from 'src/app/models/activityInterest';
 import { MemberDues } from 'src/app/models/memberDues';
 import { KnightInfo } from 'src/app/models/knightInfo';
 import { FormsService } from 'src/app/services/forms.service';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { KnightDegreeFormOption } from 'src/app/models/inputOptions/knightDegreeFormOption';
-import { KnightMemberTypeFormOption } from 'src/app/models/inputOptions/knightMemberTypeFormOption';
-import { KnightMemberClassFormOption } from 'src/app/models/inputOptions/knightMemberClassFormOption';
-import { MemberDuesPaymentStatusFormOption } from 'src/app/models/inputOptions/memberDuesPaymentStatusFormOption';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { SearchPartialNameEvent } from 'src/app/models/events/searchPartialNameEvent';
 
 @Component({
   selector: 'knights',
@@ -39,11 +37,11 @@ export class KnightsComponent implements OnInit, OnDestroy {
 
   public knightActivityInterestsForNewKnight: ActivityInterest[] = [];
   public countryFormOptions: CountryFormOption[] = [];
-  public activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
-  public knightDegreeFormOptions: KnightDegreeFormOption[] = [];
-  public knightMemberTypeFormOptions: KnightMemberTypeFormOption[] = [];
-  public knightMemberClassFormOptions: KnightMemberClassFormOption[] = [];
-  public memberDuesPaymentStatusFormOptions: MemberDuesPaymentStatusFormOption[] = [];
+  public activityCategoryFormOptions: GenericFormOption[] = [];
+  public knightDegreeFormOptions: GenericFormOption[] = [];
+  public knightMemberTypeFormOptions: GenericFormOption[] = [];
+  public knightMemberClassFormOptions: GenericFormOption[] = [];
+  public memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
@@ -95,7 +93,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   private getAllKnights() {
-    let formsObserver = {
+    const formsObserver = {
       next: (
         [
           knightsResponse,
@@ -109,12 +107,12 @@ export class KnightsComponent implements OnInit, OnDestroy {
         ]: 
         [
           Knight[],
-          ActivityCategoryFormOption[],
-          KnightDegreeFormOption[],
-          KnightMemberTypeFormOption[],
-          KnightMemberClassFormOption[],
+          GenericFormOption[],
+          GenericFormOption[],
+          GenericFormOption[],
+          GenericFormOption[],
           CountryFormOption[],
-          MemberDuesPaymentStatusFormOption[],
+          GenericFormOption[],
           ActivityInterest[]
         ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
@@ -126,7 +124,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
         this.knightActivityInterestsForNewKnight = knightActivityInterests;
         this.applySearchFilter(knightsResponse)
       },
-      error: (err: any) => this.logError("Error getting Knight Degree Form Options", err),
+      error: (err: ApiResponseError) => this.logError("Error getting Knight Degree Form Options", err),
       complete: () => console.log('Knight Degree Form Options retrieved.')
     };
 
@@ -149,8 +147,8 @@ export class KnightsComponent implements OnInit, OnDestroy {
     this.knightsLoaded = true;
   }
 
-  searchPartialName(event: any) {
-    let text = event.target.value.toLowerCase();
+  searchPartialName(event: SearchPartialNameEvent) {
+    const text = (event.target?.value || '').toLowerCase();
     this.page = 1;
     this.displayedKnights = this.allKnights.filter(knight => 
       (knight.firstName && knight.firstName.toLowerCase().includes(text)) || (knight.lastName && knight.lastName.toLowerCase().includes(text)));
@@ -189,7 +187,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightPersonalInfoInList(knight: Knight) {
-    let index = this.allKnights?.findIndex(x => x.id == knight.id);
+    const index = this.allKnights?.findIndex(x => x.id == knight.id);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       knight.knightInfo = this.allKnights[index].knightInfo;
@@ -202,7 +200,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightActivityInterestsInList(activityInterests: ActivityInterest[]) {
-    let index = this.allKnights?.findIndex(x => x.id == this.knightId);
+    const index = this.allKnights?.findIndex(x => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].activityInterests = activityInterests;
@@ -210,7 +208,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightMemberDuesInList(memberDues: MemberDues[]) {
-    let index = this.allKnights?.findIndex(x => x.id == this.knightId);
+    const index = this.allKnights?.findIndex(x => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].memberDues = memberDues;
@@ -218,7 +216,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightMemberInfoInList(knightMemberInfo: KnightInfo) {
-    let index = this.allKnights?.findIndex(x => x.id == this.knightId);
+    const index = this.allKnights?.findIndex(x => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].knightInfo = knightMemberInfo;
@@ -226,7 +224,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightUserInList(knightUser: KnightUser) {
-    let index = this.allKnights?.findIndex(x => x.id == this.knightId)
+    const index = this.allKnights?.findIndex(x => x.id == this.knightId)
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].knightUser = knightUser;
@@ -249,7 +247,8 @@ export class KnightsComponent implements OnInit, OnDestroy {
     this.showUploadKnightsModal = false;
   }
 
-  private logError(errorMessage: string, error: any) {
-
+  private logError(errorMessage: string, error: ApiResponseError) {
+    console.log(errorMessage);
+    console.log(error);
   }
 }

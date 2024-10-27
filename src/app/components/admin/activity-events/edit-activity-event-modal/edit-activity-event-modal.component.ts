@@ -4,12 +4,14 @@ import { Subscription } from 'rxjs';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
 import { ActivityEvent } from 'src/app/models/activityEvent';
+import { ChangeActivityEvent } from 'src/app/models/events/changeActivityEvent';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
-import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
+import { EventVolunteersFormGroup } from 'src/app/models/formControls/eventVolunteersFormGroup';
+import { VolunteerSignUpRoleFormGroup } from 'src/app/models/formControls/volunteerSignUpRoleFormGroup';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { TimeZoneFormOption } from 'src/app/models/inputOptions/timeZoneFormOption';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
@@ -25,8 +27,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   @Input() activityEventToEdit?: ActivityEvent;
   @Input() modalHeaderText: string = '';
   @Input() countryFormOptions: CountryFormOption[] = [];
-  @Input() councilTimeZone?: TimeZoneFormOption;
-  @Input() activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  @Input() councilTimeZone?: GenericFormOption;
+  @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() selectableActivities: Activity[] = [];
   @Input() allKnights: Knight[] = [];
   @Output() createActivityEventChanges = new EventEmitter<ActivityEvent>();
@@ -61,8 +63,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   public enableDisableAdministrativeDivisions(): void {
-    let countryCode = this.getCountryCode();
-    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+    const countryCode = this.getCountryCode();
+    const hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
 
     if (hasCountryCode) {
       this.editActivityEventForm.get('locationAddress.stateCode')?.enable();
@@ -71,23 +73,23 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     }
   }
 
-  public onChangeActivity(event: any) {
+  public onChangeActivity(event: ChangeActivityEvent) {
     console.log(event);
-    let eventNameIndex = this.selectableActivities.findIndex(x => x.activityId == event.target.value);
+    const eventNameIndex = this.selectableActivities.findIndex(x => x.activityId == event.target?.value);
 
     if (eventNameIndex >= 0) {
-      let eventName = this.selectableActivities[eventNameIndex].activityName;
+      const eventName = this.selectableActivities[eventNameIndex].activityName;
       this.editActivityEventForm.controls["eventName"].setValue(eventName);
 
-      let activityCategory = this.selectableActivities[eventNameIndex].activityCategory;
+      const activityCategory = this.selectableActivities[eventNameIndex].activityCategory;
       this.editActivityEventForm.controls["activityCategory"].setValue(activityCategory);
     }
   }
 
-  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
-    let countryCode = this.getCountryCode();
+  public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
+    const countryCode = this.getCountryCode();
 
-    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+    const filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -141,27 +143,27 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
 
   public onSubmitEditActivityEvent() {
     if (this.editModalAction === ModalActionEnums.Edit) {
-      let updateActivityEventRequest = this.mapFormToActivityEvent();
+      const updateActivityEventRequest = this.mapFormToActivityEvent();
       
       this.updateActivityEvent(updateActivityEventRequest);
     } else if (this.editModalAction === ModalActionEnums.Create) {
-      let createActivityEventRequest = this.mapFormToActivityEvent();
+      const createActivityEventRequest = this.mapFormToActivityEvent();
 
       this.createActivityEvent(createActivityEventRequest);
     }
   }
 
   private mapFormToActivityEvent(): ActivityEvent {
-    let rawForm = this.editActivityEventForm.getRawValue();
-    let volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: any) {
-      let volunteerSignUpRole: VolunteerSignUpRole = {
+    const rawForm = this.editActivityEventForm.getRawValue();
+    const volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function(role: VolunteerSignUpRoleFormGroup) {
+      const volunteerSignUpRole: VolunteerSignUpRole = {
         id: role.id || '00000000-0000-0000-0000-000000000000',
         roleTitle: role.roleTitle,
         startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.startTime),
         endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.endTime),
         numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-        eventVolunteers: role.eventVolunteers.map(function(ev: any) {
-          let eventVolunteer: EventVolunteer = {
+        eventVolunteers: role.eventVolunteers.map(function(ev: EventVolunteersFormGroup) {
+          const eventVolunteer: EventVolunteer = {
             id: ev.id || '00000000-0000-0000-0000-000000000000',
             knightId: ev.knightId
           } as EventVolunteer;
@@ -171,7 +173,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
 
       return volunteerSignUpRole;
     });
-    let locationAddress: StreetAddress = {
+    const locationAddress: StreetAddress = {
       id: rawForm.locationAddress.id || '00000000-0000-0000-0000-000000000000',
       addressName: rawForm.locationAddress.addressName,
       address1: rawForm.locationAddress.address1,
@@ -181,7 +183,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
       postalCode: rawForm.locationAddress.postalCode,
       countryCode: rawForm.locationAddress.countryCode
     } as StreetAddress;
-    let activityEvent: ActivityEvent = {
+    const activityEvent: ActivityEvent = {
       id: rawForm.id || '',
       activityId: rawForm.activityId,
       activityCategory: rawForm.activityCategory,
@@ -204,9 +206,9 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private createActivityEvent(activityEvent: ActivityEvent) {
-    let activityEventObserver = {
+    const activityEventObserver = {
       next: (createdActivityEvent: ActivityEvent) => this.passBackCreatedActivityEvent(createdActivityEvent),
-      error: (err: any) => this.logError('Error creating Activity Event', err),
+      error: (err: ApiResponseError) => this.logError('Error creating Activity Event', err),
       complete: () => console.log('Activity Event created.')
     };
 
@@ -214,9 +216,9 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private updateActivityEvent(activityEvent: ActivityEvent) {
-    let activityEventObserver = {
+    const activityEventObserver = {
       next: (activityEvent: ActivityEvent) => this.passBackUpdatedActivityEvent(activityEvent),
-      error: (err: any) => this.logError('Error updating Activity Event', err),
+      error: (err: ApiResponseError) => this.logError('Error updating Activity Event', err),
       complete: () => console.log('Activity Event updated.')
     };
 
@@ -236,25 +238,25 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private getEventStartDate() {
-    let formControl = this.editActivityEventForm.controls["startDate"] as UntypedFormControl;
+    const formControl = this.editActivityEventForm.controls["startDate"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   private getEventStartTime() {
-    let formControl = this.editActivityEventForm.controls["startTime"] as UntypedFormControl;
+    const formControl = this.editActivityEventForm.controls["startTime"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   private getEventEndDate() {
-    let formControl = this.editActivityEventForm.controls["endDate"] as UntypedFormControl;
+    const formControl = this.editActivityEventForm.controls["endDate"] as UntypedFormControl;
 
     return formControl.value;
   }
 
   private getEventEndTime() {
-    let formControl = this.editActivityEventForm.controls["endTime"] as UntypedFormControl;
+    const formControl = this.editActivityEventForm.controls["endTime"] as UntypedFormControl;
 
     return formControl.value;
   }
@@ -331,7 +333,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    let eventVolunteersArray: UntypedFormGroup[] = [];
+    const eventVolunteersArray: UntypedFormGroup[] = [];
 
     if (eventVolunteers) {
       eventVolunteers.forEach((eventVolunteer) => {
@@ -351,7 +353,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     return this.editActivityEventForm.controls["volunteerSignUpRoles"] as UntypedFormArray;
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -360,7 +362,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

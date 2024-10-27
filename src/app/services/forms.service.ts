@@ -3,12 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CountryFormOption } from '../models/inputOptions/countryFormOption';
 import { GenericFormOption } from '../models/inputOptions/genericFormOption';
-import { KnightDegreeFormOption } from '../models/inputOptions/knightDegreeFormOption';
-import { KnightMemberTypeFormOption } from '../models/inputOptions/knightMemberTypeFormOption';
-import { KnightMemberClassFormOption } from '../models/inputOptions/knightMemberClassFormOption';
-import { MemberDuesPaymentStatusFormOption } from '../models/inputOptions/memberDuesPaymentStatusFormOption';
-import { ActivityCategoryFormOption } from '../models/inputOptions/activityCategoryFormOption';
-import { TimeZoneFormOption } from '../models/inputOptions/timeZoneFormOption';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +10,12 @@ import { TimeZoneFormOption } from '../models/inputOptions/timeZoneFormOption';
 
 export class FormsService {
   private countryFormOptions?: Observable<CountryFormOption[]>;
-  private activityCategoryFormOptions?: Observable<ActivityCategoryFormOption[]>;
-  private knightDegreeFormOptions?: Observable<KnightDegreeFormOption[]>;
-  private knightMemberTypeFormOptions?: Observable<KnightMemberTypeFormOption[]>;
-  private knightMemberClassFormOptions?: Observable<KnightMemberClassFormOption[]>;
-  private memberDuesPaymentStatusFormOptions?: Observable<MemberDuesPaymentStatusFormOption[]>;
-  private timeZoneFormOptions?: Observable<TimeZoneFormOption[]>;
+  private activityCategoryFormOptions?: Observable<GenericFormOption[]>;
+  private knightDegreeFormOptions?: Observable<GenericFormOption[]>;
+  private knightMemberTypeFormOptions?: Observable<GenericFormOption[]>;
+  private knightMemberClassFormOptions?: Observable<GenericFormOption[]>;
+  private memberDuesPaymentStatusFormOptions?: Observable<GenericFormOption[]>;
+  private timeZoneFormOptions?: Observable<GenericFormOption[]>;
 
   constructor(private http: HttpClient) {
 
@@ -36,51 +30,51 @@ export class FormsService {
     return this.countryFormOptions;
   }
 
-  getActivityCategoryFormOptions(): Observable<ActivityCategoryFormOption[]> {
+  getActivityCategoryFormOptions(): Observable<GenericFormOption[]> {
     if (!this.activityCategoryFormOptions) {
       console.log('no activity category form options');
-      this.activityCategoryFormOptions = this.http.get<ActivityCategoryFormOption[]>('forms/activityCategoryFormOptions').pipe(shareReplay());
+      this.activityCategoryFormOptions = this.http.get<GenericFormOption[]>('forms/activityCategoryFormOptions').pipe(shareReplay());
     }
 
     return this.activityCategoryFormOptions;
   }
 
-  getKnightDegreeFormOptions(): Observable<KnightDegreeFormOption[]> {
+  getKnightDegreeFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightDegreeFormOptions) {
-      this.knightDegreeFormOptions = this.http.get<KnightDegreeFormOption[]>('forms/knightDegreeFormOptions').pipe(shareReplay());
+      this.knightDegreeFormOptions = this.http.get<GenericFormOption[]>('forms/knightDegreeFormOptions').pipe(shareReplay());
     }
 
     return this.knightDegreeFormOptions;
   }
 
-  getKnightMemberTypeFormOptions(): Observable<KnightMemberTypeFormOption[]> {
+  getKnightMemberTypeFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightMemberTypeFormOptions) {
-      this.knightMemberTypeFormOptions = this.http.get<KnightMemberTypeFormOption[]>('forms/knightMemberTypeFormOptions').pipe(shareReplay());
+      this.knightMemberTypeFormOptions = this.http.get<GenericFormOption[]>('forms/knightMemberTypeFormOptions').pipe(shareReplay());
     }
 
     return this.knightMemberTypeFormOptions;
   }
 
-  getKnightMemberClassFormOptions(): Observable<KnightMemberClassFormOption[]> {
+  getKnightMemberClassFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightMemberClassFormOptions) {
-      this.knightMemberClassFormOptions = this.http.get<KnightMemberClassFormOption[]>('forms/knightMemberClassFormOptions').pipe(shareReplay());
+      this.knightMemberClassFormOptions = this.http.get<GenericFormOption[]>('forms/knightMemberClassFormOptions').pipe(shareReplay());
     }
 
     return this.knightMemberClassFormOptions;
   }
 
-  getMemberDuesPaymentStatusFormOptions(): Observable<MemberDuesPaymentStatusFormOption[]> {
+  getMemberDuesPaymentStatusFormOptions(): Observable<GenericFormOption[]> {
     if (!this.memberDuesPaymentStatusFormOptions) {
-      this.memberDuesPaymentStatusFormOptions = this.http.get<MemberDuesPaymentStatusFormOption[]>('forms/memberDuesPaymentStatusFormOptions')
+      this.memberDuesPaymentStatusFormOptions = this.http.get<GenericFormOption[]>('forms/memberDuesPaymentStatusFormOptions')
         .pipe(shareReplay());
     }
 
     return this.memberDuesPaymentStatusFormOptions;
   }
 
-  getTimeZoneFormOptions(): Observable<TimeZoneFormOption[]> {
+  getTimeZoneFormOptions(): Observable<GenericFormOption[]> {
     if (!this.timeZoneFormOptions) {
-      this.timeZoneFormOptions = this.http.get<TimeZoneFormOption[]>('forms/allTimeZoneFormOptions').pipe(shareReplay());
+      this.timeZoneFormOptions = this.http.get<GenericFormOption[]>('forms/allTimeZoneFormOptions').pipe(shareReplay());
     }
 
     return this.timeZoneFormOptions;

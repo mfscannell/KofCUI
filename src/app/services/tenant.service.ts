@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 
@@ -13,9 +12,9 @@ export class TenantService {
     }
 
     getTenantId() {
-        let tenantName = location.host.split('.')[0];
+        const tenantName = location.host.split('.')[0];
         let tenantId = '';
-        let tenant = environment.tenants.find(t => t.tenantName === tenantName);
+        const tenant = environment.tenants.find(t => t.tenantName === tenantName);
 
         if (tenant) {
             tenantId = tenant.tenantId;
@@ -25,19 +24,19 @@ export class TenantService {
     }
 
     goingToBasePage() {
-        let domains = location.host.split('.');
-        let usingBasePage = domains.length === environment.numDomains - 1;
+        const domains = location.host.split('.');
+        const usingBasePage = domains.length === environment.numDomains - 1;
 
         return usingBasePage;
     }
 
     tenantExists() {
-        let domains = location.host.split('.');
+        const domains = location.host.split('.');
         let tenantExists = false;
 
         if (domains.length === environment.numDomains) {
-            let tenantName = domains[0];
-            let tenant = environment.tenants.find(t => t.tenantName === tenantName);
+            const tenantName = domains[0];
+            const tenant = environment.tenants.find(t => t.tenantName === tenantName);
 
             if (tenant) {
                 tenantExists = true;

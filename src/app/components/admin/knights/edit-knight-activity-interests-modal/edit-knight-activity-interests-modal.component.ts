@@ -2,8 +2,10 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { ActivityCategoryFormOption } from 'src/app/models/inputOptions/activityCategoryFormOption';
+import { ActivityInterestFormGroup } from 'src/app/models/formControls/activityInterestFormGroup';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 
 @Component({
@@ -15,7 +17,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   @Input() modalHeaderText: string = '';
   @Input() activityInterests: ActivityInterest[] = [];
   @Input() knightId: string = '';
-  @Input() activityCategoryFormOptions: ActivityCategoryFormOption[] = [];
+  @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberDuesChanges = new EventEmitter<ActivityInterest[]>();
   @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
   
@@ -60,8 +62,8 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   private fillOutActivityInterestForm() {
     if (this.activityInterests) {
       this.activityCategoryFormOptions.forEach(activityCategoryFormOptions => {
-        let activityInterestsFormArray = this.getActivityInterestsFormArray(`${activityCategoryFormOptions.value.toLowerCase()}ActivityInterests`);
-        let filteredActivities = this.activityInterests?.filter(activityInterest => {
+        const activityInterestsFormArray = this.getActivityInterestsFormArray(`${activityCategoryFormOptions.value.toLowerCase()}ActivityInterests`);
+        const filteredActivities = this.activityInterests?.filter(activityInterest => {
           return activityInterest.activityCategory === activityCategoryFormOptions.value;
         });
         filteredActivities?.forEach((activityInterest: ActivityInterest) =>{
@@ -86,27 +88,27 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   public getActivityInterestsFormArray(activityCategory: string): UntypedFormArray {
-    let activityInterestsFormArray = this.editKnightActivityInterestsForm.controls[activityCategory] as UntypedFormArray;
+    const activityInterestsFormArray = this.editKnightActivityInterestsForm.controls[activityCategory] as UntypedFormArray;
 
     return activityInterestsFormArray;
   }
 
-  public getFormArrayName(activityCategoryInputOption: ActivityCategoryFormOption) {
+  public getFormArrayName(activityCategoryInputOption: GenericFormOption) {
     return `${activityCategoryInputOption.value.toLowerCase()}ActivityInterests`;
   }
 
   public getActivityName(activityInterest: AbstractControl): string {
-    let rawValue = activityInterest.getRawValue();
-    let activityName = rawValue.activityName;
+    const rawValue = activityInterest.getRawValue();
+    const activityName = rawValue.activityName;
 
     return activityName as string;
   }
 
   public onSubmitEditKnightActivityInterests() {
-    let request = this.mapFormToActivityInterests();
-    let knightActivityInterestsObserver = {
+    const request = this.mapFormToActivityInterests();
+    const knightActivityInterestsObserver = {
       next: (response: ActivityInterest[]) => this.passBackResponse(response),
-      error: (err: any) => this.logError("Error Updating Knight Activity Interests", err),
+      error: (err: ApiResponseError) => this.logError("Error Updating Knight Activity Interests", err),
       complete: () => console.log('Activity Interests updated.')
     };
 
@@ -114,19 +116,19 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   private mapFormToActivityInterests(): UpdateKnightActivityInterestsRequest {
-    let rawForm = this.editKnightActivityInterestsForm.getRawValue();
+    const rawForm = this.editKnightActivityInterestsForm.getRawValue();
     console.log('mapFormToActivityInterests');
     console.log(rawForm);
 
-    let request: UpdateKnightActivityInterestsRequest = {
+    const request: UpdateKnightActivityInterestsRequest = {
       knightId: this.knightId,
       activityInterests: []
     };
 
     this.activityCategoryFormOptions.forEach(activityCategoryFormOption => {
-      let activityInterests = rawForm[`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
+      const activityInterests = rawForm[`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
 
-      activityInterests.forEach((ai: any) => {
+      activityInterests.forEach((ai: ActivityInterestFormGroup) => {
         console.log(ai);
         request.activityInterests.push({
           activityId: ai.activityId,
@@ -149,7 +151,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
     this.closeModal?.nativeElement.click();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -158,7 +160,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

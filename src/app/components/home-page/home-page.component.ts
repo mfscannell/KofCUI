@@ -14,7 +14,7 @@ export class HomePageComponent implements OnInit {
   }
 
   imageSource(image: EncodedFile) {
-    let imgSrc = `data:${image.fileType};${image.encoding},${image.data}`;
+    const imgSrc = `data:${image.fileType};${image.encoding},${image.data}`;
     return imgSrc;
   }
 }

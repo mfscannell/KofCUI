@@ -16,16 +16,16 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    let goingToBasePage = this.tenantService.goingToBasePage();
+    const goingToBasePage = this.tenantService.goingToBasePage();
 
     if (!goingToBasePage) {
-      let tenantExists = this.tenantService.tenantExists();
+      const tenantExists = this.tenantService.tenantExists();
 
       if (!tenantExists) {
-        let protocol = location.protocol;
-        let host = environment.domain;
-        let pathname = location.pathname;
-        let redirectUrl = `${protocol}//${host}${pathname}`;
+        const protocol = location.protocol;
+        const host = environment.domain;
+        const pathname = location.pathname;
+        const redirectUrl = `${protocol}//${host}${pathname}`;
         this.document.location.href = redirectUrl;
       }
     }

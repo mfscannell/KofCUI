@@ -4,6 +4,7 @@ import { EncodedFile } from 'src/app/models/encodedFile';
 import { AssetsService } from 'src/app/services/assets.service';
 import { UntypedFormGroup } from '@angular/forms';
 import { DeleteHomePageCarouselImageResponse } from 'src/app/models/responses/deleteHomePageCarouselImageResponse';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 
 @Component({
   selector: 'app-assets',
@@ -46,7 +47,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   imageSource(image: EncodedFile) {
-    let imgSrc = `data:${image.fileType};${image.encoding},${image.data}`;
+    const imgSrc = `data:${image.fileType};${image.encoding},${image.data}`;
     return imgSrc;
   }
 
@@ -57,7 +58,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
     console.log(files);
 
     if (files) {
-      let fileToUpload = <File>files[0];
+      const fileToUpload = <File>files[0];
       this.formData = new FormData();
       this.formData.append('file', fileToUpload, fileToUpload.name);
     }
@@ -65,9 +66,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   onSubmitUploadFile() {
     if (this.formData) {
-      let imageUploadObserver = {
+      const imageUploadObserver = {
         next: (response: EncodedFile) => this.handleUploadHomePageImageResponse(response),
-        error: (err: any) => this.logError("Error Uploading image.", err),
+        error: (err: ApiResponseError) => this.logError("Error Uploading image.", err),
         complete: () => console.log('Image uploaded.')
       };
   
@@ -84,15 +85,15 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   openConfirmDeleteHomePageCarouselImage(index: number) {
     this.indexToDelete = index;
-    let homePageImage = this.assetsService.getHomePageCarouselImages()[index];
+    const homePageImage = this.assetsService.getHomePageCarouselImages()[index];
     this.fileNameToDelete = homePageImage.fileName;
   }
 
   onSubmitDeleteFile() {
     if (this.fileNameToDelete) {
-      let imageUploadObserver = {
+      const imageUploadObserver = {
         next: (response: DeleteHomePageCarouselImageResponse) => this.handleDeleteImageSuccess(response),
-        error: (err: any) => this.logError("Error Deleting image.", err),
+        error: (err: ApiResponseError) => this.logError("Error Deleting image.", err),
         complete: () => console.log('Image deleted.')
       };
   
@@ -101,11 +102,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
   }
 
   private handleDeleteImageSuccess(response: DeleteHomePageCarouselImageResponse) {
+    console.log(response);
     this.assetsService.removeHomePageCarouselImage(this.indexToDelete);
     this.cancelDeleteActiveModal?.nativeElement.click();
   }
 
-  logError(message: string, err: any) {
+  logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -114,7 +116,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

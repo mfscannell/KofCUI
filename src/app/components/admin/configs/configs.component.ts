@@ -6,11 +6,12 @@ import { ConfigGroup } from 'src/app/models/configGroup';
 import { ConfigSetting } from 'src/app/models/configSetting';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
-import { TimeZoneFormOption } from 'src/app/models/inputOptions/timeZoneFormOption';
 import { ConfigInputTypeEnums } from 'src/app/enums/configInputTypeEnums';
-import { StringDropDownOption } from 'src/app/models/stringDropDownOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { FormsService } from 'src/app/services/forms.service';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { ConfigSettingFormGroup } from 'src/app/models/formControls/configSettingFormGroup';
+import { ConfigGroupFormGroup } from 'src/app/models/formControls/configGroupFormGroup';
 
 @Component({
   selector: 'kofc-configs',
@@ -22,7 +23,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private updateConfigsSubscription?: Subscription;
   private getAllTimeZonesSubscription?: Subscription;
   configGroups: ConfigGroup[] = [];
-  timeZones: TimeZoneFormOption[] = [];
+  timeZones: GenericFormOption[] = [];
   editConfigsForm: UntypedFormGroup;
 
   showSaveMessage: boolean = false;
@@ -44,18 +45,18 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   private getAllTimeZones() {
-    let getAllTimeZonesObserver = {
-      next: (timeZones: TimeZoneFormOption[]) => this.timeZones = timeZones,
-      error: (err: any) => this.logError('Error getting all timeZones.', err),
+    const getAllTimeZonesObserver = {
+      next: (timeZones: GenericFormOption[]) => this.timeZones = timeZones,
+      error: (err: ApiResponseError) => this.logError('Error getting all timeZones.', err),
       complete: () => console.log('Time zones loaded.')
     };
     this.getAllTimeZonesSubscription = this.formsService.getTimeZoneFormOptions().subscribe(getAllTimeZonesObserver);
   }
   
   private getAllConfigs() {
-    let getAllConfigsObserver = {
+    const getAllConfigsObserver = {
       next: (configGroups: ConfigGroup[]) => this.patchEditConfigGroupsForm(configGroups),
-      error: (err: any) => this.logError('Error getting all configs.', err),
+      error: (err: ApiResponseError) => this.logError('Error getting all configs.', err),
       complete: () => console.log('Config settings loaded.')
     };
     this.getAllConfigsSubscription = this.configsService.getAllConfigGroups().subscribe(getAllConfigsObserver);
@@ -77,7 +78,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   private initConfigSettings(configSettings: ConfigSetting[] | undefined) {
-    let configSettingsArray: UntypedFormGroup[] = [];
+    const configSettingsArray: UntypedFormGroup[] = [];
 
     if (configSettings) {
       configSettings.forEach((configSetting) => {
@@ -123,6 +124,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   getStringDropDownList(i: number, j: number) : GenericFormOption[] {
+    if (i > -1 && j > -1) {
+      return [];
+    }
+    
     return [];
   }
 
@@ -179,21 +184,21 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       }
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
   }
 
-  private showErrorModal(err: any) {
+  private showErrorModal(err: ApiResponseError) {
     this.showSaveMessage = true;
     this.success = false;
 
     if (typeof err?.error === 'string') {
-      this.errorMessages = [err?.err];
+      this.errorMessages = [err?.error];
     } else {
-      let errors = [];
+      const errors = [];
 
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         errors.push(err?.error?.errors[key][0]);
       }
 
@@ -201,18 +206,19 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private showSuccessModal() {
+  private showSuccessModal(configSettings: ConfigSetting[]) {
+    console.log(configSettings);
     this.showSaveMessage = true;
     this.success = true;
     this.errorMessages = [];
   }
 
   onSubmitEditConfigSettings() {
-    let updateConfigSettingsRequest = this.mapFormToConfigSettings();
+    const updateConfigSettingsRequest = this.mapFormToConfigSettings();
 
-    let updateConfigSettingsObserver = {
-      next: (configSettings: ConfigSetting[]) => this.showSuccessModal(),
-      error: (err: any) => {this.logError('Error updating Config Settings.', err); this.showErrorModal(err)},
+    const updateConfigSettingsObserver = {
+      next: (configSettings: ConfigSetting[]) => this.showSuccessModal(configSettings),
+      error: (err: ApiResponseError) => {this.logError('Error updating Config Settings.', err); this.showErrorModal(err)},
       complete: () => console.log('Config settings updated.')
     };
 
@@ -220,12 +226,12 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   mapFormToConfigSettings() {
-    let rawForm = this.editConfigsForm.getRawValue();
-    let configSettings: ConfigSetting[] = [];
+    const rawForm = this.editConfigsForm.getRawValue();
+    const configSettings: ConfigSetting[] = [];
     
-    rawForm?.configGroups?.map((configGroup: any) => {
-      configGroup.configSettings?.forEach((configSetting: any) => {
-        let updatedConfig: ConfigSetting = {
+    rawForm?.configGroups?.map((configGroup: ConfigGroupFormGroup) => {
+      configGroup.configSettings?.forEach((configSetting: ConfigSettingFormGroup) => {
+        const updatedConfig: ConfigSetting = {
           id: configSetting.id,
           configGroupId: configSetting.configGroupId,
           configName: configSetting.configName,

@@ -5,6 +5,8 @@ import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { ExcelFileReader } from 'src/app/services/excelFileReader.service';
 import { Subscription } from 'rxjs';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { UploadFileEvent } from 'src/app/models/events/uploadFileEvent';
 
 @Component({
   selector: 'upload-knights-modal',
@@ -42,8 +44,11 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
     this.errorMessages = [];
   }
 
-  addFile(event: any) {
-    this.filePath = event.target.files[0];
+  public addFile(event: UploadFileEvent) {
+    if (event.target?.files && event.target?.files.length) {
+      const files = event.target?.files;
+      this.filePath = files[0];
+    }
   }
 
   onSubmitUploadKnights() {
@@ -51,16 +56,16 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
       ExcelFileReader.ReadKnightsFromFile(this.filePath).then((knightsResult: Knight[]) => {
         console.log(knightsResult);
         this.createKnights(knightsResult);
-      }).catch((error: any) => {
+      }).catch((error: ApiResponseError) => {
         this.logError("Error uploading knights from file.", error)
       });
     }
   }
 
   private createKnights(knights: Knight[]) {
-    let knightsObserver = {
+    const knightsObserver = {
       next: (response: Knight[]) => this.passBackResponse(response),
-      error: (err: any) => this.logError("Error Creating Knights.", err),
+      error: (err: ApiResponseError) => this.logError("Error Creating Knights.", err),
       complete: () => console.log('Knights created.')
     };
 
@@ -79,7 +84,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
     this.toggleExampleFileText = this.showExampleFile ? "Hide Example File" : "Show Example File";
   }
 
-  logError(message: string, err: any) {
+  logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -88,7 +93,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }

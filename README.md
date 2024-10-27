@@ -20,6 +20,10 @@ ng serve --host mynewtenant.localhost --port 4200 --open --configuration develop
 ## When Ran From Docker
 mynewtenant.localhost:9081
 
+## Eslint
+https://eslint.org/docs/latest/use/getting-started
+Run the command `npx eslint ./` from a terminal.
+
 ## Updating Angular
 Run the following commands at Powershell:
 npm uninstall -g @angular/cli

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'kofc-aboutKnights',
@@ -8,7 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class AboutKnightsComponent implements OnInit {
   //safeUrl: SafeResourceUrl;
-  @ViewChild('player') player: any;
+  @ViewChild('player') player: {mute: () => void} | undefined;
   videoId: string;
 
   constructor(private sanitizer: DomSanitizer) {
@@ -24,6 +24,6 @@ export class AboutKnightsComponent implements OnInit {
 
   // Autoplay
   onReady() {
-    this.player.mute();
+    this.player?.mute();
   }
 }

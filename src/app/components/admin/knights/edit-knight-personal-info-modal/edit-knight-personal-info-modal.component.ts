@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AdministrativeDivisionFormOption } from 'src/app/models/inputOptions/administrativeDivisionFormOption';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
+import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
 import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
+import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
@@ -28,7 +29,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
 
   constructor(
     private knightsService: KnightsService) {
-      var today = new Date();
+      const today = new Date();
       this.editKnightPersonalInfoForm = new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         firstName: new UntypedFormControl('', [
@@ -110,10 +111,10 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
     return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
   }
 
-  public filterAdministrativeDivisionsByCountry(): AdministrativeDivisionFormOption[] {
-    let countryCode = this.getCountryCode();
+  public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
+    const countryCode = this.getCountryCode();
 
-    let filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+    const filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -123,8 +124,8 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
   }
 
   public enableDisableAdministrativeDivisions(): void {
-    let countryCode = this.getCountryCode();
-    let hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+    const countryCode = this.getCountryCode();
+    const hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
 
     if (hasCountryCode) {
       this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
@@ -134,10 +135,10 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
   }
 
   public onSubmitEditKnightPersonalInfo() {
-    let updateKnightPersonalInfoRequest = this.mapFormToKnightPersonalInfo();
-    let knightMemberInfoObserver = {
+    const updateKnightPersonalInfoRequest = this.mapFormToKnightPersonalInfo();
+    const knightMemberInfoObserver = {
       next: (response: Knight) => this.passBackResponse(response),
-      error: (err: any) => this.logError("Error Updating Knight Info", err),
+      error: (err: ApiResponseError) => this.logError("Error Updating Knight Info", err),
       complete: () => console.log('Knight Info updated.')
     };
 
@@ -145,10 +146,10 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
   }
 
   private mapFormToKnightPersonalInfo(): UpdateKnightPersonalInfoRequest {
-    let rawForm = this.editKnightPersonalInfoForm.getRawValue();
+    const rawForm = this.editKnightPersonalInfoForm.getRawValue();
     console.log("mapFormToKnightPersonalInfo");
     console.log(rawForm);
-    let homeAddress: StreetAddress = {
+    const homeAddress: StreetAddress = {
       id: rawForm.homeAddress.id,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
@@ -158,7 +159,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
       postalCode: rawForm.homeAddress.postalCode,
       countryCode: rawForm.homeAddress.countryCode
     };
-    let knight: UpdateKnightPersonalInfoRequest = {
+    const knight: UpdateKnightPersonalInfoRequest = {
       knightId: rawForm.id,
       firstName: rawForm.firstName,
       middleName: rawForm.middleName,
@@ -179,7 +180,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
     this.updateKnightPersonalInfoSubscription?.unsubscribe();
   }
 
-  private logError(message: string, err: any) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -188,7 +189,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
     } else {
-      for (let key in err?.error?.errors) {
+      for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
