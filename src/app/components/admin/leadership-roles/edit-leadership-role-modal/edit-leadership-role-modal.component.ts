@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Knight } from 'src/app/models/knight';
@@ -9,13 +19,16 @@ import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service
 @Component({
   selector: 'edit-leadership-role-modal',
   templateUrl: './edit-leadership-role-modal.component.html',
-  styleUrls: ['./edit-leadership-role-modal.component.scss']
+  styleUrls: ['./edit-leadership-role-modal.component.scss'],
 })
-export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
+export class EditLeadershipRoleModalComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   @Input() leadershipRole: LeadershipRole | undefined;
   @Input() allKnights: Knight[] = [];
   @Output() editLeadershipRoleChanges = new EventEmitter<LeadershipRole>();
-  @ViewChild('cancelCustomEditActiveModal', {static: false}) cancelCustomEditActiveModal: ElementRef | undefined;
+  @ViewChild('cancelCustomEditActiveModal', { static: false })
+  cancelCustomEditActiveModal: ElementRef | undefined;
   public editLeadershipRoleForm: UntypedFormGroup;
   public errorSaving: boolean = true;
   public errorMessages: string[] = [];
@@ -28,8 +41,8 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
       title: new UntypedFormControl(''),
       occupied: new UntypedFormControl(false),
       knightId: new UntypedFormControl(''),
-      leadershipRoleCategory: new UntypedFormControl('')
-     });
+      leadershipRoleCategory: new UntypedFormControl(''),
+    });
   }
 
   ngOnInit() {
@@ -50,7 +63,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
       title: new UntypedFormControl(''),
       occupied: new UntypedFormControl(false),
       knightId: new UntypedFormControl(''),
-      leadershipRoleCategory: new UntypedFormControl('')
+      leadershipRoleCategory: new UntypedFormControl(''),
     });
 
     if (this.leadershipRole) {
@@ -59,14 +72,12 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
         title: this.leadershipRole.title,
         occupied: this.leadershipRole.occupied,
         knightId: this.leadershipRole.knightId,
-        leadershipRoleCategory: this.leadershipRole.leadershipRoleCategory
+        leadershipRoleCategory: this.leadershipRole.leadershipRoleCategory,
       });
     }
   }
 
-  public cancelModal() {
-
-  }
+  public cancelModal() {}
 
   public onSubmitEditLeadershipRole() {
     const rawForm = this.editLeadershipRoleForm.getRawValue();
@@ -75,7 +86,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
       title: rawForm.title,
       knightId: rawForm.knightId,
       occupied: rawForm.occupied,
-      leadershipRoleCategory: rawForm.leadershipRoleCategory
+      leadershipRoleCategory: rawForm.leadershipRoleCategory,
     };
 
     this.updateLeadershipRole(updatedLeadershipRole);
@@ -83,12 +94,16 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
 
   private updateLeadershipRole(leadershipRole: LeadershipRole) {
     const leadershipRoleObserver = {
-      next: (updatedLeadershipRole: LeadershipRole) => this.passBack(updatedLeadershipRole),
-      error: (err: ApiResponseError) => this.logError('Error updating leadership role.', err),
-      complete: () => console.log('Leadership Role updated.')
+      next: (updatedLeadershipRole: LeadershipRole) =>
+        this.passBack(updatedLeadershipRole),
+      error: (err: ApiResponseError) =>
+        this.logError('Error updating leadership role.', err),
+      complete: () => console.log('Leadership Role updated.'),
     };
 
-    this.updateLeadershipRoleSubscription = this.leadershipRolesService.updateLeadershipRole(leadershipRole).subscribe(leadershipRoleObserver);
+    this.updateLeadershipRoleSubscription = this.leadershipRolesService
+      .updateLeadershipRole(leadershipRole)
+      .subscribe(leadershipRoleObserver);
   }
 
   private passBack(updatedLeadershipRole: LeadershipRole) {
@@ -109,7 +124,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSaving = true;
   }
 }

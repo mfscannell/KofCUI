@@ -9,7 +9,7 @@ import { AccountsService } from 'src/app/services/accounts.service';
 @Component({
   selector: 'kofc-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: UntypedFormGroup;
@@ -19,15 +19,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private accountsService: AccountsService,
-    private router: Router) {
+    private router: Router,
+  ) {
     this.loginForm = new UntypedFormGroup({
       username: new UntypedFormControl(),
-      password: new UntypedFormControl()
+      password: new UntypedFormControl(),
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     if (this.logInSubscription) {
@@ -40,21 +40,23 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     const loginRequest: LogInRequest = {
       username: rawForm.username,
-      password: rawForm.password
+      password: rawForm.password,
     };
     const logInObserver = {
       next: () => this.handleLogInResult(),
       error: (err: ApiResponseError) => this.logError('Error logging in.', err),
-      complete: () => console.log('Logged In.')
+      complete: () => console.log('Logged In.'),
     };
 
-    this.logInSubscription = this.accountsService.login(loginRequest).subscribe(logInObserver);
+    this.logInSubscription = this.accountsService
+      .login(loginRequest)
+      .subscribe(logInObserver);
   }
 
   private handleLogInResult() {
     this.loginForm.patchValue({
       username: '',
-      password: ''
+      password: '',
     });
 
     this.errorLoggingIn = false;
@@ -64,7 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
-    this.loginForm.patchValue({password: ''});
+    this.loginForm.patchValue({ password: '' });
 
     this.errorMessages = [];
 
@@ -75,7 +77,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorLoggingIn = true;
   }
 }

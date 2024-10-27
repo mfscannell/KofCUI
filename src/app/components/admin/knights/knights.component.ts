@@ -18,7 +18,7 @@ import { SearchPartialNameEvent } from 'src/app/models/events/searchPartialNameE
 @Component({
   selector: 'knights',
   templateUrl: './knights.component.html',
-  styleUrls: ['./knights.component.scss']
+  styleUrls: ['./knights.component.scss'],
 })
 export class KnightsComponent implements OnInit, OnDestroy {
   allKnights: Knight[] = [];
@@ -67,8 +67,8 @@ export class KnightsComponent implements OnInit, OnDestroy {
   constructor(
     private formsService: FormsService,
     private knightsService: KnightsService,
-    private knightActivityInterestsService: KnightActivityInterestsService) {
-  }
+    private knightActivityInterestsService: KnightActivityInterestsService,
+  ) {}
 
   ngOnInit() {
     this.getAllKnights();
@@ -94,38 +94,38 @@ export class KnightsComponent implements OnInit, OnDestroy {
 
   private getAllKnights() {
     const formsObserver = {
-      next: (
-        [
-          knightsResponse,
-          activityCategoriesResponse,
-          knightDegreeResponse,
-          knightMemberTypeResponse,
-          knightMemberClassResponse,
-          countryResponse,
-          memberDuesPaymentStatusResponse,
-          knightActivityInterests
-        ]: 
-        [
-          Knight[],
-          GenericFormOption[],
-          GenericFormOption[],
-          GenericFormOption[],
-          GenericFormOption[],
-          CountryFormOption[],
-          GenericFormOption[],
-          ActivityInterest[]
-        ]) => {
+      next: ([
+        knightsResponse,
+        activityCategoriesResponse,
+        knightDegreeResponse,
+        knightMemberTypeResponse,
+        knightMemberClassResponse,
+        countryResponse,
+        memberDuesPaymentStatusResponse,
+        knightActivityInterests,
+      ]: [
+        Knight[],
+        GenericFormOption[],
+        GenericFormOption[],
+        GenericFormOption[],
+        GenericFormOption[],
+        CountryFormOption[],
+        GenericFormOption[],
+        ActivityInterest[],
+      ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.knightDegreeFormOptions = knightDegreeResponse;
         this.knightMemberTypeFormOptions = knightMemberTypeResponse;
         this.knightMemberClassFormOptions = knightMemberClassResponse;
         this.countryFormOptions = countryResponse;
-        this.memberDuesPaymentStatusFormOptions = memberDuesPaymentStatusResponse;
+        this.memberDuesPaymentStatusFormOptions =
+          memberDuesPaymentStatusResponse;
         this.knightActivityInterestsForNewKnight = knightActivityInterests;
-        this.applySearchFilter(knightsResponse)
+        this.applySearchFilter(knightsResponse);
       },
-      error: (err: ApiResponseError) => this.logError("Error getting Knight Degree Form Options", err),
-      complete: () => console.log('Knight Degree Form Options retrieved.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting Knight Degree Form Options', err),
+      complete: () => console.log('Knight Degree Form Options retrieved.'),
     };
 
     this.getFormsSubscription = forkJoin([
@@ -136,7 +136,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
       this.formsService.getKnightMemberClassFormOptions(),
       this.formsService.getCountryFormOptions(),
       this.formsService.getMemberDuesPaymentStatusFormOptions(),
-      this.knightActivityInterestsService.getAllIKnightActivityInterestsForNewKnight()
+      this.knightActivityInterestsService.getAllIKnightActivityInterestsForNewKnight(),
     ]).subscribe(formsObserver);
   }
 
@@ -150,8 +150,11 @@ export class KnightsComponent implements OnInit, OnDestroy {
   searchPartialName(event: SearchPartialNameEvent) {
     const text = (event.target?.value || '').toLowerCase();
     this.page = 1;
-    this.displayedKnights = this.allKnights.filter(knight => 
-      (knight.firstName && knight.firstName.toLowerCase().includes(text)) || (knight.lastName && knight.lastName.toLowerCase().includes(text)));
+    this.displayedKnights = this.allKnights.filter(
+      (knight) =>
+        (knight.firstName && knight.firstName.toLowerCase().includes(text)) ||
+        (knight.lastName && knight.lastName.toLowerCase().includes(text)),
+    );
   }
 
   public openEditKnightPersonalInfoModal(knight: Knight) {
@@ -187,7 +190,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightPersonalInfoInList(knight: Knight) {
-    const index = this.allKnights?.findIndex(x => x.id == knight.id);
+    const index = this.allKnights?.findIndex((x) => x.id == knight.id);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       knight.knightInfo = this.allKnights[index].knightInfo;
@@ -199,8 +202,10 @@ export class KnightsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public updateKnightActivityInterestsInList(activityInterests: ActivityInterest[]) {
-    const index = this.allKnights?.findIndex(x => x.id == this.knightId);
+  public updateKnightActivityInterestsInList(
+    activityInterests: ActivityInterest[],
+  ) {
+    const index = this.allKnights?.findIndex((x) => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].activityInterests = activityInterests;
@@ -208,7 +213,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightMemberDuesInList(memberDues: MemberDues[]) {
-    const index = this.allKnights?.findIndex(x => x.id == this.knightId);
+    const index = this.allKnights?.findIndex((x) => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].memberDues = memberDues;
@@ -216,7 +221,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightMemberInfoInList(knightMemberInfo: KnightInfo) {
-    const index = this.allKnights?.findIndex(x => x.id == this.knightId);
+    const index = this.allKnights?.findIndex((x) => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].knightInfo = knightMemberInfo;
@@ -224,15 +229,14 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public updateKnightUserInList(knightUser: KnightUser) {
-    const index = this.allKnights?.findIndex(x => x.id == this.knightId)
+    const index = this.allKnights?.findIndex((x) => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
       this.allKnights[index].knightUser = knightUser;
     }
   }
 
-  openCreateKnightModal() {
-  }
+  openCreateKnightModal() {}
 
   openUploadKnightsModal() {
     this.showUploadKnightsModal = true;
@@ -243,7 +247,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public addKnights(knights: Knight[]) {
-    knights.forEach(k => this.allKnights.push(k));
+    knights.forEach((k) => this.allKnights.push(k));
     this.showUploadKnightsModal = false;
   }
 

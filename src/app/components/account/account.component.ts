@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { Knight } from 'src/app/models/knight';
@@ -8,7 +14,11 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { FormsService } from 'src/app/services/forms.service';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
@@ -21,7 +31,7 @@ import { ToggleInterestInActivityEvent } from 'src/app/models/events/toggleInter
 @Component({
   selector: 'kofc-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss']
+  styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';
@@ -42,17 +52,20 @@ export class AccountComponent implements OnInit, OnDestroy {
   showErrorSavingInterests: boolean = false;
   showSuccessSavingInterests: boolean = false;
 
-  @ViewChild('cancelEditPersonalInfoModal', {static: false}) cancelEditPersonalInfoModal: ElementRef | undefined;
+  @ViewChild('cancelEditPersonalInfoModal', { static: false })
+  cancelEditPersonalInfoModal: ElementRef | undefined;
   public errorSaving: boolean = false;
   public editKnightPersonalInfoForm: UntypedFormGroup;
   private updateKnightSubscription?: Subscription;
 
-  @ViewChild('cancelEditActivityInterestsModal', {static: false}) cancelEditActivityInterestsModal: ElementRef | undefined;
+  @ViewChild('cancelEditActivityInterestsModal', { static: false })
+  cancelEditActivityInterestsModal: ElementRef | undefined;
   allActivities: ActivityInterest[] = [];
   public editKnightActivityInterestsForm: UntypedFormGroup;
   private updateKnightActivityInterestSubscription?: Subscription;
 
-  @ViewChild('cancelEditSecurityModal', {static: false}) cancelEditSecurityModal: ElementRef | undefined;
+  @ViewChild('cancelEditSecurityModal', { static: false })
+  cancelEditSecurityModal: ElementRef | undefined;
   public passwordRequirements: PasswordRequirements = {
     requireUppercase: false,
     requireLowercase: false,
@@ -60,7 +73,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     requireDigit: false,
     requiredLength: 1,
     requireNonAlphanumeric: false,
-    allowedNonAlphanumericCharacters: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?"
+    allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'",<.>/?',
   };
   public editAccountSecurityForm: UntypedFormGroup;
 
@@ -72,10 +85,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     private formsService: FormsService,
     private knightsService: KnightsService,
     private knightActivityInterestsService: KnightActivityInterestsService,
-    private accountsService: AccountsService) {
-      this.editKnightPersonalInfoForm = this.initEditPersonalInfoForm();
-      this.editKnightActivityInterestsForm = new UntypedFormGroup({});
-      this.editAccountSecurityForm = this.initEditSecurityForm();
+    private accountsService: AccountsService,
+  ) {
+    this.editKnightPersonalInfoForm = this.initEditPersonalInfoForm();
+    this.editKnightActivityInterestsForm = new UntypedFormGroup({});
+    this.editAccountSecurityForm = this.initEditSecurityForm();
   }
 
   ngOnInit() {
@@ -117,46 +131,30 @@ export class AccountComponent implements OnInit, OnDestroy {
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       firstName: new UntypedFormControl('', [
         Validators.required,
-        Validators.maxLength(63)
+        Validators.maxLength(63),
       ]),
-      middleName: new UntypedFormControl('', [
-        Validators.maxLength(63)
-      ]),
-      lastName: new UntypedFormControl('', [
-        Validators.maxLength(63)
-      ]),
-      nameSuffix: new UntypedFormControl('', [
-        Validators.maxLength(7)
-      ]),
-      dateOfBirth: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
-      emailAddress: new UntypedFormControl('', [
-        Validators.maxLength(63)
-      ]),
-      cellPhoneNumber: new UntypedFormControl('', [
-        Validators.maxLength(31)
-      ]),
+      middleName: new UntypedFormControl('', [Validators.maxLength(63)]),
+      lastName: new UntypedFormControl('', [Validators.maxLength(63)]),
+      nameSuffix: new UntypedFormControl('', [Validators.maxLength(7)]),
+      dateOfBirth: new UntypedFormControl(
+        DateTimeFormatter.ToIso8601Date(
+          today.getFullYear(),
+          today.getMonth() + 1,
+          today.getDate(),
+        ),
+      ),
+      emailAddress: new UntypedFormControl('', [Validators.maxLength(63)]),
+      cellPhoneNumber: new UntypedFormControl('', [Validators.maxLength(31)]),
       homeAddress: new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         addressName: new UntypedFormControl(null),
-        address1: new UntypedFormControl('', [
-          Validators.maxLength(63)
-        ]),
-        address2: new UntypedFormControl('', [
-          Validators.maxLength(63)
-        ]),
-        city: new UntypedFormControl('', [
-          Validators.maxLength(63)
-        ]),
-        stateCode: new UntypedFormControl('', [
-          Validators.maxLength(3)
-        ]),
-        postalCode: new UntypedFormControl('', [
-          Validators.maxLength(15)
-        ]),
-        countryCode: new UntypedFormControl('', [
-          Validators.maxLength(7)
-        ])
-      })
+        address1: new UntypedFormControl('', [Validators.maxLength(63)]),
+        address2: new UntypedFormControl('', [Validators.maxLength(63)]),
+        city: new UntypedFormControl('', [Validators.maxLength(63)]),
+        stateCode: new UntypedFormControl('', [Validators.maxLength(3)]),
+        postalCode: new UntypedFormControl('', [Validators.maxLength(15)]),
+        countryCode: new UntypedFormControl('', [Validators.maxLength(7)]),
+      }),
     });
   }
 
@@ -165,20 +163,24 @@ export class AccountComponent implements OnInit, OnDestroy {
       knightId: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
       oldPassword: new UntypedFormControl(''),
       newPassword: new UntypedFormControl(''),
-      confirmPassword: new UntypedFormControl('')
+      confirmPassword: new UntypedFormControl(''),
     });
   }
 
   filterActivitiesByCategory(activityCategoryValue: string) {
-    return this.allActivities.filter(x => x.activityCategory === activityCategoryValue);
+    return this.allActivities.filter(
+      (x) => x.activityCategory === activityCategoryValue,
+    );
   }
 
   filterActivitiesInterested() {
-    return this.knight?.activityInterests.filter(x => x.interested);
+    return this.knight?.activityInterests.filter((x) => x.interested);
   }
 
   filterActivitiesInterestedInCategory(activityCategoryValue: string) {
-    return this.knight?.activityInterests.filter(x => x.interested && x.activityCategory === activityCategoryValue);
+    return this.knight?.activityInterests.filter(
+      (x) => x.interested && x.activityCategory === activityCategoryValue,
+    );
   }
 
   formatDate(date: string | undefined) {
@@ -197,11 +199,13 @@ export class AccountComponent implements OnInit, OnDestroy {
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
         nameSuffix: this.knight.nameSuffix,
-        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(this.knight.dateOfBirth),
+        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(
+          this.knight.dateOfBirth,
+        ),
         emailAddress: this.knight.emailAddress,
         cellPhoneNumber: this.knight.cellPhoneNumber,
-        homeAddress: this.knight.homeAddress
-       });
+        homeAddress: this.knight.homeAddress,
+      });
     }
 
     this.enableDisableAdministrativeDivisions();
@@ -209,7 +213,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   public enableDisableAdministrativeDivisions(): void {
     const countryCode = this.getCountryCode();
-    const hasCountryCode = this.countryFormOptions.some(cfo => cfo.value === countryCode);
+    const hasCountryCode = this.countryFormOptions.some(
+      (cfo) => cfo.value === countryCode,
+    );
 
     if (hasCountryCode) {
       this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
@@ -219,13 +225,16 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   private getCountryCode(): string {
-    return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
+    return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')
+      ?.value;
   }
 
   public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
     const countryCode = this.getCountryCode();
 
-    const filteredCountryFormOptions = this.countryFormOptions.filter(cfo => cfo.value === countryCode);
+    const filteredCountryFormOptions = this.countryFormOptions.filter(
+      (cfo) => cfo.value === countryCode,
+    );
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -249,7 +258,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       city: rawForm.homeAddress.city,
       stateCode: rawForm.homeAddress.stateCode,
       postalCode: rawForm.homeAddress.postalCode,
-      countryCode: rawForm.homeAddress.countryCode
+      countryCode: rawForm.homeAddress.countryCode,
     };
     const knight: UpdateKnightPersonalInfoRequest = {
       knightId: rawForm.knightId,
@@ -260,20 +269,26 @@ export class AccountComponent implements OnInit, OnDestroy {
       dateOfBirth: rawForm.dateOfBirth,
       emailAddress: rawForm.emailAddress,
       cellPhoneNumber: rawForm.cellPhoneNumber,
-      homeAddress: homeAddress
+      homeAddress: homeAddress,
     };
 
     return knight;
   }
 
-  private updateKnightPersonalInfo(knightPersonalInfo: UpdateKnightPersonalInfoRequest) {
+  private updateKnightPersonalInfo(
+    knightPersonalInfo: UpdateKnightPersonalInfoRequest,
+  ) {
     const knightObserver = {
-      next: (response: Knight) => this.handleUpdateKnightPersonalInfoResponse(response),
-      error: (err: ApiResponseError) => this.logError("Error Updating Knight.", err),
-      complete: () => console.log('Knight updated.')
+      next: (response: Knight) =>
+        this.handleUpdateKnightPersonalInfoResponse(response),
+      error: (err: ApiResponseError) =>
+        this.logError('Error Updating Knight.', err),
+      complete: () => console.log('Knight updated.'),
     };
 
-    this.updateKnightSubscription = this.knightsService.updateKnightPersonalInfo(knightPersonalInfo).subscribe(knightObserver);
+    this.updateKnightSubscription = this.knightsService
+      .updateKnightPersonalInfo(knightPersonalInfo)
+      .subscribe(knightObserver);
   }
 
   private handleUpdateKnightPersonalInfoResponse(response: Knight) {
@@ -295,7 +310,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleInterestCheckbox(interestChangeEvent: ToggleInterestInActivityEvent, activity: ActivityInterest) {
+  toggleInterestCheckbox(
+    interestChangeEvent: ToggleInterestInActivityEvent,
+    activity: ActivityInterest,
+  ) {
     activity.interested = interestChangeEvent?.target?.checked || false;
   }
 
@@ -303,19 +321,27 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.updateKnightActivityInterests(this.allActivities);
   }
 
-  private updateKnightActivityInterests(knightActivityInterests: ActivityInterest[]) {
+  private updateKnightActivityInterests(
+    knightActivityInterests: ActivityInterest[],
+  ) {
     if (this.knightId) {
       const knightObserver = {
-        next: (response: ActivityInterest[]) => this.handleUpdateActivityInterests(response),
-        error: (err: ApiResponseError) => this.logError("Error Updating Knight Activity Interests.", err),
-        complete: () => console.log('Knight Activity Interests updated.')
+        next: (response: ActivityInterest[]) =>
+          this.handleUpdateActivityInterests(response),
+        error: (err: ApiResponseError) =>
+          this.logError('Error Updating Knight Activity Interests.', err),
+        complete: () => console.log('Knight Activity Interests updated.'),
       };
-  
+
       const request = {
         knightId: this.knightId,
-        activityInterests: knightActivityInterests};
-  
-      this.updateKnightActivityInterestSubscription = this.knightActivityInterestsService.updateKnightActivityInterests(request).subscribe(knightObserver);
+        activityInterests: knightActivityInterests,
+      };
+
+      this.updateKnightActivityInterestSubscription =
+        this.knightActivityInterestsService
+          .updateKnightActivityInterests(request)
+          .subscribe(knightObserver);
     }
   }
 
@@ -329,12 +355,16 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private getPasswordRequirements() {
     const getPasswordRequirementsObserver = {
-      next: (response: PasswordRequirements) => this.passwordRequirements = response,
-      error: (err: ApiResponseError) => this.logError("Error Getting password requirements.", err),
-      complete: () => console.log('Password requirements retrieved.')
+      next: (response: PasswordRequirements) =>
+        (this.passwordRequirements = response),
+      error: (err: ApiResponseError) =>
+        this.logError('Error Getting password requirements.', err),
+      complete: () => console.log('Password requirements retrieved.'),
     };
 
-    this.getPasswordRequirementsSubscription = this.accountsService.getPasswordRequirements().subscribe(getPasswordRequirementsObserver);
+    this.getPasswordRequirementsSubscription = this.accountsService
+      .getPasswordRequirements()
+      .subscribe(getPasswordRequirementsObserver);
   }
 
   openEditAccountSecurityModal() {
@@ -352,7 +382,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   public hasRequiredLength() {
     const rawForm = this.editAccountSecurityForm.getRawValue();
     const newPassword = rawForm.newPassword as string;
-    const hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
+    const hasLength =
+      newPassword.length >= this.passwordRequirements?.requiredLength;
 
     return hasLength;
   }
@@ -362,7 +393,9 @@ export class AccountComponent implements OnInit, OnDestroy {
     const newPassword = rawForm.newPassword as string;
     const numDistinctCharacters = new Set(newPassword).size;
 
-    return numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars;
+    return (
+      numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars
+    );
   }
 
   public hasUpperCase() {
@@ -394,8 +427,13 @@ export class AccountComponent implements OnInit, OnDestroy {
     const newPassword = rawForm.newPassword as string;
     let hasSpecialCharacter = false;
 
-    for (let i = 0; i < this.passwordRequirements.allowedNonAlphanumericCharacters.length; i++) {
-      const specialChar = this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
+    for (
+      let i = 0;
+      i < this.passwordRequirements.allowedNonAlphanumericCharacters.length;
+      i++
+    ) {
+      const specialChar =
+        this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
 
       if (newPassword.indexOf(specialChar) > -1) {
         hasSpecialCharacter = true;
@@ -416,7 +454,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       knightId: rawForm.knightId,
       oldPassword: rawForm.oldPassword,
       newPassword: rawForm.newPassword,
-      confirmPassword: rawForm.confirmPassword
+      confirmPassword: rawForm.confirmPassword,
     };
 
     return changePasswordRequest;
@@ -424,12 +462,16 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private updateAccountSecurity(knight: ChangePassWordRequest) {
     const changePasswordObserver = {
-      next: (response: ChangePasswordResponse) => this.handleUpdateAccountSecurity(response),
-      error: (err: ApiResponseError) => this.logError("Error Updating Knight.", err),
-      complete: () => console.log('Knight updated.')
+      next: (response: ChangePasswordResponse) =>
+        this.handleUpdateAccountSecurity(response),
+      error: (err: ApiResponseError) =>
+        this.logError('Error Updating Knight.', err),
+      complete: () => console.log('Knight updated.'),
     };
 
-    this.updateAccountSecuritySubscription = this.accountsService.changePassword(knight).subscribe(changePasswordObserver);
+    this.updateAccountSecuritySubscription = this.accountsService
+      .changePassword(knight)
+      .subscribe(changePasswordObserver);
   }
 
   private handleUpdateAccountSecurity(response: ChangePasswordResponse) {
@@ -445,13 +487,13 @@ export class AccountComponent implements OnInit, OnDestroy {
         knightDegreeResponse,
         knightMemberTypeResponse,
         knightMemberClassResponse,
-        countryResponse
+        countryResponse,
       ]: [
         GenericFormOption[],
         GenericFormOption[],
         GenericFormOption[],
         GenericFormOption[],
-        CountryFormOption[]
+        CountryFormOption[],
       ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.knightDegreeFormOptions = knightDegreeResponse;
@@ -459,8 +501,9 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.knightMemberClassFormOptions = knightMemberClassResponse;
         this.countryFormOptions = countryResponse;
       },
-      error: (err: ApiResponseError) => this.logError("Error getting Knight Degree Form Options", err),
-      complete: () => console.log('Knight Degree Form Options retrieved.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting Knight Degree Form Options', err),
+      complete: () => console.log('Knight Degree Form Options retrieved.'),
     };
 
     this.getFormOptionsSubscriptions = forkJoin([
@@ -468,19 +511,22 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.formsService.getKnightDegreeFormOptions(),
       this.formsService.getKnightMemberTypeFormOptions(),
       this.formsService.getKnightMemberClassFormOptions(),
-      this.formsService.getCountryFormOptions()
+      this.formsService.getCountryFormOptions(),
     ]).subscribe(formsObserver);
   }
 
   private getKnight() {
     if (this.knightId) {
       const knightObserver = {
-        next: (getKnightResponse: Knight) => this.knight = getKnightResponse,
-        error: (err: ApiResponseError) => this.logError('Error getting knight.', err),
-        complete: () => console.log('Knight loaded.')
+        next: (getKnightResponse: Knight) => (this.knight = getKnightResponse),
+        error: (err: ApiResponseError) =>
+          this.logError('Error getting knight.', err),
+        complete: () => console.log('Knight loaded.'),
       };
-      
-      this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(knightObserver);
+
+      this.getKnightSubscription = this.knightsService
+        .getKnight(this.knightId)
+        .subscribe(knightObserver);
     }
   }
 

@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
 import { Knight } from 'src/app/models/knight';
@@ -11,32 +21,32 @@ import { UploadFileEvent } from 'src/app/models/events/uploadFileEvent';
 @Component({
   selector: 'upload-knights-modal',
   templateUrl: './upload-knights-modal.component.html',
-  styleUrls: ['./upload-knights-modal.component.scss']
+  styleUrls: ['./upload-knights-modal.component.scss'],
 })
-export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges {
+export class UploadKnightsModalComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   @Input() showModal: boolean = false;
   @Output() uploadKnightsChanges = new EventEmitter<Knight[]>();
-  @ViewChild('closeModal', {static: false}) closeModal: ElementRef | undefined;
-  
+  @ViewChild('closeModal', { static: false }) closeModal:
+    | ElementRef
+    | undefined;
+
   uploadKnightsForm: UntypedFormGroup;
   filePath?: Blob;
   showExampleFile: boolean = false;
-  toggleExampleFileText: string = "Show Example File";
+  toggleExampleFileText: string = 'Show Example File';
   createKnightsSubscription?: Subscription;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
 
-  constructor(
-    private knightsService: KnightsService
-  ) {
+  constructor(private knightsService: KnightsService) {
     this.uploadKnightsForm = new UntypedFormGroup({});
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   ngOnChanges() {
     this.showExampleFile = false;
@@ -53,23 +63,28 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
 
   onSubmitUploadKnights() {
     if (this.filePath) {
-      ExcelFileReader.ReadKnightsFromFile(this.filePath).then((knightsResult: Knight[]) => {
-        console.log(knightsResult);
-        this.createKnights(knightsResult);
-      }).catch((error: ApiResponseError) => {
-        this.logError("Error uploading knights from file.", error)
-      });
+      ExcelFileReader.ReadKnightsFromFile(this.filePath)
+        .then((knightsResult: Knight[]) => {
+          console.log(knightsResult);
+          this.createKnights(knightsResult);
+        })
+        .catch((error: ApiResponseError) => {
+          this.logError('Error uploading knights from file.', error);
+        });
     }
   }
 
   private createKnights(knights: Knight[]) {
     const knightsObserver = {
       next: (response: Knight[]) => this.passBackResponse(response),
-      error: (err: ApiResponseError) => this.logError("Error Creating Knights.", err),
-      complete: () => console.log('Knights created.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error Creating Knights.', err),
+      complete: () => console.log('Knights created.'),
     };
 
-    this.createKnightsSubscription = this.knightsService.createKnights(knights).subscribe(knightsObserver);
+    this.createKnightsSubscription = this.knightsService
+      .createKnights(knights)
+      .subscribe(knightsObserver);
   }
 
   private passBackResponse(knights: Knight[]) {
@@ -81,7 +96,9 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
 
   toggleExampleFile() {
     this.showExampleFile = !this.showExampleFile;
-    this.toggleExampleFileText = this.showExampleFile ? "Hide Example File" : "Show Example File";
+    this.toggleExampleFileText = this.showExampleFile
+      ? 'Hide Example File'
+      : 'Show Example File';
   }
 
   logError(message: string, err: ApiResponseError) {
@@ -97,7 +114,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSaving = true;
   }
 }

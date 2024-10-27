@@ -10,12 +10,14 @@ import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategor
 @Component({
   selector: 'kofc-leadership-roles',
   templateUrl: './leadership-roles.component.html',
-  styleUrls: ['./leadership-roles.component.scss']
+  styleUrls: ['./leadership-roles.component.scss'],
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   allKnights: Knight[] = [];
   leadershipRoles: LeadershipRole[] = [];
-  leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(LeadershipRoleCategoryEnums);
+  leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(
+    LeadershipRoleCategoryEnums,
+  );
   knightsLoaded: boolean = false;
   knightsSubscription?: Subscription;
   leadershipRolesSubscription?: Subscription;
@@ -24,8 +26,8 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
   constructor(
     private knightsService: KnightsService,
-    private leadershipRolesService: LeadershipRolesService) {
-    }
+    private leadershipRolesService: LeadershipRolesService,
+  ) {}
 
   ngOnInit() {
     this.getAllActiveKnightsNames();
@@ -50,9 +52,11 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     const knightsObserver = {
       next: (knights: Knight[]) => this.loadAllKnights(knights),
       error: (err: unknown) => console.log(`${err}`),
-      complete: () => console.log('Knights loaded.')
+      complete: () => console.log('Knights loaded.'),
     };
-    this.knightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
+    this.knightsSubscription = this.knightsService
+      .getAllActiveKnightsNames()
+      .subscribe(knightsObserver);
   }
 
   private loadAllKnights(knights: Knight[]) {
@@ -62,16 +66,21 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
   private getAllLeadershipRoles() {
     const leadershipRolesObserver = {
-      next: (leadershipRoles: LeadershipRole[]) => this.leadershipRoles = leadershipRoles,
+      next: (leadershipRoles: LeadershipRole[]) =>
+        (this.leadershipRoles = leadershipRoles),
       error: (err: unknown) => console.log(`${err}`),
-      complete: () => console.log('Leadership Roles loaded.')
+      complete: () => console.log('Leadership Roles loaded.'),
     };
-    this.leadershipRolesSubscription = this.leadershipRolesService.getAllLeadershipRoles().subscribe(leadershipRolesObserver);
+    this.leadershipRolesSubscription = this.leadershipRolesService
+      .getAllLeadershipRoles()
+      .subscribe(leadershipRolesObserver);
   }
 
   filterLeadershipRoles(leadershipRoleCategory: LeadershipRoleCategoryEnums) {
     if (this.leadershipRoles) {
-      return this.leadershipRoles.filter(x => x.leadershipRoleCategory === leadershipRoleCategory);
+      return this.leadershipRoles.filter(
+        (x) => x.leadershipRoleCategory === leadershipRoleCategory,
+      );
     }
 
     return [];
@@ -81,12 +90,12 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
     this.leadershipRole = leadershipRole;
   }
 
-  cancelModal() {
-
-  }
+  cancelModal() {}
 
   public updateLeadershipRoleInList(leadershipRole: LeadershipRole) {
-    const index = this.leadershipRoles?.findIndex(x => x.id == leadershipRole.id)
+    const index = this.leadershipRoles?.findIndex(
+      (x) => x.id == leadershipRole.id,
+    );
 
     if (this.leadershipRoles && index !== undefined && index >= 0) {
       this.leadershipRoles[index] = leadershipRole;

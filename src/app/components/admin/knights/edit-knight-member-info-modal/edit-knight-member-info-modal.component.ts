@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
@@ -11,9 +21,11 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 @Component({
   selector: 'edit-knight-member-info-modal',
   templateUrl: './edit-knight-member-info-modal.component.html',
-  styleUrls: ['./edit-knight-member-info-modal.component.scss']
+  styleUrls: ['./edit-knight-member-info-modal.component.scss'],
 })
-export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, OnChanges {
+export class EditKnightMemberInfoModalComponent
+  implements OnInit, OnDestroy, OnChanges
+{
   @Input() modalHeaderText: string = '';
   @Input() knightInfo?: KnightInfo;
   @Input() knightId: string = '';
@@ -21,23 +33,21 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
   @Input() knightMemberTypeFormOptions: GenericFormOption[] = [];
   @Input() knightMemberClassFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberInfoChanges = new EventEmitter<KnightInfo>();
-  @ViewChild('cancelEditKnightMemberInfoChanges', {static: false}) cancelEditKnightMemberInfoChanges: ElementRef | undefined;
+  @ViewChild('cancelEditKnightMemberInfoChanges', { static: false })
+  cancelEditKnightMemberInfoChanges: ElementRef | undefined;
 
   public editKnightMemberInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightMembershipInfoSubscription?: Subscription;
 
-  constructor(
-    private knightsService: KnightsService) {
-      this.editKnightMemberInfoForm = this.initForm();
+  constructor(private knightsService: KnightsService) {
+    this.editKnightMemberInfoForm = this.initForm();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   ngOnChanges() {
     this.errorSaving = false;
@@ -54,10 +64,22 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
       memberNumber: new UntypedFormControl(0),
       mailReturned: new UntypedFormControl(false),
       degree: new UntypedFormControl('First'),
-      firstDegreeDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
-      reentryDate: new UntypedFormControl(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate())),
+      firstDegreeDate: new UntypedFormControl(
+        DateTimeFormatter.ToIso8601Date(
+          today.getFullYear(),
+          today.getMonth() + 1,
+          today.getDate(),
+        ),
+      ),
+      reentryDate: new UntypedFormControl(
+        DateTimeFormatter.ToIso8601Date(
+          today.getFullYear(),
+          today.getMonth() + 1,
+          today.getDate(),
+        ),
+      ),
       memberType: new UntypedFormControl('Associate'),
-      memberClass: new UntypedFormControl('Paying')
+      memberClass: new UntypedFormControl('Paying'),
     });
   }
 
@@ -65,29 +87,36 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
     const knightMembershipInfo = this.mapFormToUpdateMembershipRequest();
     const knightMemberInfoObserver = {
       next: (response: KnightInfo) => this.passBackResponse(response),
-      error: (err: ApiResponseError) => this.logError("Error Updating Knight Membership Info", err),
-      complete: () => console.log('Knight Membership Info updated.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error Updating Knight Membership Info', err),
+      complete: () => console.log('Knight Membership Info updated.'),
     };
 
     console.log(knightMembershipInfo);
 
-    this.updateKnightMembershipInfoSubscription = this.knightsService.updateKnightMembershipInfo(knightMembershipInfo).subscribe(knightMemberInfoObserver);
+    this.updateKnightMembershipInfoSubscription = this.knightsService
+      .updateKnightMembershipInfo(knightMembershipInfo)
+      .subscribe(knightMemberInfoObserver);
   }
 
   private populateForm() {
     if (this.knightInfo) {
       console.log('knight info:');
-      console.log(this.knightInfo)
+      console.log(this.knightInfo);
       this.editKnightMemberInfoForm.patchValue({
         id: this.knightInfo.id,
         memberNumber: this.knightInfo.memberNumber,
         mailReturned: this.knightInfo.mailReturned,
         degree: this.knightInfo.degree,
-        firstDegreeDate: DateTimeFormatter.DateTimeToIso8601Date(this.knightInfo.firstDegreeDate), 
-        reentryDate: DateTimeFormatter.DateTimeToIso8601Date(this.knightInfo.reentryDate),
+        firstDegreeDate: DateTimeFormatter.DateTimeToIso8601Date(
+          this.knightInfo.firstDegreeDate,
+        ),
+        reentryDate: DateTimeFormatter.DateTimeToIso8601Date(
+          this.knightInfo.reentryDate,
+        ),
         memberType: this.knightInfo.memberType,
-        memberClass: this.knightInfo.memberClass
-      })
+        memberClass: this.knightInfo.memberClass,
+      });
     } else {
       console.log('No kinight info');
     }
@@ -103,7 +132,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
       firstDegreeDate: rawForm.firstDegreeDate,
       reentryDate: rawForm.reentryDate,
       memberType: rawForm.memberType,
-      memberClass: rawForm.memberClass
+      memberClass: rawForm.memberClass,
     };
 
     return knightInfo;
@@ -131,7 +160,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSaving = true;
   }
 }

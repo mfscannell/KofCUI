@@ -14,7 +14,7 @@ import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption
 @Component({
   selector: 'activity-categories',
   templateUrl: './activity-categories.component.html',
-  styleUrls: ['./activity-categories.component.scss']
+  styleUrls: ['./activity-categories.component.scss'],
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   getDataSubscription?: Subscription;
@@ -34,9 +34,8 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     private formsService: FormsService,
     private activitiesService: ActivitiesService,
     private knightsService: KnightsService,
-    private permissionsService: PermissionsService)
-  {
-  }
+    private permissionsService: PermissionsService,
+  ) {}
 
   ngOnInit() {
     this.getFormOptions();
@@ -62,19 +61,24 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   private getFormOptions() {
     const getDataObserver = {
-      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], GenericFormOption[], Knight[]]) => {
+      next: ([activities, activityCategoryFormOptions, allKnights]: [
+        Activity[],
+        GenericFormOption[],
+        Knight[],
+      ]) => {
         this.activities = activities;
         this.activityCategoryFormOptions = activityCategoryFormOptions;
         this.allKnights = allKnights;
       },
-      error: (err: ApiResponseError) => this.logError("Error getting Activity Form Options", err),
-      complete: () => console.log('Activity Form Options retrieved.')
+      error: (err: ApiResponseError) =>
+        this.logError('Error getting Activity Form Options', err),
+      complete: () => console.log('Activity Form Options retrieved.'),
     };
 
     this.getDataSubscription = forkJoin([
       this.activitiesService.getAllActivities(),
       this.formsService.getActivityCategoryFormOptions(),
-      this.knightsService.getAllActiveKnightsNames()
+      this.knightsService.getAllActiveKnightsNames(),
     ]).subscribe(getDataObserver);
   }
 
@@ -86,7 +90,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
       activityCategory: this.activityCategoryFormOptions[0].value,
       activityCoordinators: [],
       activityEventNotes: [],
-      notes: ''
+      notes: '',
     };
     this.modalAction = ModalActionEnums.Create;
   }
@@ -104,7 +108,9 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   }
 
   public updateActivityInList(activity: Activity) {
-    const index = this.activities?.findIndex(x => x.activityId == activity.activityId)
+    const index = this.activities?.findIndex(
+      (x) => x.activityId == activity.activityId,
+    );
 
     if (this.activities && index !== undefined && index >= 0) {
       this.activities[index] = activity;
@@ -113,17 +119,19 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   filterActivitiesByCategory(activityCategoryValue: string) {
     if (this.activities) {
-      return this.activities.filter(x => x.activityCategory === activityCategoryValue).sort(function(a, b){
-        if (a.activityName.toLowerCase() < b.activityName.toLowerCase()) {
-          return -1;
-        }
+      return this.activities
+        .filter((x) => x.activityCategory === activityCategoryValue)
+        .sort(function (a, b) {
+          if (a.activityName.toLowerCase() < b.activityName.toLowerCase()) {
+            return -1;
+          }
 
-        if (a.activityName.toLowerCase() > b.activityName.toLowerCase()) {
-          return 1;
-        }
+          if (a.activityName.toLowerCase() > b.activityName.toLowerCase()) {
+            return 1;
+          }
 
-        return 0;
-      });
+          return 0;
+        });
     }
 
     return [];
@@ -142,7 +150,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
-    
+
     this.errorSaving = true;
   }
 }
