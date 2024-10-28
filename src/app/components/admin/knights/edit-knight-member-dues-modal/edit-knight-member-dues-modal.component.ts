@@ -9,12 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MemberDuesFormGroup } from 'src/app/models/formControls/memberDuesFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
@@ -28,17 +23,13 @@ import { MemberDuesService } from 'src/app/services/memberDues.service';
   templateUrl: './edit-knight-member-dues-modal.component.html',
   styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
 })
-export class EditKnightMemberDuesModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() memberDues?: MemberDues[] = [];
   @Input() knightId: string = '';
   @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberDuesChanges = new EventEmitter<MemberDues[]>();
-  @ViewChild('closeModal', { static: false }) closeModal:
-    | ElementRef
-    | undefined;
+  @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   public editKnightMemberDuesForm: UntypedFormGroup;
   public errorSaving: boolean = false;
@@ -67,9 +58,7 @@ export class EditKnightMemberDuesModalComponent
   }
 
   get memberDuesFormArray() {
-    return this.editKnightMemberDuesForm.controls[
-      'memberDues'
-    ] as UntypedFormArray;
+    return this.editKnightMemberDuesForm.controls['memberDues'] as UntypedFormArray;
   }
 
   getMemberDuesYear(memberDueYear: AbstractControl): string {
@@ -90,12 +79,10 @@ export class EditKnightMemberDuesModalComponent
   }
 
   public onSubmitEditKnightMemberInfo() {
-    const updateKnightMemberDuesRequest =
-      this.mapFormToUpdateKnightMemberDuesRequest();
+    const updateKnightMemberDuesRequest = this.mapFormToUpdateKnightMemberDuesRequest();
     const knightMemberDuesObserver = {
       next: (response: MemberDues[]) => this.passBackResponse(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Updating Knight Member Dues', err),
+      error: (err: ApiResponseError) => this.logError('Error Updating Knight Member Dues', err),
       complete: () => console.log('Knight Info updated.'),
     };
 
@@ -106,9 +93,7 @@ export class EditKnightMemberDuesModalComponent
 
   private mapFormToUpdateKnightMemberDuesRequest(): UpdateKnightMemberDuesRequest {
     const rawForm = this.editKnightMemberDuesForm.getRawValue();
-    const mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function (
-      md: MemberDuesFormGroup,
-    ): MemberDues {
+    const mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function (md: MemberDuesFormGroup): MemberDues {
       const memberDues: MemberDues = {
         year: md.year,
         paidStatus: md.paidStatus,

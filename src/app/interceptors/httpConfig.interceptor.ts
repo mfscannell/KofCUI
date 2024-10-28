@@ -8,34 +8,37 @@ import { AccountsService } from '../services/accounts.service';
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
-    constructor(
-        private tenantService: TenantService,
-        private accountsService: AccountsService) {
+  constructor(
+    private tenantService: TenantService,
+    private accountsService: AccountsService,
+  ) {}
 
+  intercept(httpRequest: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const apiBaseUrl = environment.apiBaseUrl;
+    const tenantId = this.tenantService.getTenantId();
+    const url = `${apiBaseUrl}${tenantId}/${httpRequest.url}`;
+    const token = this.accountsService.getToken();
+
+    if (httpRequest.url.startsWith('assets')) {
+      return next.handle(
+        httpRequest.clone({
+          url: url,
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      );
     }
 
-    intercept(httpRequest: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        const apiBaseUrl = environment.apiBaseUrl;
-        const tenantId = this.tenantService.getTenantId();
-        const url = `${apiBaseUrl}${tenantId}/${httpRequest.url}`;
-        const token = this.accountsService.getToken();
-
-        if (httpRequest.url.startsWith('assets')) {
-            return next.handle(httpRequest.clone({
-                url: url,
-                setHeaders: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }));
-        }
-
-        return next.handle(httpRequest.clone({
-            url: url,
-            setHeaders: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }));
-    }
+    return next.handle(
+      httpRequest.clone({
+        url: url,
+        setHeaders: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    );
+  }
 }

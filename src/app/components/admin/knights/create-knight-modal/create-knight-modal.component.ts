@@ -9,13 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { ActivityInterestFormGroup } from 'src/app/models/formControls/activityInterestFormGroup';
@@ -35,9 +29,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   templateUrl: './create-knight-modal.component.html',
   styleUrls: ['./create-knight-modal.component.scss'],
 })
-export class CreateKnightModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() countryFormOptions: CountryFormOption[] = [];
   @Input() knightMemberClassFormOptions: GenericFormOption[] = [];
@@ -82,9 +74,7 @@ export class CreateKnightModalComponent
 
   public enableDisableAdministrativeDivisions(form: UntypedFormGroup): void {
     const countryCode = this.getCountryCode(form);
-    const hasCountryCode = this.countryFormOptions.some(
-      (cfo) => cfo.value === countryCode,
-    );
+    const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
 
     console.log(`hasCOuntry: ${hasCountryCode}. countryCode ${countryCode}`);
 
@@ -105,19 +95,12 @@ export class CreateKnightModalComponent
     const today = new Date();
     const createKnightForm = new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      firstName: new UntypedFormControl('', [
-        Validators.required,
-        Validators.maxLength(63),
-      ]),
+      firstName: new UntypedFormControl('', [Validators.required, Validators.maxLength(63)]),
       middleName: new UntypedFormControl('', [Validators.maxLength(63)]),
       lastName: new UntypedFormControl('', [Validators.maxLength(63)]),
       nameSuffix: new UntypedFormControl('', [Validators.maxLength(7)]),
       dateOfBirth: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate(),
-        ),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
       ),
       emailAddress: new UntypedFormControl('', [Validators.maxLength(63)]),
       cellPhoneNumber: new UntypedFormControl('', [Validators.maxLength(31)]),
@@ -137,18 +120,10 @@ export class CreateKnightModalComponent
         mailReturned: new UntypedFormControl(false),
         degree: new UntypedFormControl('First'),
         firstDegreeDate: new UntypedFormControl(
-          DateTimeFormatter.ToIso8601Date(
-            today.getFullYear(),
-            today.getMonth() + 1,
-            today.getDate(),
-          ),
+          DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
         ),
         reentryDate: new UntypedFormControl(
-          DateTimeFormatter.ToIso8601Date(
-            today.getFullYear(),
-            today.getMonth() + 1,
-            today.getDate(),
-          ),
+          DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
         ),
         memberType: new UntypedFormControl('Associate'),
         memberClass: new UntypedFormControl('Paying'),
@@ -163,39 +138,26 @@ export class CreateKnightModalComponent
       }),
     });
 
-    this.updateFormWithActivityInterests(
-      createKnightForm,
-      this.knightActivityInterestsForNewKnight,
-    );
+    this.updateFormWithActivityInterests(createKnightForm, this.knightActivityInterestsForNewKnight);
     this.updateFormWithMemberDuesForCreateKnightForm(createKnightForm);
 
     return createKnightForm;
   }
 
-  private updateFormWithActivityInterests(
-    form: UntypedFormGroup,
-    activityInterests: ActivityInterest[],
-  ) {
+  private updateFormWithActivityInterests(form: UntypedFormGroup, activityInterests: ActivityInterest[]) {
     this.activityCategoryFormOptions.forEach((activityCategoryFormOption) => {
       const activityInterestsFormArray = this.getActivityInterestsFormArray(
         form,
         `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`,
       );
-      const filteredActivities = activityInterests?.filter(
-        (activityInterest) => {
-          return (
-            activityInterest.activityCategory ===
-            activityCategoryFormOption.value
-          );
-        },
-      );
+      const filteredActivities = activityInterests?.filter((activityInterest) => {
+        return activityInterest.activityCategory === activityCategoryFormOption.value;
+      });
       filteredActivities?.forEach((activityInterest: ActivityInterest) => {
         const activityInterestFormGroup = new UntypedFormGroup({
           activityId: new UntypedFormControl(activityInterest.activityId),
           activityName: new UntypedFormControl(activityInterest.activityName),
-          activityCategory: new UntypedFormControl(
-            activityInterest.activityCategory,
-          ),
+          activityCategory: new UntypedFormControl(activityInterest.activityCategory),
           interested: new UntypedFormControl(activityInterest.interested),
         });
         activityInterestsFormArray.push(activityInterestFormGroup);
@@ -219,14 +181,10 @@ export class CreateKnightModalComponent
     }
   }
 
-  public filterAdministrativeDivisionsByCountry(
-    form: UntypedFormGroup,
-  ): GenericFormOption[] {
+  public filterAdministrativeDivisionsByCountry(form: UntypedFormGroup): GenericFormOption[] {
     const countryCode = this.getCountryCode(form);
 
-    const filteredCountryFormOptions = this.countryFormOptions.filter(
-      (cfo) => cfo.value === countryCode,
-    );
+    const filteredCountryFormOptions = this.countryFormOptions.filter((cfo) => cfo.value === countryCode);
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -235,16 +193,9 @@ export class CreateKnightModalComponent
     return [];
   }
 
-  public getActivityInterestsFormArray(
-    form: UntypedFormGroup,
-    activityCategory: string,
-  ): UntypedFormArray {
-    const activityInterestsFormGroup = form.controls[
-      'activityInterests'
-    ] as UntypedFormGroup;
-    const activityInterestsFormArray = activityInterestsFormGroup.controls[
-      activityCategory
-    ] as UntypedFormArray;
+  public getActivityInterestsFormArray(form: UntypedFormGroup, activityCategory: string): UntypedFormArray {
+    const activityInterestsFormGroup = form.controls['activityInterests'] as UntypedFormGroup;
+    const activityInterestsFormArray = activityInterestsFormGroup.controls[activityCategory] as UntypedFormArray;
 
     return activityInterestsFormArray;
   }
@@ -257,10 +208,7 @@ export class CreateKnightModalComponent
     return memberDueYear.getRawValue().year || '';
   }
 
-  appendMemberDues(
-    form: UntypedFormGroup,
-    memberDueFormGroup: UntypedFormGroup,
-  ) {
+  appendMemberDues(form: UntypedFormGroup, memberDueFormGroup: UntypedFormGroup) {
     const something = form.controls['memberDues'] as UntypedFormArray;
     something.push(memberDueFormGroup);
   }
@@ -270,8 +218,7 @@ export class CreateKnightModalComponent
 
     const knightObserver = {
       next: (response: Knight) => this.passBack(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Creating Knight', err),
+      error: (err: ApiResponseError) => this.logError('Error Creating Knight', err),
       complete: () => console.log('Knight created.'),
     };
 
@@ -301,9 +248,7 @@ export class CreateKnightModalComponent
       memberType: rawForm.knightInfo.memberType,
       memberClass: rawForm.knightInfo.memberClass,
     };
-    const _memberDues: MemberDues[] = rawForm?.memberDues?.map(function (
-      md: MemberDuesFormGroup,
-    ): MemberDues {
+    const _memberDues: MemberDues[] = rawForm?.memberDues?.map(function (md: MemberDuesFormGroup): MemberDues {
       const memberDues: MemberDues = {
         year: md.year,
         paidStatus: md.paidStatus,
@@ -328,9 +273,7 @@ export class CreateKnightModalComponent
 
     this.activityCategoryFormOptions.forEach((activityCategoryFormOption) => {
       const activityInterests =
-        rawForm['activityInterests'][
-          `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`
-        ];
+        rawForm['activityInterests'][`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
 
       activityInterests.forEach((ai: ActivityInterestFormGroup) => {
         console.log(ai);

@@ -61,17 +61,12 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   private getFormOptions() {
     const getDataObserver = {
-      next: ([activities, activityCategoryFormOptions, allKnights]: [
-        Activity[],
-        GenericFormOption[],
-        Knight[],
-      ]) => {
+      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], GenericFormOption[], Knight[]]) => {
         this.activities = activities;
         this.activityCategoryFormOptions = activityCategoryFormOptions;
         this.allKnights = allKnights;
       },
-      error: (err: ApiResponseError) =>
-        this.logError('Error getting Activity Form Options', err),
+      error: (err: ApiResponseError) => this.logError('Error getting Activity Form Options', err),
       complete: () => console.log('Activity Form Options retrieved.'),
     };
 
@@ -108,9 +103,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   }
 
   public updateActivityInList(activity: Activity) {
-    const index = this.activities?.findIndex(
-      (x) => x.activityId == activity.activityId,
-    );
+    const index = this.activities?.findIndex((x) => x.activityId == activity.activityId);
 
     if (this.activities && index !== undefined && index >= 0) {
       this.activities[index] = activity;

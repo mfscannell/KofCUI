@@ -24,9 +24,7 @@ import { KnightsService } from 'src/app/services/knights.service';
   templateUrl: './edit-knight-password-modal.component.html',
   styleUrls: ['./edit-knight-password-modal.component.scss'],
 })
-export class EditKnightPasswordModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() knightsFullName: string = '';
   @Input() knightId: string = '';
@@ -101,10 +99,8 @@ export class EditKnightPasswordModalComponent
 
   private getPasswordRequirements() {
     const getPasswordRequirementsObserver = {
-      next: (response: PasswordRequirements) =>
-        (this.passwordRequirements = response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Getting password requirements.', err),
+      next: (response: PasswordRequirements) => (this.passwordRequirements = response),
+      error: (err: ApiResponseError) => this.logError('Error Getting password requirements.', err),
       complete: () => console.log('Password requirements retrieved.'),
     };
 
@@ -129,8 +125,7 @@ export class EditKnightPasswordModalComponent
   hasRequiredLength() {
     const rawForm = this.editKnightPasswordForm.getRawValue();
     const newPassword = rawForm.password as string;
-    const hasLength =
-      newPassword.length >= this.passwordRequirements?.requiredLength;
+    const hasLength = newPassword.length >= this.passwordRequirements?.requiredLength;
 
     return hasLength;
   }
@@ -140,9 +135,7 @@ export class EditKnightPasswordModalComponent
     const newPassword = rawForm.password as string;
     const numDistinctCharacters = new Set(newPassword).size;
 
-    return (
-      numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars
-    );
+    return numDistinctCharacters >= this.passwordRequirements.requiredUniqueChars;
   }
 
   hasUpperCase() {
@@ -174,13 +167,8 @@ export class EditKnightPasswordModalComponent
     const newPassword = rawForm.password as string;
     let hasSpecialCharacter = false;
 
-    for (
-      let i = 0;
-      i < this.passwordRequirements.allowedNonAlphanumericCharacters.length;
-      i++
-    ) {
-      const specialChar =
-        this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
+    for (let i = 0; i < this.passwordRequirements.allowedNonAlphanumericCharacters.length; i++) {
+      const specialChar = this.passwordRequirements.allowedNonAlphanumericCharacters.charAt(i);
 
       if (newPassword.indexOf(specialChar) > -1) {
         hasSpecialCharacter = true;
@@ -210,14 +198,11 @@ export class EditKnightPasswordModalComponent
   private updateKnightPassword(request: UpdateKnightPasswordRequest) {
     const knightObserver = {
       next: (response: KnightUser) => this.passBackResponse(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Updating Knight', err),
+      error: (err: ApiResponseError) => this.logError('Error Updating Knight', err),
       complete: () => console.log('Knight updated.'),
     };
 
-    this.updateKnightPasswordSubscription = this.knightsService
-      .updateKnightPassword(request)
-      .subscribe(knightObserver);
+    this.updateKnightPasswordSubscription = this.knightsService.updateKnightPassword(request).subscribe(knightObserver);
   }
 
   private passBackResponse(response: KnightUser) {

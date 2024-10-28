@@ -9,12 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ChangeVolunteerForRoleEvent } from 'src/app/models/events/changeVolunteerForRoleEvent';
@@ -34,16 +29,12 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   templateUrl: './volunteer-for-event-modal.component.html',
   styleUrls: ['./volunteer-for-event-modal.component.scss'],
 })
-export class VolunteerForEventModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityEvent?: ActivityEvent;
   @Input() allKnights: Knight[] = [];
   @Input() knightId: string = '';
   @Output() editLeadershipRoleChanges = new EventEmitter<ActivityEvent>();
-  @ViewChild('closeModal', { static: false }) closeModal:
-    | ElementRef
-    | undefined;
+  @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   public volunteerForActivityEventForm: UntypedFormGroup;
   public errorSaving: boolean = false;
@@ -71,16 +62,12 @@ export class VolunteerForEventModalComponent
         activityCategory: this.activityEvent.activityCategory,
         eventName: this.activityEvent.eventName,
         eventDescription: this.activityEvent.eventDescription,
-        startDate: DateTimeFormatter.DateTimeToIso8601Date(
-          this.activityEvent.startDateTime,
-        ),
+        startDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEvent.startDateTime),
         startTime: {
           hour: DateTimeFormatter.getHour(this.activityEvent.startDateTime),
           minute: DateTimeFormatter.getMinute(this.activityEvent.startDateTime),
         },
-        endDate: DateTimeFormatter.DateTimeToIso8601Date(
-          this.activityEvent.endDateTime,
-        ),
+        endDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEvent.endDateTime),
         endTime: {
           hour: DateTimeFormatter.getHour(this.activityEvent.endDateTime),
           minute: DateTimeFormatter.getMinute(this.activityEvent.endDateTime),
@@ -91,57 +78,44 @@ export class VolunteerForEventModalComponent
         canceledReason: this.activityEvent.canceledReason,
       });
 
-      this.activityEvent.volunteerSignUpRoles?.forEach(
-        (role: VolunteerSignUpRole) => {
-          const volunteerSignUpRole = new UntypedFormGroup({
-            id: new UntypedFormControl(role.id),
-            roleTitle: new UntypedFormControl(role.roleTitle),
-            startDate: new UntypedFormControl({
-              year: DateTimeFormatter.getYear(role.startDateTime),
-              month: DateTimeFormatter.getMonth(role.startDateTime),
-              day: DateTimeFormatter.getDay(role.startDateTime),
-            }),
-            startTime: new UntypedFormControl({
-              hour: DateTimeFormatter.getHour(role.startDateTime),
-              minute: DateTimeFormatter.getMinute(role.startDateTime),
-            }),
-            endDate: new UntypedFormControl({
-              year: DateTimeFormatter.getYear(role.endDateTime),
-              month: DateTimeFormatter.getMonth(role.endDateTime),
-              day: DateTimeFormatter.getDay(role.endDateTime),
-            }),
-            endTime: new UntypedFormControl({
-              hour: DateTimeFormatter.getHour(role.endDateTime),
-              minute: DateTimeFormatter.getMinute(role.endDateTime),
-            }),
-            numberOfVolunteersNeeded: new UntypedFormControl(
-              role.numberOfVolunteersNeeded,
-            ),
-            volunteerForRole: new UntypedFormControl({
-              value:
-                role.eventVolunteers.findIndex(
-                  (ev) => ev.knightId === this.knightId,
-                ) >= 0,
-              disabled:
-                role.eventVolunteers.length >= role.numberOfVolunteersNeeded &&
-                role.eventVolunteers.findIndex(
-                  (ev) => ev.knightId === this.knightId,
-                ) < 0,
-            }),
-            eventVolunteers: new UntypedFormArray(
-              this.initEventVolunteersForm(role.eventVolunteers),
-            ),
-          });
+      this.activityEvent.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
+        const volunteerSignUpRole = new UntypedFormGroup({
+          id: new UntypedFormControl(role.id),
+          roleTitle: new UntypedFormControl(role.roleTitle),
+          startDate: new UntypedFormControl({
+            year: DateTimeFormatter.getYear(role.startDateTime),
+            month: DateTimeFormatter.getMonth(role.startDateTime),
+            day: DateTimeFormatter.getDay(role.startDateTime),
+          }),
+          startTime: new UntypedFormControl({
+            hour: DateTimeFormatter.getHour(role.startDateTime),
+            minute: DateTimeFormatter.getMinute(role.startDateTime),
+          }),
+          endDate: new UntypedFormControl({
+            year: DateTimeFormatter.getYear(role.endDateTime),
+            month: DateTimeFormatter.getMonth(role.endDateTime),
+            day: DateTimeFormatter.getDay(role.endDateTime),
+          }),
+          endTime: new UntypedFormControl({
+            hour: DateTimeFormatter.getHour(role.endDateTime),
+            minute: DateTimeFormatter.getMinute(role.endDateTime),
+          }),
+          numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
+          volunteerForRole: new UntypedFormControl({
+            value: role.eventVolunteers.findIndex((ev) => ev.knightId === this.knightId) >= 0,
+            disabled:
+              role.eventVolunteers.length >= role.numberOfVolunteersNeeded &&
+              role.eventVolunteers.findIndex((ev) => ev.knightId === this.knightId) < 0,
+          }),
+          eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers)),
+        });
 
-          this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
-        },
-      );
+        this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
+      });
     }
   }
 
-  private initEventVolunteersForm(
-    eventVolunteers: EventVolunteer[] | undefined,
-  ) {
+  private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
     const eventVolunteersArray: UntypedFormGroup[] = [];
 
     if (eventVolunteers) {
@@ -205,17 +179,12 @@ export class VolunteerForEventModalComponent
 
   public getEventVolunteers(volunteerSignUpRole: AbstractControl) {
     const something = volunteerSignUpRole as UntypedFormGroup;
-    const eventVolunteers = something.controls[
-      'eventVolunteers'
-    ] as UntypedFormArray;
+    const eventVolunteers = something.controls['eventVolunteers'] as UntypedFormArray;
 
     return eventVolunteers.controls;
   }
 
-  public changeVolunteerForRole(
-    $event: ChangeVolunteerForRoleEvent,
-    volunteerSignUpRoleIndex: number,
-  ) {
+  public changeVolunteerForRole($event: ChangeVolunteerForRoleEvent, volunteerSignUpRoleIndex: number) {
     console.log($event);
     if ($event.target?.checked) {
       console.log(`Check box checked:${this.knightId}`);
@@ -224,22 +193,14 @@ export class VolunteerForEventModalComponent
         knightId: new UntypedFormControl(this.knightId),
       });
 
-      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(
-        volunteerSignUpRoleIndex,
-      ) as UntypedFormGroup;
-      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls[
-        'eventVolunteers'
-      ] as UntypedFormArray;
+      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
+      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls['eventVolunteers'] as UntypedFormArray;
       console.log(eventVolunteerFormArray);
       eventVolunteerFormArray.push(eventVolunteerFormGroup);
     } else {
       console.log('Check box unchecked');
-      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(
-        volunteerSignUpRoleIndex,
-      ) as UntypedFormGroup;
-      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls[
-        'eventVolunteers'
-      ] as UntypedFormArray;
+      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
+      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls['eventVolunteers'] as UntypedFormArray;
       const volunteerIndex = eventVolunteerFormArray.controls.findIndex(
         (ctrl) => ctrl.value.knightId === this.knightId,
       );
@@ -251,9 +212,7 @@ export class VolunteerForEventModalComponent
   }
 
   get volunteerSignUpRolesForm() {
-    return this.volunteerForActivityEventForm.controls[
-      'volunteerSignUpRoles'
-    ] as UntypedFormArray;
+    return this.volunteerForActivityEventForm.controls['volunteerSignUpRoles'] as UntypedFormArray;
   }
 
   private initForm() {
@@ -266,25 +225,13 @@ export class VolunteerForEventModalComponent
       eventName: new UntypedFormControl(''),
       eventDescription: new UntypedFormControl(''),
       startDate: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate(),
-        ),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
       ),
-      startTime: new UntypedFormControl(
-        DateTimeFormatter.DateTimeToIso8601Time('2000-01-02T06:00'),
-      ),
+      startTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time('2000-01-02T06:00')),
       endDate: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate(),
-        ),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
       ),
-      endTime: new UntypedFormControl(
-        DateTimeFormatter.DateTimeToIso8601Time('2000-01-02T07:00'),
-      ),
+      endTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time('2000-01-02T07:00')),
       locationAddress: new UntypedFormGroup({
         id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
         addressName: new UntypedFormControl(''),
@@ -311,19 +258,14 @@ export class VolunteerForEventModalComponent
     const volunteerSignUpRoles: number[] = [];
 
     for (let i = 0; i < this.volunteerSignUpRolesForm.length; i++) {
-      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(
-        i,
-      ) as UntypedFormGroup;
-      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls[
-        'eventVolunteers'
-      ] as UntypedFormArray;
+      const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(i) as UntypedFormGroup;
+      const eventVolunteerFormArray = volunteerSignUpRoleControl.controls['eventVolunteers'] as UntypedFormArray;
       const volunteerIndex = eventVolunteerFormArray.controls.findIndex(
         (ctrl) => ctrl.value.knightId === this.knightId,
       );
 
       if (volunteerIndex >= 0) {
-        const volunteerSignUpRoleId = volunteerSignUpRoleControl.value
-          .id as number;
+        const volunteerSignUpRoleId = volunteerSignUpRoleControl.value.id as number;
         volunteerSignUpRoles.push(volunteerSignUpRoleId);
       }
     }
@@ -337,50 +279,38 @@ export class VolunteerForEventModalComponent
     const activityEvent = this.mapFormToActivityEvent();
 
     const activityEventObserver = {
-      next: (eventVolunteers: EventVolunteer[]) =>
-        this.passBack(activityEvent, eventVolunteers),
-      error: (err: ApiResponseError) =>
-        this.logError('Error volunteering for Activity Event', err),
+      next: (eventVolunteers: EventVolunteer[]) => this.passBack(activityEvent, eventVolunteers),
+      error: (err: ApiResponseError) => this.logError('Error volunteering for Activity Event', err),
       complete: () => console.log('Activity Event updated.'),
     };
 
-    this.updateVolunteerForActivityEventSubscription =
-      this.activityEventsService
-        .volunteerForActivityEvent(request)
-        .subscribe(activityEventObserver);
+    this.updateVolunteerForActivityEventSubscription = this.activityEventsService
+      .volunteerForActivityEvent(request)
+      .subscribe(activityEventObserver);
   }
 
   private mapFormToActivityEvent() {
     const rawForm = this.volunteerForActivityEventForm.getRawValue();
-    const volunteerRoles: VolunteerSignUpRole[] =
-      rawForm?.volunteerSignUpRoles?.map(function (
-        role: VolunteerSignUpRoleFormGroup,
-      ) {
-        const volunteerSignUpRole: VolunteerSignUpRole = {
-          id: role.id,
-          roleTitle: role.roleTitle,
-          startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(
-            role.startDate,
-            role.startTime,
-          ),
-          endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(
-            role.endDate,
-            role.endTime,
-          ),
-          numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-          eventVolunteers: role.eventVolunteers.map(function (
-            ev: EventVolunteersFormGroup,
-          ) {
-            const eventVolunteer: EventVolunteer = {
-              id: ev.id,
-              knightId: ev.knightId,
-            };
-            return eventVolunteer;
-          }),
-        };
+    const volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function (
+      role: VolunteerSignUpRoleFormGroup,
+    ) {
+      const volunteerSignUpRole: VolunteerSignUpRole = {
+        id: role.id,
+        roleTitle: role.roleTitle,
+        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.startTime),
+        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.endDate, role.endTime),
+        numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
+        eventVolunteers: role.eventVolunteers.map(function (ev: EventVolunteersFormGroup) {
+          const eventVolunteer: EventVolunteer = {
+            id: ev.id,
+            knightId: ev.knightId,
+          };
+          return eventVolunteer;
+        }),
+      };
 
-        return volunteerSignUpRole;
-      });
+      return volunteerSignUpRole;
+    });
     const locationAddress: StreetAddress = {
       id: rawForm.locationAddress.id,
       addressName: rawForm.locationAddress.addressName,
@@ -423,22 +353,13 @@ export class VolunteerForEventModalComponent
     return activityEvent;
   }
 
-  private passBack(
-    activityEvent: ActivityEvent,
-    eventVolunteers: EventVolunteer[],
-  ) {
+  private passBack(activityEvent: ActivityEvent, eventVolunteers: EventVolunteer[]) {
     if (activityEvent.volunteerSignUpRoles) {
       activityEvent.volunteerSignUpRoles.forEach((role) => {
-        if (
-          eventVolunteers.findIndex(
-            (ev) => ev.volunteerSignUpRoleId === role.id,
-          ) >= 0
-        ) {
+        if (eventVolunteers.findIndex((ev) => ev.volunteerSignUpRoleId === role.id) >= 0) {
           role.eventVolunteers.forEach((volunteer) => {
             if (volunteer.knightId === this.knightId) {
-              const eventVolunteerId = eventVolunteers.filter(
-                (ev) => ev.volunteerSignUpRoleId === role.id,
-              )[0].id;
+              const eventVolunteerId = eventVolunteers.filter((ev) => ev.volunteerSignUpRoleId === role.id)[0].id;
               volunteer.id = eventVolunteerId;
             }
           });

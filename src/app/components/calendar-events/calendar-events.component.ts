@@ -17,19 +17,14 @@ export class CalendarEventsComponent implements OnInit {
   upcomingEventsOnDate: UpcomingEvent[] = [];
   currentYear: number = new Date().getFullYear();
   currentMonth: number = new Date().getMonth() + 1;
-  currentMonthName: string = CalendarUtilities.getNameOfMonth(
-    this.currentMonth,
-  );
+  currentMonthName: string = CalendarUtilities.getNameOfMonth(this.currentMonth);
   calendarMonth: Month = new Month();
   modalHeaderText: string | undefined;
 
   constructor(private activityEventsService: ActivityEventsService) {}
 
   ngOnInit() {
-    this.calendarMonth = CalendarUtilities.getCalendar(
-      this.currentYear,
-      this.currentMonth,
-    );
+    this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
     this.calendarMonth.addEventsToMonth(this.upcomingEvents);
 
     this.getAllUpcomingEvents();
@@ -43,26 +38,16 @@ export class CalendarEventsComponent implements OnInit {
 
   private getAllUpcomingEvents() {
     const activityEventsObserver = {
-      next: (upcomingEvents: UpcomingEvent[]) =>
-        this.setEventsForCalendar(upcomingEvents),
-      error: (err: unknown) =>
-        this.logError('Error getting all activity events', err),
+      next: (upcomingEvents: UpcomingEvent[]) => this.setEventsForCalendar(upcomingEvents),
+      error: (err: unknown) => this.logError('Error getting all activity events', err),
       complete: () => console.log('Activity Events loaded.'),
     };
 
     const beginDateDate = new Date(this.currentYear, this.currentMonth - 1, 1);
     const endDateDate = new Date(beginDateDate.getTime());
     endDateDate.setMonth(beginDateDate.getMonth() + 6);
-    const beginDate = DateTimeFormatter.ToIso8601Date(
-      this.currentYear,
-      this.currentMonth,
-      1,
-    );
-    const endDate = DateTimeFormatter.ToIso8601Date(
-      endDateDate.getFullYear(),
-      endDateDate.getMonth() + 1,
-      1,
-    );
+    const beginDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, 1);
+    const endDate = DateTimeFormatter.ToIso8601Date(endDateDate.getFullYear(), endDateDate.getMonth() + 1, 1);
 
     if (beginDate && endDate) {
       this.getAllUpcomingEventsSubscription = this.activityEventsService
@@ -84,10 +69,7 @@ export class CalendarEventsComponent implements OnInit {
       this.currentMonth = 1;
     }
 
-    this.calendarMonth = CalendarUtilities.getCalendar(
-      this.currentYear,
-      this.currentMonth,
-    );
+    this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
     this.currentMonthName = CalendarUtilities.getNameOfMonth(this.currentMonth);
     this.calendarMonth.addEventsToMonth(this.upcomingEvents);
   }
@@ -100,20 +82,13 @@ export class CalendarEventsComponent implements OnInit {
       this.currentMonth = 12;
     }
 
-    this.calendarMonth = CalendarUtilities.getCalendar(
-      this.currentYear,
-      this.currentMonth,
-    );
+    this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
     this.currentMonthName = CalendarUtilities.getNameOfMonth(this.currentMonth);
     this.calendarMonth.addEventsToMonth(this.upcomingEvents);
   }
 
   viewUpcomingEvents(dayOfMonth: number) {
-    const selectedDate = DateTimeFormatter.ToIso8601Date(
-      this.currentYear,
-      this.currentMonth,
-      dayOfMonth,
-    );
+    const selectedDate = DateTimeFormatter.ToIso8601Date(this.currentYear, this.currentMonth, dayOfMonth);
     const eventsForDate = this.upcomingEvents.filter((upcomingEvent) =>
       DateTimeFormatter.sameDate(upcomingEvent.startDateTime, selectedDate),
     );

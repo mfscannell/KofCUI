@@ -3,15 +3,13 @@ import { Router } from '@angular/router';
 import { PermissionsService } from '../services/permissions.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
-export class LeadershipRolesGuard  {
+export class LeadershipRolesGuard {
   constructor(
     private permissionsService: PermissionsService,
-    private router: Router) {
-
-  }
+    private router: Router,
+  ) {}
 
   canActivate(): boolean {
     const permit = this.permissionsService.canActivateLeadershipRoles();

@@ -1,4 +1,4 @@
-import { MemberDues } from "../memberDues";
+import { MemberDues } from '../memberDues';
 
 export interface UpdateKnightMemberDuesRequest {
   knightId: string;

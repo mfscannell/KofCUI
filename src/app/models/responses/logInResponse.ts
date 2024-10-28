@@ -1,4 +1,4 @@
-import { Knight } from "../knight";
+import { Knight } from '../knight';
 
 export interface LogInResponse {
   webToken: string;
