@@ -21,9 +21,7 @@ import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service
   templateUrl: './edit-leadership-role-modal.component.html',
   styleUrls: ['./edit-leadership-role-modal.component.scss'],
 })
-export class EditLeadershipRoleModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() leadershipRole: LeadershipRole | undefined;
   @Input() allKnights: Knight[] = [];
   @Output() editLeadershipRoleChanges = new EventEmitter<LeadershipRole>();
@@ -94,10 +92,8 @@ export class EditLeadershipRoleModalComponent
 
   private updateLeadershipRole(leadershipRole: LeadershipRole) {
     const leadershipRoleObserver = {
-      next: (updatedLeadershipRole: LeadershipRole) =>
-        this.passBack(updatedLeadershipRole),
-      error: (err: ApiResponseError) =>
-        this.logError('Error updating leadership role.', err),
+      next: (updatedLeadershipRole: LeadershipRole) => this.passBack(updatedLeadershipRole),
+      error: (err: ApiResponseError) => this.logError('Error updating leadership role.', err),
       complete: () => console.log('Leadership Role updated.'),
     };
 

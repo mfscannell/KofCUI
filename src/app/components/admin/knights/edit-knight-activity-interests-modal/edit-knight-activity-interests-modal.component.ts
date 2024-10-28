@@ -9,12 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { ActivityInterestFormGroup } from 'src/app/models/formControls/activityInterestFormGroup';
@@ -28,28 +23,20 @@ import { KnightActivityInterestsService } from 'src/app/services/knightActivityI
   templateUrl: './edit-knight-activity-interests-modal.component.html',
   styleUrls: ['./edit-knight-activity-interests-modal.component.scss'],
 })
-export class EditKnightActivityInterestsModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() activityInterests: ActivityInterest[] = [];
   @Input() knightId: string = '';
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
-  @Output() editKnightMemberDuesChanges = new EventEmitter<
-    ActivityInterest[]
-  >();
-  @ViewChild('closeModal', { static: false }) closeModal:
-    | ElementRef
-    | undefined;
+  @Output() editKnightMemberDuesChanges = new EventEmitter<ActivityInterest[]>();
+  @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   public editKnightActivityInterestsForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightActivityInterestsSubscription?: Subscription;
 
-  constructor(
-    private knightActivityInterestsService: KnightActivityInterestsService,
-  ) {
+  constructor(private knightActivityInterestsService: KnightActivityInterestsService) {
     this.editKnightActivityInterestsForm = new UntypedFormGroup({
       communityActivityInterests: new UntypedFormArray([]),
       faithActivityInterests: new UntypedFormArray([]),
@@ -81,52 +68,38 @@ export class EditKnightActivityInterestsModalComponent
 
   private fillOutActivityInterestForm() {
     if (this.activityInterests) {
-      this.activityCategoryFormOptions.forEach(
-        (activityCategoryFormOptions) => {
-          const activityInterestsFormArray = this.getActivityInterestsFormArray(
-            `${activityCategoryFormOptions.value.toLowerCase()}ActivityInterests`,
-          );
-          const filteredActivities = this.activityInterests?.filter(
-            (activityInterest) => {
-              return (
-                activityInterest.activityCategory ===
-                activityCategoryFormOptions.value
-              );
-            },
-          );
-          filteredActivities?.forEach((activityInterest: ActivityInterest) => {
-            const activityInterestFormGroup = new UntypedFormGroup({
-              activityId: new UntypedFormControl(activityInterest.activityId),
-              activityName: new UntypedFormControl(
-                activityInterest.activityName,
-              ),
-              activityCategory: new UntypedFormControl(
-                activityInterest.activityCategory,
-              ),
-              interested: new UntypedFormControl(activityInterest.interested),
-            });
-            activityInterestsFormArray.push(activityInterestFormGroup);
+      this.activityCategoryFormOptions.forEach((activityCategoryFormOptions) => {
+        const activityInterestsFormArray = this.getActivityInterestsFormArray(
+          `${activityCategoryFormOptions.value.toLowerCase()}ActivityInterests`,
+        );
+        const filteredActivities = this.activityInterests?.filter((activityInterest) => {
+          return activityInterest.activityCategory === activityCategoryFormOptions.value;
+        });
+        filteredActivities?.forEach((activityInterest: ActivityInterest) => {
+          const activityInterestFormGroup = new UntypedFormGroup({
+            activityId: new UntypedFormControl(activityInterest.activityId),
+            activityName: new UntypedFormControl(activityInterest.activityName),
+            activityCategory: new UntypedFormControl(activityInterest.activityCategory),
+            interested: new UntypedFormControl(activityInterest.interested),
           });
-        },
-      );
+          activityInterestsFormArray.push(activityInterestFormGroup);
+        });
+      });
     }
   }
 
   get activityInterestsFormArray(): UntypedFormArray {
-    return this.editKnightActivityInterestsForm.controls[
-      'activityInterests'
-    ] as UntypedFormArray;
+    return this.editKnightActivityInterestsForm.controls['activityInterests'] as UntypedFormArray;
   }
 
   public getActivityCategoryFormGroupName(activityCategoryValue: string) {
     return activityCategoryValue.toLowerCase();
   }
 
-  public getActivityInterestsFormArray(
-    activityCategory: string,
-  ): UntypedFormArray {
-    const activityInterestsFormArray = this.editKnightActivityInterestsForm
-      .controls[activityCategory] as UntypedFormArray;
+  public getActivityInterestsFormArray(activityCategory: string): UntypedFormArray {
+    const activityInterestsFormArray = this.editKnightActivityInterestsForm.controls[
+      activityCategory
+    ] as UntypedFormArray;
 
     return activityInterestsFormArray;
   }
@@ -146,15 +119,13 @@ export class EditKnightActivityInterestsModalComponent
     const request = this.mapFormToActivityInterests();
     const knightActivityInterestsObserver = {
       next: (response: ActivityInterest[]) => this.passBackResponse(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Updating Knight Activity Interests', err),
+      error: (err: ApiResponseError) => this.logError('Error Updating Knight Activity Interests', err),
       complete: () => console.log('Activity Interests updated.'),
     };
 
-    this.updateKnightActivityInterestsSubscription =
-      this.knightActivityInterestsService
-        .updateKnightActivityInterests(request)
-        .subscribe(knightActivityInterestsObserver);
+    this.updateKnightActivityInterestsSubscription = this.knightActivityInterestsService
+      .updateKnightActivityInterests(request)
+      .subscribe(knightActivityInterestsObserver);
   }
 
   private mapFormToActivityInterests(): UpdateKnightActivityInterestsRequest {
@@ -168,10 +139,7 @@ export class EditKnightActivityInterestsModalComponent
     };
 
     this.activityCategoryFormOptions.forEach((activityCategoryFormOption) => {
-      const activityInterests =
-        rawForm[
-          `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`
-        ];
+      const activityInterests = rawForm[`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
 
       activityInterests.forEach((ai: ActivityInterestFormGroup) => {
         console.log(ai);

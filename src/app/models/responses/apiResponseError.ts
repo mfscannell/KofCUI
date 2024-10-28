@@ -1,3 +1,3 @@
 export interface ApiResponseError {
-  error: string | {errors: Record<string, string>}
+  error: string | { errors: Record<string, string> };
 }

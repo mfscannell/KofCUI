@@ -23,14 +23,10 @@ import { UploadFileEvent } from 'src/app/models/events/uploadFileEvent';
   templateUrl: './upload-knights-modal.component.html',
   styleUrls: ['./upload-knights-modal.component.scss'],
 })
-export class UploadKnightsModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() showModal: boolean = false;
   @Output() uploadKnightsChanges = new EventEmitter<Knight[]>();
-  @ViewChild('closeModal', { static: false }) closeModal:
-    | ElementRef
-    | undefined;
+  @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   uploadKnightsForm: UntypedFormGroup;
   filePath?: Blob;
@@ -77,14 +73,11 @@ export class UploadKnightsModalComponent
   private createKnights(knights: Knight[]) {
     const knightsObserver = {
       next: (response: Knight[]) => this.passBackResponse(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Creating Knights.', err),
+      error: (err: ApiResponseError) => this.logError('Error Creating Knights.', err),
       complete: () => console.log('Knights created.'),
     };
 
-    this.createKnightsSubscription = this.knightsService
-      .createKnights(knights)
-      .subscribe(knightsObserver);
+    this.createKnightsSubscription = this.knightsService.createKnights(knights).subscribe(knightsObserver);
   }
 
   private passBackResponse(knights: Knight[]) {
@@ -96,9 +89,7 @@ export class UploadKnightsModalComponent
 
   toggleExampleFile() {
     this.showExampleFile = !this.showExampleFile;
-    this.toggleExampleFileText = this.showExampleFile
-      ? 'Hide Example File'
-      : 'Show Example File';
+    this.toggleExampleFileText = this.showExampleFile ? 'Hide Example File' : 'Show Example File';
   }
 
   logError(message: string, err: ApiResponseError) {

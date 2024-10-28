@@ -8,36 +8,37 @@ import { VolunteerForActivityEventRequest } from '../models/requests/volunteerFo
 import { EventVolunteer } from '../models/eventVolunteer';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ActivityEventsService {
-    private upcomingEvents?: Observable<UpcomingEvent[]>;
-    constructor(private http: HttpClient) {
+  private upcomingEvents?: Observable<UpcomingEvent[]>;
+  constructor(private http: HttpClient) {}
 
-    }
+  getAllActivityEvents(beginDate: string, endDate: string): Observable<ActivityEvent[]> {
+    return this.http.get<ActivityEvent[]>(`activityEvents/byDateRange?beginDate=${beginDate}&endDate=${endDate}`);
+  }
 
-    getAllActivityEvents(beginDate: string, endDate: string): Observable<ActivityEvent[]> {
-        return this.http.get<ActivityEvent[]>(`activityEvents/byDateRange?beginDate=${beginDate}&endDate=${endDate}`);
-    }
+  getAllActivityEventsForVolunteering(beginDate: string, endDate: string): Observable<ActivityEvent[]> {
+    return this.http.get<ActivityEvent[]>(
+      `activityEvents/forVolunteering/byDateRange?beginDate=${beginDate}&endDate=${endDate}`,
+    );
+  }
 
-    getAllActivityEventsForVolunteering(beginDate: string, endDate: string): Observable<ActivityEvent[]> {
-        return this.http.get<ActivityEvent[]>(`activityEvents/forVolunteering/byDateRange?beginDate=${beginDate}&endDate=${endDate}`);
-    }
+  getAllUpcomingEvents(beginDate: string, endDate: string): Observable<UpcomingEvent[]> {
+    return this.http.get<UpcomingEvent[]>(`activityEvents/upcomingEvents?beginDate=${beginDate}&endDate=${endDate}`);
+  }
 
-    getAllUpcomingEvents(beginDate: string, endDate: string): Observable<UpcomingEvent[]> {
-        return this.http.get<UpcomingEvent[]>(`activityEvents/upcomingEvents?beginDate=${beginDate}&endDate=${endDate}`);
-    }
+  updateActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
+    return this.http.put<ActivityEvent>(`activityEvents/${activityEvent.id}`, activityEvent);
+  }
 
-    updateActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
-        return this.http.put<ActivityEvent>(`activityEvents/${activityEvent.id}`, activityEvent);
-    }
+  createActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
+    return this.http.post<ActivityEvent>('activityEvents/', activityEvent);
+  }
 
-    createActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
-        return this.http.post<ActivityEvent>('activityEvents/', activityEvent);
-    }
-
-    volunteerForActivityEvent(volunteerForActivityEventRequest: VolunteerForActivityEventRequest): Observable<EventVolunteer[]> {
-        return this.http.put<EventVolunteer[]>(`activityEvents/volunteerFor`, volunteerForActivityEventRequest);
-    }
+  volunteerForActivityEvent(
+    volunteerForActivityEventRequest: VolunteerForActivityEventRequest,
+  ): Observable<EventVolunteer[]> {
+    return this.http.put<EventVolunteer[]>(`activityEvents/volunteerFor`, volunteerForActivityEventRequest);
+  }
 }

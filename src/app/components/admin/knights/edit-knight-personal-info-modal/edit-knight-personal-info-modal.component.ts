@@ -9,11 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
@@ -29,16 +25,12 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   templateUrl: './edit-knight-personal-info-modal.component.html',
   styleUrls: ['./edit-knight-personal-info-modal.component.scss'],
 })
-export class EditKnightPersonalInfoModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() knight?: Knight;
   @Input() countryFormOptions: CountryFormOption[] = [];
   @Output() editKnightPersonalInfoChanges = new EventEmitter<Knight>();
-  @ViewChild('closeModal', { static: false }) closeModal:
-    | ElementRef
-    | undefined;
+  @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   public editKnightPersonalInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
@@ -49,19 +41,12 @@ export class EditKnightPersonalInfoModalComponent
     const today = new Date();
     this.editKnightPersonalInfoForm = new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      firstName: new UntypedFormControl('', [
-        Validators.required,
-        Validators.maxLength(63),
-      ]),
+      firstName: new UntypedFormControl('', [Validators.required, Validators.maxLength(63)]),
       middleName: new UntypedFormControl('', [Validators.maxLength(63)]),
       lastName: new UntypedFormControl('', [Validators.maxLength(63)]),
       nameSuffix: new UntypedFormControl('', [Validators.maxLength(7)]),
       dateOfBirth: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate(),
-        ),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
       ),
       emailAddress: new UntypedFormControl('', [Validators.maxLength(63)]),
       cellPhoneNumber: new UntypedFormControl('', [Validators.maxLength(31)]),
@@ -99,9 +84,7 @@ export class EditKnightPersonalInfoModalComponent
         middleName: this.knight.middleName,
         lastName: this.knight.lastName,
         nameSuffix: this.knight.nameSuffix,
-        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(
-          this.knight.dateOfBirth,
-        ),
+        dateOfBirth: DateTimeFormatter.DateTimeToIso8601Date(this.knight.dateOfBirth),
         emailAddress: this.knight.emailAddress,
         cellPhoneNumber: this.knight.cellPhoneNumber,
         homeAddress: this.knight.homeAddress,
@@ -110,16 +93,13 @@ export class EditKnightPersonalInfoModalComponent
   }
 
   private getCountryCode(): string {
-    return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')
-      ?.value;
+    return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
   }
 
   public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
     const countryCode = this.getCountryCode();
 
-    const filteredCountryFormOptions = this.countryFormOptions.filter(
-      (cfo) => cfo.value === countryCode,
-    );
+    const filteredCountryFormOptions = this.countryFormOptions.filter((cfo) => cfo.value === countryCode);
 
     if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
       return filteredCountryFormOptions[0].administrativeDivisions;
@@ -130,9 +110,7 @@ export class EditKnightPersonalInfoModalComponent
 
   public enableDisableAdministrativeDivisions(): void {
     const countryCode = this.getCountryCode();
-    const hasCountryCode = this.countryFormOptions.some(
-      (cfo) => cfo.value === countryCode,
-    );
+    const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
 
     if (hasCountryCode) {
       this.editKnightPersonalInfoForm.get('homeAddress.stateCode')?.enable();
@@ -145,8 +123,7 @@ export class EditKnightPersonalInfoModalComponent
     const updateKnightPersonalInfoRequest = this.mapFormToKnightPersonalInfo();
     const knightMemberInfoObserver = {
       next: (response: Knight) => this.passBackResponse(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Updating Knight Info', err),
+      error: (err: ApiResponseError) => this.logError('Error Updating Knight Info', err),
       complete: () => console.log('Knight Info updated.'),
     };
 

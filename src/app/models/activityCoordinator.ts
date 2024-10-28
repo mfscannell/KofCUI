@@ -1,4 +1,4 @@
 export interface ActivityCoordinator {
-    id: string;
-    knightId: string;
+  id: string;
+  knightId: string;
 }

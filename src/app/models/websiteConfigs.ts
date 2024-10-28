@@ -1,4 +1,4 @@
-import { ExternalLink } from "./externalLink";
+import { ExternalLink } from './externalLink';
 
 export interface WebsiteConfigs {
   externalLinks: ExternalLink[];

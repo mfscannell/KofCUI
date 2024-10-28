@@ -5,19 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class LeadershipRolesService {
-    constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {}
 
-    }
+  getAllLeadershipRoles(): Observable<LeadershipRole[]> {
+    return this.http.get<LeadershipRole[]>('leadershipRoles');
+  }
 
-    getAllLeadershipRoles(): Observable<LeadershipRole[]> {
-        return this.http.get<LeadershipRole[]>('leadershipRoles');
-    }
-
-    updateLeadershipRole(updatedLeadershipRole: LeadershipRole): Observable<LeadershipRole> {
-        return this.http.put<LeadershipRole>(`leadershipRoles`, updatedLeadershipRole);
-    }
+  updateLeadershipRole(updatedLeadershipRole: LeadershipRole): Observable<LeadershipRole> {
+    return this.http.put<LeadershipRole>(`leadershipRoles`, updatedLeadershipRole);
+  }
 }

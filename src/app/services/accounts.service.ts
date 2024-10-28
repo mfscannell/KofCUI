@@ -10,33 +10,30 @@ import { ChangePasswordResponse } from '../models/responses/changePasswordRespon
 import { PasswordRequirements } from '../models/responses/passwordRequirements';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AccountsService {
   private currentUserSource = new ReplaySubject<LogInResponse | null>(1);
   currentUser = this.currentUserSource.asObservable();
 
   private loggedInUser?: LogInResponse;
 
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
 
   login(loginRequest: LogInRequest) {
-      return this.http.post<LogInResponse>('accounts/login', loginRequest).pipe(
-        map((response: LogInResponse) => {
-          this.loggedInUser = response;
-          this.currentUserSource.next(response);
-        })
-      );
+    return this.http.post<LogInResponse>('accounts/login', loginRequest).pipe(
+      map((response: LogInResponse) => {
+        this.loggedInUser = response;
+        this.currentUserSource.next(response);
+      }),
+    );
   }
 
-  changePassword(changePasswordRequest: ChangePassWordRequest) : Observable<ChangePasswordResponse> {
+  changePassword(changePasswordRequest: ChangePassWordRequest): Observable<ChangePasswordResponse> {
     return this.http.put<ChangePasswordResponse>('accounts/changePassword', changePasswordRequest);
   }
 
-  getPasswordRequirements() : Observable<PasswordRequirements> {
+  getPasswordRequirements(): Observable<PasswordRequirements> {
     return this.http.get<PasswordRequirements>('accounts/passwordRequirements');
   }
 
@@ -68,7 +65,7 @@ export class AccountsService {
   }
 
   getRoles() {
-    let roles:string[] = [];
+    let roles: string[] = [];
 
     if (this.loggedInUser) {
       const tokenRoles = this.getDecodedToken(this.loggedInUser.webToken).role;

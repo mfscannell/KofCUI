@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EncodedFile } from 'src/app/models/encodedFile';
 import { AssetsService } from 'src/app/services/assets.service';
@@ -25,9 +19,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
   public formData?: FormData;
   public uploadImageForm: UntypedFormGroup;
   public errorSaving: boolean = false;
-  @ViewChild('cancelEditActiveModal', { static: false }) cancelEditActiveModal:
-    | ElementRef
-    | undefined;
+  @ViewChild('cancelEditActiveModal', { static: false }) cancelEditActiveModal: ElementRef | undefined;
   @ViewChild('cancelEditActiveModal', { static: false })
   cancelDeleteActiveModal: ElementRef | undefined;
 
@@ -73,10 +65,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
   onSubmitUploadFile() {
     if (this.formData) {
       const imageUploadObserver = {
-        next: (response: EncodedFile) =>
-          this.handleUploadHomePageImageResponse(response),
-        error: (err: ApiResponseError) =>
-          this.logError('Error Uploading image.', err),
+        next: (response: EncodedFile) => this.handleUploadHomePageImageResponse(response),
+        error: (err: ApiResponseError) => this.logError('Error Uploading image.', err),
         complete: () => console.log('Image uploaded.'),
       };
 
@@ -102,10 +92,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
   onSubmitDeleteFile() {
     if (this.fileNameToDelete) {
       const imageUploadObserver = {
-        next: (response: DeleteHomePageCarouselImageResponse) =>
-          this.handleDeleteImageSuccess(response),
-        error: (err: ApiResponseError) =>
-          this.logError('Error Deleting image.', err),
+        next: (response: DeleteHomePageCarouselImageResponse) => this.handleDeleteImageSuccess(response),
+        error: (err: ApiResponseError) => this.logError('Error Deleting image.', err),
         complete: () => console.log('Image deleted.'),
       };
 
@@ -115,9 +103,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleDeleteImageSuccess(
-    response: DeleteHomePageCarouselImageResponse,
-  ) {
+  private handleDeleteImageSuccess(response: DeleteHomePageCarouselImageResponse) {
     console.log(response);
     this.assetsService.removeHomePageCarouselImage(this.indexToDelete);
     this.cancelDeleteActiveModal?.nativeElement.click();

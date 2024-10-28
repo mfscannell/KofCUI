@@ -1,5 +1,5 @@
-import { ConfigInputTypeEnums } from "src/app/enums/configInputTypeEnums";
-import { ConfigValueTypeEnums } from "src/app/enums/configValueTypeEnums";
+import { ConfigInputTypeEnums } from 'src/app/enums/configInputTypeEnums';
+import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
 
 export interface ConfigSettingFormGroup {
   id: string;

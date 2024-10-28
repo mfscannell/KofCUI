@@ -4,14 +4,14 @@ export const environment = {
   numDomains: 2,
   tenants: [
     {
-      tenantName: "htknights",
-      tenantId: "1234"
+      tenantName: 'htknights',
+      tenantId: '1234',
     },
     {
-      tenantName: "hsknights",
-      tenantId: "5678"
-    }
+      tenantName: 'hsknights',
+      tenantId: '5678',
+    },
   ],
-  baseUrl: "http://localhost:9080/",
-  apiBaseUrl: "http://localhost:9080/api/"
+  baseUrl: 'http://localhost:9080/',
+  apiBaseUrl: 'http://localhost:9080/api/',
 };

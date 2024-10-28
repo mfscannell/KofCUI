@@ -48,9 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       complete: () => console.log('Logged In.'),
     };
 
-    this.logInSubscription = this.accountsService
-      .login(loginRequest)
-      .subscribe(logInObserver);
+    this.logInSubscription = this.accountsService.login(loginRequest).subscribe(logInObserver);
   }
 
   private handleLogInResult() {

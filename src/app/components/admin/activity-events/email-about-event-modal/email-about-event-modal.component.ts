@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from 'src/app/models/activityEvent';
@@ -20,13 +12,9 @@ import { ActivitiesService } from 'src/app/services/activities.service';
   templateUrl: './email-about-event-modal.component.html',
   styleUrls: ['./email-about-event-modal.component.scss'],
 })
-export class EmailAboutEventModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityEvent?: ActivityEvent;
-  @ViewChild('closeModal', { static: false }) closeModal:
-    | ElementRef
-    | undefined;
+  @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
   public sendEmailForm: UntypedFormGroup;
   public errorSending: boolean = false;
   public errorMessages: string[] = [];
@@ -56,10 +44,8 @@ export class EmailAboutEventModalComponent
 
   public onSubmitSendEmail() {
     const sendEmailObserver = {
-      next: (sendEmailResponse: SendEmailResponse) =>
-        this.showSendEmailResponse(sendEmailResponse),
-      error: (err: ApiResponseError) =>
-        this.logError('Error sending email', err),
+      next: (sendEmailResponse: SendEmailResponse) => this.showSendEmailResponse(sendEmailResponse),
+      error: (err: ApiResponseError) => this.logError('Error sending email', err),
       complete: () => console.log('Email sent.'),
     };
 

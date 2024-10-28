@@ -5,9 +5,8 @@ import { CountryFormOption } from '../models/inputOptions/countryFormOption';
 import { GenericFormOption } from '../models/inputOptions/genericFormOption';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class FormsService {
   private countryFormOptions?: Observable<CountryFormOption[]>;
   private activityCategoryFormOptions?: Observable<GenericFormOption[]>;
@@ -17,13 +16,11 @@ export class FormsService {
   private memberDuesPaymentStatusFormOptions?: Observable<GenericFormOption[]>;
   private timeZoneFormOptions?: Observable<GenericFormOption[]>;
 
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
 
   getCountryFormOptions(): Observable<CountryFormOption[]> {
     if (!this.countryFormOptions) {
-      console.log("no country form options.");
+      console.log('no country form options.');
       this.countryFormOptions = this.http.get<CountryFormOption[]>('forms/countryFormOptions').pipe(shareReplay());
     }
 
@@ -33,7 +30,9 @@ export class FormsService {
   getActivityCategoryFormOptions(): Observable<GenericFormOption[]> {
     if (!this.activityCategoryFormOptions) {
       console.log('no activity category form options');
-      this.activityCategoryFormOptions = this.http.get<GenericFormOption[]>('forms/activityCategoryFormOptions').pipe(shareReplay());
+      this.activityCategoryFormOptions = this.http
+        .get<GenericFormOption[]>('forms/activityCategoryFormOptions')
+        .pipe(shareReplay());
     }
 
     return this.activityCategoryFormOptions;
@@ -41,7 +40,9 @@ export class FormsService {
 
   getKnightDegreeFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightDegreeFormOptions) {
-      this.knightDegreeFormOptions = this.http.get<GenericFormOption[]>('forms/knightDegreeFormOptions').pipe(shareReplay());
+      this.knightDegreeFormOptions = this.http
+        .get<GenericFormOption[]>('forms/knightDegreeFormOptions')
+        .pipe(shareReplay());
     }
 
     return this.knightDegreeFormOptions;
@@ -49,7 +50,9 @@ export class FormsService {
 
   getKnightMemberTypeFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightMemberTypeFormOptions) {
-      this.knightMemberTypeFormOptions = this.http.get<GenericFormOption[]>('forms/knightMemberTypeFormOptions').pipe(shareReplay());
+      this.knightMemberTypeFormOptions = this.http
+        .get<GenericFormOption[]>('forms/knightMemberTypeFormOptions')
+        .pipe(shareReplay());
     }
 
     return this.knightMemberTypeFormOptions;
@@ -57,7 +60,9 @@ export class FormsService {
 
   getKnightMemberClassFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightMemberClassFormOptions) {
-      this.knightMemberClassFormOptions = this.http.get<GenericFormOption[]>('forms/knightMemberClassFormOptions').pipe(shareReplay());
+      this.knightMemberClassFormOptions = this.http
+        .get<GenericFormOption[]>('forms/knightMemberClassFormOptions')
+        .pipe(shareReplay());
     }
 
     return this.knightMemberClassFormOptions;
@@ -65,7 +70,8 @@ export class FormsService {
 
   getMemberDuesPaymentStatusFormOptions(): Observable<GenericFormOption[]> {
     if (!this.memberDuesPaymentStatusFormOptions) {
-      this.memberDuesPaymentStatusFormOptions = this.http.get<GenericFormOption[]>('forms/memberDuesPaymentStatusFormOptions')
+      this.memberDuesPaymentStatusFormOptions = this.http
+        .get<GenericFormOption[]>('forms/memberDuesPaymentStatusFormOptions')
         .pipe(shareReplay());
     }
 

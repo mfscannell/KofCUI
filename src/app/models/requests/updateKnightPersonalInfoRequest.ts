@@ -1,4 +1,4 @@
-import { StreetAddress } from "../streetAddress";
+import { StreetAddress } from '../streetAddress';
 
 export interface UpdateKnightPersonalInfoRequest {
   knightId: string;
