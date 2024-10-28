@@ -32,8 +32,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.configsService.hasCachedWebsiteConfigs()) {
-      this.externalLinks =
-        this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
+      this.externalLinks = this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
     } else {
       this.getWebsiteText();
     }
@@ -75,30 +74,23 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private getWebsiteText() {
     const websiteTextObserver = {
       next: () => this.handleGetWebsiteTextResult(),
-      error: (err: ApiResponseError) =>
-        this.logError('Error getting all website text.', err),
+      error: (err: ApiResponseError) => this.logError('Error getting all website text.', err),
       complete: () => console.log('Website text loaded.'),
     };
-    this.getWebsiteTextSubscription = this.configsService
-      .getAllWebsiteConfigs()
-      .subscribe(websiteTextObserver);
+    this.getWebsiteTextSubscription = this.configsService.getAllWebsiteConfigs().subscribe(websiteTextObserver);
   }
 
   private handleGetWebsiteTextResult() {
-    this.externalLinks =
-      this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
+    this.externalLinks = this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
   }
 
   private getWebsiteContent() {
     const observer = {
       next: () => this.handleGetWebsiteContent(),
-      error: (err: ApiResponseError) =>
-        this.logError('Error getting website content.', err),
+      error: (err: ApiResponseError) => this.logError('Error getting website content.', err),
       complete: () => console.log('Website content loaded.'),
     };
-    this.getWebsiteContentSubscription = this.assetsService
-      .getAllWebsiteContent()
-      .subscribe(observer);
+    this.getWebsiteContentSubscription = this.assetsService.getAllWebsiteContent().subscribe(observer);
   }
 
   private handleGetWebsiteContent() {}

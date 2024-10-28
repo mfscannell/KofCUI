@@ -29,6 +29,8 @@ mynewtenant.localhost:9081
 https://eslint.org/docs/latest/use/getting-started
 Run the command `npx eslint ./` from a terminal.
 
+https://prettier.io/docs/en/configuration.html
+https://www.boag.online/notepad/post/full-prettier-prettierrc-config
 Run the command `npx prettier . --check` from a terminal to check stylings.
 Run the command `npm prettier . --write` from a terminal to fix stylings.
 

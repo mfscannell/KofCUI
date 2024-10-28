@@ -23,9 +23,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   templateUrl: './edit-knight-member-info-modal.component.html',
   styleUrls: ['./edit-knight-member-info-modal.component.scss'],
 })
-export class EditKnightMemberInfoModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
   @Input() knightInfo?: KnightInfo;
   @Input() knightId: string = '';
@@ -65,18 +63,10 @@ export class EditKnightMemberInfoModalComponent
       mailReturned: new UntypedFormControl(false),
       degree: new UntypedFormControl('First'),
       firstDegreeDate: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate(),
-        ),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
       ),
       reentryDate: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(
-          today.getFullYear(),
-          today.getMonth() + 1,
-          today.getDate(),
-        ),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
       ),
       memberType: new UntypedFormControl('Associate'),
       memberClass: new UntypedFormControl('Paying'),
@@ -87,8 +77,7 @@ export class EditKnightMemberInfoModalComponent
     const knightMembershipInfo = this.mapFormToUpdateMembershipRequest();
     const knightMemberInfoObserver = {
       next: (response: KnightInfo) => this.passBackResponse(response),
-      error: (err: ApiResponseError) =>
-        this.logError('Error Updating Knight Membership Info', err),
+      error: (err: ApiResponseError) => this.logError('Error Updating Knight Membership Info', err),
       complete: () => console.log('Knight Membership Info updated.'),
     };
 
@@ -108,12 +97,8 @@ export class EditKnightMemberInfoModalComponent
         memberNumber: this.knightInfo.memberNumber,
         mailReturned: this.knightInfo.mailReturned,
         degree: this.knightInfo.degree,
-        firstDegreeDate: DateTimeFormatter.DateTimeToIso8601Date(
-          this.knightInfo.firstDegreeDate,
-        ),
-        reentryDate: DateTimeFormatter.DateTimeToIso8601Date(
-          this.knightInfo.reentryDate,
-        ),
+        firstDegreeDate: DateTimeFormatter.DateTimeToIso8601Date(this.knightInfo.firstDegreeDate),
+        reentryDate: DateTimeFormatter.DateTimeToIso8601Date(this.knightInfo.reentryDate),
         memberType: this.knightInfo.memberType,
         memberClass: this.knightInfo.memberClass,
       });

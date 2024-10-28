@@ -8,40 +8,37 @@ import { GetAllWebsiteContentResponse } from '../models/responses/getAllWebsiteC
 import { DeleteHomePageCarouselImageResponse } from '../models/responses/deleteHomePageCarouselImageResponse';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AssetsService {
-    private homePageCarouselImages: EncodedFile[] = [];
-    constructor(private http: HttpClient) {
+  private homePageCarouselImages: EncodedFile[] = [];
+  constructor(private http: HttpClient) {}
 
-    }
+  getAllWebsiteContent() {
+    return this.http.get<GetAllWebsiteContentResponse>('assets/allWebsiteContent').pipe(
+      map((response: GetAllWebsiteContentResponse) => {
+        this.homePageCarouselImages = response.response;
+      }),
+    );
+  }
 
-    getAllWebsiteContent() {
-        return this.http.get<GetAllWebsiteContentResponse>('assets/allWebsiteContent').pipe(
-            map((response: GetAllWebsiteContentResponse) => {
-                this.homePageCarouselImages = response.response;
-            })
-          )
-    }
+  uploadHomePageImage(image: FormData): Observable<EncodedFile> {
+    return this.http.post<EncodedFile>('assets/homePageCarouselImage', image);
+  }
 
-    uploadHomePageImage(image: FormData): Observable<EncodedFile> {
-        return this.http.post<EncodedFile>('assets/homePageCarouselImage', image);
-    }
+  deleteHomePageCarouselImage(image: string): Observable<DeleteHomePageCarouselImageResponse> {
+    return this.http.delete<DeleteHomePageCarouselImageResponse>(`assets/homePageCarouselImage/${image}`);
+  }
 
-    deleteHomePageCarouselImage(image: string): Observable<DeleteHomePageCarouselImageResponse> {
-        return this.http.delete<DeleteHomePageCarouselImageResponse>(`assets/homePageCarouselImage/${image}`);
-    }
+  getHomePageCarouselImages() {
+    return this.homePageCarouselImages;
+  }
 
-    getHomePageCarouselImages() {
-        return this.homePageCarouselImages;
-    }
+  removeHomePageCarouselImage(index: number) {
+    this.homePageCarouselImages.splice(index, 1);
+  }
 
-    removeHomePageCarouselImage(index: number) {
-        this.homePageCarouselImages.splice(index, 1);
-    }
-
-    appendHomePageCarouselImage(image: EncodedFile) {
-        this.homePageCarouselImages.push(image);
-    }
+  appendHomePageCarouselImage(image: EncodedFile) {
+    this.homePageCarouselImages.push(image);
+  }
 }

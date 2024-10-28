@@ -9,12 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
@@ -31,9 +26,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   templateUrl: './edit-activity-modal.component.html',
   styleUrls: ['./edit-activity-modal.component.scss'],
 })
-export class EditActivityModalComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('cancelEditActivityModal', { static: false })
   cancelEditActivityModal: ElementRef | undefined;
 
@@ -80,9 +73,7 @@ export class EditActivityModalComponent
         notes: this.activity.notes,
       });
 
-      const activityCoordinatorsList = this.editActivityForm.get(
-        'activityCoordinatorsList',
-      ) as UntypedFormArray;
+      const activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
 
       this.activity.activityCoordinators.map(function (coordinator) {
         const activityCoordinatorFg = new UntypedFormGroup({
@@ -92,9 +83,7 @@ export class EditActivityModalComponent
         activityCoordinatorsList.push(activityCoordinatorFg);
       });
 
-      const activityEventNotes = this.editActivityForm.get(
-        'activityEventNotesList',
-      ) as UntypedFormArray;
+      const activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
 
       this.activity.activityEventNotes.map(function (note) {
         const activityEventNotesFg = new UntypedFormGroup({
@@ -108,16 +97,9 @@ export class EditActivityModalComponent
 
   private initForm() {
     return new UntypedFormGroup({
-      activityId: new UntypedFormControl(
-        '00000000-0000-0000-0000-000000000000',
-      ),
-      activityName: new UntypedFormControl('', [
-        Validators.required,
-        Validators.maxLength(127),
-      ]),
-      activityDescription: new UntypedFormControl('', [
-        Validators.maxLength(255),
-      ]),
+      activityId: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
+      activityName: new UntypedFormControl('', [Validators.required, Validators.maxLength(127)]),
+      activityDescription: new UntypedFormControl('', [Validators.maxLength(255)]),
       activityCategory: new UntypedFormControl(null, [Validators.required]),
       activityCoordinatorsList: new UntypedFormArray([]),
       activityEventNotesList: new UntypedFormArray([]),
@@ -126,9 +108,7 @@ export class EditActivityModalComponent
   }
 
   public deleteActivityCoordinator(roleIndex: number) {
-    const activityCoordinators = this.editActivityForm.controls[
-      'activityCoordinatorsList'
-    ] as UntypedFormArray;
+    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as UntypedFormArray;
 
     activityCoordinators.removeAt(roleIndex);
   }
@@ -139,29 +119,21 @@ export class EditActivityModalComponent
       knightId: new UntypedFormControl(null, [Validators.required]),
     });
 
-    const activityCoordinators = this.editActivityForm.controls[
-      'activityCoordinatorsList'
-    ] as UntypedFormArray;
+    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as UntypedFormArray;
 
     activityCoordinators.push(activityCoordinator);
   }
 
   get activityCoordinators() {
-    return this.editActivityForm.controls[
-      'activityCoordinatorsList'
-    ] as UntypedFormArray;
+    return this.editActivityForm.controls['activityCoordinatorsList'] as UntypedFormArray;
   }
 
   get activityEventNotes() {
-    return this.editActivityForm.controls[
-      'activityEventNotesList'
-    ] as UntypedFormArray;
+    return this.editActivityForm.controls['activityEventNotesList'] as UntypedFormArray;
   }
 
   public formatEventStartDate(index: number) {
-    return DateTimeFormatter.ToDisplayedDate(
-      this.activity?.activityEventNotes[index].startDateTime,
-    );
+    return DateTimeFormatter.ToDisplayedDate(this.activity?.activityEventNotes[index].startDateTime);
   }
 
   public getEventNotes(index: number) {
@@ -182,15 +154,15 @@ export class EditActivityModalComponent
 
   private mapFormToActivity() {
     const rawForm = this.editActivityForm.getRawValue();
-    const activityCoordinators = rawForm?.activityCoordinatorsList.map(
-      function (coordinator: ActivityCoordinatorFormGroup) {
-        const activityCoordinator: ActivityCoordinator = {
-          id: coordinator.id,
-          knightId: coordinator.knightId,
-        };
-        return activityCoordinator;
-      },
-    );
+    const activityCoordinators = rawForm?.activityCoordinatorsList.map(function (
+      coordinator: ActivityCoordinatorFormGroup,
+    ) {
+      const activityCoordinator: ActivityCoordinator = {
+        id: coordinator.id,
+        knightId: coordinator.knightId,
+      };
+      return activityCoordinator;
+    });
     const activity: Activity = {
       activityId: rawForm.activityId,
       activityName: rawForm.activityName,
@@ -206,16 +178,12 @@ export class EditActivityModalComponent
 
   private updateActivity(activity: Activity) {
     const activityObserver = {
-      next: (updatedActivity: Activity) =>
-        this.passBackUpdatedActivity(updatedActivity),
-      error: (err: ApiResponseError) =>
-        this.logError('Error updating Activity', err),
+      next: (updatedActivity: Activity) => this.passBackUpdatedActivity(updatedActivity),
+      error: (err: ApiResponseError) => this.logError('Error updating Activity', err),
       complete: () => console.log('Activity updated.'),
     };
 
-    this.updateActivitySubscription = this.activitiesService
-      .updateActivity(activity)
-      .subscribe(activityObserver);
+    this.updateActivitySubscription = this.activitiesService.updateActivity(activity).subscribe(activityObserver);
   }
 
   private passBackUpdatedActivity(updatedActivity: Activity) {
@@ -225,16 +193,12 @@ export class EditActivityModalComponent
 
   private createActivity(activity: Activity) {
     const activityObserver = {
-      next: (createdActivity: Activity) =>
-        this.passBackCreatedActivity(createdActivity),
-      error: (err: ApiResponseError) =>
-        this.logError('Error creating Activity', err),
+      next: (createdActivity: Activity) => this.passBackCreatedActivity(createdActivity),
+      error: (err: ApiResponseError) => this.logError('Error creating Activity', err),
       complete: () => console.log('Activity created.'),
     };
 
-    this.createActivitySubscription = this.activitiesService
-      .createActivity(activity)
-      .subscribe(activityObserver);
+    this.createActivitySubscription = this.activitiesService.createActivity(activity).subscribe(activityObserver);
   }
 
   private passBackCreatedActivity(createdActivity: Activity) {

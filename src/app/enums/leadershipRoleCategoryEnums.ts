@@ -1,5 +1,5 @@
 export enum LeadershipRoleCategoryEnums {
-  Admin = "Admin",
-  Officer = "Officer",
-  Director = "Director",
+  Admin = 'Admin',
+  Officer = 'Officer',
+  Director = 'Director',
 }

@@ -1,6 +1,6 @@
-import { EventVolunteersFormGroup } from "./eventVolunteersFormGroup";
+import { EventVolunteersFormGroup } from './eventVolunteersFormGroup';
 
-export interface  VolunteerSignUpRoleFormGroup {
+export interface VolunteerSignUpRoleFormGroup {
   id: string;
   roleTitle: string;
   startDate: string;

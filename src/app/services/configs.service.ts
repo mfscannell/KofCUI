@@ -8,41 +8,38 @@ import { WebsiteConfigs } from '../models/websiteConfigs';
 import { GenericFormOption } from '../models/inputOptions/genericFormOption';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ConfigsService {
-    private allWebsiteConfigs?: WebsiteConfigs;
+  private allWebsiteConfigs?: WebsiteConfigs;
 
-    constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) {}
 
-    }
+  getAllConfigGroups(): Observable<ConfigGroup[]> {
+    return this.http.get<ConfigGroup[]>('configs');
+  }
 
-    getAllConfigGroups(): Observable<ConfigGroup[]> {
-        return this.http.get<ConfigGroup[]>('configs');
-    }
+  updateConfigSettings(updatedConfigs: ConfigSetting[]): Observable<ConfigSetting[]> {
+    return this.http.put<ConfigSetting[]>('configs', updatedConfigs);
+  }
 
-    updateConfigSettings(updatedConfigs: ConfigSetting[]): Observable<ConfigSetting[]> {
-        return this.http.put<ConfigSetting[]>('configs', updatedConfigs);
-    }
+  getAllWebsiteConfigs(): Observable<void> {
+    return this.http.get<WebsiteConfigs>('configs/allWebsiteConfigs').pipe(
+      map((response: WebsiteConfigs) => {
+        this.allWebsiteConfigs = response;
+      }),
+    );
+  }
 
-    getAllWebsiteConfigs(): Observable<void> {
-        return this.http.get<WebsiteConfigs>('configs/allWebsiteConfigs').pipe(
-            map((response: WebsiteConfigs) => {
-              this.allWebsiteConfigs = response;
-            })
-          );
-    }
+  getCachedWebsiteConfigs() {
+    return this.allWebsiteConfigs;
+  }
 
-    getCachedWebsiteConfigs() {
-        return this.allWebsiteConfigs;
-    }
+  hasCachedWebsiteConfigs() {
+    return this.allWebsiteConfigs !== undefined;
+  }
 
-    hasCachedWebsiteConfigs() {
-        return this.allWebsiteConfigs !== undefined;
-    }
-
-    getCouncilTimeZone(): Observable<GenericFormOption> {
-        return this.http.get<GenericFormOption>('configs/councilTimeZone');
-    }
+  getCouncilTimeZone(): Observable<GenericFormOption> {
+    return this.http.get<GenericFormOption>('configs/councilTimeZone');
+  }
 }

@@ -1,4 +1,4 @@
-import { GenericFormOption } from "./genericFormOption";
+import { GenericFormOption } from './genericFormOption';
 
 export interface CountryFormOption extends GenericFormOption {
   administrativeDivisionLabel: string;

@@ -13,11 +13,7 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
-import {
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ConfigsService } from 'src/app/services/configs.service';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { FormsService } from 'src/app/services/forms.service';
@@ -142,10 +138,8 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     console.log(this.toDate);
 
     const activityEventsObserver = {
-      next: (activityEvents: ActivityEvent[]) =>
-        this.handleGetActivityEvents(activityEvents),
-      error: (err: ApiResponseError) =>
-        this.logError('Error getting all activity events', err),
+      next: (activityEvents: ActivityEvent[]) => this.handleGetActivityEvents(activityEvents),
+      error: (err: ApiResponseError) => this.logError('Error getting all activity events', err),
       complete: () => console.log('Activity Events loaded.'),
     };
 
@@ -161,13 +155,8 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   private handleGetActivities(response: Activity[]) {
-    this.allActivities = response.sort((a, b) =>
-      a.activityName.localeCompare(b.activityName),
-    );
-    this.selectableActivities =
-      this.permissionsService.filterActivitiesByEventCreation(
-        this.allActivities,
-      );
+    this.allActivities = response.sort((a, b) => a.activityName.localeCompare(b.activityName));
+    this.selectableActivities = this.permissionsService.filterActivitiesByEventCreation(this.allActivities);
   }
 
   private getFormOptions() {
@@ -178,21 +167,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         councilTimeZone,
         getAllActivitiesResponse,
         getAllKnightsResponse,
-      ]: [
-        GenericFormOption[],
-        CountryFormOption[],
-        GenericFormOption,
-        Activity[],
-        Knight[],
-      ]) => {
+      ]: [GenericFormOption[], CountryFormOption[], GenericFormOption, Activity[], Knight[]]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.countryFormOptions = countryResponse;
         this.councilTimeZone = councilTimeZone;
         this.handleGetActivities(getAllActivitiesResponse);
         this.allKnights = getAllKnightsResponse;
       },
-      error: (err: ApiResponseError) =>
-        this.logError('Error getting Activity Events Form Options', err),
+      error: (err: ApiResponseError) => this.logError('Error getting Activity Events Form Options', err),
       complete: () => console.log('Activity Events Form Options retrieved.'),
     };
 
@@ -230,9 +212,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   public updateActivityEventInList(activityEvent: ActivityEvent) {
-    const index = this.activityEvents?.findIndex(
-      (x) => x.id === activityEvent.id,
-    );
+    const index = this.activityEvents?.findIndex((x) => x.id === activityEvent.id);
 
     if (this.activityEvents && index !== undefined && index >= 0) {
       this.activityEvents[index] = activityEvent;

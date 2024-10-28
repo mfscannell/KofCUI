@@ -1,4 +1,4 @@
 export enum ModalActionEnums {
-    Create = 'Create',
-    Edit = 'Edit'
+  Create = 'Create',
+  Edit = 'Edit',
 }

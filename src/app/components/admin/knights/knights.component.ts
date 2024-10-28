@@ -118,13 +118,11 @@ export class KnightsComponent implements OnInit, OnDestroy {
         this.knightMemberTypeFormOptions = knightMemberTypeResponse;
         this.knightMemberClassFormOptions = knightMemberClassResponse;
         this.countryFormOptions = countryResponse;
-        this.memberDuesPaymentStatusFormOptions =
-          memberDuesPaymentStatusResponse;
+        this.memberDuesPaymentStatusFormOptions = memberDuesPaymentStatusResponse;
         this.knightActivityInterestsForNewKnight = knightActivityInterests;
         this.applySearchFilter(knightsResponse);
       },
-      error: (err: ApiResponseError) =>
-        this.logError('Error getting Knight Degree Form Options', err),
+      error: (err: ApiResponseError) => this.logError('Error getting Knight Degree Form Options', err),
       complete: () => console.log('Knight Degree Form Options retrieved.'),
     };
 
@@ -202,9 +200,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public updateKnightActivityInterestsInList(
-    activityInterests: ActivityInterest[],
-  ) {
+  public updateKnightActivityInterestsInList(activityInterests: ActivityInterest[]) {
     const index = this.allKnights?.findIndex((x) => x.id == this.knightId);
 
     if (this.allKnights && index !== undefined && index >= 0) {
