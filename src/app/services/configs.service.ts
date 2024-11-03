@@ -2,10 +2,9 @@ import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ConfigGroup } from 'src/app/models/configGroup';
-import { ConfigSetting } from 'src/app/models/configSetting';
 import { WebsiteConfigs } from '../models/websiteConfigs';
 import { GenericFormOption } from '../models/inputOptions/genericFormOption';
+import { TenantConfig } from '../models/tenantConfig';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +14,12 @@ export class ConfigsService {
 
   constructor(private http: HttpClient) {}
 
-  getAllConfigGroups(): Observable<ConfigGroup[]> {
-    return this.http.get<ConfigGroup[]>('configs');
+  getAllConfig(): Observable<TenantConfig> {
+    return this.http.get<TenantConfig>('configs');
   }
 
-  updateConfigSettings(updatedConfigs: ConfigSetting[]): Observable<ConfigSetting[]> {
-    return this.http.put<ConfigSetting[]>('configs', updatedConfigs);
+  updateConfigSettings(updatedConfigs: TenantConfig): Observable<TenantConfig> {
+    return this.http.put<TenantConfig>('configs', updatedConfigs);
   }
 
   getAllWebsiteConfigs(): Observable<void> {

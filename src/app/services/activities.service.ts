@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Activity } from 'src/app/models/activity';
 import { SendEmailRequest } from '../models/requests/sendEmailRequest';
 import { SendEmailResponse } from '../models/responses/sendEmailResponse';
+import { CreateActivityRequest } from '../models/requests/createActivityRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class ActivitiesService {
     return this.http.get<Activity[]>('activities');
   }
 
-  createActivity(activity: Activity): Observable<Activity> {
+  createActivity(activity: CreateActivityRequest): Observable<Activity> {
     return this.http.post<Activity>('activities/', activity);
   }
 
