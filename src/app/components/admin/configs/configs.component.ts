@@ -1,17 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
-import { ConfigGroup } from 'src/app/models/configGroup';
-import { ConfigSetting } from 'src/app/models/configSetting';
 import { ConfigsService } from 'src/app/services/configs.service';
-import { ConfigValueTypeEnums } from 'src/app/enums/configValueTypeEnums';
-import { ConfigInputTypeEnums } from 'src/app/enums/configInputTypeEnums';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { FormsService } from 'src/app/services/forms.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { ConfigSettingFormGroup } from 'src/app/models/formControls/configSettingFormGroup';
-import { ConfigGroupFormGroup } from 'src/app/models/formControls/configGroupFormGroup';
+import { TenantConfig } from 'src/app/models/tenantConfig';
+import { ExternalLinkFormGroup } from 'src/app/models/formControls/externalLinkFormGroup';
+import { ExternalLink } from 'src/app/models/externalLink';
 
 @Component({
   selector: 'kofc-configs',
@@ -22,7 +19,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllConfigsSubscription?: Subscription;
   private updateConfigsSubscription?: Subscription;
   private getAllTimeZonesSubscription?: Subscription;
-  configGroups: ConfigGroup[] = [];
+  public tenantConfigs?: TenantConfig;
   timeZones: GenericFormOption[] = [];
   editConfigsForm: UntypedFormGroup;
 
@@ -35,14 +32,44 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     private configsService: ConfigsService,
     private formsService: FormsService,
   ) {
-    this.editConfigsForm = new UntypedFormGroup({
-      configGroups: new UntypedFormArray([]),
-    });
+    this.editConfigsForm = this.initForm();
   }
 
   ngOnInit() {
     this.getAllConfigs();
     this.getAllTimeZones();
+  }
+
+  private initForm() {
+    return new UntypedFormGroup({
+      id: new UntypedFormControl(''),
+      facebookUrl: new UntypedFormControl(''),
+      twitterUrl: new UntypedFormControl(''),
+      councilTimeZone: new UntypedFormControl(''),
+      allowChangeActivitySubscription: new UntypedFormControl(false),
+      externalLinksList: new UntypedFormArray([])
+    });
+  }
+
+  get externalLinksList() {
+    return this.editConfigsForm.controls['externalLinksList'] as UntypedFormArray;
+  }
+
+  public deleteExternalLink(roleIndex: number) {
+    const externalLinks = this.editConfigsForm.controls['externalLinksList'] as UntypedFormArray;
+
+    externalLinks.removeAt(roleIndex);
+  }
+
+  public addExternalLink() {
+    const externalLink = new UntypedFormGroup({
+      websiteName: new UntypedFormControl(''),
+      url: new UntypedFormControl(''),
+    });
+
+    const externalLinks = this.editConfigsForm.controls['externalLinksList'] as UntypedFormArray;
+
+    externalLinks.push(externalLink);
   }
 
   private getAllTimeZones() {
@@ -56,127 +83,33 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
   private getAllConfigs() {
     const getAllConfigsObserver = {
-      next: (configGroups: ConfigGroup[]) => this.patchEditConfigGroupsForm(configGroups),
+      next: (tenantConfig: TenantConfig) => this.patchEditConfigGroupsForm(tenantConfig),
       error: (err: ApiResponseError) => this.logError('Error getting all configs.', err),
       complete: () => console.log('Config settings loaded.'),
     };
-    this.getAllConfigsSubscription = this.configsService.getAllConfigGroups().subscribe(getAllConfigsObserver);
+    this.getAllConfigsSubscription = this.configsService.getAllConfig().subscribe(getAllConfigsObserver);
   }
 
-  private patchEditConfigGroupsForm(configGroups: ConfigGroup[]) {
-    this.configGroups = configGroups;
-    configGroups.forEach((configGroup: ConfigGroup) => {
-      const configGroupFormGroup = new UntypedFormGroup({
-        id: new UntypedFormControl(configGroup.id),
-        configGroupName: new UntypedFormControl(configGroup.configGroupName),
-        configGroupDisplayName: new UntypedFormControl(configGroup.configGroupDisplayName),
-        configGroupSortValue: new UntypedFormControl(configGroup.configGroupSortValue),
-        configSettings: new UntypedFormArray(this.initConfigSettings(configGroup.configSettings)),
-      });
+  private patchEditConfigGroupsForm(tenantConfigRespone: TenantConfig) {
+    this.tenantConfigs = tenantConfigRespone;
 
-      this.configGroupsForm.push(configGroupFormGroup);
+    this.editConfigsForm.patchValue({
+      id: this.tenantConfigs.id,
+      facebookUrl: this.tenantConfigs.facebookUrl,
+      twitterUrl: this.tenantConfigs.twitterUrl,
+      councilTimeZone: this.tenantConfigs.councilTimeZone,
+      allowChangeActivitySubscription: this.tenantConfigs.allowChangeActivitySubscription
     });
-  }
 
-  private initConfigSettings(configSettings: ConfigSetting[] | undefined) {
-    const configSettingsArray: UntypedFormGroup[] = [];
+    const externalLinksList = this.editConfigsForm.get('externalLinksList') as UntypedFormArray;
 
-    if (configSettings) {
-      configSettings.forEach((configSetting) => {
-        const configSettingFormGroup = new UntypedFormGroup({
-          id: new UntypedFormControl(configSetting.id),
-          configGroupId: new UntypedFormControl(configSetting.configGroupId),
-          configName: new UntypedFormControl(configSetting.configName),
-          configDisplayName: new UntypedFormControl(configSetting.configDisplayName),
-          configSortValue: new UntypedFormControl(configSetting.configSortValue),
-          helpText: new UntypedFormControl(configSetting.helpText),
-          configValueType: new UntypedFormControl(configSetting.configValueType),
-          booleanValue: new UntypedFormControl(configSetting.booleanValue),
-          longValue: new UntypedFormControl(configSetting.longValue),
-          stringValue: new UntypedFormControl(configSetting.stringValue),
-          guidValue: new UntypedFormControl(configSetting.guidValue),
-          dateTimeValue: new UntypedFormControl(configSetting.dateTimeValue),
-          inputType: new UntypedFormControl(configSetting.inputType),
-        });
-
-        configSettingsArray.push(configSettingFormGroup);
+    this.tenantConfigs.externalLinks.forEach(function(externalLink){
+      const externalLinkFormGroup = new UntypedFormGroup({
+        websiteName: new UntypedFormControl(externalLink.websiteName),
+        knightId: new UntypedFormControl(externalLink.url),
       });
-    }
-
-    return configSettingsArray;
-  }
-
-  isCheckBox(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.CheckBox;
-  }
-
-  isStringInput(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.TextBox;
-  }
-
-  isStringDropDown(i: number, j: number) {
-    return (
-      this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.DropDown &&
-      this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.String
-    );
-  }
-
-  isGuidDropDown(i: number, j: number) {
-    return (
-      this.configGroups[i].configSettings[j].inputType === ConfigInputTypeEnums.DropDown &&
-      this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Guid
-    );
-  }
-
-  getStringDropDownList(i: number, j: number): GenericFormOption[] {
-    if (this.configGroups[i].configSettings[j].configName === 'CouncilTimeZone') {
-      return this.timeZones;
-    }
-
-    if (i > -1 && j > -1) {
-      return [];
-    }
-
-    return [];
-  }
-
-  getGuidDropDownList(i: number, j: number): GenericFormOption[] {
-    if (i > -1 && j > -1) {
-      return [];
-    }
-
-    return [];
-  }
-
-  isLong(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Long;
-  }
-
-  isDate(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configValueType === ConfigValueTypeEnums.Date;
-  }
-
-  get configGroupsForm() {
-    return this.editConfigsForm.controls['configGroups'] as UntypedFormArray;
-  }
-
-  getConfigGroupName(index: number) {
-    return this.configGroups[index].configGroupDisplayName;
-  }
-
-  getConfigSettings(configGroup: AbstractControl) {
-    const something = configGroup as UntypedFormGroup;
-    const configSettings = something.controls['configSettings'] as UntypedFormArray;
-
-    return configSettings.controls;
-  }
-
-  getConfigName(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].configDisplayName;
-  }
-
-  getConfigHelpText(i: number, j: number) {
-    return this.configGroups[i].configSettings[j].helpText;
+      externalLinksList.push(externalLinkFormGroup);
+    })
   }
 
   ngOnDestroy() {
@@ -215,7 +148,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private showSuccessModal(configSettings: ConfigSetting[]) {
+  private showSuccessModal(configSettings: TenantConfig) {
     console.log(configSettings);
     this.showSaveMessage = true;
     this.success = true;
@@ -226,7 +159,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     const updateConfigSettingsRequest = this.mapFormToConfigSettings();
 
     const updateConfigSettingsObserver = {
-      next: (configSettings: ConfigSetting[]) => this.showSuccessModal(configSettings),
+      next: (configSettings: TenantConfig) => this.showSuccessModal(configSettings),
       error: (err: ApiResponseError) => {
         this.logError('Error updating Config Settings.', err);
         this.showErrorModal(err);
@@ -239,30 +172,29 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       .subscribe(updateConfigSettingsObserver);
   }
 
-  mapFormToConfigSettings() {
+  mapFormToConfigSettings(): TenantConfig {
     const rawForm = this.editConfigsForm.getRawValue();
-    const configSettings: ConfigSetting[] = [];
 
-    rawForm?.configGroups?.map((configGroup: ConfigGroupFormGroup) => {
-      configGroup.configSettings?.forEach((configSetting: ConfigSettingFormGroup) => {
-        const updatedConfig: ConfigSetting = {
-          id: configSetting.id,
-          configGroupId: configSetting.configGroupId,
-          configName: configSetting.configName,
-          configDisplayName: configSetting.configDisplayName,
-          configSortValue: configSetting.configSortValue,
-          helpText: configSetting.helpText,
-          configValueType: configSetting.configValueType,
-          booleanValue: configSetting.booleanValue,
-          longValue: configSetting.longValue,
-          stringValue: configSetting.stringValue,
-          guidValue: configSetting.guidValue,
-          dateTimeValue: configSetting.dateTimeValue,
-          inputType: configSetting.inputType,
-        };
-        configSettings.push(updatedConfig);
-      });
+    const externalLinks = rawForm?.externalLinksList.map(function (
+      externalLinkForm: ExternalLinkFormGroup,
+    ) {
+      const externalLink: ExternalLink = {
+        websiteName: externalLinkForm.websiteName,
+        url: externalLinkForm.url
+      };
+      return externalLink;
     });
+
+    const configSettings: TenantConfig = {
+      id: rawForm.id,
+      facebookUrl: rawForm.facebookUrl,
+      twitterUrl: rawForm.twitterUrl,
+      councilTimeZone: rawForm.councilTimeZone,
+      allowChangeActivitySubscription: rawForm.allowChangeActivitySubscription,
+      externalLinks: externalLinks
+    };
+
+    console.log(configSettings);
 
     return configSettings;
   }
