@@ -12,42 +12,47 @@
     </div>
   </div>
   <form [formGroup]="editConfigsForm" (ngSubmit)="onSubmitEditConfigSettings()">
-    <div formArrayName="configGroups">
-      <div class="accordion" id="configsAccordion">
-        <div class="accordion-item" *ngFor="let configGroupFormGroup of configGroupsForm.controls; let i = index;" [formGroupName]="i">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" attr.data-bs-target="#collapse-{{i}}" aria-expanded="true" attr.aria-controls="collapse-{{i}}">
-              {{ getConfigGroupName(i) }}
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" formControlName="facebookUrl" id="facebookUrl" autocomplete="off" placeholder="https://facebook.com">
+      <label for="facebookUrl">Facebook URL</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" formControlName="twitterUrl" id="twitterUrl" autocomplete="off" placeholder="https://twitter.com">
+      <label for="twitterUrl">Twitter URL</label>
+    </div>
+    <div class="form-floating mb-3">
+      <select class="form-select" id="councilTimeZone" formControlName="councilTimeZone">
+        <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{timeZone.displayName}}</option>
+      </select>
+      <label for="councilTimeZone">Council Time Zone</label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="allowChangeActivitySubscription">
+      <label class="form-check-label" for="allowChangeActivitySubscription">Allow Users To Change Activity Subscription</label>
+    </div>
+    <div formArrayName="externalLinksList">
+      <div *ngFor="let externalLink of externalLinksList.controls; let i = index;">
+        <div class="form-group row mb-3" [formGroupName]="i">
+          <div class="form-floating mb-3 col-5">
+            <input type="text" class="form-control" formControlName="websiteName" id="websiteName-{{i}}" autocomplete="off" placeholder="Google">
+            <label for="websiteName">Website Name</label>
+          </div>
+          <div class="form-floating mb-3 col-5">
+            <input type="text" class="form-control" formControlName="url" id="url-{{i}}" autocomplete="off" placeholder="https://google.com">
+            <label for="websiteName">URL</label>
+          </div>
+          <div class="col-4 col-md-2">
+            <button type="button" class="btn btn-danger" (click)="deleteExternalLink(i)">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+              </svg>
             </button>
-          </h2>
-          <div id="collapse-{{i}}" class="accordion-collapse collapse" data-bs-parent="#configsAccordion">
-            <div class="accordion-body" formArrayName="configSettings">
-              <div class="form-group row mb-1" *ngFor="let configSetting of getConfigSettings(configGroupFormGroup); let j = index" [formGroupName]="j">
-                <div class="col-12 col-sm-4">
-                  <label for="configSetting_value" class="col-form-label">{{getConfigName(i, j)}}</label>
-                </div>
-                <div class="col-10 col-sm-7">
-                  <input *ngIf="isCheckBox(i, j)" type="checkbox" class="form-check-input" formControlName="booleanValue" id="configSetting_booleanValue">
-                  <input *ngIf="isStringInput(i, j)" type="text" autocomplete="off" class="form-control" formControlName="stringValue" id="configSetting_stringValue">
-                  <select *ngIf="isStringDropDown(i, j)" class="form-select" id="configSetting_stringDropDown" formControlName="stringValue">
-                    <option *ngFor="let selectOption of getStringDropDownList(i, j)" [value]="selectOption.value">{{selectOption.displayName}}</option>
-                  </select>
-                  <select *ngIf="isGuidDropDown(i, j)" class="form-select" id="configSetting_guidDropDown" formControlName="guidValue">
-                    <option *ngFor="let selectOption of getGuidDropDownList(i, j)" [value]="selectOption.value">{{selectOption.displayName}}</option>
-                  </select>
-                </div>
-                <div class="col-2 col-sm-1">
-                  <button type="button" class="btn btn-primary btn-kofc-blue rounded-circle p-0" ngbTooltip="{{getConfigHelpText(i, j)}}" placement="left">
-                    <svg class="bi" width="22" height="22" fill="currentColor">
-                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#question"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="form-group mb-3">
+      <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addExternalLink()">Add External Link</button>
     </div>
     <div class="form-group row mb-1">
       <div class="col-12 mt-1">

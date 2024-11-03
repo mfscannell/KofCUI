@@ -19,7 +19,6 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   knightsLoaded: boolean = false;
   knightsSubscription?: Subscription;
   leadershipRolesSubscription?: Subscription;
-  updateLeadershipRoleSubscription?: Subscription;
   leadershipRole: LeadershipRole | undefined;
 
   constructor(
@@ -39,10 +38,6 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
     if (this.knightsSubscription) {
       this.knightsSubscription.unsubscribe();
-    }
-
-    if (this.updateLeadershipRoleSubscription) {
-      this.updateLeadershipRoleSubscription.unsubscribe();
     }
   }
 

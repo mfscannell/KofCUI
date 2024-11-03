@@ -17,6 +17,8 @@ import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
 import { ActivityCoordinatorFormGroup } from 'src/app/models/formControls/activityCoordinatorFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
+import { CreateActivityCoordinatorRequest } from 'src/app/models/requests/createActivityCoordinatorRequest';
+import { CreateActivityRequest } from 'src/app/models/requests/createActivityRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
@@ -147,9 +149,30 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
       const updatedActivity = this.mapFormToActivity();
       this.updateActivity(updatedActivity);
     } else if (this.modalAction === ModalActionEnums.Create) {
-      const newActivity = this.mapFormToActivity();
+      const newActivity = this.mapFormToCreateActivityRequest();
       this.createActivity(newActivity);
     }
+  }
+
+  private mapFormToCreateActivityRequest(): CreateActivityRequest {
+    const rawForm = this.editActivityForm.getRawValue();
+    const activityCoordinators = rawForm?.activityCoordinatorsList.map(function (
+      coordinator: ActivityCoordinatorFormGroup,
+    ) {
+      const activityCoordinator: CreateActivityCoordinatorRequest = {
+        knightId: coordinator.knightId,
+      };
+      return activityCoordinator;
+    });
+    const activity: CreateActivityRequest = {
+      activityName: rawForm.activityName,
+      activityDescription: rawForm.activityDescription,
+      activityCategory: rawForm.activityCategory,
+      activityCoordinators: activityCoordinators,
+      notes: rawForm.notes,
+    };
+
+    return activity;
   }
 
   private mapFormToActivity() {
@@ -191,7 +214,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
     this.cancelEditActivityModal?.nativeElement.click();
   }
 
-  private createActivity(activity: Activity) {
+  private createActivity(activity: CreateActivityRequest) {
     const activityObserver = {
       next: (createdActivity: Activity) => this.passBackCreatedActivity(createdActivity),
       error: (err: ApiResponseError) => this.logError('Error creating Activity', err),

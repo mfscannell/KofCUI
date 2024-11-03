@@ -13,6 +13,7 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
+import { UpdateLeadershipRoleRequest } from 'src/app/models/requests/updateLeadershipRoleRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 
@@ -79,18 +80,16 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
 
   public onSubmitEditLeadershipRole() {
     const rawForm = this.editLeadershipRoleForm.getRawValue();
-    const updatedLeadershipRole: LeadershipRole = {
+    const updatedLeadershipRole: UpdateLeadershipRoleRequest = {
       id: rawForm.id,
-      title: rawForm.title,
-      knightId: rawForm.knightId,
-      occupied: rawForm.occupied,
-      leadershipRoleCategory: rawForm.leadershipRoleCategory,
+      knightId: rawForm.occupied ? rawForm.knightId : undefined,
+      occupied: rawForm.occupied
     };
 
     this.updateLeadershipRole(updatedLeadershipRole);
   }
 
-  private updateLeadershipRole(leadershipRole: LeadershipRole) {
+  private updateLeadershipRole(leadershipRole: UpdateLeadershipRoleRequest) {
     const leadershipRoleObserver = {
       next: (updatedLeadershipRole: LeadershipRole) => this.passBack(updatedLeadershipRole),
       error: (err: ApiResponseError) => this.logError('Error updating leadership role.', err),
