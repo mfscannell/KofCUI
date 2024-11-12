@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
+import * as _ from "lodash";
 
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
@@ -10,6 +11,7 @@ import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { EditActivityModalComponent } from './edit-activity-modal/edit-activity-modal.component';
 
 @Component({
   selector: 'activity-categories',
@@ -17,11 +19,12 @@ import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption
   styleUrls: ['./activity-categories.component.scss'],
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
+  @ViewChild(EditActivityModalComponent) editActivityModal: EditActivityModalComponent | undefined;
   getDataSubscription?: Subscription;
   activitiesSubscription?: Subscription;
   allKnights: Knight[] = [];
   activityCategoryFormOptions: GenericFormOption[] = [];
-  activities?: Activity[];
+  activities: Activity[] = [];
   closeModalResult = '';
 
   modalAction: ModalActionEnums = ModalActionEnums.Create;
@@ -79,55 +82,34 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   openCreateActivityModal() {
     this.modalHeaderText = 'Creating Activity';
-    this.activity = {
-      activityName: '',
-      activityDescription: '',
-      activityCategory: this.activityCategoryFormOptions[0].value,
-      activityCoordinators: [],
-      activityEventNotes: [],
-      notes: '',
-    };
     this.modalAction = ModalActionEnums.Create;
+    this.editActivityModal?.resetForm();
   }
 
   openEditActivityModal(activity: Activity) {
     this.modalHeaderText = 'Editing Activity';
     this.activity = activity;
     this.modalAction = ModalActionEnums.Edit;
+    this.editActivityModal?.resetForm(this.activity);
   }
 
   public addActivityToList(activity: Activity) {
-    this.activities?.push(activity);
+    const newList = _.cloneDeep(this.activities) as Activity[];
+    newList.push(activity);
+    this.activities = newList;
     console.log('addActivityToList');
     console.log(this.activities);
   }
 
   public updateActivityInList(activity: Activity) {
-    const index = this.activities?.findIndex((x) => x.activityId == activity.activityId);
+    const newList = _.cloneDeep(this.activities) as Activity[];
+    const index = newList.findIndex((x) => x.activityId == activity.activityId);
 
-    if (this.activities && index !== undefined && index >= 0) {
-      this.activities[index] = activity;
+    if (newList && index !== undefined && index >= 0) {
+      newList[index] = activity;
+
+      this.activities = newList;
     }
-  }
-
-  filterActivitiesByCategory(activityCategoryValue: string) {
-    if (this.activities) {
-      return this.activities
-        .filter((x) => x.activityCategory === activityCategoryValue)
-        .sort(function (a, b) {
-          if (a.activityName.toLowerCase() < b.activityName.toLowerCase()) {
-            return -1;
-          }
-
-          if (a.activityName.toLowerCase() > b.activityName.toLowerCase()) {
-            return 1;
-          }
-
-          return 0;
-        });
-    }
-
-    return [];
   }
 
   private logError(message: string, err: ApiResponseError) {

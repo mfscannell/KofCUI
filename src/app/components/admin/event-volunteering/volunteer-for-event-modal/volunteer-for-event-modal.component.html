@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="form-group mb-3">
-          {{formatEventStartDate()}}, {{formatEventStartTime()}} - {{formatEventEndTime()}}
+          {{activityEvent?.startDateTime| toDisplayDate }}, {{ activityEvent?.startDateTime | toDisplayTime }} - {{ activityEvent?.endDateTime | toDisplayTime }}
         </div>
         <div formGroupName="locationAddress">
           <div class="row mb-1">
@@ -50,7 +50,7 @@
           </div>
           <div *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
             <div class="form-group row">
-              <div class="col-12 mb-1">{{formatVolunteerRole(i)}} {{formatVolunteerRoleStartTime(i)}} - {{formatVolunteerRoleEndTime(i)}}</div>
+              <div class="col-12 mb-1"> {{ activityEvent?.volunteerSignUpRoles?.[i] | toNumVolunteersNeeded }} {{activityEvent?.volunteerSignUpRoles?.[i]?.startDateTime | toDisplayTime }} - {{activityEvent?.volunteerSignUpRoles?.[i]?.endDateTime | toDisplayTime }} </div>
             </div>
             <div class="form-group row mb-3">
               <div class="col-6 col-sm-6 col-md-4 col-lg-3">

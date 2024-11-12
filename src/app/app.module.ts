@@ -51,6 +51,15 @@ import { CreateKnightModalComponent } from './components/admin/knights/create-kn
 import { VolunteerForEventModalComponent } from './components/admin/event-volunteering/volunteer-for-event-modal/volunteer-for-event-modal.component';
 import { EmailAboutEventModalComponent } from './components/admin/activity-events/email-about-event-modal/email-about-event-modal.component';
 import { EditActivityEventModalComponent } from './components/admin/activity-events/edit-activity-event-modal/edit-activity-event-modal.component';
+import { ToDisplayDatePipe } from './pipes/toDisplayDate.pipe';
+import { ToDisplayTimePipe } from './pipes/toDisplayTime.pipe';
+
+import { FilterActivitiesByCategoryPipe } from './pipes/filterActivitiesByCategory.pipe';
+import { CanModifyActivityPipe } from './pipes/canModifyActivity.pipe';
+import { FilterAdministrativeDivisionsPipe } from './pipes/filterAdministrativeDivisions.pipe';
+import { FilterLeadershipRolesPipe } from './pipes/filterLeadershipRoles.pipe';
+import { ToNumVolunteersNeededPipe } from './pipes/toNumVolunteersNeeded.pipe';
+import { MeetsPasswordRequrementsPipe } from './pipes/meetsPasswordRequirements.pipe';
 
 @NgModule({
   declarations: [
@@ -83,6 +92,14 @@ import { EditActivityEventModalComponent } from './components/admin/activity-eve
     EmailAboutEventModalComponent,
     EventVolunteeringComponent,
     VolunteerForEventModalComponent,
+    ToDisplayDatePipe,
+    ToDisplayTimePipe,
+    ToNumVolunteersNeededPipe,
+    FilterActivitiesByCategoryPipe,
+    FilterLeadershipRolesPipe,
+    CanModifyActivityPipe,
+    FilterAdministrativeDivisionsPipe,
+    MeetsPasswordRequrementsPipe
   ],
   bootstrap: [AppComponent],
   imports: [

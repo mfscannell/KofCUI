@@ -54,7 +54,7 @@
             </div>
             <div class="panel-body" formGroupName="homeAddress">
               <div class="form-floating mb-3">
-                <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions(createKnightForm)">
+                <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
                   <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
                 </select>
                 <label for="countryCode">Country</label>
@@ -73,7 +73,7 @@
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select" id="stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry(createKnightForm)" [value]="state.value">{{state.displayName}}</option>
+                  <option *ngFor="let state of countryFormOptions | filterAdministrativeDivisions:selectedCountry" [value]="state.value">{{state.displayName}}</option>
                 </select>
                 <label for="stateCode">State</label>
               </div>

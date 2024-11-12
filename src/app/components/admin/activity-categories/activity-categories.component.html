@@ -9,13 +9,13 @@
       <div id="collapse-{{i}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <div class="container">
-            <div class="row" *ngFor='let activity of filterActivitiesByCategory(activityCategoryInputOption.value)'>
+            <div class="row" *ngFor='let activity of activities | filterActivitiesByCategory:activityCategoryInputOption.value'>
               <div class="col-9 col-md-6">
                 {{activity.activityName}}
               </div>
               <div class="col-3 col-md-4">
                 <div class="btn-toolbar text-center mt-1">
-                  <button *ngIf="canEditActivity(activity.activityId)" type="button" data-bs-toggle="modal" data-bs-target="#editActivityModal" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditActivityModal(activity)">
+                  <button *ngIf="'edit' | canModifyActivity:activity.activityId" type="button" data-bs-toggle="modal" data-bs-target="#editActivityModal" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditActivityModal(activity)">
                     <svg class="bi" width="20" height="20" fill="currentColor">
                       <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                     </svg>
@@ -31,17 +31,17 @@
   <div class="row">
     <div class="col-md-12 mt-1">
       <div class="btn-toolbar text-center mt-1">
-        <button type="button" *ngIf="canAddActivity() && activityCategoryFormOptions.length > 0" data-bs-toggle="modal" data-bs-target="#editActivityModal" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityModal()">Add Activity</button>
+        <button type="button" *ngIf="'add' | canModifyActivity" data-bs-toggle="modal" data-bs-target="#editActivityModal" class="btn btn-primary btn-kofc-blue" (click)="openCreateActivityModal()">Add Activity</button>
       </div>
     </div>
   </div>
   <edit-activity-modal
+    #editActivityModal
     class="modal fade"
     id="editActivityModal"
     tabindex="-1"
     aria-labelledby="editActivityModalLabel"
     aria-hidden="true"
-    [activity]="activity"
     [allKnights]="allKnights"
     [activityCategoryFormOptions]="activityCategoryFormOptions"
     [modalHeaderText]="modalHeaderText"

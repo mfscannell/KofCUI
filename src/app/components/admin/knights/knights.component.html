@@ -85,14 +85,13 @@
     [activityInterests]="activityInterestsToEdit"
     [knightId]="knightId"
     [activityCategoryFormOptions]="activityCategoryFormOptions"
-    (editKnightMemberDuesChanges)="updateKnightActivityInterestsInList($event)"></edit-knight-activity-interests-modal>
+    (editKnightActivityInterestsChanges)="updateKnightActivityInterestsInList($event)"></edit-knight-activity-interests-modal>
   <edit-knight-member-dues-modal
     class="modal fade"
     id="editKnightMemberDuesModal"
     [memberDuesPaymentStatusFormOptions]="memberDuesPaymentStatusFormOptions"
     [modalHeaderText]="editKnightMemberDuesModalHeaderText"
     [knightId]="knightId"
-    [memberDues]="memberDuesToEdit"
     (editKnightMemberDuesChanges)="updateKnightMemberDuesInList($event)"></edit-knight-member-dues-modal>
   <edit-knight-password-modal
     class="modal fade"
@@ -100,7 +99,6 @@
     [modalHeaderText]="editKnightPasswordModalText"
     [knightsFullName]="knightFullName"
     [knightId]="knightId"
-    [knightUser]="knightUser"
     (editKnightPasswordChanges)="updateKnightUserInList($event)"></edit-knight-password-modal>
   <edit-knight-member-info-modal 
     class="modal fade" 

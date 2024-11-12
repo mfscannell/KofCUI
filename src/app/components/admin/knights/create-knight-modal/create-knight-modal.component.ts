@@ -13,7 +13,6 @@ import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup
 import { Subscription } from 'rxjs';
 import { ActivityInterest } from 'src/app/models/activityInterest';
 import { ActivityInterestFormGroup } from 'src/app/models/formControls/activityInterestFormGroup';
-import { MemberDuesFormGroup } from 'src/app/models/formControls/memberDuesFormGroup';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
@@ -44,6 +43,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   public createKnightForm: UntypedFormGroup;
+  public selectedCountry: string = '';
 
   private createKnightSubscription?: Subscription;
 
@@ -61,6 +61,11 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     this.errorMessages = [];
   }
 
+  public resetForm() {
+    this.createKnightForm = this.initCreateKnightForm();
+    this.enableDisableAdministrativeDivisions();
+  }
+
   public getFormArrayName(activityCategoryFormOption: GenericFormOption) {
     return `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`;
   }
@@ -72,8 +77,9 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     return activityName as string;
   }
 
-  public enableDisableAdministrativeDivisions(form: UntypedFormGroup): void {
-    const countryCode = this.getCountryCode(form);
+  public enableDisableAdministrativeDivisions(): void {
+    const countryCode = this.getCountryCode();
+    this.selectedCountry = countryCode;
     const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
 
     console.log(`hasCOuntry: ${hasCountryCode}. countryCode ${countryCode}`);
@@ -87,8 +93,8 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-  private getCountryCode(form: UntypedFormGroup): string {
-    return form.get('homeAddress.countryCode')?.value;
+  private getCountryCode(): string {
+    return this.createKnightForm.get('homeAddress.countryCode')?.value;
   }
 
   private initCreateKnightForm() {
@@ -110,7 +116,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
         address1: new UntypedFormControl('', [Validators.maxLength(63)]),
         address2: new UntypedFormControl('', [Validators.maxLength(63)]),
         city: new UntypedFormControl('', [Validators.maxLength(63)]),
-        stateCode: new UntypedFormControl('', [Validators.maxLength(3)]),
+        stateCode: new UntypedFormControl({value: '', disabled: true}, [Validators.maxLength(3)]),
         postalCode: new UntypedFormControl('', [Validators.maxLength(15)]),
         countryCode: new UntypedFormControl('', [Validators.maxLength(7)]),
       }),
@@ -181,18 +187,6 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-  public filterAdministrativeDivisionsByCountry(form: UntypedFormGroup): GenericFormOption[] {
-    const countryCode = this.getCountryCode(form);
-
-    const filteredCountryFormOptions = this.countryFormOptions.filter((cfo) => cfo.value === countryCode);
-
-    if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
-      return filteredCountryFormOptions[0].administrativeDivisions;
-    }
-
-    return [];
-  }
-
   public getActivityInterestsFormArray(form: UntypedFormGroup, activityCategory: string): UntypedFormArray {
     const activityInterestsFormGroup = form.controls['activityInterests'] as UntypedFormGroup;
     const activityInterestsFormArray = activityInterestsFormGroup.controls[activityCategory] as UntypedFormArray;
@@ -248,7 +242,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       memberType: rawForm.knightInfo.memberType,
       memberClass: rawForm.knightInfo.memberClass,
     };
-    const _memberDues: MemberDues[] = rawForm?.memberDues?.map(function (md: MemberDuesFormGroup): MemberDues {
+    const _memberDues: MemberDues[] = rawForm?.memberDues?.map(function (md: MemberDues): MemberDues {
       const memberDues: MemberDues = {
         year: md.year,
         paidStatus: md.paidStatus,

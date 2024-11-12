@@ -1,27 +1,16 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
+import { EditActivityCoordinatorFormGroup } from 'src/app/forms/editActivityCoordinatorFormGroup';
+import { EditActivityModelFormGroup } from 'src/app/forms/editActivityModelFormGroup';
 import { Activity } from 'src/app/models/activity';
-import { ActivityCoordinator } from 'src/app/models/activityCoordinator';
-import { ActivityCoordinatorFormGroup } from 'src/app/models/formControls/activityCoordinatorFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
-import { CreateActivityCoordinatorRequest } from 'src/app/models/requests/createActivityCoordinatorRequest';
 import { CreateActivityRequest } from 'src/app/models/requests/createActivityRequest';
+import { UpdateActivityRequest } from 'src/app/models/requests/updateActivityRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { ActivitiesService } from 'src/app/services/activities.service';
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
   selector: 'edit-activity-modal',
@@ -29,10 +18,8 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
   styleUrls: ['./edit-activity-modal.component.scss'],
 })
 export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('cancelEditActivityModal', { static: false })
-  cancelEditActivityModal: ElementRef | undefined;
+  @ViewChild('cancelEditActivityModal', { static: false }) cancelEditActivityModal: ElementRef | undefined;
 
-  @Input() activity: Activity | undefined;
   @Input() allKnights: Knight[] = [];
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() modalHeaderText: string = '';
@@ -40,7 +27,8 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   @Output() createActivityChanges = new EventEmitter<Activity>();
   @Output() editActivityChanges = new EventEmitter<Activity>();
 
-  public editActivityForm: UntypedFormGroup;
+  public activity?: Activity;
+  public editActivityForm: FormGroup<EditActivityModelFormGroup>;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
@@ -64,89 +52,71 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   ngOnChanges() {
+  }
+
+  public resetForm(activity?: Activity) {
     this.editActivityForm = this.initForm();
+    this.editActivityForm.markAsPristine();
+    this.editActivityForm.markAsUntouched();
 
-    if (this.activity) {
-      this.editActivityForm.patchValue({
-        activityId: this.activity.activityId,
-        activityName: this.activity.activityName,
-        activityDescription: this.activity.activityDescription,
-        activityCategory: this.activity.activityCategory,
-        notes: this.activity.notes,
-      });
-
-      const activityCoordinatorsList = this.editActivityForm.get('activityCoordinatorsList') as UntypedFormArray;
-
-      this.activity.activityCoordinators.map(function (coordinator) {
-        const activityCoordinatorFg = new UntypedFormGroup({
-          id: new UntypedFormControl(coordinator.id),
-          knightId: new UntypedFormControl(coordinator.knightId),
-        });
-        activityCoordinatorsList.push(activityCoordinatorFg);
-      });
-
-      const activityEventNotes = this.editActivityForm.get('activityEventNotesList') as UntypedFormArray;
-
-      this.activity.activityEventNotes.map(function (note) {
-        const activityEventNotesFg = new UntypedFormGroup({
-          startDateTime: new UntypedFormControl(note.startDateTime),
-          notes: new UntypedFormControl(note.notes),
-        });
-        activityEventNotes.push(activityEventNotesFg);
-      });
+    if (activity) {
+      this.activity = activity;
+      this.patchForm(activity);
     }
   }
 
   private initForm() {
-    return new UntypedFormGroup({
-      activityId: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      activityName: new UntypedFormControl('', [Validators.required, Validators.maxLength(127)]),
-      activityDescription: new UntypedFormControl('', [Validators.maxLength(255)]),
-      activityCategory: new UntypedFormControl(null, [Validators.required]),
-      activityCoordinatorsList: new UntypedFormArray([]),
-      activityEventNotesList: new UntypedFormArray([]),
-      notes: new UntypedFormControl(''),
+    return new FormGroup<EditActivityModelFormGroup>({
+      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', {nonNullable: true}),
+      activityName: new FormControl<string>('', { nonNullable:true, validators: [Validators.required, Validators.maxLength(127)] }),
+      activityDescription: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(255)] }),
+      activityCategory: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+      activityCoordinatorsList: new FormArray<FormGroup<EditActivityCoordinatorFormGroup>>([]),
+      notes: new FormControl<string>('', { nonNullable: true }),
+    });
+  }
+
+  private patchForm(activity: Activity) {
+    this.editActivityForm.patchValue({
+      id: activity.activityId,
+      activityName: activity.activityName,
+      activityDescription: activity.activityDescription,
+      activityCategory: activity.activityCategory,
+      notes: activity.notes,
+    });
+
+    activity.activityCoordinators.map((coordinator) => {
+      const activityCoordinatorFg = new FormGroup<EditActivityCoordinatorFormGroup>({
+        knightId: new FormControl<string>(coordinator, { nonNullable: true }),
+      });
+      this.editActivityForm.controls.activityCoordinatorsList.controls.push(activityCoordinatorFg);
     });
   }
 
   public deleteActivityCoordinator(roleIndex: number) {
-    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as UntypedFormArray;
+    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as FormArray<FormGroup<EditActivityCoordinatorFormGroup>>;
 
     activityCoordinators.removeAt(roleIndex);
   }
 
   public addActivityCoordinator() {
-    const activityCoordinator = new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      knightId: new UntypedFormControl(null, [Validators.required]),
+    const activityCoordinator = new FormGroup<EditActivityCoordinatorFormGroup>({
+      knightId: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     });
 
-    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as UntypedFormArray;
+    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as FormArray<FormGroup<EditActivityCoordinatorFormGroup>>;
 
     activityCoordinators.push(activityCoordinator);
   }
 
-  get activityCoordinators() {
-    return this.editActivityForm.controls['activityCoordinatorsList'] as UntypedFormArray;
+  public cancelModal() {
+    this.errorSaving = false;
+    this.errorMessages = [];
   }
-
-  get activityEventNotes() {
-    return this.editActivityForm.controls['activityEventNotesList'] as UntypedFormArray;
-  }
-
-  public formatEventStartDate(index: number) {
-    return DateTimeFormatter.ToDisplayedDate(this.activity?.activityEventNotes[index].startDateTime);
-  }
-
-  public getEventNotes(index: number) {
-    return this.activity?.activityEventNotes[index].notes;
-  }
-
-  public cancelModal() {}
 
   public onSubmitEditActivity() {
     if (this.modalAction === ModalActionEnums.Edit) {
-      const updatedActivity = this.mapFormToActivity();
+      const updatedActivity = this.mapFormToUpdateActivityRequest();
       this.updateActivity(updatedActivity);
     } else if (this.modalAction === ModalActionEnums.Create) {
       const newActivity = this.mapFormToCreateActivityRequest();
@@ -155,51 +125,39 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private mapFormToCreateActivityRequest(): CreateActivityRequest {
-    const rawForm = this.editActivityForm.getRawValue();
-    const activityCoordinators = rawForm?.activityCoordinatorsList.map(function (
-      coordinator: ActivityCoordinatorFormGroup,
-    ) {
-      const activityCoordinator: CreateActivityCoordinatorRequest = {
-        knightId: coordinator.knightId,
-      };
-      return activityCoordinator;
+    const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map((activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
+      return activityCoordinatorFormGroup.controls.knightId.value;
     });
     const activity: CreateActivityRequest = {
-      activityName: rawForm.activityName,
-      activityDescription: rawForm.activityDescription,
-      activityCategory: rawForm.activityCategory,
+      activityName: this.editActivityForm.controls.activityName.value,
+      activityDescription: this.editActivityForm.controls.activityDescription.value,
+      activityCategory: this.editActivityForm.controls.activityCategory.value,
       activityCoordinators: activityCoordinators,
-      notes: rawForm.notes,
+      notes: this.editActivityForm.controls.notes.value,
     };
+
+    console.log(activity);
 
     return activity;
   }
 
-  private mapFormToActivity() {
-    const rawForm = this.editActivityForm.getRawValue();
-    const activityCoordinators = rawForm?.activityCoordinatorsList.map(function (
-      coordinator: ActivityCoordinatorFormGroup,
-    ) {
-      const activityCoordinator: ActivityCoordinator = {
-        id: coordinator.id,
-        knightId: coordinator.knightId,
-      };
-      return activityCoordinator;
+  private mapFormToUpdateActivityRequest(): UpdateActivityRequest {
+    const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map((activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
+      return activityCoordinatorFormGroup.controls.knightId.value;
     });
-    const activity: Activity = {
-      activityId: rawForm.activityId,
-      activityName: rawForm.activityName,
-      activityDescription: rawForm.activityDescription,
-      activityCategory: rawForm.activityCategory,
+    const activity: UpdateActivityRequest = {
+      activityId: this.editActivityForm.controls.id.value,
+      activityName: this.editActivityForm.controls.activityName.value,
+      activityDescription: this.editActivityForm.controls.activityDescription.value,
+      activityCategory: this.editActivityForm.controls.activityCategory.value,
       activityCoordinators: activityCoordinators,
-      activityEventNotes: [],
-      notes: rawForm.notes,
+      notes: this.editActivityForm.controls.notes.value,
     };
 
     return activity;
   }
 
-  private updateActivity(activity: Activity) {
+  private updateActivity(activity: UpdateActivityRequest) {
     const activityObserver = {
       next: (updatedActivity: Activity) => this.passBackUpdatedActivity(updatedActivity),
       error: (err: ApiResponseError) => this.logError('Error updating Activity', err),
@@ -210,7 +168,10 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private passBackUpdatedActivity(updatedActivity: Activity) {
+    this.errorSaving = false;
+    this.errorMessages = [];
     this.editActivityChanges.emit(updatedActivity);
+    this.updateActivitySubscription?.unsubscribe();
     this.cancelEditActivityModal?.nativeElement.click();
   }
 
@@ -225,7 +186,10 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private passBackCreatedActivity(createdActivity: Activity) {
+    this.errorSaving = false;
+    this.errorMessages = [];
     this.createActivityChanges.emit(createdActivity);
+    this.createActivitySubscription?.unsubscribe();
     this.cancelEditActivityModal?.nativeElement.click();
   }
 

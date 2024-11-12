@@ -1,5 +1,5 @@
 export interface UpdateLeadershipRoleRequest {
   id: string;
-  knightId?: number;
+  knightId?: string;
   occupied: boolean;
 }
