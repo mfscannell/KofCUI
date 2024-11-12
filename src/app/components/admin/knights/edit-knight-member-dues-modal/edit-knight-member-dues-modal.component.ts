@@ -9,9 +9,10 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MemberDuesFormGroup } from 'src/app/models/formControls/memberDuesFormGroup';
+import { EditMemberDuesFormGroup } from 'src/app/forms/editMemberDuesFormGroup';
+import { MemberDueFormGroup } from 'src/app/forms/memberDueFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { MemberDues } from 'src/app/models/memberDues';
 import { UpdateKnightMemberDuesRequest } from 'src/app/models/requests/updateKnightMemberDuesRequest';
@@ -31,16 +32,14 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   @Output() editKnightMemberDuesChanges = new EventEmitter<MemberDues[]>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
-  public editKnightMemberDuesForm: UntypedFormGroup;
+  public editKnightMemberDuesForm: FormGroup<EditMemberDuesFormGroup>;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
   private updateKnightMemberDuesSubscription?: Subscription;
 
   constructor(private memberDuesService: MemberDuesService) {
-    this.editKnightMemberDuesForm = new UntypedFormGroup({
-      memberDues: new UntypedFormArray([]),
-    });
+    this.editKnightMemberDuesForm = this.initForm();
   }
 
   ngOnInit() {}
@@ -50,30 +49,30 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   ngOnChanges() {
     this.errorSaving = false;
     this.errorMessages = [];
-    this.editKnightMemberDuesForm = new UntypedFormGroup({
-      memberDues: new UntypedFormArray([]),
+  }
+
+  public resetForm(memberDues: MemberDues[]) {
+    this.editKnightMemberDuesForm = this.initForm();
+    this.errorSaving = false;
+    this.errorMessages = [];
+    this.patchForm(memberDues);
+  }
+
+  private initForm() {
+    return new FormGroup<EditMemberDuesFormGroup>({
+      memberDues: new FormArray<FormGroup<MemberDueFormGroup>>([]),
     });
-
-    this.populateForm();
   }
 
-  get memberDuesFormArray() {
-    return this.editKnightMemberDuesForm.controls['memberDues'] as UntypedFormArray;
-  }
-
-  getMemberDuesYear(memberDueYear: AbstractControl): string {
-    return memberDueYear.getRawValue().year || '';
-  }
-
-  private populateForm() {
-    if (this.memberDues) {
-      this.memberDues.forEach((memberDue: MemberDues) => {
-        const memberDueFormGroup = new UntypedFormGroup({
-          year: new UntypedFormControl(memberDue.year),
-          paidStatus: new UntypedFormControl(memberDue.paidStatus),
+  private patchForm(memberDues: MemberDues[]) {
+    if (memberDues) {
+      memberDues.forEach((memberDue: MemberDues) => {
+        const memberDueFormGroup = new FormGroup<MemberDueFormGroup>({
+          year: new FormControl<number>(memberDue.year, { nonNullable: true }),
+          paidStatus: new FormControl<string>(memberDue.paidStatus, { nonNullable: true }),
         });
 
-        this.memberDuesFormArray.push(memberDueFormGroup);
+        this.editKnightMemberDuesForm.controls.memberDues.controls.push(memberDueFormGroup);
       });
     }
   }
@@ -92,11 +91,10 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   }
 
   private mapFormToUpdateKnightMemberDuesRequest(): UpdateKnightMemberDuesRequest {
-    const rawForm = this.editKnightMemberDuesForm.getRawValue();
-    const mappedMemberDues: MemberDues[] = rawForm?.memberDues?.map(function (md: MemberDuesFormGroup): MemberDues {
+    const mappedMemberDues: MemberDues[] = this.editKnightMemberDuesForm.controls.memberDues.controls.map((memberDueFormGroup: FormGroup<MemberDueFormGroup>) => {
       const memberDues: MemberDues = {
-        year: md.year,
-        paidStatus: md.paidStatus,
+        year: memberDueFormGroup.controls.year.value,
+        paidStatus: memberDueFormGroup.controls.paidStatus.value
       };
 
       return memberDues;

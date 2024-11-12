@@ -8,12 +8,12 @@
     <div class="modal-body">
       <form [formGroup]="editKnightMemberDuesForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
         <div formArrayName="memberDues">
-          <div *ngFor="let memberDue of memberDuesFormArray.controls; let i = index" [formGroupName]="i">
-            <div class="form-floating mb-3">
+          <div *ngFor="let memberDue of editKnightMemberDuesForm.controls.memberDues.controls; let i = index;">
+            <div class="form-floating mb-3" [formGroup]="memberDue">
               <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
                 <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
               </select>
-              <label for="stateCode">{{getMemberDuesYear(memberDue)}}</label>
+              <label for="stateCode">{{memberDue.controls.year.value}}</label>
             </div>
           </div>
         </div>

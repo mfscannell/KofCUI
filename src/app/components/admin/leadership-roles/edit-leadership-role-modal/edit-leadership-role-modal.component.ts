@@ -1,16 +1,7 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { LeadershipRoleFormGroup } from 'src/app/forms/leadershipRoleFormGroup';
 import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { UpdateLeadershipRoleRequest } from 'src/app/models/requests/updateLeadershipRoleRequest';
@@ -23,25 +14,18 @@ import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service
   styleUrls: ['./edit-leadership-role-modal.component.scss'],
 })
 export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() leadershipRole: LeadershipRole | undefined;
   @Input() allKnights: Knight[] = [];
   @Output() editLeadershipRoleChanges = new EventEmitter<LeadershipRole>();
-  @ViewChild('cancelCustomEditActiveModal', { static: false })
-  cancelCustomEditActiveModal: ElementRef | undefined;
-  public editLeadershipRoleForm: UntypedFormGroup;
+  @ViewChild('cancelCustomEditActiveModal', { static: false }) cancelCustomEditActiveModal: ElementRef | undefined;
+  public editLeadershipRoleForm: FormGroup<LeadershipRoleFormGroup>;
   public errorSaving: boolean = true;
   public errorMessages: string[] = [];
+  public leadershipRole?: LeadershipRole;
   private updateLeadershipRoleSubscription?: Subscription;
 
   constructor(private leadershipRolesService: LeadershipRolesService) {
     console.log('EditLeadershipRoleModalComponent constructor');
-    this.editLeadershipRoleForm = new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      title: new UntypedFormControl(''),
-      occupied: new UntypedFormControl(false),
-      knightId: new UntypedFormControl(''),
-      leadershipRoleCategory: new UntypedFormControl(''),
-    });
+    this.editLeadershipRoleForm = this.initForm();
   }
 
   ngOnInit() {
@@ -49,31 +33,37 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
   }
 
   ngOnDestroy() {
-    if (this.updateLeadershipRoleSubscription) {
-      this.updateLeadershipRoleSubscription.unsubscribe();
-    }
   }
 
   ngOnChanges() {
     console.log('EditLeadershipRoleModalComponent ngOnChanges');
+  }
 
-    this.editLeadershipRoleForm = new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      title: new UntypedFormControl(''),
-      occupied: new UntypedFormControl(false),
-      knightId: new UntypedFormControl(''),
-      leadershipRoleCategory: new UntypedFormControl(''),
-    });
+  public resetForm(leadershipRole: LeadershipRole) {
+    this.leadershipRole = leadershipRole;
+    this.editLeadershipRoleForm = this.initForm();
 
-    if (this.leadershipRole) {
+    if (leadershipRole) {
       this.editLeadershipRoleForm.patchValue({
-        id: this.leadershipRole.id,
-        title: this.leadershipRole.title,
-        occupied: this.leadershipRole.occupied,
-        knightId: this.leadershipRole.knightId,
-        leadershipRoleCategory: this.leadershipRole.leadershipRoleCategory,
+        id: leadershipRole.id,
+        title: leadershipRole.title,
+        occupied: leadershipRole.occupied,
+        knightId: leadershipRole.knightId,
+        leadershipRoleCategory: leadershipRole.leadershipRoleCategory,
       });
     }
+
+    console.log('editLeadershipRoleModal resetForm');
+  }
+
+  private initForm(): FormGroup<LeadershipRoleFormGroup> {
+    return new FormGroup<LeadershipRoleFormGroup>({
+      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', {nonNullable: true}),
+      title: new FormControl<string>('', {nonNullable: true}),
+      occupied: new FormControl<boolean>(false, {nonNullable: true}),
+      knightId: new FormControl<string | undefined>(undefined, {nonNullable: true}),
+      leadershipRoleCategory: new FormControl<string>('', {nonNullable: true}),
+    });
   }
 
   public cancelModal() {}
@@ -102,7 +92,11 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
   }
 
   private passBack(updatedLeadershipRole: LeadershipRole) {
+    this.errorSaving = false;
+    this.errorMessages = [];
     this.editLeadershipRoleChanges.emit(updatedLeadershipRole);
+
+    this.updateLeadershipRoleSubscription?.unsubscribe();
     this.cancelCustomEditActiveModal?.nativeElement.click();
   }
 

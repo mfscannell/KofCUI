@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 import { ConfigsService } from 'src/app/services/configs.service';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { FormsService } from 'src/app/services/forms.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { TenantConfig } from 'src/app/models/tenantConfig';
-import { ExternalLinkFormGroup } from 'src/app/models/formControls/externalLinkFormGroup';
 import { ExternalLink } from 'src/app/models/externalLink';
+import { ConfigsFormGroup } from 'src/app/forms/configsFormGroup';
+import { ExternalLinksFormGroup } from 'src/app/forms/externalLinksFormGroup';
 
 @Component({
   selector: 'kofc-configs',
@@ -21,7 +22,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllTimeZonesSubscription?: Subscription;
   public tenantConfigs?: TenantConfig;
   timeZones: GenericFormOption[] = [];
-  editConfigsForm: UntypedFormGroup;
+  editConfigsForm: FormGroup<ConfigsFormGroup>;
 
   showSaveMessage: boolean = false;
   success: boolean = true;
@@ -40,36 +41,28 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     this.getAllTimeZones();
   }
 
-  private initForm() {
-    return new UntypedFormGroup({
-      id: new UntypedFormControl(''),
-      facebookUrl: new UntypedFormControl(''),
-      twitterUrl: new UntypedFormControl(''),
-      councilTimeZone: new UntypedFormControl(''),
-      allowChangeActivitySubscription: new UntypedFormControl(false),
-      externalLinksList: new UntypedFormArray([])
+  private initForm(): FormGroup<ConfigsFormGroup> {
+    return new FormGroup<ConfigsFormGroup>({
+      id: new FormControl<string>('', { nonNullable: true }),
+      facebookUrl: new FormControl<string>('', { nonNullable: true }),
+      twitterUrl: new FormControl<string>('', { nonNullable: true }),
+      councilTimeZone: new FormControl<string>('', { nonNullable: true }),
+      allowChangeActivitySubscription: new FormControl<boolean>(false, { nonNullable: true }),
+      externalLinksList: new FormArray<FormGroup<ExternalLinksFormGroup>>([])
     });
-  }
-
-  get externalLinksList() {
-    return this.editConfigsForm.controls['externalLinksList'] as UntypedFormArray;
   }
 
   public deleteExternalLink(roleIndex: number) {
-    const externalLinks = this.editConfigsForm.controls['externalLinksList'] as UntypedFormArray;
-
-    externalLinks.removeAt(roleIndex);
+    this.editConfigsForm.controls.externalLinksList.removeAt(roleIndex);
   }
 
   public addExternalLink() {
-    const externalLink = new UntypedFormGroup({
-      websiteName: new UntypedFormControl(''),
-      url: new UntypedFormControl(''),
+    const externalLink = new FormGroup<ExternalLinksFormGroup>({
+      websiteName: new FormControl<string>('', { nonNullable: true }),
+      url: new FormControl<string>('', { nonNullable: true }),
     });
 
-    const externalLinks = this.editConfigsForm.controls['externalLinksList'] as UntypedFormArray;
-
-    externalLinks.push(externalLink);
+    this.editConfigsForm.controls.externalLinksList.push(externalLink);
   }
 
   private getAllTimeZones() {
@@ -91,6 +84,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   }
 
   private patchEditConfigGroupsForm(tenantConfigRespone: TenantConfig) {
+    console.log('patchEditConfigGroupForm');
     this.tenantConfigs = tenantConfigRespone;
 
     this.editConfigsForm.patchValue({
@@ -101,14 +95,13 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       allowChangeActivitySubscription: this.tenantConfigs.allowChangeActivitySubscription
     });
 
-    const externalLinksList = this.editConfigsForm.get('externalLinksList') as UntypedFormArray;
-
-    this.tenantConfigs.externalLinks.forEach(function(externalLink){
-      const externalLinkFormGroup = new UntypedFormGroup({
-        websiteName: new UntypedFormControl(externalLink.websiteName),
-        knightId: new UntypedFormControl(externalLink.url),
+    this.tenantConfigs.externalLinks.forEach((externalLink) => {
+      const externalLinkFormGroup = new FormGroup<ExternalLinksFormGroup>({
+        websiteName: new FormControl<string>(externalLink.websiteName, { nonNullable: true}),
+        url: new FormControl<string>(externalLink.url, { nonNullable: true}),
       });
-      externalLinksList.push(externalLinkFormGroup);
+
+      this.editConfigsForm.controls.externalLinksList.push(externalLinkFormGroup);
     })
   }
 
@@ -176,7 +169,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
     const rawForm = this.editConfigsForm.getRawValue();
 
     const externalLinks = rawForm?.externalLinksList.map(function (
-      externalLinkForm: ExternalLinkFormGroup,
+      externalLinkForm: ExternalLink
     ) {
       const externalLink: ExternalLink = {
         websiteName: externalLinkForm.websiteName,
