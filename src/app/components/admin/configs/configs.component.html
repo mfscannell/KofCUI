@@ -31,7 +31,7 @@
       <label class="form-check-label" for="allowChangeActivitySubscription">Allow Users To Change Activity Subscription</label>
     </div>
     <div formArrayName="externalLinksList">
-      <div *ngFor="let externalLink of externalLinksList.controls; let i = index;">
+      <div *ngFor="let externalLink of editConfigsForm.controls.externalLinksList.controls; let i = index;">
         <div class="form-group row mb-3" [formGroupName]="i">
           <div class="form-floating mb-3 col-5">
             <input type="text" class="form-control" formControlName="websiteName" id="websiteName-{{i}}" autocomplete="off" placeholder="Google">

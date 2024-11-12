@@ -131,7 +131,7 @@ export class DateTimeFormatter {
 
   /// converts an ISO-8601 date to Month DD, YYYY
   /// date: string 'yyyy-mm-dd'
-  static ToDisplayedDate(date: string | undefined) {
+  static ToDisplayDate(date: string | undefined): string {
     let displayedDate = '';
 
     const year = DateTimeFormatter.getYear(date);
@@ -139,15 +139,8 @@ export class DateTimeFormatter {
     const day = DateTimeFormatter.getDay(date);
     let monthName = '';
 
-    if (
-      year === undefined ||
-      month === undefined ||
-      day === undefined ||
-      year === null ||
-      month === null ||
-      day === null
-    ) {
-      return undefined;
+    if (year === undefined || month === undefined || day === undefined || year === null || month === null || day === null) {
+      return '';
     }
 
     if (1 <= month && month <= 12) {
@@ -159,9 +152,9 @@ export class DateTimeFormatter {
     return displayedDate;
   }
 
-  static ToDisplayTime(dateTime: string | undefined) {
+  static ToDisplayTime(dateTime: string | undefined): string {
     if (dateTime === undefined || dateTime === null) {
-      return undefined;
+      return '';
     }
 
     let hour = DateTimeFormatter.getHour(dateTime);
@@ -169,7 +162,7 @@ export class DateTimeFormatter {
     let meridian = 'AM';
 
     if (hour === undefined || hour === null) {
-      return undefined;
+      return '';
     }
 
     if (hour > 12) {

@@ -108,10 +108,6 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatDate(date: string | undefined) {
-    return DateTimeFormatter.ToDisplayedDate(date);
-  }
-
   getAllActivityEvents() {
     console.log(this.fromDate);
     console.log(this.toDate);

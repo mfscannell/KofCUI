@@ -87,7 +87,7 @@
               {{upcomingEvent.eventName}}
             </h5>
             <h6>
-              {{formatTime(upcomingEvent.startDateTime)}} - {{formatTime(upcomingEvent.endDateTime)}}
+              {{ upcomingEvent.startDateTime | toDisplayTime }} - {{ upcomingEvent.endDateTime | toDisplayTime }}
             </h6>
             <h6>
               {{upcomingEvent?.locationAddress?.addressName}}

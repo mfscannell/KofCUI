@@ -9,13 +9,13 @@
       <div id="collapse-{{i}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <div class="container">
-            <div class="row" *ngFor='let leadershipRole of filterLeadershipRoles(leadershipRoleCategory)'>
+            <div class="row" *ngFor='let leadershipRole of leadershipRoles | filterLeadershipRoles:leadershipRoleCategory'>
               <div class="col-9 col-md-6">
                 {{leadershipRole.title}}
               </div>
               <div class="col-3 col-md-4">
                 <div class="btn-toolbar text-center mt-1">
-                  <button type="button" class="btn btn-primary btn-kofc-blue me-1" data-bs-toggle="modal" data-bs-target="#customEditLeadershipRoleModal" (click)="openEditLeadershipRoleModal(leadershipRole)">
+                  <button type="button" class="btn btn-primary btn-kofc-blue me-1" data-bs-toggle="modal" data-bs-target="#editLeadershipRoleModal" (click)="openEditLeadershipRoleModal(leadershipRole)">
                     <svg class="bi" width="20" height="20" fill="currentColor">
                       <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                     </svg>
@@ -29,6 +29,11 @@
     </div>
   </div>
   <!-- LEADERSHIP ROLE MODAL -->
-  <edit-leadership-role-modal class="modal fade" id="customEditLeadershipRoleModal" [leadershipRole]="leadershipRole" [allKnights]="allKnights" (editLeadershipRoleChanges)="updateLeadershipRoleInList($event)"></edit-leadership-role-modal>
+  <edit-leadership-role-modal
+    #editLeadershipRoleModal
+    id="editLeadershipRoleModal"
+    class="modal fade" 
+    [allKnights]="allKnights" 
+    (editLeadershipRoleChanges)="updateLeadershipRoleInList($event)"></edit-leadership-role-modal>
   <div class="row" id="leadershipRolesSpacer"></div>
 </div>

@@ -107,7 +107,7 @@
             </div>
             <div class="form-floating mb-3">
               <select class="form-select" id="locationAddress_stateCode" formControlName="stateCode" placeholder="Kansas">
-                <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
+                <option *ngFor="let state of countryFormOptions | filterAdministrativeDivisions:selectedCountry" [value]="state.value">{{state.displayName}}</option>
               </select>
               <label for="locationAddress_stateCode">State</label>
             </div>

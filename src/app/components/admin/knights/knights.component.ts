@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { forkJoin, Subject, Subscription } from 'rxjs';
 
@@ -14,6 +14,9 @@ import { KnightActivityInterestsService } from 'src/app/services/knightActivityI
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { SearchPartialNameEvent } from 'src/app/models/events/searchPartialNameEvent';
+import { CreateKnightModalComponent } from './create-knight-modal/create-knight-modal.component';
+import { EditKnightPasswordModalComponent } from './edit-knight-password-modal/edit-knight-password-modal.component';
+import { EditKnightMemberDuesModalComponent } from './edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
 
 @Component({
   selector: 'knights',
@@ -21,6 +24,9 @@ import { SearchPartialNameEvent } from 'src/app/models/events/searchPartialNameE
   styleUrls: ['./knights.component.scss'],
 })
 export class KnightsComponent implements OnInit, OnDestroy {
+  @ViewChild(CreateKnightModalComponent) createKnightModal: CreateKnightModalComponent | undefined;
+  @ViewChild(EditKnightPasswordModalComponent) editKnightPasswordModal: EditKnightPasswordModalComponent | undefined;
+  @ViewChild(EditKnightMemberDuesModalComponent) editKnightMemberDuesModal: EditKnightMemberDuesModalComponent | undefined;
   allKnights: Knight[] = [];
   displayedKnights: Knight[] = [];
   displayedKnightsCount: number = 0;
@@ -45,7 +51,6 @@ export class KnightsComponent implements OnInit, OnDestroy {
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
-  public knightUser?: KnightUser;
   public editKnightPasswordModalText: string = '';
   public knightId: string = '';
   public knightFullName: string = '';
@@ -57,7 +62,6 @@ export class KnightsComponent implements OnInit, OnDestroy {
   public knightToEdit?: Knight;
 
   public editKnightMemberDuesModalHeaderText: string = '';
-  public memberDuesToEdit: MemberDues[] = [];
 
   public editKnightActivityInterestsModalHeaderText: string = '';
   public activityInterestsToEdit: ActivityInterest[] = [];
@@ -170,8 +174,9 @@ export class KnightsComponent implements OnInit, OnDestroy {
 
   public openEditKnightMemberDuesModal(knight: Knight) {
     this.knightId = knight.id || '';
-    this.memberDuesToEdit = knight.memberDues;
     this.editKnightMemberDuesModalHeaderText = `Editing Member Dues for ${knight.firstName} ${knight.lastName}`;
+
+    this.editKnightMemberDuesModal?.resetForm(knight.memberDues);
   }
 
   public openEditKnightMemberInfoModal(knight: Knight) {
@@ -181,10 +186,11 @@ export class KnightsComponent implements OnInit, OnDestroy {
   }
 
   public openEditKnightPassword(knight: Knight) {
-    this.knightUser = knight.knightUser;
     this.editKnightPasswordModalText = `Editing Knight Password for ${knight.firstName} ${knight.lastName}`;
     this.knightFullName = `${knight.firstName} ${knight.lastName}`;
     this.knightId = knight.id || '';
+
+    this.editKnightPasswordModal?.resetForm(knight.knightUser);
   }
 
   public updateKnightPersonalInfoInList(knight: Knight) {
@@ -232,7 +238,9 @@ export class KnightsComponent implements OnInit, OnDestroy {
     }
   }
 
-  openCreateKnightModal() {}
+  openCreateKnightModal() {
+    this.createKnightModal?.resetForm();
+  }
 
   openUploadKnightsModal() {
     this.showUploadKnightsModal = true;

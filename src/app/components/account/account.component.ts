@@ -162,10 +162,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     return this.knight?.activityInterests.filter((x) => x.interested && x.activityCategory === activityCategoryValue);
   }
 
-  formatDate(date: string | undefined) {
-    return DateTimeFormatter.ToDisplayedDate(date);
-  }
-
   public openEditAccountPersonalInfoModal() {
     this.errorSaving = false;
     this.errorMessages = [];
@@ -307,7 +303,19 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   private handleUpdateActivityInterests(response: ActivityInterest[]) {
     if (this.knight) {
-      this.knight.activityInterests = response;
+      response.forEach((kai) => {
+        const indexOfActivity = this.allActivities.findIndex(ai => ai.activityId === kai.activityId);
+  
+        if (indexOfActivity > -1) {
+          this.allActivities[indexOfActivity].interested = kai.interested;
+
+          if (this.knight) {
+            this.knight.activityInterests = this.allActivities;
+          }
+        }
+      });
+
+      //this.knight.activityInterests = response;
     }
 
     this.cancelEditActivityInterestsModal?.nativeElement.click();

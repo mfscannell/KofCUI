@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +19,7 @@ import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption
 import { FormsService } from 'src/app/services/forms.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { EditActivityEventModalComponent } from './edit-activity-event-modal/edit-activity-event-modal.component';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -26,6 +27,7 @@ import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption
   styleUrls: ['./activity-events.component.scss'],
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
+  @ViewChild(EditActivityEventModalComponent) editActivityEventModal: EditActivityEventModalComponent | undefined;
   activityEventsSubscription?: Subscription;
   activityEvents: ActivityEvent[] = [];
   selectableActivities: Activity[] = [];
@@ -120,10 +122,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatDate(date: string | undefined) {
-    return DateTimeFormatter.ToDisplayedDate(date);
-  }
-
   canAddEvent() {
     return this.permissionsService.canAddEvent(this.allActivities);
   }
@@ -192,6 +190,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   public openCreateActivityEventModal() {
+    this.editActivityEventModal?.resetForm();
     this.errorSending = false;
     this.errorMessages = [];
     this.activityEventToEdit = undefined;

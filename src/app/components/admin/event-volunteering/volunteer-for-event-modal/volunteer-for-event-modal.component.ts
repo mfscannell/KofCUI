@@ -132,46 +132,12 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
     return eventVolunteersArray;
   }
 
-  public formatEventStartDate() {
-    return DateTimeFormatter.ToDisplayedDate(this.activityEvent?.startDateTime);
-  }
-
-  public formatEventStartTime() {
-    return DateTimeFormatter.ToDisplayTime(this.activityEvent?.startDateTime);
-  }
-
-  public formatEventEndTime() {
-    return DateTimeFormatter.ToDisplayTime(this.activityEvent?.endDateTime);
-  }
-
   public formatVolunteerRole(index: number) {
     if (this.activityEvent?.volunteerSignUpRoles) {
       const role = this.activityEvent.volunteerSignUpRoles[index];
       const volunteerRole = `${role.numberOfVolunteersNeeded} ${role.roleTitle}(s)`;
 
       return volunteerRole;
-    }
-
-    return '';
-  }
-
-  public formatVolunteerRoleStartTime(index: number) {
-    if (this.activityEvent?.volunteerSignUpRoles) {
-      const role = this.activityEvent.volunteerSignUpRoles[index];
-      const formattedTime = DateTimeFormatter.ToDisplayTime(role.startDateTime);
-
-      return formattedTime;
-    }
-
-    return '';
-  }
-
-  public formatVolunteerRoleEndTime(index: number) {
-    if (this.activityEvent?.volunteerSignUpRoles) {
-      const role = this.activityEvent.volunteerSignUpRoles[index];
-      const formattedTime = DateTimeFormatter.ToDisplayTime(role.endDateTime);
-
-      return formattedTime;
     }
 
     return '';

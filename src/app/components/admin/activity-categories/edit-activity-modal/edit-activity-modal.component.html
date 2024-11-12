@@ -35,8 +35,8 @@
           <!-- COORDINATORS -->
           <div class="tab-pane fade" id="coordinators-tab-pane" role="tabpanel" aria-labelledby="coordinators-tab" tabindex="0">
             <div formArrayName="activityCoordinatorsList">
-              <div *ngFor="let coordinator of activityCoordinators.controls; let i = index;">
-                <div class="form-group row mb-3" [formGroupName]="i">
+              <div *ngFor="let coordinator of editActivityForm.controls.activityCoordinatorsList.controls; let i = index;">
+                <div class="form-group row mb-3" [formGroup]="coordinator">
                   <div class="col-8 col-md-10">
                     <select class="form-select" id="activityCoordinatorKnightId" formControlName="knightId">
                       <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
@@ -67,12 +67,10 @@
                 <h5>Notes From Prior Events</h5>
               </div>
             </div>
-            <div formArrayName="activityEventNotesList">
-              <div *ngFor="let eventNote of activityEventNotes.controls; let i = index;">
-                <div class="form-group row mb-3" [formGroupName]="i">
-                  <div class="col-12">
-                    {{formatEventStartDate(i)}} - {{getEventNotes(i)}}
-                  </div>
+            <div *ngFor="let eventNote of activity?.activityEventNotes">
+              <div class="form-group row mb-3">
+                <div class="col-12">
+                  {{ eventNote.startDateTime | toDisplayDate }} - {{eventNote.notes}}
                 </div>
               </div>
             </div>

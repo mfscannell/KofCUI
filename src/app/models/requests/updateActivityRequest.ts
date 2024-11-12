@@ -1,4 +1,5 @@
-export interface CreateActivityRequest{
+export interface UpdateActivityRequest {
+  activityId: string;
   activityName: string;
   activityDescription: string;
   activityCategory: string;

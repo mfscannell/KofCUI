@@ -28,7 +28,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   @Input() activityInterests: ActivityInterest[] = [];
   @Input() knightId: string = '';
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
-  @Output() editKnightMemberDuesChanges = new EventEmitter<ActivityInterest[]>();
+  @Output() editKnightActivityInterestsChanges = new EventEmitter<ActivityInterest[]>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   public editKnightActivityInterestsForm: UntypedFormGroup;
@@ -159,7 +159,14 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   }
 
   private passBackResponse(response: ActivityInterest[]) {
-    this.editKnightMemberDuesChanges.emit(response);
+    response.forEach((kai) => {
+      const indexOfActivity = this.activityInterests.findIndex(ai => ai.activityId === kai.activityId);
+
+      if (indexOfActivity > -1) {
+        this.activityInterests[indexOfActivity].interested = kai.interested;
+      }
+    });
+    this.editKnightActivityInterestsChanges.emit(this.activityInterests);
     this.updateKnightActivityInterestsSubscription?.unsubscribe();
     this.closeModal?.nativeElement.click();
   }

@@ -32,35 +32,14 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
   @Output() editKnightPersonalInfoChanges = new EventEmitter<Knight>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
+  public selectedCountry: string = '';
   public editKnightPersonalInfoForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightPersonalInfoSubscription?: Subscription;
 
   constructor(private knightsService: KnightsService) {
-    const today = new Date();
-    this.editKnightPersonalInfoForm = new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      firstName: new UntypedFormControl('', [Validators.required, Validators.maxLength(63)]),
-      middleName: new UntypedFormControl('', [Validators.maxLength(63)]),
-      lastName: new UntypedFormControl('', [Validators.maxLength(63)]),
-      nameSuffix: new UntypedFormControl('', [Validators.maxLength(7)]),
-      dateOfBirth: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-      ),
-      emailAddress: new UntypedFormControl('', [Validators.maxLength(63)]),
-      cellPhoneNumber: new UntypedFormControl('', [Validators.maxLength(31)]),
-      homeAddress: new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        addressName: new UntypedFormControl(null),
-        address1: new UntypedFormControl('', [Validators.maxLength(63)]),
-        address2: new UntypedFormControl('', [Validators.maxLength(63)]),
-        city: new UntypedFormControl('', [Validators.maxLength(63)]),
-        stateCode: new UntypedFormControl('', [Validators.maxLength(3)]),
-        postalCode: new UntypedFormControl('', [Validators.maxLength(15)]),
-        countryCode: new UntypedFormControl('', [Validators.maxLength(7)]),
-      }),
-    });
+    this.editKnightPersonalInfoForm = this.initForm();
   }
 
   ngOnInit() {}
@@ -92,12 +71,45 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
     }
   }
 
+  public resetForm() {
+    this.editKnightPersonalInfoForm = this.initForm();
+    this.enableDisableAdministrativeDivisions();
+  }
+
+  private initForm() {
+    const today = new Date();
+    
+    return new UntypedFormGroup({
+      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
+      firstName: new UntypedFormControl('', [Validators.required, Validators.maxLength(63)]),
+      middleName: new UntypedFormControl('', [Validators.maxLength(63)]),
+      lastName: new UntypedFormControl('', [Validators.maxLength(63)]),
+      nameSuffix: new UntypedFormControl('', [Validators.maxLength(7)]),
+      dateOfBirth: new UntypedFormControl(
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+      ),
+      emailAddress: new UntypedFormControl('', [Validators.maxLength(63)]),
+      cellPhoneNumber: new UntypedFormControl('', [Validators.maxLength(31)]),
+      homeAddress: new UntypedFormGroup({
+        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
+        addressName: new UntypedFormControl(null),
+        address1: new UntypedFormControl('', [Validators.maxLength(63)]),
+        address2: new UntypedFormControl('', [Validators.maxLength(63)]),
+        city: new UntypedFormControl('', [Validators.maxLength(63)]),
+        stateCode: new UntypedFormControl('', [Validators.maxLength(3)]),
+        postalCode: new UntypedFormControl('', [Validators.maxLength(15)]),
+        countryCode: new UntypedFormControl('', [Validators.maxLength(7)]),
+      }),
+    });
+  }
+
   private getCountryCode(): string {
     return this.editKnightPersonalInfoForm.get('homeAddress.countryCode')?.value;
   }
 
   public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
     const countryCode = this.getCountryCode();
+    this.selectedCountry = countryCode;
 
     const filteredCountryFormOptions = this.countryFormOptions.filter((cfo) => cfo.value === countryCode);
 
@@ -110,6 +122,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
 
   public enableDisableAdministrativeDivisions(): void {
     const countryCode = this.getCountryCode();
+    this.selectedCountry = countryCode;
     const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
 
     if (hasCountryCode) {

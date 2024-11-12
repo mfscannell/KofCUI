@@ -9,7 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
@@ -45,6 +45,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   @Output() updateActivityEventChanges = new EventEmitter<ActivityEvent>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
+  public selectedCountry: string = '';
   public editActivityEventForm: UntypedFormGroup;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
@@ -54,9 +55,13 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
 
   constructor(private activityEventsService: ActivityEventsService) {
     this.editActivityEventForm = this.initForm();
+    console.log(this.editActivityEventForm);
+    this.enableDisableAdministrativeDivisions();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.enableDisableAdministrativeDivisions();
+  }
 
   ngOnDestroy() {}
 
@@ -70,14 +75,23 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     }
   }
 
+  public resetForm() {
+    this.editActivityEventForm = this.initForm();
+    this.enableDisableAdministrativeDivisions();
+  }
+
   public enableDisableAdministrativeDivisions(): void {
     const countryCode = this.getCountryCode();
+    this.selectedCountry = countryCode;
     const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
 
     if (hasCountryCode) {
-      this.editActivityEventForm.get('locationAddress.stateCode')?.enable();
+      const locationAddressFormGroup = this.editActivityEventForm.controls.locationAddress as FormGroup;
+      locationAddressFormGroup.controls.stateCode.enable();
     } else {
-      this.editActivityEventForm.get('locationAddress.stateCode')?.disable();
+      const locationAddressFormGroup = this.editActivityEventForm.controls.locationAddress as UntypedFormGroup;
+      const stateCodeControl = locationAddressFormGroup.controls.stateCode as UntypedFormControl;
+      stateCodeControl.disable();
     }
   }
 
@@ -94,16 +108,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     }
   }
 
-  public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
-    const countryCode = this.getCountryCode();
-
-    const filteredCountryFormOptions = this.countryFormOptions.filter((cfo) => cfo.value === countryCode);
-
-    if (filteredCountryFormOptions && filteredCountryFormOptions.length) {
-      return filteredCountryFormOptions[0].administrativeDivisions;
-    }
-
-    return [];
+  private getCountryCode(): string {
+    return this.editActivityEventForm.get('locationAddress.countryCode')?.value;
   }
 
   public deleteVolunteerSignUpRole(roleIndex: number) {
@@ -277,10 +283,6 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     return formControl.value;
   }
 
-  private getCountryCode(): string {
-    return this.editActivityEventForm.get('locationAddress.countryCode')?.value;
-  }
-
   private initForm() {
     return new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
@@ -298,7 +300,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
         address1: new UntypedFormControl(''),
         address2: new UntypedFormControl(''),
         city: new UntypedFormControl(''),
-        stateCode: new UntypedFormControl(''),
+        stateCode: new UntypedFormControl({value: '', disabled: true}),
         postalCode: new UntypedFormControl(''),
         countryCode: new UntypedFormControl(''),
       }),

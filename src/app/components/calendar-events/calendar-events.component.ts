@@ -104,10 +104,6 @@ export class CalendarEventsComponent implements OnInit {
     this.modalHeaderText = `Events for ${dateString}`;
   }
 
-  formatTime(dateTime: string | undefined) {
-    return DateTimeFormatter.ToDisplayTime(dateTime);
-  }
-
   logError(message: string, err: unknown) {
     console.error(message);
     console.error(err);

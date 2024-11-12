@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
+import * as _ from "lodash";
 
 import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { KnightsService } from 'src/app/services/knights.service';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategoryEnums';
+import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/edit-leadership-role-modal.component';
 
 @Component({
   selector: 'kofc-leadership-roles',
@@ -13,13 +15,13 @@ import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategor
   styleUrls: ['./leadership-roles.component.scss'],
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
-  allKnights: Knight[] = [];
-  leadershipRoles: LeadershipRole[] = [];
-  leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(LeadershipRoleCategoryEnums);
-  knightsLoaded: boolean = false;
-  knightsSubscription?: Subscription;
-  leadershipRolesSubscription?: Subscription;
-  leadershipRole: LeadershipRole | undefined;
+  @ViewChild(EditLeadershipRoleModalComponent) editLeadershipRoleModal: EditLeadershipRoleModalComponent | undefined;
+
+  public allKnights: Knight[] = [];
+  public leadershipRoles: LeadershipRole[] = [];
+  public leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(LeadershipRoleCategoryEnums);
+  private knightsSubscription?: Subscription;
+  private leadershipRolesSubscription?: Subscription;
 
   constructor(
     private knightsService: KnightsService,
@@ -52,7 +54,6 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
   private loadAllKnights(knights: Knight[]) {
     this.allKnights = knights;
-    this.knightsLoaded = true;
   }
 
   private getAllLeadershipRoles() {
@@ -66,25 +67,22 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
       .subscribe(leadershipRolesObserver);
   }
 
-  filterLeadershipRoles(leadershipRoleCategory: LeadershipRoleCategoryEnums) {
-    if (this.leadershipRoles) {
-      return this.leadershipRoles.filter((x) => x.leadershipRoleCategory === leadershipRoleCategory);
-    }
-
-    return [];
-  }
-
   openEditLeadershipRoleModal(leadershipRole: LeadershipRole) {
-    this.leadershipRole = leadershipRole;
+    this.editLeadershipRoleModal?.resetForm(leadershipRole);
   }
 
   cancelModal() {}
 
   public updateLeadershipRoleInList(leadershipRole: LeadershipRole) {
-    const index = this.leadershipRoles?.findIndex((x) => x.id == leadershipRole.id);
+    console.log(leadershipRole);
 
-    if (this.leadershipRoles && index !== undefined && index >= 0) {
-      this.leadershipRoles[index] = leadershipRole;
+    const newList = _.cloneDeep(this.leadershipRoles) as LeadershipRole[];
+    const index = newList.findIndex((x) => x.id == leadershipRole.id);
+
+    if (newList && index !== undefined && index >= 0) {
+      newList[index] = leadershipRole;
+
+      this.leadershipRoles = newList;
     }
   }
 }
