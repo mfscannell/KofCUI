@@ -75,14 +75,12 @@
     class="modal fade"
     id="editKnightPersonalInfoModal"
     [modalHeaderText]="editKnightPersonalInfoModalHeaderText"
-    [knight]="knightToEdit"
     [countryFormOptions]="countryFormOptions"
     (editKnightPersonalInfoChanges)="updateKnightPersonalInfoInList($event)"></edit-knight-personal-info-modal>
   <edit-knight-activity-interests-modal
     class="modal fade"
     id="editKnightActivityInterestsModal"
     [modalHeaderText]="editKnightActivityInterestsModalHeaderText"
-    [activityInterests]="activityInterestsToEdit"
     [knightId]="knightId"
     [activityCategoryFormOptions]="activityCategoryFormOptions"
     (editKnightActivityInterestsChanges)="updateKnightActivityInterestsInList($event)"></edit-knight-activity-interests-modal>
@@ -104,7 +102,6 @@
     class="modal fade" 
     id="editKnightMemberInfoModal"
     [knightId]="knightId"
-    [knightInfo]="knightInfo"
     [modalHeaderText]="editKnightMemberInfoModalHeaderText"
     [knightDegreeFormOptions]="knightDegreeFormOptions"
     [knightMemberTypeFormOptions]="knightMemberTypeFormOptions"

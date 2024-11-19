@@ -7,19 +7,17 @@
     </div>
     <div class="modal-body">
       <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditKnightActivityInterests()">
-        <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
+        <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions; let i = index;">
           <div class="form-group row mb-1">
             <div class="col-12">
               <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
             </div>
           </div>
-          <div formArrayName="{{getFormArrayName(activityCategoryFormOption)}}">
-            <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(getFormArrayName(activityCategoryFormOption)).controls; let i = index" [formGroupName]="i">
-              <div class="form-group row mb-1">
-                <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-              <div class="col-7 col-md-9">
-                <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-              </div>
+          <div formArrayName="activityInterests">
+            <div *ngFor="let activityInterestGroup of editKnightActivityInterestsForm.controls.activityInterests.controls | filterActivityInterestsByCategoryPipe:activityCategoryFormOption.value; let j = index;" [formGroup]="activityInterestGroup">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" formControlName="interested" id="interested-{{i}}-{{j}}">
+                <label class="form-check-label" for="allowChangeActivitySubscription">{{activityInterestGroup.controls.activityName.value}}</label>
               </div>
             </div>
           </div>

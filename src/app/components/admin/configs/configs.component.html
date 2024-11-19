@@ -26,9 +26,12 @@
       </select>
       <label for="councilTimeZone">Council Time Zone</label>
     </div>
-    <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" id="allowChangeActivitySubscription">
-      <label class="form-check-label" for="allowChangeActivitySubscription">Allow Users To Change Activity Subscription</label>
+    <div class="form-group mb-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="allowChangeActivitySubscription">
+        <label class="form-check-label" for="allowChangeActivitySubscription">Allow Users To Change Activity Subscription</label>
+      </div>
+      <small id="emailHelp" class="form-text text-muted">Disabling results in all users being subscribed to all activities.</small>
     </div>
     <div formArrayName="externalLinksList">
       <div *ngFor="let externalLink of editConfigsForm.controls.externalLinksList.controls; let i = index;">

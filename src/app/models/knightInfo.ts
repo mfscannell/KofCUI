@@ -1,4 +1,6 @@
 import { KnightDegree } from '../types/knight-degree.type';
+import { KnightMemberClassType } from '../types/knight-member-class.type';
+import { KnightMemberTypeType } from '../types/knight-member-type.type';
 
 export interface KnightInfo {
   id?: string;
@@ -7,6 +9,6 @@ export interface KnightInfo {
   degree: KnightDegree;
   firstDegreeDate?: string;
   reentryDate?: string;
-  memberType: string;
-  memberClass: string;
+  memberType: KnightMemberTypeType;
+  memberClass: KnightMemberClassType;
 }
