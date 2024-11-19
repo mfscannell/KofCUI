@@ -1,19 +1,19 @@
 import * as XLSX from 'xlsx';
 import { Injectable } from '@angular/core';
 
-import { Knight } from 'src/app/models/knight';
-import { KnightInfo } from 'src/app/models/knightInfo';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { KnightMemberTypeEnumMapper } from 'src/app/utilities/knightMemberTypeEnumMapper';
 import { KnightMemberClassEnumMapper } from 'src/app/utilities/knightMemberClassEnumMapper';
 import { KnightExcelUpload } from '../models/fileModels/knightExcelUpload';
+import { CreateKnightRequest } from '../models/requests/createKnightRequest';
+import { CreateKnightInfoRequest } from '../models/requests/createKnightInfoRequest';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExcelFileReader {
   static ReadKnightsFromFile(file: Blob) {
-    return new Promise<Knight[]>((resolve, reject) => {
+    return new Promise<CreateKnightRequest[]>((resolve, reject) => {
       const fileReader = new FileReader();
 
       fileReader.onload = (e) => {
@@ -26,7 +26,7 @@ export class ExcelFileReader {
           const worksheet = workBook.Sheets[firstSheetName];
           const rawJson = XLSX.utils.sheet_to_json(worksheet, { raw: true }) as KnightExcelUpload[];
           console.log(rawJson);
-          const readKnights: Knight[] = [];
+          const readKnights: CreateKnightRequest[] = [];
 
           rawJson.forEach(function (rawKnight: KnightExcelUpload) {
             const firstName = rawKnight['First Name'] === undefined ? '' : `${rawKnight['First Name']}`;
@@ -52,16 +52,16 @@ export class ExcelFileReader {
             const reentryDate = DateTimeFormatter.MapNumberToIso8601Date(rawKnight['Reentry Date'], true);
             const memberType = KnightMemberTypeEnumMapper.Map(rawKnight['Member Type']);
             const memberClass = KnightMemberClassEnumMapper.Map(rawKnight['Member Class']);
-            const knightInfo: KnightInfo = {
+            const knightInfo: CreateKnightInfoRequest = {
               memberNumber: memberNumber,
               mailReturned: mailReturned,
               degree: degree,
-              firstDegreeDate: firstDegreeDate,
-              reentryDate: reentryDate,
+              firstDegreeDate: firstDegreeDate || '',
+              reentryDate: reentryDate || '',
               memberType: memberType,
               memberClass: memberClass,
             };
-            const mappedKnight: Knight = {
+            const mappedKnight: CreateKnightRequest = {
               firstName: firstName,
               middleName: middleName,
               lastName: lastName,
@@ -70,6 +70,7 @@ export class ExcelFileReader {
               emailAddress: emailAddress,
               cellPhoneNumber: cellPhoneNumber,
               homeAddress: {
+                addressName: '',
                 address1: homeAddress1,
                 address2: homeAddress2,
                 city: city,

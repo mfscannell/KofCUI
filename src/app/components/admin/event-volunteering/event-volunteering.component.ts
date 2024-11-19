@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
@@ -9,9 +9,9 @@ import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { VolunteerForEventModalComponent } from './volunteer-for-event-modal/volunteer-for-event-modal.component';
 
 @Component({
   selector: 'kofc-event-volunteering',
@@ -19,6 +19,8 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
   styleUrls: ['./event-volunteering.component.scss'],
 })
 export class EventVolunteeringComponent implements OnInit, OnDestroy {
+  @ViewChild(VolunteerForEventModalComponent) volunteerForEventModal: VolunteerForEventModalComponent | undefined;
+
   private activityEventsSubscription?: Subscription;
   private getAllKnightsSubscription?: Subscription;
   activityEvents: ActivityEvent[] = [];
@@ -29,10 +31,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   page = 1;
   pageSize = 5;
   maxSize = 10;
-  activityEvent: ActivityEvent | undefined;
-  volunteerForActivityEventForm: UntypedFormGroup;
   public knightId: string = '';
-  @ViewChild('cancelEditActiveModal', { static: false }) cancelEditActiveModal: ElementRef | undefined;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
 
@@ -52,43 +51,6 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
       '';
     this.toDate =
       DateTimeFormatter.ToIso8601Date(finalDate.getFullYear(), finalDate.getMonth() + 1, finalDate.getDate()) || '';
-
-    const today = new Date();
-    this.volunteerForActivityEventForm = new UntypedFormGroup({
-      activityEventId: new UntypedFormControl(''),
-      activityId: new UntypedFormControl(''),
-      activityCategory: new UntypedFormControl(''),
-      eventName: new UntypedFormControl(''),
-      eventDescription: new UntypedFormControl(''),
-      startDate: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-      ),
-      startTime: new UntypedFormControl({
-        hour: 6,
-        minute: 0,
-      }),
-      endDate: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-      ),
-      endTime: new UntypedFormControl({
-        hour: 7,
-        minute: 0,
-      }),
-      locationAddress: new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        addressName: new UntypedFormControl(''),
-        address1: new UntypedFormControl(''),
-        address2: new UntypedFormControl(''),
-        city: new UntypedFormControl(''),
-        stateCode: new UntypedFormControl(''),
-        postalCode: new UntypedFormControl(''),
-        countryCode: new UntypedFormControl(''),
-      }),
-      showInCalendar: new UntypedFormControl(null),
-      canceled: new UntypedFormControl({ value: null, disabled: true }),
-      canceledReason: new UntypedFormControl(''),
-      volunteerSignUpRoles: new UntypedFormArray([]),
-    });
 
     this.knightId = this.accountsService.getKnightId() || '';
   }
@@ -135,8 +97,8 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
   }
 
-  openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
-    this.activityEvent = activityEvent;
+  public openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
+    this.volunteerForEventModal?.resetForm(activityEvent);
   }
 
   public updateActivityEventInList(activityEvent: ActivityEvent) {

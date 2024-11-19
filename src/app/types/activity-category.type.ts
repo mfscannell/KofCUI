@@ -1,0 +1,1 @@
+export type ActivityCategoryType = 'Community' | 'Faith' | 'Family' | 'Life' | 'Miscellaneous'

@@ -1,23 +1,15 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
+import { EditActivityEventFormGroup } from 'src/app/forms/editActivityEventFormGroup';
+import { EditAddressFormGroup } from 'src/app/forms/editAddressFormGroup';
+import { EditEventVolunteersFormGroup } from 'src/app/forms/editEventVolunteersFormGroup';
+import { EditVolunteerSignUpRoleFormGroup } from 'src/app/forms/editVolunteerSignUpRoleFormGroup';
 import { Activity } from 'src/app/models/activity';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ChangeActivityEvent } from 'src/app/models/events/changeActivityEvent';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
-import { EventVolunteersFormGroup } from 'src/app/models/formControls/eventVolunteersFormGroup';
-import { VolunteerSignUpRoleFormGroup } from 'src/app/models/formControls/volunteerSignUpRoleFormGroup';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
@@ -34,7 +26,6 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 })
 export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() editModalAction: ModalActionEnums = ModalActionEnums.Create;
-  @Input() activityEventToEdit?: ActivityEvent;
   @Input() modalHeaderText: string = '';
   @Input() countryFormOptions: CountryFormOption[] = [];
   @Input() councilTimeZone?: GenericFormOption;
@@ -46,7 +37,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
   public selectedCountry: string = '';
-  public editActivityEventForm: UntypedFormGroup;
+  public editActivityEventForm: FormGroup<EditActivityEventFormGroup>;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
@@ -66,32 +57,28 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   ngOnDestroy() {}
 
   ngOnChanges() {
-    this.errorSaving = false;
-    this.errorMessages = [];
-    this.editActivityEventForm = this.initForm();
-
-    if (this.editModalAction == ModalActionEnums.Edit && this.activityEventToEdit) {
-      this.patchForm();
-    }
   }
 
-  public resetForm() {
+  public resetForm(activityEventToEdit?: ActivityEvent) {
     this.editActivityEventForm = this.initForm();
+    this.errorSaving = false;
+    this.errorMessages = [];
+
+    if (activityEventToEdit) {
+      this.patchForm(activityEventToEdit);
+    }
+
     this.enableDisableAdministrativeDivisions();
   }
 
   public enableDisableAdministrativeDivisions(): void {
-    const countryCode = this.getCountryCode();
-    this.selectedCountry = countryCode;
-    const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
+    this.selectedCountry = this.editActivityEventForm.controls.locationAddress.controls.countryCode.value;
+    const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === this.selectedCountry);
 
     if (hasCountryCode) {
-      const locationAddressFormGroup = this.editActivityEventForm.controls.locationAddress as FormGroup;
-      locationAddressFormGroup.controls.stateCode.enable();
+      this.editActivityEventForm.controls.locationAddress.controls.stateCode.enable();
     } else {
-      const locationAddressFormGroup = this.editActivityEventForm.controls.locationAddress as UntypedFormGroup;
-      const stateCodeControl = locationAddressFormGroup.controls.stateCode as UntypedFormControl;
-      stateCodeControl.disable();
+      this.editActivityEventForm.controls.locationAddress.controls.stateCode.disable();
     }
   }
 
@@ -108,12 +95,8 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     }
   }
 
-  private getCountryCode(): string {
-    return this.editActivityEventForm.get('locationAddress.countryCode')?.value;
-  }
-
   public deleteVolunteerSignUpRole(roleIndex: number) {
-    this.volunteerSignUpRolesForm.removeAt(roleIndex);
+    this.editActivityEventForm.controls.volunteerSignUpRoles.removeAt(roleIndex);
   }
 
   public getEventVolunteers(volunteerSignUpRole: AbstractControl) {
@@ -124,35 +107,33 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   public deleteEventVolunteer(roleIndex: number, volunteerIndex: number) {
-    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(roleIndex) as UntypedFormGroup;
-    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls['eventVolunteers'] as UntypedFormArray;
-    eventVolunteerFormArray.removeAt(volunteerIndex);
+    this.editActivityEventForm.controls.volunteerSignUpRoles.at(roleIndex).controls.eventVolunteers.removeAt(volunteerIndex);
   }
 
   public addEventVolunteer(volunteerSignUpRoleIndex: number) {
-    const eventVolunteerFormGroup = new UntypedFormGroup({
-      id: new UntypedFormControl(''),
-      knightId: new UntypedFormControl(''),
+    console.log('addEventVOlunteer');
+    console.log(this.editActivityEventForm);
+    const eventVolunteerFormGroup = new FormGroup<EditEventVolunteersFormGroup>({
+      id: new FormControl<string>('', { nonNullable: true }),
+      knightId: new FormControl<string>('', { nonNullable: true }),
     });
 
-    const volunteerSignUpRoleControl = this.volunteerSignUpRolesForm.at(volunteerSignUpRoleIndex) as UntypedFormGroup;
-    const eventVolunteerFormArray = volunteerSignUpRoleControl.controls['eventVolunteers'] as UntypedFormArray;
-    eventVolunteerFormArray.push(eventVolunteerFormGroup);
+    this.editActivityEventForm.controls.volunteerSignUpRoles.at(volunteerSignUpRoleIndex).controls.eventVolunteers.controls.push(eventVolunteerFormGroup);
   }
 
   public addVolunteerSignUpRole() {
-    const volunteerSignUpRole = new UntypedFormGroup({
-      id: new UntypedFormControl(''),
-      roleTitle: new UntypedFormControl(''),
-      startDate: new UntypedFormControl(this.getEventStartDate()),
-      startTime: new UntypedFormControl(this.getEventStartTime()),
-      endDate: new UntypedFormControl(this.getEventEndDate()),
-      endTime: new UntypedFormControl(this.getEventEndTime()),
-      numberOfVolunteersNeeded: new UntypedFormControl(''),
-      eventVolunteers: new UntypedFormArray([]),
+    const volunteerSignUpRole = new FormGroup<EditVolunteerSignUpRoleFormGroup>({
+      id: new FormControl<string>('', { nonNullable: true }),
+      roleTitle: new FormControl<string>('', { nonNullable: true }),
+      startDate: new FormControl<string>(this.getEventStartDate(), { nonNullable: true }),
+      startTime: new FormControl<string>(this.getEventStartTime(), { nonNullable: true }),
+      endDate: new FormControl<string>(this.getEventEndDate(), { nonNullable: true }),
+      endTime: new FormControl<string>(this.getEventEndTime(), { nonNullable: true }),
+      numberOfVolunteersNeeded: new FormControl<number>(0, { nonNullable: true }),
+      eventVolunteers: new FormArray<FormGroup<EditEventVolunteersFormGroup>>([]),
     });
 
-    this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
+    this.editActivityEventForm.controls.volunteerSignUpRoles.controls.push(volunteerSignUpRole);
   }
 
   public onSubmitEditActivityEvent() {
@@ -168,57 +149,49 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   private mapFormToActivityEvent(): ActivityEvent {
-    const rawForm = this.editActivityEventForm.getRawValue();
-    const volunteerRoles: VolunteerSignUpRole[] = rawForm?.volunteerSignUpRoles?.map(function (
-      role: VolunteerSignUpRoleFormGroup,
-    ) {
-      const volunteerSignUpRole: VolunteerSignUpRole = {
-        id: role.id || '00000000-0000-0000-0000-000000000000',
-        roleTitle: role.roleTitle,
-        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.startTime),
-        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(role.startDate, role.endTime),
-        numberOfVolunteersNeeded: role.numberOfVolunteersNeeded,
-        eventVolunteers: role.eventVolunteers.map(function (ev: EventVolunteersFormGroup) {
+    const volunteerRoles: VolunteerSignUpRole[] = this.editActivityEventForm.controls.volunteerSignUpRoles.controls.map((roleFormGroup: FormGroup<EditVolunteerSignUpRoleFormGroup>) => {
+      return {
+        id: roleFormGroup.controls.id.value || '00000000-0000-0000-0000-000000000000',
+        roleTitle: roleFormGroup.controls.roleTitle.value,
+        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(roleFormGroup.controls.startDate.value, roleFormGroup.controls.startTime.value),
+        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(roleFormGroup.controls.startDate.value, roleFormGroup.controls.endTime.value),
+        numberOfVolunteersNeeded: roleFormGroup.controls.numberOfVolunteersNeeded.value,
+        eventVolunteers: roleFormGroup.controls.eventVolunteers.controls.map((ev: FormGroup<EditEventVolunteersFormGroup>) => {
           const eventVolunteer: EventVolunteer = {
-            id: ev.id || '00000000-0000-0000-0000-000000000000',
-            knightId: ev.knightId,
+            id: ev.controls.id.value || '00000000-0000-0000-0000-000000000000',
+            knightId: ev.controls.knightId.value,
           } as EventVolunteer;
           return eventVolunteer;
         }),
       } as VolunteerSignUpRole;
-
-      return volunteerSignUpRole;
     });
-    const locationAddress: StreetAddress = {
-      id: rawForm.locationAddress.id || '00000000-0000-0000-0000-000000000000',
-      addressName: rawForm.locationAddress.addressName,
-      address1: rawForm.locationAddress.address1,
-      address2: rawForm.locationAddress.address2,
-      city: rawForm.locationAddress.city,
-      stateCode: rawForm.locationAddress.stateCode,
-      postalCode: rawForm.locationAddress.postalCode,
-      countryCode: rawForm.locationAddress.countryCode,
-    } as StreetAddress;
-    const activityEvent: ActivityEvent = {
-      id: rawForm.id || '',
-      activityId: rawForm.activityId,
-      activityCategory: rawForm.activityCategory,
-      eventName: rawForm.eventName,
-      eventDescription: rawForm.eventDescription,
-      startDateTime:
-        DateTimeFormatter.DateAndTimeToIso8601DateTime(rawForm.startDate, rawForm.startTime) || '1999-01-01T00:00',
-      endDateTime:
-        DateTimeFormatter.DateAndTimeToIso8601DateTime(rawForm.startDate, rawForm.endTime) || '1999-01-01T00:00',
-      locationAddress: locationAddress,
-      volunteerSignUpRoles: volunteerRoles,
-      showInCalendar: rawForm.showInCalendar ? rawForm.showInCalendar : false,
-      canceled: rawForm.canceled ? rawForm.canceled : false,
-      canceledReason: rawForm.canceledReason,
-      notes: rawForm.notes,
-    } as ActivityEvent;
 
-    console.log('mapFormToActivityEvent');
-    console.log(activityEvent);
+    const activityEvent: ActivityEvent = {
+      id: this.editActivityEventForm.controls.id.value,
+      activityId: this.editActivityEventForm.controls.activityId.value,
+      activityCategory: this.editActivityEventForm.controls.activityCategory.value,
+      eventName: this.editActivityEventForm.controls.eventName.value,
+      eventDescription: this.editActivityEventForm.controls.eventDescription.value,
+      startDateTime:
+        DateTimeFormatter.DateAndTimeToIso8601DateTime(this.editActivityEventForm.controls.startDate.value, this.editActivityEventForm.controls.startTime.value) || '1999-01-01T00:00',
+      endDateTime:
+        DateTimeFormatter.DateAndTimeToIso8601DateTime(this.editActivityEventForm.controls.startDate.value, this.editActivityEventForm.controls.endTime.value) || '1999-01-01T00:00',
+      locationAddress: {
+        id: this.editActivityEventForm.controls.locationAddress.controls.id.value,
+        addressName: this.editActivityEventForm.controls.locationAddress.controls.addressName.value,
+        address1: this.editActivityEventForm.controls.locationAddress.controls.address1.value,
+        address2: this.editActivityEventForm.controls.locationAddress.controls.address2.value,
+        city: this.editActivityEventForm.controls.locationAddress.controls.city.value,
+        stateCode: this.editActivityEventForm.controls.locationAddress.controls.stateCode.value,
+        postalCode: this.editActivityEventForm.controls.locationAddress.controls.postalCode.value,
+        countryCode: this.editActivityEventForm.controls.locationAddress.controls.countryCode.value
+      } as StreetAddress,
+      volunteerSignUpRoles: volunteerRoles,
+      showInCalendar: this.editActivityEventForm.controls.showInCalendar.value,
+      canceled: this.editActivityEventForm.controls.canceled.value,
+      canceledReason: this.editActivityEventForm.controls.canceledReason.value,
+      notes: this.editActivityEventForm.controls.notes.value,
+    } as ActivityEvent;
 
     return activityEvent;
   }
@@ -283,92 +256,80 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     return formControl.value;
   }
 
-  private initForm() {
-    return new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      activityId: new UntypedFormControl(''),
-      activityCategory: new UntypedFormControl(''),
-      eventName: new UntypedFormControl(''),
-      eventDescription: new UntypedFormControl(''),
-      startDate: new UntypedFormControl(''),
-      startTime: new UntypedFormControl(''),
-      endDate: new UntypedFormControl(''),
-      endTime: new UntypedFormControl(''),
-      locationAddress: new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        addressName: new UntypedFormControl(''),
-        address1: new UntypedFormControl(''),
-        address2: new UntypedFormControl(''),
-        city: new UntypedFormControl(''),
-        stateCode: new UntypedFormControl({value: '', disabled: true}),
-        postalCode: new UntypedFormControl(''),
-        countryCode: new UntypedFormControl(''),
+  private initForm(): FormGroup<EditActivityEventFormGroup> {
+    return new FormGroup<EditActivityEventFormGroup>({
+      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
+      activityId: new FormControl<string>('', { nonNullable: true }),
+      activityCategory: new FormControl<string>('', { nonNullable: true }),
+      eventName: new FormControl<string>('', { nonNullable: true }),
+      eventDescription: new FormControl<string>('', { nonNullable: true }),
+      startDate: new FormControl<string>('', { nonNullable: true }),
+      startTime: new FormControl<string>('', { nonNullable: true }),
+      endDate: new FormControl<string>('', { nonNullable: true }),
+      endTime: new FormControl<string>('', { nonNullable: true }),
+      locationAddress: new FormGroup<EditAddressFormGroup>({
+        id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
+        addressName: new FormControl<string>('', { nonNullable: true }),
+        address1: new FormControl<string>('', { nonNullable: true }),
+        address2: new FormControl<string>('', { nonNullable: true }),
+        city: new FormControl<string>('', { nonNullable: true }),
+        stateCode: new FormControl<string>({value: '', disabled: true}, { nonNullable: true }),
+        postalCode: new FormControl<string>('', { nonNullable: true }),
+        countryCode: new FormControl<string>('', { nonNullable: true }),
       }),
-      showInCalendar: new UntypedFormControl(null),
-      canceled: new UntypedFormControl(null),
-      canceledReason: new UntypedFormControl(''),
-      notes: new UntypedFormControl(''),
-      volunteerSignUpRoles: new UntypedFormArray([]),
+      showInCalendar: new FormControl<boolean>(false, { nonNullable: true }),
+      canceled: new FormControl<boolean>(false, { nonNullable: true }),
+      canceledReason: new FormControl<string>('', { nonNullable: true }),
+      notes: new FormControl<string>('', { nonNullable: true }),
+      volunteerSignUpRoles: new FormArray<FormGroup<EditVolunteerSignUpRoleFormGroup>>([]),
     });
   }
 
-  private patchForm() {
-    if (this.activityEventToEdit) {
-      this.editActivityEventForm.patchValue({
-        id: this.activityEventToEdit.id,
-        activityId: this.activityEventToEdit.activityId,
-        activityCategory: this.activityEventToEdit.activityCategory,
-        eventName: this.activityEventToEdit.eventName,
-        eventDescription: this.activityEventToEdit.eventDescription,
-        startDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEventToEdit.startDateTime),
-        startTime: DateTimeFormatter.DateTimeToIso8601Time(this.activityEventToEdit.startDateTime),
-        endDate: DateTimeFormatter.DateTimeToIso8601Date(this.activityEventToEdit.endDateTime),
-        endTime: DateTimeFormatter.DateTimeToIso8601Time(this.activityEventToEdit.endDateTime),
-        locationAddress: this.activityEventToEdit.locationAddress,
-        showInCalendar: this.activityEventToEdit.showInCalendar,
-        canceled: this.activityEventToEdit.canceled,
-        canceledReason: this.activityEventToEdit.canceledReason,
-        notes: this.activityEventToEdit.notes,
+  private patchForm(activityEvent: ActivityEvent) {
+    console.log('patchForm');
+    this.editActivityEventForm.patchValue({
+      id: activityEvent.id,
+      activityId: activityEvent.activityId,
+      activityCategory: activityEvent.activityCategory,
+      eventName: activityEvent.eventName,
+      eventDescription: activityEvent.eventDescription,
+      startDate: DateTimeFormatter.DateTimeToIso8601Date(activityEvent.startDateTime),
+      startTime: DateTimeFormatter.DateTimeToIso8601Time(activityEvent.startDateTime),
+      endDate: DateTimeFormatter.DateTimeToIso8601Date(activityEvent.endDateTime),
+      endTime: DateTimeFormatter.DateTimeToIso8601Time(activityEvent.endDateTime),
+      locationAddress: activityEvent.locationAddress,
+      showInCalendar: activityEvent.showInCalendar,
+      canceled: activityEvent.canceled,
+      canceledReason: activityEvent.canceledReason,
+      notes: activityEvent.notes,
+    });
+
+    console.log('done patching basics');
+
+    activityEvent.volunteerSignUpRoles.forEach((role: VolunteerSignUpRole) => {
+      const volunteerSignUpRoleFormGroup = new FormGroup<EditVolunteerSignUpRoleFormGroup>({
+        id: new FormControl<string>(role.id, { nonNullable: true }),
+        roleTitle: new FormControl<string>(role.roleTitle, { nonNullable: true }),
+        startDate: new FormControl<string>(DateTimeFormatter.DateTimeToIso8601Date(role.startDateTime), { nonNullable: true }),
+        startTime: new FormControl<string>(DateTimeFormatter.DateTimeToIso8601Time(role.startDateTime), { nonNullable: true }),
+        endDate: new FormControl<string>(DateTimeFormatter.DateTimeToIso8601Date(role.endDateTime), { nonNullable: true }),
+        endTime: new FormControl<string>(DateTimeFormatter.DateTimeToIso8601Time(role.endDateTime), { nonNullable: true }),
+        numberOfVolunteersNeeded: new FormControl<number>(role.numberOfVolunteersNeeded, { nonNullable: true }),
+        eventVolunteers: new FormArray<FormGroup<EditEventVolunteersFormGroup>>([]),
       });
 
-      this.activityEventToEdit.volunteerSignUpRoles?.forEach((role: VolunteerSignUpRole) => {
-        const volunteerSignUpRole = new UntypedFormGroup({
-          id: new UntypedFormControl(role.id),
-          roleTitle: new UntypedFormControl(role.roleTitle),
-          startDate: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Date(role.startDateTime)),
-          startTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time(role.startDateTime)),
-          endDate: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Date(role.endDateTime)),
-          endTime: new UntypedFormControl(DateTimeFormatter.DateTimeToIso8601Time(role.endDateTime)),
-          numberOfVolunteersNeeded: new UntypedFormControl(role.numberOfVolunteersNeeded),
-          eventVolunteers: new UntypedFormArray(this.initEventVolunteersForm(role.eventVolunteers)),
+      role.eventVolunteers.forEach((eventVolunteer: EventVolunteer) => {
+        const eventVolunteerFormGroup = new FormGroup<EditEventVolunteersFormGroup>({
+          id: new FormControl<string>(eventVolunteer.id, { nonNullable: true }),
+          knightId: new FormControl<string>(eventVolunteer.knightId, { nonNullable: true })
         });
-
-        this.volunteerSignUpRolesForm.push(volunteerSignUpRole);
+        volunteerSignUpRoleFormGroup.controls.eventVolunteers.controls.push(eventVolunteerFormGroup);
       });
 
-      this.enableDisableAdministrativeDivisions();
-    }
-  }
+      this.editActivityEventForm.controls.volunteerSignUpRoles.controls.push(volunteerSignUpRoleFormGroup);
+    });
 
-  private initEventVolunteersForm(eventVolunteers: EventVolunteer[] | undefined) {
-    const eventVolunteersArray: UntypedFormGroup[] = [];
-
-    if (eventVolunteers) {
-      eventVolunteers.forEach((eventVolunteer) => {
-        const eventVolunteerFormGroup = new UntypedFormGroup({
-          id: new UntypedFormControl(eventVolunteer.id),
-          knightId: new UntypedFormControl(eventVolunteer.knightId),
-        });
-
-        eventVolunteersArray.push(eventVolunteerFormGroup);
-      });
-    }
-
-    return eventVolunteersArray;
-  }
-
-  get volunteerSignUpRolesForm() {
-    return this.editActivityEventForm.controls['volunteerSignUpRoles'] as UntypedFormArray;
+    console.log('done patching volunteer sign up roles');
   }
 
   private logError(message: string, err: ApiResponseError) {

@@ -17,6 +17,7 @@ import { ExcelFileReader } from 'src/app/services/excelFileReader.service';
 import { Subscription } from 'rxjs';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { UploadFileEvent } from 'src/app/models/events/uploadFileEvent';
+import { CreateKnightRequest } from 'src/app/models/requests/createKnightRequest';
 
 @Component({
   selector: 'upload-knights-modal',
@@ -60,7 +61,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
   onSubmitUploadKnights() {
     if (this.filePath) {
       ExcelFileReader.ReadKnightsFromFile(this.filePath)
-        .then((knightsResult: Knight[]) => {
+        .then((knightsResult: CreateKnightRequest[]) => {
           console.log(knightsResult);
           this.createKnights(knightsResult);
         })
@@ -70,7 +71,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
     }
   }
 
-  private createKnights(knights: Knight[]) {
+  private createKnights(knights: CreateKnightRequest[]) {
     const knightsObserver = {
       next: (response: Knight[]) => this.passBackResponse(response),
       error: (err: ApiResponseError) => this.logError('Error Creating Knights.', err),

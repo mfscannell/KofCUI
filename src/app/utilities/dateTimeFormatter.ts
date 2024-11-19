@@ -193,7 +193,7 @@ export class DateTimeFormatter {
       month === null ||
       day === null
     ) {
-      return undefined;
+      return '';
     }
 
     let yearString = '';
@@ -218,7 +218,7 @@ export class DateTimeFormatter {
   /// Converts ISO 8601 Date-Time to ISO 8601 Date.
   static DateTimeToIso8601Date(dateTime: string | undefined) {
     if (!dateTime) {
-      return undefined;
+      return '';
     }
 
     if (!dateTime.includes('T')) {
@@ -230,11 +230,11 @@ export class DateTimeFormatter {
 
   static DateTimeToIso8601Time(dateTime: string | undefined) {
     if (!dateTime) {
-      return undefined;
+      return '';
     }
 
     if (!dateTime.includes('T')) {
-      return undefined;
+      return '';
     }
 
     return dateTime.split('T')[1];
@@ -249,7 +249,7 @@ export class DateTimeFormatter {
       month === null ||
       day === null
     ) {
-      return undefined;
+      return '';
     }
 
     let yearString = '';

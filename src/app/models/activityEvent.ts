@@ -7,12 +7,12 @@ export interface ActivityEvent {
   activityCategory: string;
   eventName: string;
   eventDescription: string;
-  startDateTime?: string;
-  endDateTime?: string;
-  locationAddress?: StreetAddress;
-  volunteerSignUpRoles?: VolunteerSignUpRole[];
+  startDateTime: string;
+  endDateTime: string;
+  locationAddress: StreetAddress;
+  volunteerSignUpRoles: VolunteerSignUpRole[];
   showInCalendar: boolean;
   canceled: boolean;
   canceledReason: string;
-  notes?: string;
+  notes: string;
 }

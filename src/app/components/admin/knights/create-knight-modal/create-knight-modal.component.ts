@@ -1,26 +1,26 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { CreateAddressFormGroup } from 'src/app/forms/createAddressFormGroup';
+import { CreateKnightFormGroup } from 'src/app/forms/createKnightFormGroup';
+import { EditActivityInterestFormGroup } from 'src/app/forms/editActivityInterestFormGroup';
+import { EditActivityInterestsFormGroup } from 'src/app/forms/editActivityInterestsFormGroup';
+import { EditKnightMemberInfoFormGroup } from 'src/app/forms/editKnightMemberInfoFormGroup';
+import { MemberDueFormGroup } from 'src/app/forms/memberDueFormGroup';
 import { ActivityInterest } from 'src/app/models/activityInterest';
-import { ActivityInterestFormGroup } from 'src/app/models/formControls/activityInterestFormGroup';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
-import { KnightInfo } from 'src/app/models/knightInfo';
 import { MemberDues } from 'src/app/models/memberDues';
+import { CreateActivityInterestRequest } from 'src/app/models/requests/createActivityInterestRequest';
+import { CreateKnightInfoRequest } from 'src/app/models/requests/createKnightInfoRequest';
+import { CreateKnightRequest } from 'src/app/models/requests/createKnightRequest';
+import { CreateStreetAddressRequest } from 'src/app/models/requests/createStreetAddressRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { StreetAddress } from 'src/app/models/streetAddress';
 import { KnightsService } from 'src/app/services/knights.service';
+import { KnightDegree } from 'src/app/types/knight-degree.type';
+import { KnightMemberClassType } from 'src/app/types/knight-member-class.type';
+import { KnightMemberTypeType } from 'src/app/types/knight-member-type.type';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
@@ -42,7 +42,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
 
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
-  public createKnightForm: UntypedFormGroup;
+  public createKnightForm: FormGroup<CreateKnightFormGroup>;
   public selectedCountry: string = '';
 
   private createKnightSubscription?: Subscription;
@@ -56,14 +56,54 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   ngOnDestroy() {}
 
   ngOnChanges() {
-    this.createKnightForm = this.initCreateKnightForm();
-    this.errorSaving = false;
-    this.errorMessages = [];
   }
 
   public resetForm() {
     this.createKnightForm = this.initCreateKnightForm();
     this.enableDisableAdministrativeDivisions();
+
+    this.errorSaving = false;
+    this.errorMessages = [];
+  }
+
+  private initCreateKnightForm(): FormGroup<CreateKnightFormGroup> {
+    const today = new Date();
+    const activityInterestsFormGroups = this.initActivityInterestsForm(this.knightActivityInterestsForNewKnight);
+    const createKnightForm = new FormGroup<CreateKnightFormGroup>({
+      firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(63)] }),
+      middleName: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
+      lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
+      nameSuffix: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(7)] }),
+      dateOfBirth: new FormControl<string>(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()), { nonNullable: true }),
+      emailAddress: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
+      cellPhoneNumber: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(31)] }),
+      homeAddress: new FormGroup<CreateAddressFormGroup>({
+        addressName: new FormControl<string>('', { nonNullable: true }),
+        address1: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
+        address2: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
+        city: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
+        stateCode: new FormControl<string>({value: '', disabled: true}, { nonNullable: true, validators: [Validators.maxLength(3)] }),
+        postalCode: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(15)] }),
+        countryCode: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(7)] }),
+      }),
+      knightInfo: new FormGroup<EditKnightMemberInfoFormGroup>({
+        memberNumber: new FormControl<number>(0, { nonNullable: true }),
+        mailReturned: new FormControl<boolean>(false, { nonNullable: true }),
+        degree: new FormControl<KnightDegree>('First', { nonNullable: true }),
+        firstDegreeDate: new FormControl<string>(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()), { nonNullable: true }        ),
+        reentryDate: new FormControl<string>(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()), { nonNullable: true }),
+        memberType: new FormControl<KnightMemberTypeType>('Associate', { nonNullable: true }),
+        memberClass: new FormControl<KnightMemberClassType>('Paying', { nonNullable: true }),
+      }),
+      memberDues: new FormArray<FormGroup<MemberDueFormGroup>>([]),
+      activityInterests: new FormGroup<EditActivityInterestsFormGroup>({
+        activityInterests: new FormArray<FormGroup<EditActivityInterestFormGroup>>(activityInterestsFormGroups)
+      }),
+    });
+
+    this.updateFormWithMemberDuesForCreateKnightForm(createKnightForm);
+
+    return createKnightForm;
   }
 
   public getFormArrayName(activityCategoryFormOption: GenericFormOption) {
@@ -78,7 +118,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public enableDisableAdministrativeDivisions(): void {
-    const countryCode = this.getCountryCode();
+    const countryCode = this.createKnightForm.controls.homeAddress.controls.countryCode.value;
     this.selectedCountry = countryCode;
     const hasCountryCode = this.countryFormOptions.some((cfo) => cfo.value === countryCode);
 
@@ -93,118 +133,52 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-  private getCountryCode(): string {
-    return this.createKnightForm.get('homeAddress.countryCode')?.value;
-  }
-
-  private initCreateKnightForm() {
-    const today = new Date();
-    const createKnightForm = new UntypedFormGroup({
-      id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-      firstName: new UntypedFormControl('', [Validators.required, Validators.maxLength(63)]),
-      middleName: new UntypedFormControl('', [Validators.maxLength(63)]),
-      lastName: new UntypedFormControl('', [Validators.maxLength(63)]),
-      nameSuffix: new UntypedFormControl('', [Validators.maxLength(7)]),
-      dateOfBirth: new UntypedFormControl(
-        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-      ),
-      emailAddress: new UntypedFormControl('', [Validators.maxLength(63)]),
-      cellPhoneNumber: new UntypedFormControl('', [Validators.maxLength(31)]),
-      homeAddress: new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        addressName: new UntypedFormControl(null),
-        address1: new UntypedFormControl('', [Validators.maxLength(63)]),
-        address2: new UntypedFormControl('', [Validators.maxLength(63)]),
-        city: new UntypedFormControl('', [Validators.maxLength(63)]),
-        stateCode: new UntypedFormControl({value: '', disabled: true}, [Validators.maxLength(3)]),
-        postalCode: new UntypedFormControl('', [Validators.maxLength(15)]),
-        countryCode: new UntypedFormControl('', [Validators.maxLength(7)]),
-      }),
-      knightInfo: new UntypedFormGroup({
-        id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
-        memberNumber: new UntypedFormControl(0),
-        mailReturned: new UntypedFormControl(false),
-        degree: new UntypedFormControl('First'),
-        firstDegreeDate: new UntypedFormControl(
-          DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-        ),
-        reentryDate: new UntypedFormControl(
-          DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-        ),
-        memberType: new UntypedFormControl('Associate'),
-        memberClass: new UntypedFormControl('Paying'),
-      }),
-      memberDues: new UntypedFormArray([]),
-      activityInterests: new UntypedFormGroup({
-        communityActivityInterests: new UntypedFormArray([]),
-        faithActivityInterests: new UntypedFormArray([]),
-        familyActivityInterests: new UntypedFormArray([]),
-        lifeActivityInterests: new UntypedFormArray([]),
-        miscellaneousActivityInterests: new UntypedFormArray([]),
-      }),
-    });
-
-    this.updateFormWithActivityInterests(createKnightForm, this.knightActivityInterestsForNewKnight);
-    this.updateFormWithMemberDuesForCreateKnightForm(createKnightForm);
-
-    return createKnightForm;
-  }
-
-  private updateFormWithActivityInterests(form: UntypedFormGroup, activityInterests: ActivityInterest[]) {
-    this.activityCategoryFormOptions.forEach((activityCategoryFormOption) => {
-      const activityInterestsFormArray = this.getActivityInterestsFormArray(
-        form,
-        `${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`,
-      );
-      const filteredActivities = activityInterests?.filter((activityInterest) => {
-        return activityInterest.activityCategory === activityCategoryFormOption.value;
+  private updateFormWithActivityInterests(activityInterests: ActivityInterest[]) {
+    console.log('updateFormWithActivityInterests');
+    console.log(activityInterests);
+    console.log(this.createKnightForm);
+    activityInterests.forEach((activityInterest: ActivityInterest) => {
+      const activityInterestFormGroup = new FormGroup<EditActivityInterestFormGroup>({
+        activityId: new FormControl<string>(activityInterest.activityId, { nonNullable: true }),
+        activityName: new FormControl<string>(activityInterest.activityName, { nonNullable: true }),
+        activityCategory: new FormControl<string>(activityInterest.activityCategory, { nonNullable: true }),
+        interested: new FormControl<boolean>(activityInterest.interested, { nonNullable: true }),
       });
-      filteredActivities?.forEach((activityInterest: ActivityInterest) => {
-        const activityInterestFormGroup = new UntypedFormGroup({
-          activityId: new UntypedFormControl(activityInterest.activityId),
-          activityName: new UntypedFormControl(activityInterest.activityName),
-          activityCategory: new UntypedFormControl(activityInterest.activityCategory),
-          interested: new UntypedFormControl(activityInterest.interested),
-        });
-        activityInterestsFormArray.push(activityInterestFormGroup);
-      });
+      this.createKnightForm.controls.activityInterests.controls.activityInterests.controls.push(activityInterestFormGroup);
     });
   }
 
-  private updateFormWithMemberDuesForCreateKnightForm(form: UntypedFormGroup) {
+  private initActivityInterestsForm(activityInterests: ActivityInterest[]): FormGroup<EditActivityInterestFormGroup>[] {
+    const formGroups = activityInterests.map((activityInterest: ActivityInterest) => {
+      const activityInterestFormGroup = new FormGroup<EditActivityInterestFormGroup>({
+        activityId: new FormControl<string>(activityInterest.activityId, { nonNullable: true }),
+        activityName: new FormControl<string>(activityInterest.activityName, { nonNullable: true }),
+        activityCategory: new FormControl<string>(activityInterest.activityCategory, { nonNullable: true }),
+        interested: new FormControl<boolean>(activityInterest.interested, { nonNullable: true }),
+      });
+      return activityInterestFormGroup;
+    });
+
+    return formGroups;
+  }
+
+  private updateFormWithMemberDuesForCreateKnightForm(form: FormGroup<CreateKnightFormGroup>) {
     const thisYear = new Date().getFullYear();
     const startYear = thisYear - 9;
     const endYear = thisYear + 1;
 
     for (let year = startYear; year <= endYear; year++) {
-      const memberDueFormGroup = new UntypedFormGroup({
-        memberDuesId: new UntypedFormControl(0),
-        year: new UntypedFormControl(year),
-        paidStatus: new UntypedFormControl('Unpaid'),
+      const memberDueFormGroup = new FormGroup<MemberDueFormGroup>({
+        year: new FormControl<number>(year, { nonNullable: true }),
+        paidStatus: new FormControl<string>('Unpaid', { nonNullable: true }),
       });
 
-      this.appendMemberDues(form, memberDueFormGroup);
+      form.controls.memberDues.controls.push(memberDueFormGroup);
     }
-  }
-
-  public getActivityInterestsFormArray(form: UntypedFormGroup, activityCategory: string): UntypedFormArray {
-    const activityInterestsFormGroup = form.controls['activityInterests'] as UntypedFormGroup;
-    const activityInterestsFormArray = activityInterestsFormGroup.controls[activityCategory] as UntypedFormArray;
-
-    return activityInterestsFormArray;
-  }
-
-  getMemberDuesForm(form: UntypedFormGroup) {
-    return form.controls['memberDues'] as UntypedFormArray;
   }
 
   public getMemberDuesYear(memberDueYear: AbstractControl): string {
     return memberDueYear.getRawValue().year || '';
-  }
-
-  appendMemberDues(form: UntypedFormGroup, memberDueFormGroup: UntypedFormGroup) {
-    const something = form.controls['memberDues'] as UntypedFormArray;
-    something.push(memberDueFormGroup);
   }
 
   onSubmitCreateKnight() {
@@ -223,8 +197,8 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
 
   private mapCreateKnightFormToKnight() {
     const rawForm = this.createKnightForm.getRawValue();
-    const homeAddress: StreetAddress = {
-      id: rawForm.homeAddress.id,
+    const homeAddress: CreateStreetAddressRequest = {
+      addressName: '',
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,
       city: rawForm.homeAddress.city,
@@ -232,8 +206,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       postalCode: rawForm.homeAddress.postalCode,
       countryCode: rawForm.homeAddress.countryCode,
     };
-    const knightInfo: KnightInfo = {
-      id: rawForm.knightInfo.id,
+    const knightInfo: CreateKnightInfoRequest = {
       memberNumber: rawForm.knightInfo.memberNumber,
       mailReturned: rawForm.knightInfo.mailReturned,
       degree: rawForm.knightInfo.degree,
@@ -250,8 +223,13 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
 
       return memberDues;
     });
-    const knight: Knight = {
-      id: rawForm.id,
+    const _activityInterests: CreateActivityInterestRequest[] = this.createKnightForm.controls.activityInterests.controls.activityInterests.controls.map((formGroup: FormGroup<EditActivityInterestFormGroup>) => {
+      return {
+        activityId: formGroup.controls.activityId.value,
+        interested: formGroup.controls.interested.value
+      } as CreateActivityInterestRequest;
+    });
+    const knight: CreateKnightRequest = {
       firstName: rawForm.firstName,
       middleName: rawForm.middleName,
       lastName: rawForm.lastName,
@@ -261,24 +239,9 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       cellPhoneNumber: rawForm.cellPhoneNumber,
       homeAddress: homeAddress,
       knightInfo: knightInfo,
-      activityInterests: [],
+      activityInterests: _activityInterests,
       memberDues: _memberDues,
     };
-
-    this.activityCategoryFormOptions.forEach((activityCategoryFormOption) => {
-      const activityInterests =
-        rawForm['activityInterests'][`${activityCategoryFormOption.value.toLowerCase()}ActivityInterests`];
-
-      activityInterests.forEach((ai: ActivityInterestFormGroup) => {
-        console.log(ai);
-        knight.activityInterests.push({
-          activityId: ai.activityId,
-          activityName: ai.activityName,
-          activityCategory: ai.activityCategory,
-          interested: ai.interested,
-        });
-      });
-    });
 
     console.log('Mapped Knight:');
     console.log(knight);

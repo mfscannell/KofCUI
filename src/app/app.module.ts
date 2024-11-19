@@ -60,6 +60,8 @@ import { FilterAdministrativeDivisionsPipe } from './pipes/filterAdministrativeD
 import { FilterLeadershipRolesPipe } from './pipes/filterLeadershipRoles.pipe';
 import { ToNumVolunteersNeededPipe } from './pipes/toNumVolunteersNeeded.pipe';
 import { MeetsPasswordRequrementsPipe } from './pipes/meetsPasswordRequirements.pipe';
+import { FilterActivityInterestsByCategoryPipe } from './pipes/filterActivityInterestsByCategory.pipe';
+import { ConvertKnightIdToNamePipe } from './pipes/convertKnightIdToName.pipe';
 
 @NgModule({
   declarations: [
@@ -93,9 +95,11 @@ import { MeetsPasswordRequrementsPipe } from './pipes/meetsPasswordRequirements.
     EventVolunteeringComponent,
     VolunteerForEventModalComponent,
     ToDisplayDatePipe,
+    ConvertKnightIdToNamePipe,
     ToDisplayTimePipe,
     ToNumVolunteersNeededPipe,
     FilterActivitiesByCategoryPipe,
+    FilterActivityInterestsByCategoryPipe,
     FilterLeadershipRolesPipe,
     CanModifyActivityPipe,
     FilterAdministrativeDivisionsPipe,

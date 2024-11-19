@@ -1,14 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditMemberDuesFormGroup } from 'src/app/forms/editMemberDuesFormGroup';
@@ -26,7 +16,6 @@ import { MemberDuesService } from 'src/app/services/memberDues.service';
 })
 export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
-  @Input() memberDues?: MemberDues[] = [];
   @Input() knightId: string = '';
   @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
   @Output() editKnightMemberDuesChanges = new EventEmitter<MemberDues[]>();
@@ -47,24 +36,22 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   ngOnDestroy() {}
 
   ngOnChanges() {
-    this.errorSaving = false;
-    this.errorMessages = [];
   }
 
-  public resetForm(memberDues: MemberDues[]) {
+  public resetForm(memberDues: MemberDues[]): void {
     this.editKnightMemberDuesForm = this.initForm();
     this.errorSaving = false;
     this.errorMessages = [];
     this.patchForm(memberDues);
   }
 
-  private initForm() {
+  private initForm(): FormGroup<EditMemberDuesFormGroup> {
     return new FormGroup<EditMemberDuesFormGroup>({
       memberDues: new FormArray<FormGroup<MemberDueFormGroup>>([]),
     });
   }
 
-  private patchForm(memberDues: MemberDues[]) {
+  private patchForm(memberDues: MemberDues[]): void {
     if (memberDues) {
       memberDues.forEach((memberDue: MemberDues) => {
         const memberDueFormGroup = new FormGroup<MemberDueFormGroup>({
