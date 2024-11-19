@@ -127,7 +127,22 @@
           <!-- ACTIVITIES -->
           <div class="tab-pane fade" id="activities-tab-pane" role="tabpanel" aria-labelledby="activities-tab" tabindex="0">
             <div formGroupName="activityInterests">
-              <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
+              <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions; let i = index;">
+                <div class="form-group row mb-1">
+                  <div class="col-12">
+                    <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
+                  </div>
+                </div>
+                <div formArrayName="activityInterests">
+                  <div *ngFor="let activityInterestGroup of createKnightForm.controls.activityInterests.controls.activityInterests.controls | filterActivityInterestsByCategoryPipe:activityCategoryFormOption.value; let j = index;" [formGroup]="activityInterestGroup">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" formControlName="interested" id="interested-{{i}}-{{j}}">
+                      <label class="form-check-label" for="allowChangeActivitySubscription">{{activityInterestGroup.controls.activityName.value}}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
                 <div class="form-group mb-3">
                   <div class="col-12">
                     <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
@@ -143,18 +158,18 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <!-- MEMBER DUES -->
           <div class="tab-pane fade" id="member-dues-tab-pane" role="tabpanel" aria-labelledby="member-dues-tab" tabindex="0">
             <div formArrayName="memberDues">
-              <div *ngFor="let memberDue of getMemberDuesForm(createKnightForm).controls; let i = index" [formGroupName]="i">
+              <div *ngFor="let memberDue of createKnightForm.controls.memberDues.controls; let i = index" [formGroupName]="i">
                 <div class="form-floating mb-3">
                   <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
                     <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
                   </select>
-                  <label for="stateCode">{{getMemberDuesYear(memberDue)}}</label>
+                  <label for="stateCode">{{memberDue.controls.year.value}}</label>
                 </div>
               </div>
             </div>

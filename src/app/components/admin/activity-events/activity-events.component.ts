@@ -190,20 +190,17 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   }
 
   public openCreateActivityEventModal() {
-    this.editActivityEventModal?.resetForm();
-    this.errorSending = false;
-    this.errorMessages = [];
     this.activityEventToEdit = undefined;
     this.editModalAction = ModalActionEnums.Create;
     this.editModalHeaderText = 'Adding Activity Event';
+    this.editActivityEventModal?.resetForm();
   }
 
   public openEditActivityEventModal(activityEvent: ActivityEvent) {
-    this.errorSending = false;
-    this.errorMessages = [];
     this.activityEventToEdit = activityEvent;
     this.editModalAction = ModalActionEnums.Edit;
     this.editModalHeaderText = 'Editing Activity Event';
+    this.editActivityEventModal?.resetForm(activityEvent);
   }
 
   public appendActivityEventToList(activityEvent: ActivityEvent) {

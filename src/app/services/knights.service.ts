@@ -8,6 +8,7 @@ import { KnightUser } from '../models/knightUser';
 import { UpdateKnightPersonalInfoRequest } from '../models/requests/updateKnightPersonalInfoRequest';
 import { KnightInfo } from '../models/knightInfo';
 import { UpdateKnightMembershipInfoRequest } from '../models/requests/updateKnightMembershipInfoRequest';
+import { CreateKnightRequest } from '../models/requests/createKnightRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -31,11 +32,11 @@ export class KnightsService {
     return this.http.get<Knight[]>('knights/activeNamesOnly');
   }
 
-  createKnightAndActivityInterest(knight: Knight): Observable<Knight> {
+  createKnightAndActivityInterest(knight: CreateKnightRequest): Observable<Knight> {
     return this.http.post<Knight>('knights/withAllActivities', knight);
   }
 
-  createKnights(knights: Knight[]): Observable<Knight[]> {
+  createKnights(knights: CreateKnightRequest[]): Observable<Knight[]> {
     return this.http.post<Knight[]>('knights/multiple', knights);
   }
 

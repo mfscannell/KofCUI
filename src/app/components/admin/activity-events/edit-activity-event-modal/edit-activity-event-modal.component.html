@@ -120,61 +120,65 @@
             <div class="form-group row mb-3">
               <div class="col-12">All times are in {{councilTimeZone?.displayName}} time zone.</div>
               <div formArrayName="volunteerSignUpRoles">
-                <div *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
-                  <div class="form-group row mb-3">
-                    <div class="col-6 col-md-3">
-                      <input type="text" class="form-control" formControlName="roleTitle" id="roleTitle" placeholder="Title" autocomplete="off">
-                    </div>
-                    <div class="col-3 col-md-2">
-                      <input type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
-                    </div>
-                    <div class="col-3 col-md-1">
-                      <button type="button" class="btn btn-danger" (click)="deleteVolunteerSignUpRole(i)">
-                        <svg class="bi" width="24" height="24" fill="currentColor">
-                          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="form-floating mb-3">
-                        <input type="time" formControlName="startTime" id="startTime" class="form-control" min="0:00" max="23:30" step="900" />
-                        <label for="startTime">Start Time</label>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="form-floating mb-3">
-                        <input type="time" formControlName="endTime" id="endTime" class="form-control" min="0:00" max="23:30" step="900" />
-                        <label for="endTime">End Time</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div formArrayName="eventVolunteers">
-                    <div *ngFor="let eventVolunteer of getEventVolunteers(volunteerSignUpRole); let j = index" [formGroupName]="j">
-                      <div class="form-group row mb-3">
-                        <div class="col-8 col-md-4">
-                          <select class="form-select" id="activityId" formControlName="knightId">
-                            <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
-                          </select>
-                        </div>
-                        <div class="col-4 col-md-2">
-                          <button type="button" class="btn btn-danger" (click)="deleteEventVolunteer(i, j)">
-                            <svg class="bi" width="22" height="22" fill="currentColor">
-                              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                <!-- VOLUNTEER SIGN UP ROLES -->
+                <div *ngFor="let volunteerSignUpRole of editActivityEventForm.controls.volunteerSignUpRoles.controls; let i = index">
+                  <div [formGroup]="volunteerSignUpRole">
                     <div class="form-group row mb-3">
-                      <div class="col-12 col-md-12">
-                        <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addEventVolunteer(i)">Add Volunteer</button>
+                      <div class="col-6 col-md-3">
+                        <input type="text" class="form-control" formControlName="roleTitle" id="roleTitle" placeholder="Title" autocomplete="off">
+                      </div>
+                      <div class="col-3 col-md-2">
+                        <input type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
+                      </div>
+                      <div class="col-3 col-md-1">
+                        <button type="button" class="btn btn-danger" (click)="deleteVolunteerSignUpRole(i)">
+                          <svg class="bi" width="24" height="24" fill="currentColor">
+                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-floating mb-3">
+                          <input type="time" formControlName="startTime" id="startTime" class="form-control" min="0:00" max="23:30" step="900" />
+                          <label for="startTime">Start Time</label>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="form-floating mb-3">
+                          <input type="time" formControlName="endTime" id="endTime" class="form-control" min="0:00" max="23:30" step="900" />
+                          <label for="endTime">End Time</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div formArrayName="eventVolunteers">
+                      <div *ngFor="let eventVolunteer of volunteerSignUpRole.controls.eventVolunteers.controls; let j = index">
+                        <div class="form-group row mb-3" [formGroup]="eventVolunteer">
+                          <div class="col-8 col-md-4">
+                            <select class="form-select" id="activityId" formControlName="knightId">
+                              <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
+                            </select>
+                          </div>
+                          <div class="col-4 col-md-2">
+                            <button type="button" class="btn btn-danger" (click)="deleteEventVolunteer(i, j)">
+                              <svg class="bi" width="22" height="22" fill="currentColor">
+                                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group row mb-3">
+                        <div class="col-12 col-md-12">
+                          <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addEventVolunteer(i)">Add Volunteer</button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <hr *ngIf="i !== volunteerSignUpRolesForm.controls.length-1" class="my-12"/>
+                  <hr *ngIf="i !== editActivityEventForm.controls.volunteerSignUpRoles.controls.length-1" class="my-12"/>
                 </div>
+                <!-- END VOLUNTEER SIGN UP ROLES -->
               </div>
               <div class="form-group row mb-1">
                 <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addVolunteerSignUpRole()">Add Role</button>

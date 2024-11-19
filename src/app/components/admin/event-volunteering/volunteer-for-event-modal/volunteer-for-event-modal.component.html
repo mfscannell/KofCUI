@@ -9,38 +9,38 @@
       <form [formGroup]="volunteerForActivityEventForm" (ngSubmit)="onSubmitVolunteerForActivityEvent()">
         <div class="row mb-1">
           <div class="col-12">
-            <h5 *ngIf="!activityEvent?.canceled">{{activityEvent?.eventName}}</h5>
-            <h5 *ngIf="activityEvent?.canceled">{{activityEvent?.eventName}} (CANCELED)</h5>
+            <h5 *ngIf="!activityEvent?.canceled">{{activityEvent.eventName}}</h5>
+            <h5 *ngIf="activityEvent?.canceled">{{activityEvent.eventName}} (CANCELED)</h5>
           </div>
         </div>
         <div class="row mb-1" *ngIf="activityEvent?.canceled">
-          <div class="col-12">Reason for cancelation: {{activityEvent?.canceledReason}}</div>
+          <div class="col-12">Reason for cancelation: {{activityEvent.canceledReason}}</div>
         </div>
         <div class="row mb-1">
           <div class="col-12">
-            {{activityEvent?.eventDescription}}
+            {{activityEvent.eventDescription}}
           </div>
         </div>
         <div class="form-group mb-3">
-          {{activityEvent?.startDateTime| toDisplayDate }}, {{ activityEvent?.startDateTime | toDisplayTime }} - {{ activityEvent?.endDateTime | toDisplayTime }}
+          {{activityEvent.startDateTime | toDisplayDate }}, {{ activityEvent.startDateTime | toDisplayTime }} - {{ activityEvent.endDateTime | toDisplayTime }}
         </div>
-        <div formGroupName="locationAddress">
+        <div>
           <div class="row mb-1">
             <h5>Location</h5>
           </div>
           <div class="form-group row mb-1">
             <div class="col-12">
-              {{activityEvent?.locationAddress?.addressName}}
+              {{activityEvent.locationAddress.addressName}}
             </div>
           </div>
           <div class="form-group row mb-1">
             <div class="col-12">
-              {{activityEvent?.locationAddress?.address1}} {{activityEvent?.locationAddress?.address2}}
+              {{activityEvent.locationAddress.address1}} {{activityEvent.locationAddress.address2}}
             </div>
           </div>
           <div class="form-group row mb-1">
             <div class="col-12">
-              {{activityEvent?.locationAddress?.city}}, {{activityEvent?.locationAddress?.stateCode}} {{activityEvent?.locationAddress?.postalCode}}
+              {{activityEvent.locationAddress.city}}, {{activityEvent.locationAddress.stateCode}} {{activityEvent.locationAddress.postalCode}}
             </div>
           </div>
         </div>
@@ -48,30 +48,26 @@
           <div class="row mb-1">
             <h5>Volunteers</h5>
           </div>
-          <div *ngFor="let volunteerSignUpRole of volunteerSignUpRolesForm.controls; let i = index" [formGroupName]="i">
-            <div class="form-group row">
-              <div class="col-12 mb-1"> {{ activityEvent?.volunteerSignUpRoles?.[i] | toNumVolunteersNeeded }} {{activityEvent?.volunteerSignUpRoles?.[i]?.startDateTime | toDisplayTime }} - {{activityEvent?.volunteerSignUpRoles?.[i]?.endDateTime | toDisplayTime }} </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                <label for="volunteerRole_volunteerFor" class="col-form-label">Volunteer for Role?</label>
+          <div *ngFor="let volunteerSignUpRole of volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls; let i = index">
+            <div [formGroup]="volunteerSignUpRole">
+              <div class="form-group row">
+                <div class="col-12 mb-1"> {{ activityEvent.volunteerSignUpRoles[i] | toNumVolunteersNeeded }} {{activityEvent.volunteerSignUpRoles[i].startDateTime | toDisplayTime }} - {{activityEvent.volunteerSignUpRoles[i].endDateTime | toDisplayTime }} </div>
               </div>
-              <div class="col-6 col-sm-6 col-md-8 col-lg-9">
-                <input type="checkbox" class="form-check-input" formControlName="volunteerForRole" id="volunteerRole_volunteerFor" (change)="changeVolunteerForRole($event, i)">
+              <div class="form-group row mb-3">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" formControlName="volunteerForRole" id="volunteerRole_volunteerFor">
+                  <label class="form-check-label" for="volunteerRole_volunteerFor">Volunteer for Role?</label>
+                </div>
               </div>
-            </div>
-            <ng-container formArrayName="eventVolunteers">
-              <ng-container *ngFor="let eventVolunteer of getEventVolunteers(volunteerSignUpRole); let j = index" [formGroupName]="j">
+              <div *ngFor="let eventVolunteer of activityEvent.volunteerSignUpRoles[i].eventVolunteers">
                 <div class="form-group row mb-3">
-                  <div class="col-8 col-md-3">
-                    <select readonly class="form-control" id="activityId" formControlName="knightId">
-                      <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
-                    </select>
+                  <div class="col-12">
+                    {{eventVolunteer.knightId | convertKnightIdToName:allKnights}}
                   </div>
                 </div>
-              </ng-container>
-            </ng-container>
-            <hr *ngIf="i !== volunteerSignUpRolesForm.controls.length-1" class="my-12"/>
+              </div>
+              <hr *ngIf="i !== volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls.length-1" class="my-12"/>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
