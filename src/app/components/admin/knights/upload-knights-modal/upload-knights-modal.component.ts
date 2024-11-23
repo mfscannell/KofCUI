@@ -93,7 +93,7 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
     this.toggleExampleFileText = this.showExampleFile ? 'Hide Example File' : 'Show Example File';
   }
 
-  logError(message: string, err: ApiResponseError) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -101,6 +101,10 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);

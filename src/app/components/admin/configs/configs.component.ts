@@ -130,6 +130,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
     if (typeof err?.error === 'string') {
       this.errorMessages = [err?.error];
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       const errors = [];
 

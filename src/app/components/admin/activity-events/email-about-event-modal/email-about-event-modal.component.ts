@@ -16,7 +16,7 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
   @Input() activityEvent?: ActivityEvent;
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
   public sendEmailForm: UntypedFormGroup;
-  public errorSending: boolean = false;
+  public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
   private activitiesSubscription?: Subscription;
@@ -31,7 +31,7 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
 
   ngOnChanges() {
     this.sendEmailForm = this.initForm();
-    this.errorSending = false;
+    this.errorSaving = false;
     this.errorMessages = [];
   }
 
@@ -82,12 +82,16 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
 
-    this.errorSending = true;
+    this.errorSaving = true;
   }
 }

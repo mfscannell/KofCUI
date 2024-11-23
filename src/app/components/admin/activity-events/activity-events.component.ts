@@ -8,7 +8,6 @@ import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
@@ -20,6 +19,7 @@ import { FormsService } from 'src/app/services/forms.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { EditActivityEventModalComponent } from './edit-activity-event-modal/edit-activity-event-modal.component';
+import { KnightName } from 'src/app/models/knightName';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -33,7 +33,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   selectableActivities: Activity[] = [];
   allActivities: Activity[] = [];
   activityEventToEdit?: ActivityEvent;
-  allKnights: Knight[] = [];
+  allKnights: KnightName[] = [];
   fromDate: string | undefined;
   toDate: string | undefined;
   page = 1;
@@ -42,7 +42,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   public councilTimeZone: GenericFormOption | undefined;
   editActivityEventForm: UntypedFormGroup;
 
-  errorSending: boolean = false;
+  errorSaving: boolean = false;
   errorMessages: string[] = [];
   public activityEventToEmailAbout: ActivityEvent | undefined;
 
@@ -165,7 +165,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
         councilTimeZone,
         getAllActivitiesResponse,
         getAllKnightsResponse,
-      ]: [GenericFormOption[], CountryFormOption[], GenericFormOption, Activity[], Knight[]]) => {
+      ]: [GenericFormOption[], CountryFormOption[], GenericFormOption, Activity[], KnightName[]]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.countryFormOptions = countryResponse;
         this.councilTimeZone = councilTimeZone;
@@ -181,7 +181,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       this.formsService.getCountryFormOptions(),
       this.configsService.getCouncilTimeZone(),
       this.activitiesService.getAllActivities(),
-      this.knightsService.getAllActiveKnightsNames(),
+      this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}),
     ]).subscribe(formsObserver);
   }
 
@@ -228,12 +228,16 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
 
-    this.errorSending = true;
+    this.errorSaving = true;
   }
 }

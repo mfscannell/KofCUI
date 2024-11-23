@@ -9,6 +9,7 @@ import { UpdateKnightPersonalInfoRequest } from '../models/requests/updateKnight
 import { KnightInfo } from '../models/knightInfo';
 import { UpdateKnightMembershipInfoRequest } from '../models/requests/updateKnightMembershipInfoRequest';
 import { CreateKnightRequest } from '../models/requests/createKnightRequest';
+import { KnightName } from '../models/knightName';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +25,21 @@ export class KnightsService {
     return this.http.get<Knight[]>('knights');
   }
 
-  getAllKnightsNames(): Observable<Knight[]> {
-    return this.http.get<Knight[]>('knights/namesOnly');
-  }
+  getAllKnightsNames(context?: {restrictToActiveOnly: boolean}): Observable<KnightName[]> {
+    let queryString = 'knights/namesOnly';
+    let queryStringContainsParam = false;
 
-  getAllActiveKnightsNames(): Observable<Knight[]> {
-    return this.http.get<Knight[]>('knights/activeNamesOnly');
+    if (context?.restrictToActiveOnly) {
+      if (queryStringContainsParam) {
+        queryString = `${queryString}&restringToActiveOnly=true`;
+      } else {
+        queryString = `${queryString}?restringToActiveOnly=true`;
+      }
+
+      queryStringContainsParam = true;
+    }
+
+    return this.http.get<KnightName[]>(queryString);
   }
 
   createKnightAndActivityInterest(knight: CreateKnightRequest): Observable<Knight> {
