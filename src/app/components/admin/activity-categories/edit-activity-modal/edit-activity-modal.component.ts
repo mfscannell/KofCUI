@@ -6,7 +6,7 @@ import { EditActivityCoordinatorFormGroup } from 'src/app/forms/editActivityCoor
 import { EditActivityModelFormGroup } from 'src/app/forms/editActivityModelFormGroup';
 import { Activity } from 'src/app/models/activity';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { Knight } from 'src/app/models/knight';
+import { KnightName } from 'src/app/models/knightName';
 import { CreateActivityRequest } from 'src/app/models/requests/createActivityRequest';
 import { UpdateActivityRequest } from 'src/app/models/requests/updateActivityRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
@@ -18,9 +18,10 @@ import { ActivitiesService } from 'src/app/services/activities.service';
   styleUrls: ['./edit-activity-modal.component.scss'],
 })
 export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('cancelEditActivityModal', { static: false }) cancelEditActivityModal: ElementRef | undefined;
+  @ViewChild('closeEditActivityModal', { static: false }) cancelEditActivityModal: ElementRef | undefined;
+  @ViewChild('informationTab', { static: false }) informationTab: ElementRef | undefined;
 
-  @Input() allKnights: Knight[] = [];
+  @Input() allKnights: KnightName[] = [];
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() modalHeaderText: string = '';
   @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
@@ -55,6 +56,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public resetForm(activity?: Activity) {
+    this.informationTab?.nativeElement.click();
     this.editActivityForm = this.initForm();
     this.editActivityForm.markAsPristine();
     this.editActivityForm.markAsUntouched();
@@ -65,7 +67,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-  private initForm() {
+  private initForm(): FormGroup<EditActivityModelFormGroup> {
     return new FormGroup<EditActivityModelFormGroup>({
       id: new FormControl<string>('00000000-0000-0000-0000-000000000000', {nonNullable: true}),
       activityName: new FormControl<string>('', { nonNullable:true, validators: [Validators.required, Validators.maxLength(127)] }),
@@ -115,6 +117,10 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public onSubmitEditActivity() {
+    if(!this.editActivityForm.valid) {
+      return;
+    }
+
     if (this.modalAction === ModalActionEnums.Edit) {
       const updatedActivity = this.mapFormToUpdateActivityRequest();
       this.updateActivity(updatedActivity);
@@ -125,6 +131,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private mapFormToCreateActivityRequest(): CreateActivityRequest {
+    console.log(this.editActivityForm);
     const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map((activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
       return activityCoordinatorFormGroup.controls.knightId.value;
     });
@@ -201,6 +208,10 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);

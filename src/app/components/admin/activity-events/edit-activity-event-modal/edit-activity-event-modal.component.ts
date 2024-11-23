@@ -12,7 +12,7 @@ import { ChangeActivityEvent } from 'src/app/models/events/changeActivityEvent';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { Knight } from 'src/app/models/knight';
+import { KnightName } from 'src/app/models/knightName';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
@@ -31,7 +31,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   @Input() councilTimeZone?: GenericFormOption;
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() selectableActivities: Activity[] = [];
-  @Input() allKnights: Knight[] = [];
+  @Input() allKnights: KnightName[] = [];
   @Output() createActivityEventChanges = new EventEmitter<ActivityEvent>();
   @Output() updateActivityEventChanges = new EventEmitter<ActivityEvent>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
@@ -340,6 +340,10 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);

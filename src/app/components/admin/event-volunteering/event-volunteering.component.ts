@@ -7,11 +7,11 @@ import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { VolunteerForEventModalComponent } from './volunteer-for-event-modal/volunteer-for-event-modal.component';
+import { KnightName } from 'src/app/models/knightName';
 
 @Component({
   selector: 'kofc-event-volunteering',
@@ -24,7 +24,7 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   private activityEventsSubscription?: Subscription;
   private getAllKnightsSubscription?: Subscription;
   activityEvents: ActivityEvent[] = [];
-  allKnights: Knight[] = [];
+  allKnights: KnightName[] = [];
   fromDate: string;
   toDate: string;
   hoveredDate: NgbDate | null = null;
@@ -89,12 +89,12 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
 
   private getAllActiveKnightsNames() {
     const knightsObserver = {
-      next: (getAllKnightsResponse: Knight[]) => (this.allKnights = getAllKnightsResponse),
+      next: (getAllKnightsResponse: KnightName[]) => (this.allKnights = getAllKnightsResponse),
       error: (err: ApiResponseError) => this.logError('Error getting all knights.', err),
       complete: () => console.log('All knights loaded.'),
     };
 
-    this.getAllKnightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
+    this.getAllKnightsSubscription = this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}).subscribe(knightsObserver);
   }
 
   public openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
@@ -122,6 +122,10 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);

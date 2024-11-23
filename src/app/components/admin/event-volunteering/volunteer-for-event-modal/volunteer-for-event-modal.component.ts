@@ -5,7 +5,7 @@ import { EditVolunteerForEventFormGroup } from 'src/app/forms/editVolunteerForEv
 import { EditVolunteerForRoleFormGroup } from 'src/app/forms/editVolunteerForRoleFormGroup';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { EventVolunteer } from 'src/app/models/eventVolunteer';
-import { Knight } from 'src/app/models/knight';
+import { KnightName } from 'src/app/models/knightName';
 import { VolunteerForActivityEventRequest } from 'src/app/models/requests/volunteerForActivityEventRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
@@ -42,7 +42,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
     } as StreetAddress,
     volunteerSignUpRoles: []
   } as ActivityEvent;
-  @Input() allKnights: Knight[] = [];
+  @Input() allKnights: KnightName[] = [];
   @Input() knightId: string = '';
   @Output() editLeadershipRoleChanges = new EventEmitter<ActivityEvent>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
@@ -181,6 +181,10 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
