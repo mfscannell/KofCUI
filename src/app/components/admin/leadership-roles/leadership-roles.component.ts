@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as _ from "lodash";
 
-import { Knight } from 'src/app/models/knight';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { KnightsService } from 'src/app/services/knights.service';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategoryEnums';
 import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/edit-leadership-role-modal.component';
+import { KnightName } from 'src/app/models/knightName';
 
 @Component({
   selector: 'kofc-leadership-roles',
@@ -17,7 +17,7 @@ import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/e
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   @ViewChild(EditLeadershipRoleModalComponent) editLeadershipRoleModal: EditLeadershipRoleModalComponent | undefined;
 
-  public allKnights: Knight[] = [];
+  public allKnights: KnightName[] = [];
   public leadershipRoles: LeadershipRole[] = [];
   public leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(LeadershipRoleCategoryEnums);
   private knightsSubscription?: Subscription;
@@ -45,14 +45,14 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
   private getAllActiveKnightsNames() {
     const knightsObserver = {
-      next: (knights: Knight[]) => this.loadAllKnights(knights),
+      next: (knights: KnightName[]) => this.loadAllKnights(knights),
       error: (err: unknown) => console.log(`${err}`),
       complete: () => console.log('Knights loaded.'),
     };
-    this.knightsSubscription = this.knightsService.getAllActiveKnightsNames().subscribe(knightsObserver);
+    this.knightsSubscription = this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}).subscribe(knightsObserver);
   }
 
-  private loadAllKnights(knights: Knight[]) {
+  private loadAllKnights(knights: KnightName[]) {
     this.allKnights = knights;
   }
 
@@ -67,7 +67,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
       .subscribe(leadershipRolesObserver);
   }
 
-  openEditLeadershipRoleModal(leadershipRole: LeadershipRole) {
+  public openEditLeadershipRoleModal(leadershipRole: LeadershipRole) {
     this.editLeadershipRoleModal?.resetForm(leadershipRole);
   }
 

@@ -109,7 +109,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
     this.cancelDeleteActiveModal?.nativeElement.click();
   }
 
-  logError(message: string, err: ApiResponseError) {
+  private logError(message: string, err: ApiResponseError) {
     console.error(message);
     console.error(err);
 
@@ -117,12 +117,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
       }
     }
 
-    this.showErrorMessage = true;
+    this.errorSaving = true;
   }
 }

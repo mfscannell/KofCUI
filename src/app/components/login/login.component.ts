@@ -70,6 +70,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);

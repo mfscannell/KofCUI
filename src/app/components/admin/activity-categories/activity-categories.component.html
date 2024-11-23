@@ -15,7 +15,7 @@
               </div>
               <div class="col-3 col-md-4">
                 <div class="btn-toolbar text-center mt-1">
-                  <button *ngIf="'edit' | canModifyActivity:activity.activityId" type="button" data-bs-toggle="modal" data-bs-target="#editActivityModal" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditActivityModal(activity)">
+                  <button *ngIf="'edit' | canModifyActivity:activity.activityId" type="button" [attr.aria-label]="'edit-' + activity.activityName + '-button'" data-bs-toggle="modal" data-bs-target="#editActivityModal" class="btn btn-primary btn-kofc-blue me-1" (click)="openEditActivityModal(activity)">
                     <svg class="bi" width="20" height="20" fill="currentColor">
                       <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                     </svg>

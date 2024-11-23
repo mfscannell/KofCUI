@@ -1,35 +1,41 @@
 <div class="modal-dialog modal-xl">
   <div class="modal-content">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-      <button #cancelEditActivityModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" (click)="cancelModal()">
-      </button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="editActivityForm" (ngSubmit)="onSubmitEditActivity()">
+    <form [formGroup]="editActivityForm" (ngSubmit)="onSubmitEditActivity()">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+        <button #closeEditActivityModal id="cancel-edit-activity-modal" type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" (click)="cancelModal()">
+        </button>
+      </div>
+      <div class="modal-body">
         <nav class="tabbable">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Information</button>
+            <button class="nav-link active" #informationTab id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Information</button>
             <button class="nav-link" id="coordinators-tab" data-bs-toggle="tab" data-bs-target="#coordinators-tab-pane" type="button" role="tab" aria-controls="coordinators-tab-pane" aria-selected="false">Coordinators</button>
             <button class="nav-link" id="event-notes-tab" data-bs-toggle="tab" data-bs-target="#event-notes-tab-pane" type="button" role="tab" aria-controls="event-notes-tab-pane" aria-selected="false">Event Notes</button>
           </div>
         </nav>
-        <div class="tab-content mt-2" id="create-knight-tab-content">
+        <div class="tab-content mt-2" id="edit-activity-tab-content">
           <!-- INFORMATION -->
           <div class="tab-pane fade show active" id="information-tab-pane" role="tabpanel" aria-labelledby="information-tab" tabindex="0">
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="activityName" id="activityName" autocomplete="off" placeholder="Pancake Breakfast">
-              <label for="activityName">Activity Name</label>
+            <div class="form-floating mb-1">
+              <input type="text" class="form-control" formControlName="activityName" id="activity-name" autocomplete="off" placeholder="Pancake Breakfast">
+              <label for="activity-name">Activity Name</label>
+              <small id="activity-name-required-error-message" class="form-text kofc-error-text" *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.required">Activity Name is required.</small>
+              <small id="activity-name-max-length-error-message" class="form-text kofc-error-text" *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.maxlength">Activity Name shall be no more than {{editActivityForm.controls.activityName.errors?.maxlength.requiredLength}} characters long.</small>
+              <small id="activity-name-spacer" class="kofc-error-spacer" *ngIf="!editActivityForm.controls.activityName.touched || editActivityForm.controls.activityName.valid"></small>
             </div>
+
             <div class="form-floating mb-3">
-              <textarea class="form-control text-area-height-200" type="text" formControlName="activityDescription" id="activityDescription" placeholder="Leave a comment here"></textarea>
-              <label for="activityDescription">Activity Description</label>
+              <textarea class="form-control text-area-height-200" type="text" formControlName="activityDescription" id="activity-description" placeholder="Leave a comment here"></textarea>
+              <label for="activity-description">Activity Description</label>
             </div>
-            <div class="form-floating mb-3">
-              <select class="form-select" id="activityCategory" formControlName="activityCategory">
+            <div class="form-floating mb-5">
+              <select class="form-select" id="activity-category" formControlName="activityCategory">
                 <option *ngFor="let activityCategoryInputOption of activityCategoryFormOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
               </select>
-              <label for="activityCategory">Activity Category</label>
+              <label for="activity-category">Activity Category</label>
+              <small id="activity-category-required-error-message" class="form-text kofc-error-text" *ngIf="editActivityForm.controls.activityCategory.touched && editActivityForm.controls.activityCategory.errors?.required">Activity Category is required.</small>
+              <small id="activity-category-spacer" class="kofc-error-spacer" *ngIf="!editActivityForm.controls.activityCategory.touched || editActivityForm.controls.activityCategory.valid"></small>
             </div>
           </div>
           <!-- COORDINATORS -->
@@ -38,12 +44,12 @@
               <div *ngFor="let coordinator of editActivityForm.controls.activityCoordinatorsList.controls; let i = index;">
                 <div class="form-group row mb-3" [formGroup]="coordinator">
                   <div class="col-8 col-md-10">
-                    <select class="form-select" id="activityCoordinatorKnightId" formControlName="knightId">
-                      <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
+                    <select class="form-select" id="activity-coordinator-knight-id" formControlName="knightId">
+                      <option *ngFor="let knight of allKnights" [value]="knight.id" [attr.id]="knight.firstName + '-' + knight.lastName">{{knight.firstName}} {{knight.lastName}}</option>
                     </select>
                   </div>
                   <div class="col-4 col-md-2">
-                    <button type="button" class="btn btn-danger" (click)="deleteActivityCoordinator(i)">
+                    <button [attr.id]="'delete-coordinator-' + i" type="button" class="btn btn-danger" aria-label="Delete activity coordinator" (click)="deleteActivityCoordinator(i)">
                       <svg class="bi" width="24" height="24" fill="currentColor">
                         <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
                       </svg>
@@ -53,40 +59,42 @@
               </div>
             </div>
             <div class="form-group mb-3">
-              <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addActivityCoordinator()">Add Coordinator</button>
+              <button id="add-activity-coordinator" type="button" class="btn btn-primary btn-kofc-blue" (click)="addActivityCoordinator()">Add Coordinator</button>
             </div>
           </div>
           <!-- NOTES -->
-           <div class="tab-pane fade" id="event-notes-tab-pane" role="tabpanel" aria-labelledby="event-notes-tab" tabindex="0">
+          <div class="tab-pane fade" id="event-notes-tab-pane" role="tabpanel" aria-labelledby="event-notes-tab" tabindex="0">
             <div class="form-floating row mb-3">
               <textarea class="form-control text-area-height-200" type="text" formControlName="notes" id="notes" placeholder="Leave a comment here"></textarea>
               <label for="notes">Actiivity Notes</label>
             </div>
-            <div class="form-group row mb-1">
-              <div class="col-12">
-                <h5>Notes From Prior Events</h5>
-              </div>
-            </div>
-            <div *ngFor="let eventNote of activity?.activityEventNotes">
-              <div class="form-group row mb-3">
+            <div *ngif="modalAction === 'Edit'">
+              <div class="form-group row mb-1">
                 <div class="col-12">
-                  {{ eventNote.startDateTime | toDisplayDate }} - {{eventNote.notes}}
+                  <h5>Notes From Prior Events</h5>
+                </div>
+              </div>
+              <div *ngFor="let eventNote of activity?.activityEventNotes">
+                <div class="form-group row mb-3">
+                  <div class="col-12">
+                    {{ eventNote.startDateTime | toDisplayDate }} - {{eventNote.notes}}
+                  </div>
                 </div>
               </div>
             </div>
-           </div>
-        </div>
-        <!-- FOOTER -->
-        <div class="modal-footer">
-          <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
           </div>
-          <button id="saveActivity" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-          <button id="cancelChangeToActivity" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
-         </div>
-      </form>
-    </div>
+        </div>
+      </div>
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <div class="container">
+          <div class="row" *ngIf="errorSaving">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+          </div>
+        </div>
+        <button id="save-activity" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+        <button id="cancel-change-to-activity" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>

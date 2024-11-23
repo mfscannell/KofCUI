@@ -7,11 +7,11 @@ import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { FormsService } from 'src/app/services/forms.service';
-import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { EditActivityModalComponent } from './edit-activity-modal/edit-activity-modal.component';
+import { KnightName } from 'src/app/models/knightName';
 
 @Component({
   selector: 'activity-categories',
@@ -22,7 +22,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityModalComponent) editActivityModal: EditActivityModalComponent | undefined;
   getDataSubscription?: Subscription;
   activitiesSubscription?: Subscription;
-  allKnights: Knight[] = [];
+  allKnights: KnightName[] = [];
   activityCategoryFormOptions: GenericFormOption[] = [];
   activities: Activity[] = [];
   closeModalResult = '';
@@ -64,7 +64,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   private getFormOptions() {
     const getDataObserver = {
-      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], GenericFormOption[], Knight[]]) => {
+      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], GenericFormOption[], KnightName[]]) => {
         this.activities = activities;
         this.activityCategoryFormOptions = activityCategoryFormOptions;
         this.allKnights = allKnights;
@@ -76,7 +76,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     this.getDataSubscription = forkJoin([
       this.activitiesService.getAllActivities(),
       this.formsService.getActivityCategoryFormOptions(),
-      this.knightsService.getAllActiveKnightsNames(),
+      this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}),
     ]).subscribe(getDataObserver);
   }
 
@@ -120,6 +120,10 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);

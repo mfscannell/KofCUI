@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnIni
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LeadershipRoleFormGroup } from 'src/app/forms/leadershipRoleFormGroup';
-import { Knight } from 'src/app/models/knight';
+import { KnightName } from 'src/app/models/knightName';
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { UpdateLeadershipRoleRequest } from 'src/app/models/requests/updateLeadershipRoleRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
@@ -14,7 +14,7 @@ import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service
   styleUrls: ['./edit-leadership-role-modal.component.scss'],
 })
 export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() allKnights: Knight[] = [];
+  @Input() allKnights: KnightName[] = [];
   @Output() editLeadershipRoleChanges = new EventEmitter<LeadershipRole>();
   @ViewChild('cancelCustomEditActiveModal', { static: false }) cancelCustomEditActiveModal: ElementRef | undefined;
   public editLeadershipRoleForm: FormGroup<LeadershipRoleFormGroup>;
@@ -108,6 +108,10 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
 
     if (typeof err?.error === 'string') {
       this.errorMessages.push(err.error);
+    } else if (Array.isArray(err?.error)) {
+      err?.error.forEach((e: string) => {
+        this.errorMessages.push(e);
+      });
     } else {
       for (const key in err?.error?.errors) {
         this.errorMessages.push(err?.error?.errors[key][0]);
