@@ -62,6 +62,7 @@ import { ToNumVolunteersNeededPipe } from './pipes/toNumVolunteersNeeded.pipe';
 import { MeetsPasswordRequrementsPipe } from './pipes/meetsPasswordRequirements.pipe';
 import { FilterActivityInterestsByCategoryPipe } from './pipes/filterActivityInterestsByCategory.pipe';
 import { ConvertKnightIdToNamePipe } from './pipes/convertKnightIdToName.pipe';
+import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pipe';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { ConvertKnightIdToNamePipe } from './pipes/convertKnightIdToName.pipe';
     FilterActivityInterestsByCategoryPipe,
     FilterLeadershipRolesPipe,
     CanModifyActivityPipe,
+    IsEndDateAfterStartDatePipe,
     FilterAdministrativeDivisionsPipe,
     MeetsPasswordRequrementsPipe
   ],

@@ -42,7 +42,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   private updateKnightPersonalInfoSubscription?: Subscription;
   knightsLoaded: boolean = false;
   page = 1;
-  pageSize = 20;
+  pageSize = 5;
   maxSize = 10;
 
   private _search$ = new Subject<void>();

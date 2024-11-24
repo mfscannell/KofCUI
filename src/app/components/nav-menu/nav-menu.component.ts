@@ -4,6 +4,7 @@ import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from 'src/app/models/externalLink';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { WebsiteContent } from 'src/app/models/websiteContent';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { AssetsService } from 'src/app/services/assets.service';
 import { ConfigsService } from 'src/app/services/configs.service';
@@ -16,7 +17,6 @@ import { ConfigsService } from 'src/app/services/configs.service';
 export class NavMenuComponent implements OnInit, OnDestroy {
   public isMenuCollapsed = true;
   public isAccountDropDownOpen = false;
-  private getWebsiteTextSubscription?: Subscription;
   private getWebsiteContentSubscription?: Subscription;
   private logInSubscription?: Subscription;
   public externalLinks: ExternalLink[] = [];
@@ -31,19 +31,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (this.configsService.hasCachedWebsiteConfigs()) {
-      this.externalLinks = this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
-    } else {
-      this.getWebsiteText();
-    }
     this.getWebsiteContent();
   }
 
   ngOnDestroy() {
-    if (this.getWebsiteTextSubscription) {
-      this.getWebsiteTextSubscription.unsubscribe();
-    }
-
     if (this.logInSubscription) {
       this.logInSubscription.unsubscribe();
     }
@@ -71,29 +62,18 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.isMenuCollapsed = true;
   }
 
-  private getWebsiteText() {
-    const websiteTextObserver = {
-      next: () => this.handleGetWebsiteTextResult(),
-      error: (err: ApiResponseError) => this.logError('Error getting all website text.', err),
-      complete: () => console.log('Website text loaded.'),
-    };
-    this.getWebsiteTextSubscription = this.configsService.getAllWebsiteConfigs().subscribe(websiteTextObserver);
-  }
-
-  private handleGetWebsiteTextResult() {
-    this.externalLinks = this.configsService.getCachedWebsiteConfigs()?.externalLinks || [];
-  }
-
   private getWebsiteContent() {
+    console.log('nav menu getWebsiteContent');
     const observer = {
-      next: () => this.handleGetWebsiteContent(),
-      error: (err: ApiResponseError) => this.logError('Error getting website content.', err),
-      complete: () => console.log('Website content loaded.'),
+      next: (websiteContent: WebsiteContent) => { 
+        this.externalLinks = websiteContent.externalLinks;
+      },
+      error: (err: ApiResponseError) => this.logError('Menu Error getting website content', err),
+      complete: () => console.log('Webstie content retrieved.'),
     };
-    this.getWebsiteContentSubscription = this.assetsService.getAllWebsiteContent().subscribe(observer);
-  }
 
-  private handleGetWebsiteContent() {}
+    this.getWebsiteContentSubscription = this.configsService.getWebsiteContent().subscribe(observer);
+  }
 
   private logError(message: string, err: ApiResponseError) {
     console.error(message);
