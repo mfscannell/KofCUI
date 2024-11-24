@@ -20,16 +20,17 @@
             <div class="form-floating mb-1">
               <input type="text" class="form-control" formControlName="activityName" id="activity-name" autocomplete="off" placeholder="Pancake Breakfast">
               <label for="activity-name">Activity Name</label>
-              <small id="activity-name-required-error-message" class="form-text kofc-error-text" *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.required">Activity Name is required.</small>
-              <small id="activity-name-max-length-error-message" class="form-text kofc-error-text" *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.maxlength">Activity Name shall be no more than {{editActivityForm.controls.activityName.errors?.maxlength.requiredLength}} characters long.</small>
-              <small id="activity-name-spacer" class="kofc-error-spacer" *ngIf="!editActivityForm.controls.activityName.touched || editActivityForm.controls.activityName.valid"></small>
+              <small class="kofc-error-message">
+                <div *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.required">Activity Name is Required.</div>
+                <div *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.maxlength">Activity Name shall be no more than {{editActivityForm.controls.activityName.errors?.maxlength.requiredLength}} characters long.</div>
+              </small>
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-5">
               <textarea class="form-control text-area-height-200" type="text" formControlName="activityDescription" id="activity-description" placeholder="Leave a comment here"></textarea>
               <label for="activity-description">Activity Description</label>
             </div>
-            <div class="form-floating mb-5">
+            <div class="form-floating mb-1">
               <select class="form-select" id="activity-category" formControlName="activityCategory">
                 <option *ngFor="let activityCategoryInputOption of activityCategoryFormOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
               </select>

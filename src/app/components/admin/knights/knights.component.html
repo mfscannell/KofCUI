@@ -1,8 +1,8 @@
 <div class="container d-grid gap-2">
   <form>
-    <div class="form-group form-inline" *ngIf="knightsLoaded">
-      <label for="nameSearch" class="col-form-label">Name Search:</label>
-      <input class="form-control ms-2" id="nameSearch" type="text" (input)=searchPartialName($event)/>
+    <div class="form-floating" *ngIf="knightsLoaded">
+      <input class="form-control" id="name-search" type="text" (input)=searchPartialName($event)/>
+      <label for="name-search" class="col-form-label">Name Search:</label>
     </div>
   </form>
   <div class="row bg-light border" *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
@@ -43,8 +43,17 @@
       </button>
     </div>
   </div>
-  <ngb-pagination [collectionSize]="displayedKnights.length" [(page)]="page" [maxSize]="maxSize" [pageSize]="pageSize" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-  </ngb-pagination>
+  <div class="form-group">
+    <div class="form-floating float-start me-1">
+      <select class="form-select" id="page-size" [(ngModel)]="pageSize">
+        <option value="2">2</option>
+        <option value="5">5</option>
+      </select>
+      <label for="page-size">Page Size</label>
+    </div>
+    <ngb-pagination class="float-start ms-1" [collectionSize]="displayedKnights.length" [(page)]="page" [maxSize]="maxSize" [pageSize]="pageSize" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+    </ngb-pagination>
+  </div>
   <div class="form-group row mb-1">
     <div class="col-md-12">
       <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#createKnightModal" (click)="openCreateKnightModal()">Add Knight</button>

@@ -5,6 +5,8 @@ import { AssetsService } from 'src/app/services/assets.service';
 import { UntypedFormGroup } from '@angular/forms';
 import { DeleteHomePageCarouselImageResponse } from 'src/app/models/responses/deleteHomePageCarouselImageResponse';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { WebsiteContent } from 'src/app/models/websiteContent';
+import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
   selector: 'app-assets',
@@ -16,9 +18,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
   errorMessages: string[] = [];
   showSuccessMessage: boolean = false;
   private uploadHomePageImageSubscription?: Subscription;
+  private getWebsiteContentSubscription?: Subscription;
   public formData?: FormData;
   public uploadImageForm: UntypedFormGroup;
   public errorSaving: boolean = false;
+  public homePageCarouselImages: EncodedFile[] = [];
+  public homePageCarouselImageSources: string[] = [];
   @ViewChild('cancelEditActiveModal', { static: false }) cancelEditActiveModal: ElementRef | undefined;
   @ViewChild('cancelEditActiveModal', { static: false })
   cancelDeleteActiveModal: ElementRef | undefined;
@@ -28,12 +33,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
   indexToDelete: number = -1;
   private deleteHomePageImageSubscription?: Subscription;
 
-  constructor(public assetsService: AssetsService) {
+  constructor(public assetsService: AssetsService, private configsService: ConfigsService) {
     this.uploadImageForm = new UntypedFormGroup({});
     this.deleteImageForm = new UntypedFormGroup({});
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getWebsiteContent();
+  }
 
   ngOnDestroy(): void {
     if (this.uploadHomePageImageSubscription) {
@@ -42,6 +49,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
     if (this.deleteHomePageImageSubscription) {
       this.deleteHomePageImageSubscription.unsubscribe();
+    }
+
+    if (this.getWebsiteContentSubscription) {
+      this.getWebsiteContentSubscription.unsubscribe();
     }
   }
 
@@ -76,16 +87,33 @@ export class AssetsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getWebsiteContent() {
+    const observer = {
+      next: (websiteContent: WebsiteContent) => { 
+        this.homePageCarouselImages = websiteContent.homePageCarouselImages;
+        this.homePageCarouselImageSources = websiteContent.homePageCarouselImages.map((image) => {
+          return `data:${image.fileType};${image.encoding},${image.data}`;
+        });
+      },
+      error: (err: ApiResponseError) => this.logError('Menu Error getting website content', err),
+      complete: () => console.log('Webstie content retrieved.'),
+    };
+
+    this.getWebsiteContentSubscription = this.configsService.getWebsiteContent().subscribe(observer);
+  }
+
   private handleUploadHomePageImageResponse(response: EncodedFile) {
     this.showErrorMessage = false;
     this.errorMessages = [];
-    this.assetsService.appendHomePageCarouselImage(response);
+    this.configsService.flagWebsiteContentStale();
+    this.homePageCarouselImages.push(response);
+    this.homePageCarouselImageSources.push(`data:${response.fileType};${response.encoding},${response.data}`);
     this.cancelEditActiveModal?.nativeElement.click();
   }
 
-  openConfirmDeleteHomePageCarouselImage(index: number) {
+  public openConfirmDeleteHomePageCarouselImage(index: number) {
     this.indexToDelete = index;
-    const homePageImage = this.assetsService.getHomePageCarouselImages()[index];
+    const homePageImage = this.homePageCarouselImages[index];
     this.fileNameToDelete = homePageImage.fileName;
   }
 
@@ -105,7 +133,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   private handleDeleteImageSuccess(response: DeleteHomePageCarouselImageResponse) {
     console.log(response);
-    this.assetsService.removeHomePageCarouselImage(this.indexToDelete);
+    this.configsService.flagWebsiteContentStale();
+    this.homePageCarouselImages.splice(this.indexToDelete, 1);
+    this.homePageCarouselImageSources.splice(this.indexToDelete, 1);
     this.cancelDeleteActiveModal?.nativeElement.click();
   }
 

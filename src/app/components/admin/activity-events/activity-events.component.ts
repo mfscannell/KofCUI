@@ -20,6 +20,7 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { EditActivityEventModalComponent } from './edit-activity-event-modal/edit-activity-event-modal.component';
 import { KnightName } from 'src/app/models/knightName';
+import { WebsiteContent } from 'src/app/models/websiteContent';
 
 @Component({
   selector: 'kofc-activity-events',
@@ -34,12 +35,12 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   allActivities: Activity[] = [];
   activityEventToEdit?: ActivityEvent;
   allKnights: KnightName[] = [];
-  fromDate: string | undefined;
-  toDate: string | undefined;
+  startDate: string;
+  endDate: string;
   page = 1;
   pageSize = 5;
   maxSize = 10;
-  public councilTimeZone: GenericFormOption | undefined;
+  public councilTimeZone: string = '';
   editActivityEventForm: UntypedFormGroup;
 
   errorSaving: boolean = false;
@@ -65,19 +66,19 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     initialDate.setMonth(initialDate.getMonth() - 3);
     const finalDate = new Date(initialDate);
     finalDate.setMonth(finalDate.getMonth() + 6);
-    this.fromDate = DateTimeFormatter.ToIso8601Date(
+    this.startDate = DateTimeFormatter.ToIso8601Date(
       initialDate.getFullYear(),
       initialDate.getMonth() + 1,
       initialDate.getDate(),
     );
-    this.toDate = DateTimeFormatter.ToIso8601Date(
+    this.endDate = DateTimeFormatter.ToIso8601Date(
       finalDate.getFullYear(),
       finalDate.getMonth() + 1,
       finalDate.getDate(),
     );
     console.log('Exiting constructor');
-    console.log(this.fromDate);
-    console.log(this.toDate);
+    console.log(this.startDate);
+    console.log(this.endDate);
 
     this.editActivityEventForm = new UntypedFormGroup({
       id: new UntypedFormControl('00000000-0000-0000-0000-000000000000'),
@@ -132,8 +133,8 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   public getAllActivityEvents() {
     console.log('getAllActivityEvents');
-    console.log(this.fromDate);
-    console.log(this.toDate);
+    console.log(this.startDate);
+    console.log(this.endDate);
 
     const activityEventsObserver = {
       next: (activityEvents: ActivityEvent[]) => this.handleGetActivityEvents(activityEvents),
@@ -141,9 +142,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       complete: () => console.log('Activity Events loaded.'),
     };
 
-    if (this.fromDate && this.toDate) {
+    if (this.startDate && this.endDate) {
       this.activityEventsSubscription = this.activityEventsService
-        .getAllActivityEvents(this.fromDate, this.toDate)
+        .getAllActivityEvents(this.startDate, this.endDate)
         .subscribe(activityEventsObserver);
     }
   }
@@ -162,13 +163,13 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       next: ([
         activityCategoriesResponse,
         countryResponse,
-        councilTimeZone,
+        websiteContent,
         getAllActivitiesResponse,
         getAllKnightsResponse,
-      ]: [GenericFormOption[], CountryFormOption[], GenericFormOption, Activity[], KnightName[]]) => {
+      ]: [GenericFormOption[], CountryFormOption[], WebsiteContent, Activity[], KnightName[]]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.countryFormOptions = countryResponse;
-        this.councilTimeZone = councilTimeZone;
+        this.councilTimeZone = websiteContent.councilTimeZone;
         this.handleGetActivities(getAllActivitiesResponse);
         this.allKnights = getAllKnightsResponse;
       },
@@ -179,7 +180,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     this.getFormOptionsSubscriptions = forkJoin([
       this.formsService.getActivityCategoryFormOptions(),
       this.formsService.getCountryFormOptions(),
-      this.configsService.getCouncilTimeZone(),
+      this.configsService.getWebsiteContent(),
       this.activitiesService.getAllActivities(),
       this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}),
     ]).subscribe(formsObserver);
@@ -214,11 +215,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       this.activityEvents[index] = activityEvent;
     }
   }
-
-  // validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-  //   const parsed = this.formatter.parse(input);
-  //   return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  // }
 
   private logError(message: string, err: ApiResponseError) {
     console.error(message);

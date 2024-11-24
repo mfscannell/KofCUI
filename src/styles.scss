@@ -4,7 +4,7 @@
 @import 'bootstrap/scss/bootstrap';
 
 .accordion-button:not(.collapsed) {
-  color: #112866;
+  color: #000000;
   background-color: #fbda8a !important;
 }
 
@@ -119,6 +119,13 @@ small.kofc-error-text {
 
 small.kofc-error-spacer {
   height: 23px;
+  width: 100%;
+  display: block;
+}
+
+.kofc-error-message {
+  color: #dc3545;
+  height: 19px;
   width: 100%;
   display: block;
 }

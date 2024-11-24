@@ -1,16 +1,16 @@
-import { map, Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { WebsiteConfigs } from '../models/websiteConfigs';
-import { GenericFormOption } from '../models/inputOptions/genericFormOption';
 import { TenantConfig } from '../models/tenantConfig';
+import { WebsiteContent } from '../models/websiteContent';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigsService {
-  private allWebsiteConfigs?: WebsiteConfigs;
+  private websiteContent?: Observable<WebsiteContent>;
+  private isWebSiteContentStale: boolean = true;
 
   constructor(private http: HttpClient) {}
 
@@ -22,23 +22,22 @@ export class ConfigsService {
     return this.http.put<TenantConfig>('configs', updatedConfigs);
   }
 
-  getAllWebsiteConfigs(): Observable<void> {
-    return this.http.get<WebsiteConfigs>('configs/allWebsiteConfigs').pipe(
-      map((response: WebsiteConfigs) => {
-        this.allWebsiteConfigs = response;
-      }),
-    );
+  public getWebsiteContent(): Observable<WebsiteContent> {
+    console.log(`getWebsiteContent: [${this.isWebSiteContentStale}]`);
+
+    if (!this.websiteContent || this.isWebSiteContentStale) {
+      console.log('no website content cached');
+      this.websiteContent = this.http
+        .get<WebsiteContent>('configs/websiteContent')
+        .pipe(shareReplay());
+    }
+
+    this.isWebSiteContentStale = false;
+
+    return this.websiteContent;
   }
 
-  getCachedWebsiteConfigs() {
-    return this.allWebsiteConfigs;
-  }
-
-  hasCachedWebsiteConfigs() {
-    return this.allWebsiteConfigs !== undefined;
-  }
-
-  getCouncilTimeZone(): Observable<GenericFormOption> {
-    return this.http.get<GenericFormOption>('configs/councilTimeZone');
+  public flagWebsiteContentStale() {
+    this.isWebSiteContentStale = true;
   }
 }
