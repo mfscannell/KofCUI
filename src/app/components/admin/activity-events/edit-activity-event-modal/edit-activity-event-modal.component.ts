@@ -28,7 +28,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   @Input() editModalAction: ModalActionEnums = ModalActionEnums.Create;
   @Input() modalHeaderText: string = '';
   @Input() countryFormOptions: CountryFormOption[] = [];
-  @Input() councilTimeZone?: GenericFormOption;
+  @Input() councilTimeZone: string = '';
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() selectableActivities: Activity[] = [];
   @Input() allKnights: KnightName[] = [];

@@ -1,18 +1,25 @@
 <div class="container">
   <div class="row">
     <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-2">
-      <div class="input-group">
-        <input type="date" [(ngModel)]="fromDate" id="fromDate" class="form-control" min="1900-01-01" max="2050-12-31" />
+      <div class="form-floating">
+        <input type="date" [(ngModel)]="startDate" id="from-date" class="form-control" min="1900-01-01" max="2050-12-31" />
+        <label for="from-date">From Date</label>
       </div>
     </div>
     <div class="col-6 col-sm-4 col-md-3 col-xl-2 mb-2">
-      <div class="input-group">
-        <input type="date" [(ngModel)]="toDate" id="toDate" class="form-control" min="1900-01-01" max="2050-12-31" />
+      <div class="form-floating">
+        <input type="date" [(ngModel)]="endDate" id="to-date" class="form-control" min="1900-01-01" max="3000-12-31" />
+        <label for="to-date">To Date</label>
       </div>
     </div>
     <div class="col-4 col-sm-2 mb-2">
       <button type="button"  class="btn btn-primary btn-kofc-blue" (click)="getAllActivityEvents()">Search</button>
     </div>
+  </div>
+  <div class="row">
+    <small class="kofc-error-message">
+      <div *ngIf="endDate | isEndDateAfterStartDate:startDate">End date must be after start date</div>
+    </small>
   </div>
   <div class="row">
     <div class="table-responsive">
@@ -31,14 +38,14 @@
             <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
             <td>{{ activityEvent.startDateTime | toDisplayDate }}</td>
             <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#sendEmailModal" (click)="openSendEmailModal(activityEvent)">
+              <button type="button" class="btn btn-primary btn-kofc-blue" aria-label="Send email about event" data-bs-toggle="modal" data-bs-target="#sendEmailModal" (click)="openSendEmailModal(activityEvent)">
                 <svg class="bi" width="24" height="24" fill="currentColor">
                   <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
                 </svg>
               </button>
             </td>
             <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
+              <button type="button" class="btn btn-primary btn-kofc-blue" aria-label="Edit activity event" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
                 <svg class="bi" width="24" height="24" fill="currentColor">
                   <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
                 </svg>

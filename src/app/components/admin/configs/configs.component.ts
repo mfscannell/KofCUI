@@ -147,6 +147,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
   private showSuccessModal(configSettings: TenantConfig) {
     console.log(configSettings);
+    this.configsService.flagWebsiteContentStale();
     this.showSaveMessage = true;
     this.success = true;
     this.errorMessages = [];

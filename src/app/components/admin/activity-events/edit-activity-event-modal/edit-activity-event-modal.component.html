@@ -1,201 +1,196 @@
 <div class="modal-dialog modal-xl">
   <div class="modal-content">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-      <button #closeModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-      </button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="editActivityEventForm" (ngSubmit)="onSubmitEditActivityEvent()">
-        <nav class="tabbable">
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Information</button>
-            <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location-tab-pane" type="button" role="tab" aria-controls="location-tab-pane" aria-selected="false">Location</button>
-            <button class="nav-link" id="volunteers-tab" data-bs-toggle="tab" data-bs-target="#volunteers-tab-pane" type="button" role="tab" aria-controls="volunteers-tab-pane" aria-selected="false">Volunteers</button>
-          </div>
-        </nav>
-        <div class="tab-content mt-2" id="create-knight-tab-content">
-          <div class="tab-pane fade show active" id="information-tab-pane" role="tabpanel" aria-labelledby="information-tab" tabindex="0">
-            <div class="form-group row mb-3">
-              <div class="col-12">All times are in {{councilTimeZone?.displayName}} time zone.</div>
+    <form [formGroup]="editActivityEventForm" (ngSubmit)="onSubmitEditActivityEvent()">
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+        <button #closeModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+        </button>
+      </div>
+      <!-- MODAL BODY -->
+      <div class="modal-body">
+          <nav class="tabbable">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="information-tab" data-bs-toggle="tab" data-bs-target="#information-tab-pane" type="button" role="tab" aria-controls="information-tab-pane" aria-selected="true">Information</button>
+              <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location-tab-pane" type="button" role="tab" aria-controls="location-tab-pane" aria-selected="false">Location</button>
+              <button class="nav-link" id="volunteers-tab" data-bs-toggle="tab" data-bs-target="#volunteers-tab-pane" type="button" role="tab" aria-controls="volunteers-tab-pane" aria-selected="false">Volunteers</button>
             </div>
-            <div class="form-floating mb-3">
-              <select class="form-select" id="activityId" formControlName="activityId" (change)='onChangeActivity($event)' placeholder="Pancake Breakfast">
-                <option *ngFor="let activity of selectableActivities" [value]="activity.activityId">{{activity.activityName}}</option>
-              </select>
-              <label for="activityId">Activity</label>
-            </div>
-            <div class="form-floating mb-3">
-              <select class="form-select" id="activityCategory" formControlName="activityCategory">
-                <option *ngFor="let activityCategoryFormOption of activityCategoryFormOptions" [value]="activityCategoryFormOption.value">{{activityCategoryFormOption.displayName}}</option>
-              </select>
-              <label for="activityId">Activity Category</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="eventName" id="eventName" autocomplete="off" placeholder="Pancake Breakfast">
-              <label for="eventName">Event Name</label>
-            </div>
-            <div class="form-floating mb-3">
-              <textarea class="form-control text-area-height-200" type="text" formControlName="eventDescription" id="eventDescription" placeholder="Leave a comment here"></textarea>
-              <label for="eventDescription">Event Description</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="date" formControlName="startDate" id="startDate" class="form-control" min="1900-01-01" max="2050-12-31" />
-              <label for="startDate">Start Date</label>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="form-floating mb-3">
-                  <input type="time" formControlName="startTime" id="startTime" class="form-control" min="0:00" max="23:30" step="900" />
-                  <label for="startTime">Start Time</label>
+          </nav>
+          <div class="tab-content mt-2" id="edit-event-tab-content">
+            <div class="tab-pane fade show active" id="information-tab-pane" role="tabpanel" aria-labelledby="information-tab" tabindex="0">
+              <div class="form-group row mb-3">
+                <div class="col-12">All times are in {{councilTimeZone}} time zone.</div>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select" id="activity-id" formControlName="activityId" (change)='onChangeActivity($event)' placeholder="Pancake Breakfast">
+                  <option *ngFor="let activity of selectableActivities" [value]="activity.activityId">{{activity.activityName}}</option>
+                </select>
+                <label for="activity-id">Activity</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select" id="activity-category" formControlName="activityCategory">
+                  <option [attr.id]="activityCategoryFormOption.displayName" *ngFor="let activityCategoryFormOption of activityCategoryFormOptions" [value]="activityCategoryFormOption.value">{{activityCategoryFormOption.displayName}}</option>
+                </select>
+                <label for="activity-category">Activity Category</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="eventName" id="event-name" autocomplete="off" placeholder="Pancake Breakfast">
+                <label for="event-name">Event Name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <textarea class="form-control text-area-height-200" type="text" formControlName="eventDescription" id="event-description" placeholder="Leave a comment here"></textarea>
+                <label for="event-description">Event Description</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="date" formControlName="startDate" id="start-date" class="form-control" min="1900-01-01" max="3000-12-31" />
+                <label for="start-date">Start Date</label>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-floating mb-3">
+                    <input type="time" formControlName="startTime" id="start-time" class="form-control" min="0:00" max="23:59" step="900" />
+                    <label for="start-time">Start Time</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-floating mb-3">
+                    <input type="time" formControlName="endTime" id="end-time" class="form-control" min="0:00" max="23:59" step="900" />
+                    <label for="end-time">End Time</label>
+                  </div>
                 </div>
               </div>
-              <div class="col-6">
-                <div class="form-floating mb-3">
-                  <input type="time" formControlName="endTime" id="endTime" class="form-control" min="0:00" max="23:30" step="900" />
-                  <label for="endTime">End Time</label>
-                </div>
-              </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-4 col-md-3">
+              <div class="form-check form-switch">
+                <input type="checkbox" role="switch" class="form-check-input" formControlName="showInCalendar" id="show-in-calendar">
                 <label for="showInCalendar" class="col-form-label">Show in Calendar</label>
               </div>
-              <div class="col-8 col-md-9">
-                <input type="checkbox" class="form-check-input" formControlName="showInCalendar" id="showInCalendar">
-              </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-4 col-md-3">
+              <div class="form-check form-switch">
+                <input type="checkbox" role="switch" class="form-check-input" formControlName="canceled" id="canceled">
                 <label for="canceled" class="col-form-label">Canceled</label>
               </div>
-              <div class="col-8 col-md-9">
-                <input type="checkbox" class="form-check-input" formControlName="canceled" id="canceled">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="canceledReason" id="canceled-reason" autocomplete="off" placeholder="Rain">
+                <label for="canceledReason">Reason for Cancelation</label>
+              </div>
+              <div class="form-floating mb-3">
+                <textarea type="text" class="form-control text-area-height-200" formControlName="notes" id="notes" placeholder="Leave a comment here"></textarea>
+                <label for="notes">Private Notes</label>
               </div>
             </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="canceledReason" id="canceledReason" autocomplete="off" placeholder="Rain">
-              <label for="canceledReason">Reason for Cancelation</label>
+            <div class="tab-pane fade" id="location-tab-pane" role="tabpanel" aria-labelledby="location-tab" tabindex="0" formGroupName="locationAddress">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="addressName" id="locationAddress-addressName" autocomplete="off" placeholder="Church">
+                <label for="locationAddress-addressName">Location Name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select" id="locationAddress-countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()" placeholder="US">
+                  <option [attr.id]="country.displayName" *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+                </select>
+                <label for="locationAddress-countryCode">Country</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="address1" id="locationAddress-address1" autocomplete="off" placeholder="123 Main St">
+                <label for="locationAddress-address1">Address 1</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="address2" id="locationAddress-address2" autocomplete="off" placeholder="Apt. 1">
+                <label for="locationAddress-address2">Address 2</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="city" id="locationAddress-city" autocomplete="off" placeholder="Kansas City">
+                <label for="locationAddress-city">City</label>
+              </div>
+              <div class="form-floating mb-3">
+                <select class="form-select" id="locationAddress-stateCode" formControlName="stateCode" placeholder="Kansas">
+                  <option [attr.id]="state.displayName" *ngFor="let state of countryFormOptions | filterAdministrativeDivisions:selectedCountry" [value]="state.value">{{state.displayName}}</option>
+                </select>
+                <label for="locationAddress-stateCode">State</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" formControlName="postalCode" id="locationAddress-postalCode" autocomplete="off" placeholder="12345">
+                <label for="locationAddress-postalCode">Zip Code</label>
+              </div>
             </div>
-            <div class="form-floating mb-3">
-              <textarea type="text" class="form-control text-area-height-200" formControlName="notes" id="notes" placeholder="Leave a comment here"></textarea>
-              <label for="notes">Private Notes</label>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="location-tab-pane" role="tabpanel" aria-labelledby="location-tab" tabindex="0" formGroupName="locationAddress">
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="addressName" id="locationAddress_addressName" autocomplete="off" placeholder="Church">
-              <label for="locationAddress_addressName">Location Name</label>
-            </div>
-            <div class="form-floating mb-3">
-              <select class="form-select" id="locationAddress_countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()" placeholder="US">
-                <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
-              </select>
-              <label for="locationAddress_countryCode">Country</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="address1" id="locationAddress_address1" autocomplete="off" placeholder="123 Main St">
-              <label for="locationAddress_address1">Address 1</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="address2" id="locationAddress_address2" autocomplete="off" placeholder="Apt. 1">
-              <label for="locationAddress_address2">Address 2</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="city" id="locationAddress_city" autocomplete="off" placeholder="Kansas City">
-              <label for="locationAddress_city">City</label>
-            </div>
-            <div class="form-floating mb-3">
-              <select class="form-select" id="locationAddress_stateCode" formControlName="stateCode" placeholder="Kansas">
-                <option *ngFor="let state of countryFormOptions | filterAdministrativeDivisions:selectedCountry" [value]="state.value">{{state.displayName}}</option>
-              </select>
-              <label for="locationAddress_stateCode">State</label>
-            </div>
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" formControlName="postalCode" id="locationAddress_postalCode" autocomplete="off" placeholder="12345">
-              <label for="locationAddress_postalCode">Zip Code</label>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="volunteers-tab-pane" role="tabpanel" aria-labelledby="volunteers-tab" tabindex="0">
-            <div class="form-group row mb-3">
-              <div class="col-12">All times are in {{councilTimeZone?.displayName}} time zone.</div>
-              <div formArrayName="volunteerSignUpRoles">
-                <!-- VOLUNTEER SIGN UP ROLES -->
-                <div *ngFor="let volunteerSignUpRole of editActivityEventForm.controls.volunteerSignUpRoles.controls; let i = index">
-                  <div [formGroup]="volunteerSignUpRole">
-                    <div class="form-group row mb-3">
-                      <div class="col-6 col-md-3">
-                        <input type="text" class="form-control" formControlName="roleTitle" id="roleTitle" placeholder="Title" autocomplete="off">
-                      </div>
-                      <div class="col-3 col-md-2">
-                        <input type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="numberOfVolunteersNeeded" placeholder="###" autocomplete="off">
-                      </div>
-                      <div class="col-3 col-md-1">
-                        <button type="button" class="btn btn-danger" (click)="deleteVolunteerSignUpRole(i)">
-                          <svg class="bi" width="24" height="24" fill="currentColor">
-                            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="form-floating mb-3">
-                          <input type="time" formControlName="startTime" id="startTime" class="form-control" min="0:00" max="23:30" step="900" />
-                          <label for="startTime">Start Time</label>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="form-floating mb-3">
-                          <input type="time" formControlName="endTime" id="endTime" class="form-control" min="0:00" max="23:30" step="900" />
-                          <label for="endTime">End Time</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div formArrayName="eventVolunteers">
-                      <div *ngFor="let eventVolunteer of volunteerSignUpRole.controls.eventVolunteers.controls; let j = index">
-                        <div class="form-group row mb-3" [formGroup]="eventVolunteer">
-                          <div class="col-8 col-md-4">
-                            <select class="form-select" id="activityId" formControlName="knightId">
-                              <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
-                            </select>
-                          </div>
-                          <div class="col-4 col-md-2">
-                            <button type="button" class="btn btn-danger" (click)="deleteEventVolunteer(i, j)">
-                              <svg class="bi" width="22" height="22" fill="currentColor">
-                                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+            <div class="tab-pane fade" id="volunteers-tab-pane" role="tabpanel" aria-labelledby="volunteers-tab" tabindex="0">
+              <div class="form-group row mb-3">
+                <div class="col-12">All times are in {{councilTimeZone}} time zone.</div>
+                <div formArrayName="volunteerSignUpRoles">
+                  <!-- VOLUNTEER SIGN UP ROLES -->
+                  <div *ngFor="let volunteerSignUpRole of editActivityEventForm.controls.volunteerSignUpRoles.controls; let i = index">
+                    <div [formGroup]="volunteerSignUpRole">
                       <div class="form-group row mb-3">
-                        <div class="col-12 col-md-12">
-                          <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addEventVolunteer(i)">Add Volunteer</button>
+                        <div class="col-6 col-md-3">
+                          <input type="text" class="form-control" formControlName="roleTitle" id="role-title" placeholder="Title" autocomplete="off">
+                        </div>
+                        <div class="col-3 col-md-2">
+                          <input type="number" class="form-control" formControlName="numberOfVolunteersNeeded" id="number-of-volunteers-needed" placeholder="###" autocomplete="off">
+                        </div>
+                        <div class="col-3 col-md-1">
+                          <button type="button" class="btn btn-danger" (click)="deleteVolunteerSignUpRole(i)" [attr.id]="volunteerSignUpRole.controls.roleTitle">
+                            <svg class="bi" width="24" height="24" fill="currentColor">
+                              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-floating mb-3">
+                            <input type="time" formControlName="startTime" [attr.id]="volunteerSignUpRole.controls.roleTitle + '-start-time'" class="form-control" min="0:00" max="23:59" step="900" />
+                            <label [attr.for]="volunteerSignUpRole.controls.roleTitle + '-end-time'">Start Time</label>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-floating mb-3">
+                            <input type="time" formControlName="endTime" [attr.id]="volunteerSignUpRole.controls.roleTitle + '-end-time'" class="form-control" min="0:00" max="23:59" step="900" />
+                            <label [attr.for]="volunteerSignUpRole.controls.roleTitle + '-end-time'">End Time</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div formArrayName="eventVolunteers">
+                        <div *ngFor="let eventVolunteer of volunteerSignUpRole.controls.eventVolunteers.controls; let j = index">
+                          <div class="form-group row mb-3" [formGroup]="eventVolunteer">
+                            <div class="col-8 col-md-4">
+                              <select class="form-select" id="activityId" formControlName="knightId">
+                                <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
+                              </select>
+                            </div>
+                            <div class="col-4 col-md-2">
+                              <button type="button" class="btn btn-danger" (click)="deleteEventVolunteer(i, j)">
+                                <svg class="bi" width="22" height="22" fill="currentColor">
+                                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                          <div class="col-12 col-md-12">
+                            <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addEventVolunteer(i)" aria-label="Add event volunteer">Add Volunteer</button>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <hr *ngIf="i !== editActivityEventForm.controls.volunteerSignUpRoles.controls.length-1" class="my-12"/>
                   </div>
-                  <hr *ngIf="i !== editActivityEventForm.controls.volunteerSignUpRoles.controls.length-1" class="my-12"/>
+                  <!-- END VOLUNTEER SIGN UP ROLES -->
                 </div>
-                <!-- END VOLUNTEER SIGN UP ROLES -->
-              </div>
-              <div class="form-group row mb-1">
-                <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addVolunteerSignUpRole()">Add Role</button>
+                <div class="form-group row mb-1">
+                  <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addVolunteerSignUpRole()" aria-label="Add volunteer role">Add Role</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+      </div>
+      <!-- MODAL FOOTER -->
+      <div class="modal-footer">
+        <div class="container">
+          <div class="row" *ngIf="errorSaving">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
           </div>
-          <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
-      </form>
-    </div>
+        <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>

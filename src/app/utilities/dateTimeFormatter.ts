@@ -286,6 +286,10 @@ export class DateTimeFormatter {
   }
 
   static DateAndTimeToIso8601DateTime(date: string, time: string) {
+    if (!time) {
+      time = '00:00:00';
+    }
+    
     return `${date}T${time}`;
   }
 
