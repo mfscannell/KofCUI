@@ -1,18 +1,19 @@
 <div>
-  <ngb-carousel
-    [showNavigationArrows]="true" 
-    [showNavigationIndicators]="true"
-    [interval]="1000"
-    [pauseOnHover]="false"
-    [keyboard]="true"
-    [wrap]="true"
-    [activeId]="'slideOne'" >
-    <ng-template ngbSlide *ngFor="let carouselImage of homePageCarouselImagesSources">
-      <div class="picsum-img-wrapper">
-        <img [src]="carouselImage" class="img-fluid" alt="Random first slide">
+  <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active" *ngFor="let carouselImage of homePageCarouselImagesSources" data-bs-interval="1000">
+        <img [src]="carouselImage" class="d-block w-100" alt="Home page carousel image">
+      </div>
     </div>
-    </ng-template>
-  </ngb-carousel>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
   <div class="container">
     <div class="row">
       <div class="col-12 text-center" >

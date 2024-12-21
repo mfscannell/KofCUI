@@ -1,12 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from 'src/app/models/externalLink';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { WebsiteContent } from 'src/app/models/websiteContent';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { AssetsService } from 'src/app/services/assets.service';
 import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
@@ -15,7 +13,8 @@ import { ConfigsService } from 'src/app/services/configs.service';
   styleUrls: ['./nav-menu.component.scss'],
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
-  public isMenuCollapsed = true;
+  @ViewChild('menuCollapseButton', { static: false }) menuCollapseButton: ElementRef | undefined;
+  @ViewChild('navbarSupportedContent', { static: false }) navbarSupportedContent: ElementRef | undefined;
   public isAccountDropDownOpen = false;
   private getWebsiteContentSubscription?: Subscription;
   private logInSubscription?: Subscription;
@@ -26,7 +25,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   constructor(
     private configsService: ConfigsService,
     public accountsService: AccountsService,
-    private assetsService: AssetsService,
     private router: Router,
   ) {}
 
@@ -44,22 +42,21 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  navigateToAccountClick(dropDown: NgbDropdown) {
-    dropDown.close();
-    this.isMenuCollapsed = true;
+  public toggleCollapseMenu() {
+    this.menuCollapseButton?.nativeElement.click();
   }
 
-  navigateToLogin(dropDown: NgbDropdown) {
-    dropDown.close();
+  public navigateToAccountClick() {
+    this.router.navigate(['/account']);
+  }
+
+  public navigateToLogin() {
     this.router.navigate(['/login']);
-    this.isMenuCollapsed = true;
   }
 
-  logout(dropDown: NgbDropdown) {
-    dropDown.close();
+  public logout() {
     this.accountsService.logout();
     this.router.navigate(['/']);
-    this.isMenuCollapsed = true;
   }
 
   private getWebsiteContent() {

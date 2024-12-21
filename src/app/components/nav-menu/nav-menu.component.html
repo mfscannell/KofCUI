@@ -1,62 +1,95 @@
-<!-- <header> -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+<nav class="navbar navbar-expand-md navbar-light bg-white">
+  <div class="container">
+    <img id="navigationLogo" src="assets/images/knightsOfColumbus.png" alt="Knights of Columbus logo">
+  </div>
+</nav>
+<nav id="menuNavBar" class="navbar navbar-expand">
+  <div class="container-fluid">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item active">
+        <button #menuCollapseButton id="menuCollapseButton" class="btn btn-kofc-yellow" type="button" data-bs-toggle="offcanvas" data-bs-target="#leftOffCanvas" aria-controls="leftOffCanvas" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </li>
+      <li class="nav-item active d-none d-md-inline">
+        <a class="nav-link nav-link-kofc-white" routerLink="/" routerLinkActiver="active">Home</a>
+      </li>
+      <li class="nav-item active d-none d-md-inline">
+        <a class="nav-link nav-link-kofc-white" routerLink="/aboutKnights" routerLinkActiver="active">About the Knights</a>
+      </li>
+      <li class="nav-item active d-none d-md-inline">
+        <a class="nav-link nav-link-kofc-white" routerLink="/aboutOurCouncil" routerLinkActiver="active">About Our Council</a>
+      </li>
+      <li class="nav-item active d-none d-md-inline">
+        <a class="nav-link nav-link-kofc-white" routerLink="/upcomingEvents" routerLinkActiver="active">Upcoming Events</a>
+      </li>
+      <li class="nav-item dropdown d-none d-md-inline">
+        <a class="nav-link nav-link-kofc-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Links
+        </a>
+        <ul class="dropdown-menu">
+          <li *ngFor="let extLink of externalLinks" class="nav-link-kofc-blue">
+            <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}" target="_blank">{{extLink.websiteName}}</a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item active d-none d-md-inline" *ngIf="(accountsService.currentUser | async) as user">
+        <a class="nav-link nav-link-kofc-white" routerLink="/admin" routerLinkActiver="active">Admin</a>
+      </li>
+      <li #accountDropDown class="nav-item dropdown d-none d-md-inline" *ngIf="(accountsService.currentUser | async) === null">
+        <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm1" role="button" data-bs-toggle="dropdown">Welcome</button>
+        <ul class="dropdown-menu">
+          <li class="nav-link">
+            <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToLogin();">Sign in</button>
+          </li>
+        </ul>
+      </li>
+      <li #accountLogOutDropDown class="nav-item active d-none d-md-inline" *ngIf="(accountsService.currentUser | async) as user">
+        <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm2" data-bs-toggle="dropdown">Welcome {{user.knight?.firstName | titlecase}}</button>
+        <ul class="dropdown-menu">
+          <li class="nav-link">
+            <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="logout();">Log out</button>
+          </li>
+          <li class="nav-link">
+            <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToAccountClick();">Sign in</button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="leftOffCanvas" aria-labelledby="leftOffCanvasLabel">
+  <div class="offcanvas-header">
     <div class="container">
-      <img id="navigationLogo" src="assets/images/knightsOfColumbus.png" alt="Knights of Columbus logo">
+      <div class="row">
+        <h5 class="offcanvas-title nav-link-kofc-white" id="leftOffCanvasLabel" *ngIf="!(accountsService.currentUser | async)">Welcome</h5>
+        <h5 class="offcanvas-title nav-link-kofc-white" id="leftOffCanvasLabel" *ngIf="(accountsService.currentUser | async) as user">Welcome {{user.knight?.firstName}}</h5>
+      </div>
+      <div class="row" *ngIf="!(accountsService.currentUser | async)">
+        <button type="button" class="btn btn-kofc-yellow" id="sideSignIn" role="button" (click)="toggleCollapseMenu(); navigateToLogin();">Sign In</button>
+      </div>
+      <div class="row mb-2" *ngIf="(accountsService.currentUser | async) as user">
+        <button type="button" class="btn btn-kofc-yellow" id="sideNavigateToAccount" role="button" (click)="toggleCollapseMenu(); navigateToAccountClick();">Account</button>
+      </div>
+      <div class="row" *ngIf="(accountsService.currentUser | async) as user">
+        <button type="button" class="btn btn-kofc-yellow" id="sideLogout" role="button" (click)="toggleCollapseMenu(); logout();">Log Out</button>
+      </div>
     </div>
-  </nav>
-  <nav id="menuNavBar" class="navbar navbar-expand-md mb-3">
-    <button id="navigationButton" class="navbar-toggler nav-link-kofc-white" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
-      &#9776;
-    </button>
-  
-    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item active">
-          <a class="nav-link nav-link-kofc-white" routerLink="/" (click)="isMenuCollapsed = true" routerLinkActiver="active">Home</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link nav-link-kofc-white" routerLink="/aboutKnights" (click)="isMenuCollapsed = true" routerLinkActiver="active">About the Knights</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link nav-link-kofc-white" routerLink="/aboutOurCouncil" (click)="isMenuCollapsed = true" routerLinkActiver="active">About Our Council</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link nav-link-kofc-white" routerLink="/upcomingEvents" (click)="isMenuCollapsed = true" routerLinkActiver="active">Upcoming Events</a>
-        </li>
-        <li ngbDropdown class="nav-item dropdown active" *ngIf="externalLinks.length > 0">
-          <a ngbDropdownToggle class="nav-link nav-link-kofc-white dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Links</a>
-          <ul ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li ngbDropdownItem class="nav-link-kofc-blue" *ngFor="let extLink of externalLinks">
-              <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}" target="_blank" rel="noopener noreferrer">{{extLink.websiteName}}</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item active" *ngIf="(accountsService.currentUser | async) as user">
-          <a class="nav-link nav-link-kofc-white" routerLink="/admin" (click)="isMenuCollapsed = true" routerLinkActiver="active">Admin</a>
-        </li>
-      </ul>
-      <li ngbDropdown #accountDropDown="ngbDropdown" class="d-flex" *ngIf="(accountsService.currentUser | async) === null" [autoClose]="true">
-        <button type="button" class="btn btn-primary btn-kofc-yellow" id="dropdownForm1" ngbDropdownToggle>Welcome</button>
-        <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end signInDropDown" aria-labelledby="dropdownForm1">
-          <div class="container">
-            <div class="row">
-              <div class="col-12">
-                <button type="button" class="btn btn-primary btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToLogin(accountDropDown);">Sign in</button>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="errorLoggingIn">
-            <div *ngFor="let errorMsg of errorMessages" class="alert alert-danger">{{errorMsg}}</div>
-          </div>
-        </div>
-      </li>
-      <li ngbDropdown #accountLogOutDropDown="ngbDropdown" class="d-flex" *ngIf="(accountsService.currentUser | async) as user">
-        <button type="button" class="btn btn-primary  btn-kofc-yellow" id="dropdownForm2" ngbDropdownToggle>Welcome {{user.knight?.firstName | titlecase}}</button>
-        <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownForm2">
-          <a class="nav-link nav-link-kofc-blue" routerLink="/account" routerLinkActiver="active" (click)="navigateToAccountClick(accountLogOutDropDown)">Account</a>
-          <button type="button" class="btn btn-primary btn-kofc-blue" id="logOutBtn" (click)="logout(accountLogOutDropDown)">Log Out</button>
-        </div>
-      </li>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <a class="nav-link nav-link-kofc-white" routerLink="/" routerLinkActiver="active" (click)="toggleCollapseMenu()">Home</a>
     </div>
-  </nav>
+    <div>
+      <a class="nav-link nav-link-kofc-white" routerLink="/aboutKnights" routerLinkActiver="active" (click)="toggleCollapseMenu()">About the Knights</a>
+    </div>
+    <div>
+      <a class="nav-link nav-link-kofc-white" routerLink="/aboutOurCouncil" routerLinkActiver="active" (click)="toggleCollapseMenu()">About Our Council</a>
+    </div>
+    <div>
+      <a class="nav-link nav-link-kofc-white" routerLink="/upcomingEvents" routerLinkActiver="active" (click)="toggleCollapseMenu()">Upcoming Events</a>
+    </div>
+  </div>
+</div>
 <!-- </header> -->
