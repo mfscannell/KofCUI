@@ -17,6 +17,16 @@
     }
 }
 
+#leftOffCanvas {
+    background-color: #112866;
+}
+
+@media (max-width: 767px) {
+    #leftOffCanvas {
+        width: 200px;
+    }
+}
+
 /* @media only screen and (max-width: 400px) {
     #navigationLogo {
         width: 200px;

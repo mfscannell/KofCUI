@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 
@@ -27,7 +25,6 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   allKnights: KnightName[] = [];
   fromDate: string;
   toDate: string;
-  hoveredDate: NgbDate | null = null;
   page = 1;
   pageSize = 5;
   maxSize = 10;
@@ -39,8 +36,6 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     private accountsService: AccountsService,
     private activityEventsService: ActivityEventsService,
     private knightsService: KnightsService,
-    private calendar: NgbCalendar,
-    public formatter: NgbDateParserFormatter,
   ) {
     const initialDate = new Date();
     initialDate.setMonth(initialDate.getMonth() - 3);
@@ -107,11 +102,6 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
     if (this.activityEvents && index !== undefined && index >= 0) {
       this.activityEvents[index] = activityEvent;
     }
-  }
-
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
   private logError(message: string, err: ApiResponseError) {

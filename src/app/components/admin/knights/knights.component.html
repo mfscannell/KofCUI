@@ -8,35 +8,35 @@
   <div class="row bg-light border" *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
     <div class="col-12 col-sm-7 pt-2 pb-2">{{knight.firstName}} {{knight.lastName}}</div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit personal info" data-bs-toggle="modal" data-bs-target="#editKnightPersonalInfoModal" (click)="openEditKnightPersonalInfoModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPersonalInfoModal" (click)="openEditKnightPersonalInfoModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#person"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit knight info" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit activity interests" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit member dues" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
         </svg>
       </button>
     </div>
     <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" ngbTooltip="Edit password" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
+      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
         <svg class="bi" width="24" height="24" fill="currentColor">
           <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
         </svg>

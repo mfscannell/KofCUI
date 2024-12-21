@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
-import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-
 import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
@@ -60,7 +58,6 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
     private permissionsService: PermissionsService,
     private configsService: ConfigsService,
     private formsService: FormsService,
-    public formatter: NgbDateParserFormatter,
   ) {
     const initialDate = new Date();
     initialDate.setMonth(initialDate.getMonth() - 3);
