@@ -13,6 +13,9 @@ import { EventVolunteer } from 'src/app/models/eventVolunteer';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { KnightName } from 'src/app/models/knightName';
+import { CreateActivityEventRequest } from 'src/app/models/requests/createActivityEventRequest';
+import { CreateStreetAddressRequest } from 'src/app/models/requests/createStreetAddressRequest';
+import { CreateVolunteerSignUpRoleRequest } from 'src/app/models/requests/createVolunteerSignUpRoleRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
@@ -142,10 +145,51 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
 
       this.updateActivityEvent(updateActivityEventRequest);
     } else if (this.editModalAction === ModalActionEnums.Create) {
-      const createActivityEventRequest = this.mapFormToActivityEvent();
+      const createActivityEventRequest = this.mapFormToCreateActivityEventRequest();
 
       this.createActivityEvent(createActivityEventRequest);
     }
+  }
+
+  private mapFormToCreateActivityEventRequest(): CreateActivityEventRequest {
+    const volunteerRoles: CreateVolunteerSignUpRoleRequest[] = this.editActivityEventForm.controls.volunteerSignUpRoles.controls.map((roleFormGroup: FormGroup<EditVolunteerSignUpRoleFormGroup>) => {
+      return {
+        roleTitle: roleFormGroup.controls.roleTitle.value,
+        startDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(roleFormGroup.controls.startDate.value, roleFormGroup.controls.startTime.value),
+        endDateTime: DateTimeFormatter.DateAndTimeToIso8601DateTime(roleFormGroup.controls.startDate.value, roleFormGroup.controls.endTime.value),
+        numberOfVolunteersNeeded: roleFormGroup.controls.numberOfVolunteersNeeded.value,
+        eventVolunteers: roleFormGroup.controls.eventVolunteers.controls.map((ev: FormGroup<EditEventVolunteersFormGroup>) => {
+          return ev.controls.knightId.value;
+        }),
+      } as CreateVolunteerSignUpRoleRequest;
+    });
+
+    const activityEvent: CreateActivityEventRequest = {
+      activityId: this.editActivityEventForm.controls.activityId.value,
+      activityCategory: this.editActivityEventForm.controls.activityCategory.value,
+      eventName: this.editActivityEventForm.controls.eventName.value,
+      eventDescription: this.editActivityEventForm.controls.eventDescription.value,
+      startDateTime:
+        DateTimeFormatter.DateAndTimeToIso8601DateTime(this.editActivityEventForm.controls.startDate.value, this.editActivityEventForm.controls.startTime.value) || '1999-01-01T00:00',
+      endDateTime:
+        DateTimeFormatter.DateAndTimeToIso8601DateTime(this.editActivityEventForm.controls.startDate.value, this.editActivityEventForm.controls.endTime.value) || '1999-01-01T00:00',
+      locationAddress: {
+        addressName: this.editActivityEventForm.controls.locationAddress.controls.addressName.value,
+        address1: this.editActivityEventForm.controls.locationAddress.controls.address1.value,
+        address2: this.editActivityEventForm.controls.locationAddress.controls.address2.value,
+        city: this.editActivityEventForm.controls.locationAddress.controls.city.value,
+        stateCode: this.editActivityEventForm.controls.locationAddress.controls.stateCode.value,
+        postalCode: this.editActivityEventForm.controls.locationAddress.controls.postalCode.value,
+        countryCode: this.editActivityEventForm.controls.locationAddress.controls.countryCode.value
+      } as CreateStreetAddressRequest,
+      volunteerSignUpRoles: volunteerRoles,
+      showInCalendar: this.editActivityEventForm.controls.showInCalendar.value,
+      canceled: this.editActivityEventForm.controls.canceled.value,
+      canceledReason: this.editActivityEventForm.controls.canceledReason.value,
+      notes: this.editActivityEventForm.controls.notes.value,
+    } as CreateActivityEventRequest;
+
+    return activityEvent;
   }
 
   private mapFormToActivityEvent(): ActivityEvent {
@@ -196,7 +240,7 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
     return activityEvent;
   }
 
-  private createActivityEvent(activityEvent: ActivityEvent) {
+  private createActivityEvent(activityEvent: CreateActivityEventRequest) {
     const activityEventObserver = {
       next: (createdActivityEvent: ActivityEvent) => this.passBackCreatedActivityEvent(createdActivityEvent),
       error: (err: ApiResponseError) => this.logError('Error creating Activity Event', err),

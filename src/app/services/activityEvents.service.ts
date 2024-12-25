@@ -6,6 +6,7 @@ import { ActivityEvent } from 'src/app/models/activityEvent';
 import { UpcomingEvent } from '../models/upcomingEvent';
 import { VolunteerForActivityEventRequest } from '../models/requests/volunteerForActivityEventRequest';
 import { EventVolunteer } from '../models/eventVolunteer';
+import { CreateActivityEventRequest } from '../models/requests/createActivityEventRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class ActivityEventsService {
     return this.http.put<ActivityEvent>(`activityEvents/${activityEvent.id}`, activityEvent);
   }
 
-  createActivityEvent(activityEvent: ActivityEvent): Observable<ActivityEvent> {
+  createActivityEvent(activityEvent: CreateActivityEventRequest): Observable<ActivityEvent> {
     return this.http.post<ActivityEvent>('activityEvents/', activityEvent);
   }
 
