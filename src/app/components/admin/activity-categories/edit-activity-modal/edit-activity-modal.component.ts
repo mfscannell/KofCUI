@@ -114,6 +114,8 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   public cancelModal() {
     this.errorSaving = false;
     this.errorMessages = [];
+    this.createActivitySubscription?.unsubscribe();
+    this.updateActivitySubscription?.unsubscribe();
   }
 
   public onSubmitEditActivity() {
