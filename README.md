@@ -19,7 +19,7 @@ In the src/environments/environments.ts file, add a new tenant in the tenants ar
 }
 
 To Start up locally, run the command
-ng serve --disable-host-check --configuration development
+ng serve --disable-host-check --configuration localnondocker
 ng serve --host mynewtenant.localhost --port 4200 --open --configuration development
 
 ## When Ran From Docker
