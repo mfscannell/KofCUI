@@ -1,7 +1,11 @@
+import { ProblemDetails } from "./problemDetails";
+
 export interface ApiResponseError {
-  title: string,
+  error: ProblemDetails,
+  message: string,
+  name: string,
+  ok: boolean,
   status: number,
-  detail: string,
-  instance: string,
-  error: string | string[] | { errors: Record<string, string> };
+  statusText: string,
+  url: string
 }

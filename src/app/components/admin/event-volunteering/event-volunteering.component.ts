@@ -110,16 +110,19 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
 
     this.errorMessages = [];
 
-    if (typeof err?.error === 'string') {
-      this.errorMessages.push(err.error);
-    } else if (Array.isArray(err?.error)) {
-      err?.error.forEach((e: string) => {
-        this.errorMessages.push(e);
-      });
-    } else {
-      for (const key in err?.error?.errors) {
-        this.errorMessages.push(err?.error?.errors[key][0]);
-      }
+    console.log('Parts of error');
+    console.log(err);
+    const problemDetails = err.error;
+
+    if (problemDetails.detail) {
+      this.errorMessages.push(err.error.detail);
+    }
+
+    for (const key in problemDetails.errors) {
+      const errorsArray = problemDetails.errors[key];
+      errorsArray.forEach(error => {
+        this.errorMessages.push(error);
+      })
     }
 
     this.errorSaving = true;
