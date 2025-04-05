@@ -127,21 +127,17 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   private showErrorModal(err: ApiResponseError) {
     this.showSaveMessage = true;
     this.success = false;
+    const problemDetails = err.error;
 
-    if (typeof err?.error === 'string') {
-      this.errorMessages = [err?.error];
-    } else if (Array.isArray(err?.error)) {
-      err?.error.forEach((e: string) => {
-        this.errorMessages.push(e);
-      });
-    } else {
-      const errors = [];
+    if (problemDetails.detail) {
+      this.errorMessages.push(err.error.detail);
+    }
 
-      for (const key in err?.error?.errors) {
-        errors.push(err?.error?.errors[key][0]);
-      }
-
-      this.errorMessages = errors;
+    for (const key in problemDetails.errors) {
+      const errorsArray = problemDetails.errors[key];
+      errorsArray.forEach(error => {
+        this.errorMessages.push(error);
+      })
     }
   }
 
