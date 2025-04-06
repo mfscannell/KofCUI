@@ -16,7 +16,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
   intercept(httpRequest: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const apiBaseUrl = environment.apiBaseUrl;
     const tenantId = this.tenantService.getTenantId();
-    const url = `${apiBaseUrl}${tenantId}/${httpRequest.url}`;
+    const url = `${apiBaseUrl}${tenantId}/v1.0/${httpRequest.url}`;
     const token = this.accountsService.getToken();
 
     if (httpRequest.url.startsWith('assets')) {

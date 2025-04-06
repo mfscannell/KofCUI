@@ -18,15 +18,15 @@ export class KnightsService {
   constructor(private http: HttpClient) {}
 
   getKnight(knightId: string): Observable<Knight> {
-    return this.http.get<Knight>(`v1.0/knights/${knightId}`);
+    return this.http.get<Knight>(`knights/${knightId}`);
   }
 
   getAllKnights(): Observable<Knight[]> {
-    return this.http.get<Knight[]>('v1.0/knights');
+    return this.http.get<Knight[]>('knights');
   }
 
   getAllKnightsNames(context?: {restrictToActiveOnly: boolean}): Observable<KnightName[]> {
-    let queryString = 'v1.0/knights/namesOnly';
+    let queryString = 'knights/namesOnly';
     let queryStringContainsParam = false;
 
     if (context?.restrictToActiveOnly) {
@@ -43,23 +43,23 @@ export class KnightsService {
   }
 
   createKnightAndActivityInterest(knight: CreateKnightRequest): Observable<Knight> {
-    return this.http.post<Knight>('v1.0/knights/withAllActivities', knight);
+    return this.http.post<Knight>('knights/withAllActivities', knight);
   }
 
   createKnights(knights: CreateKnightRequest[]): Observable<Knight[]> {
-    return this.http.post<Knight[]>('v1.0/knights/multiple', knights);
+    return this.http.post<Knight[]>('knights/multiple', knights);
   }
 
   updateKnightPersonalInfo(knight: UpdateKnightPersonalInfoRequest): Observable<Knight> {
-    return this.http.put<Knight>(`v1.0/knights/personalInfo`, knight);
+    return this.http.put<Knight>(`knights/personalInfo`, knight);
   }
 
   updateKnightMembershipInfo(
     updateKnightMembershipInfoRequest: UpdateKnightMembershipInfoRequest,
   ): Observable<KnightInfo> {
-    return this.http.put<KnightInfo>(`v1.0/knights/knightMembershipInfo`, updateKnightMembershipInfoRequest);
+    return this.http.put<KnightInfo>(`knights/knightMembershipInfo`, updateKnightMembershipInfoRequest);
   }
   updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<KnightUser> {
-    return this.http.put<KnightUser>(`v1.0/knights/${request?.knightId}/password`, request);
+    return this.http.put<KnightUser>(`knights/${request?.knightId}/password`, request);
   }
 }
