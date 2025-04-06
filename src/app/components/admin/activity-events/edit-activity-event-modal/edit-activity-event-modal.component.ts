@@ -23,9 +23,10 @@ import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'edit-activity-event-modal',
-  templateUrl: './edit-activity-event-modal.component.html',
-  styleUrls: ['./edit-activity-event-modal.component.scss'],
+    selector: 'edit-activity-event-modal',
+    templateUrl: './edit-activity-event-modal.component.html',
+    styleUrls: ['./edit-activity-event-modal.component.scss'],
+    standalone: false
 })
 export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() editModalAction: ModalActionEnums = ModalActionEnums.Create;

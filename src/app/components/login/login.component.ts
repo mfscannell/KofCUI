@@ -7,9 +7,10 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
-  selector: 'kofc-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'kofc-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: UntypedFormGroup;

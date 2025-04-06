@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'kofc-aboutKnights',
-  templateUrl: './aboutKnights.component.html',
-  styleUrls: ['./aboutKnights.component.scss'],
+    selector: 'kofc-aboutKnights',
+    templateUrl: './aboutKnights.component.html',
+    styleUrls: ['./aboutKnights.component.scss'],
+    standalone: false
 })
 export class AboutKnightsComponent implements OnInit {
   //safeUrl: SafeResourceUrl;

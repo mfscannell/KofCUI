@@ -13,9 +13,10 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { ActivitiesService } from 'src/app/services/activities.service';
 
 @Component({
-  selector: 'edit-activity-modal',
-  templateUrl: './edit-activity-modal.component.html',
-  styleUrls: ['./edit-activity-modal.component.scss'],
+    selector: 'edit-activity-modal',
+    templateUrl: './edit-activity-modal.component.html',
+    styleUrls: ['./edit-activity-modal.component.scss'],
+    standalone: false
 })
 export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('closeEditActivityModal', { static: false }) cancelEditActivityModal: ElementRef | undefined;

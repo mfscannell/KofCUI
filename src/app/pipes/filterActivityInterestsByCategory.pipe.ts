@@ -2,8 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { EditActivityInterestFormGroup } from '../forms/editActivityInterestFormGroup';
 import { FormGroup } from '@angular/forms';
 @Pipe({
-  name: 'filterActivityInterestsByCategoryPipe',
-  pure: true
+    name: 'filterActivityInterestsByCategoryPipe',
+    pure: true,
+    standalone: false
 })
 export class FilterActivityInterestsByCategoryPipe implements PipeTransform {
   transform(activities: FormGroup<EditActivityInterestFormGroup>[], activityCategoryValue: string): FormGroup<EditActivityInterestFormGroup>[] {

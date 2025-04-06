@@ -22,9 +22,10 @@ import { EditKnightActivityInterestsModalComponent } from './edit-knight-activit
 import { EditKnightPersonalInfoModalComponent } from './edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
 
 @Component({
-  selector: 'knights',
-  templateUrl: './knights.component.html',
-  styleUrls: ['./knights.component.scss'],
+    selector: 'knights',
+    templateUrl: './knights.component.html',
+    styleUrls: ['./knights.component.scss'],
+    standalone: false
 })
 export class KnightsComponent implements OnInit, OnDestroy {
   @ViewChild(CreateKnightModalComponent) createKnightModal: CreateKnightModalComponent | undefined;

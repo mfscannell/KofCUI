@@ -20,9 +20,10 @@ import { UploadFileEvent } from 'src/app/models/events/uploadFileEvent';
 import { CreateKnightRequest } from 'src/app/models/requests/createKnightRequest';
 
 @Component({
-  selector: 'upload-knights-modal',
-  templateUrl: './upload-knights-modal.component.html',
-  styleUrls: ['./upload-knights-modal.component.scss'],
+    selector: 'upload-knights-modal',
+    templateUrl: './upload-knights-modal.component.html',
+    styleUrls: ['./upload-knights-modal.component.scss'],
+    standalone: false
 })
 export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() showModal: boolean = false;

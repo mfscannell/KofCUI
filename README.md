@@ -18,12 +18,17 @@ In the src/environments/environments.ts file, add a new tenant in the tenants ar
     tenantId: "mytenantID"
 }
 
+
+## Running Project Locally
+### Command Line
 To Start up locally, run the command
-ng serve --disable-host-check --configuration localnondocker
+`ng serve --disable-host-check --configuration localnondocker`
 ng serve --host mynewtenant.localhost --port 4200 --open --configuration development
 
-## When Ran From Docker
-mynewtenant.localhost:9081
+Browse to `mynewtenant.localhost:4200`
+
+### When Ran From Docker Compose
+Browse to `mynewtenant.localhost:9081`
 
 ## Eslint & Prettier
 https://eslint.org/docs/latest/use/getting-started
@@ -35,15 +40,18 @@ Run the command `npx prettier . --check` from a terminal to check stylings.
 Run the command `npm prettier . --write` from a terminal to fix stylings.
 
 ## Updating Angular
+### Easy Way
+The easier thing to do when updating from a version that has not reached end of life.
+
+`ng update`
+
+### Hard Way
 Run the following commands at Powershell:
 npm uninstall -g @angular/cli
 npm install -g @angular/cli@latest
 
 Then create a new project:
 ng new TestAngularUI
-or the easier thing to do when updating from a version that has not reached end of life.
-ng update
-
 
 ## Development server
 

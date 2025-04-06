@@ -14,9 +14,10 @@ import { EditActivityModalComponent } from './edit-activity-modal/edit-activity-
 import { KnightName } from 'src/app/models/knightName';
 
 @Component({
-  selector: 'activity-categories',
-  templateUrl: './activity-categories.component.html',
-  styleUrls: ['./activity-categories.component.scss'],
+    selector: 'activity-categories',
+    templateUrl: './activity-categories.component.html',
+    styleUrls: ['./activity-categories.component.scss'],
+    standalone: false
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityModalComponent) editActivityModal: EditActivityModalComponent | undefined;

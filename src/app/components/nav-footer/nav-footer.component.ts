@@ -5,9 +5,10 @@ import { WebsiteContent } from 'src/app/models/websiteContent';
 import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
-  selector: 'nav-footer',
-  templateUrl: './nav-footer.component.html',
-  styleUrls: ['./nav-footer.component.scss'],
+    selector: 'nav-footer',
+    templateUrl: './nav-footer.component.html',
+    styleUrls: ['./nav-footer.component.scss'],
+    standalone: false
 })
 export class NavFooterComponent implements OnInit, OnDestroy {
   private getWebsiteContentSubscription?: Subscription;

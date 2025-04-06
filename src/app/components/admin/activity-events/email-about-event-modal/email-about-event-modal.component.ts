@@ -8,9 +8,10 @@ import { SendEmailResponse } from 'src/app/models/responses/sendEmailResponse';
 import { ActivitiesService } from 'src/app/services/activities.service';
 
 @Component({
-  selector: 'email-about-event-modal',
-  templateUrl: './email-about-event-modal.component.html',
-  styleUrls: ['./email-about-event-modal.component.scss'],
+    selector: 'email-about-event-modal',
+    templateUrl: './email-about-event-modal.component.html',
+    styleUrls: ['./email-about-event-modal.component.scss'],
+    standalone: false
 })
 export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityEvent?: ActivityEvent;

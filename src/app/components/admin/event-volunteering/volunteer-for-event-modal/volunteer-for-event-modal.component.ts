@@ -13,9 +13,10 @@ import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 
 @Component({
-  selector: 'volunteer-for-event-modal',
-  templateUrl: './volunteer-for-event-modal.component.html',
-  styleUrls: ['./volunteer-for-event-modal.component.scss'],
+    selector: 'volunteer-for-event-modal',
+    templateUrl: './volunteer-for-event-modal.component.html',
+    styleUrls: ['./volunteer-for-event-modal.component.scss'],
+    standalone: false
 })
 export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnChanges {
   public activityEvent: ActivityEvent = {
