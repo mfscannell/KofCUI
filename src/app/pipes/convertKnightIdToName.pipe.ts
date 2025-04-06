@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { KnightName } from '../models/knightName';
 @Pipe({
-  name: 'convertKnightIdToName',
-  pure: true
+    name: 'convertKnightIdToName',
+    pure: true,
+    standalone: false
 })
 export class ConvertKnightIdToNamePipe implements PipeTransform {
   transform(knightId: string, knights: KnightName[]): string {

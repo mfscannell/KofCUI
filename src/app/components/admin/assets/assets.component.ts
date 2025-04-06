@@ -9,9 +9,10 @@ import { WebsiteContent } from 'src/app/models/websiteContent';
 import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
-  selector: 'app-assets',
-  templateUrl: './assets.component.html',
-  styleUrls: ['./assets.component.scss'],
+    selector: 'app-assets',
+    templateUrl: './assets.component.html',
+    styleUrls: ['./assets.component.scss'],
+    standalone: false
 })
 export class AssetsComponent implements OnInit, OnDestroy {
   showErrorMessage: boolean = false;

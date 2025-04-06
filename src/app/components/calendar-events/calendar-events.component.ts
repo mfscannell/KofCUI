@@ -7,9 +7,10 @@ import { CalendarUtilities } from 'src/app/utilities/calendarUtilities';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'kofc-calendar-events',
-  templateUrl: './calendar-events.component.html',
-  styleUrls: ['./calendar-events.component.scss'],
+    selector: 'kofc-calendar-events',
+    templateUrl: './calendar-events.component.html',
+    styleUrls: ['./calendar-events.component.scss'],
+    standalone: false
 })
 export class CalendarEventsComponent implements OnInit {
   getAllUpcomingEventsSubscription?: Subscription;

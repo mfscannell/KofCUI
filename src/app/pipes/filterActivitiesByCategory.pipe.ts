@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Activity } from '../models/activity';
 @Pipe({
-  name: 'filterActivitiesByCategory',
-  pure: true
+    name: 'filterActivitiesByCategory',
+    pure: true,
+    standalone: false
 })
 export class FilterActivitiesByCategoryPipe implements PipeTransform {
   transform(activities: Activity[], activityCategoryValue: string): Activity[] {

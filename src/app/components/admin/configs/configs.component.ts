@@ -12,9 +12,10 @@ import { ConfigsFormGroup } from 'src/app/forms/configsFormGroup';
 import { ExternalLinksFormGroup } from 'src/app/forms/externalLinksFormGroup';
 
 @Component({
-  selector: 'kofc-configs',
-  templateUrl: './configs.component.html',
-  styleUrls: ['./configs.component.scss'],
+    selector: 'kofc-configs',
+    templateUrl: './configs.component.html',
+    styleUrls: ['./configs.component.scss'],
+    standalone: false
 })
 export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllConfigsSubscription?: Subscription;

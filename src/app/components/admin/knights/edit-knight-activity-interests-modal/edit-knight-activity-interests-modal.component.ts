@@ -10,9 +10,10 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 
 @Component({
-  selector: 'edit-knight-activity-interests-modal',
-  templateUrl: './edit-knight-activity-interests-modal.component.html',
-  styleUrls: ['./edit-knight-activity-interests-modal.component.scss'],
+    selector: 'edit-knight-activity-interests-modal',
+    templateUrl: './edit-knight-activity-interests-modal.component.html',
+    styleUrls: ['./edit-knight-activity-interests-modal.component.scss'],
+    standalone: false
 })
 export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';

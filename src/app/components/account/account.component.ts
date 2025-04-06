@@ -19,9 +19,10 @@ import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption
 import { ToggleInterestInActivityEvent } from 'src/app/models/events/toggleInterestInActivityEvent';
 
 @Component({
-  selector: 'kofc-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
+    selector: 'kofc-account',
+    templateUrl: './account.component.html',
+    styleUrls: ['./account.component.scss'],
+    standalone: false
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';

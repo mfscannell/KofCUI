@@ -23,9 +23,10 @@ import { KnightsService } from 'src/app/services/knights.service';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'edit-knight-personal-info-modal',
-  templateUrl: './edit-knight-personal-info-modal.component.html',
-  styleUrls: ['./edit-knight-personal-info-modal.component.scss'],
+    selector: 'edit-knight-personal-info-modal',
+    templateUrl: './edit-knight-personal-info-modal.component.html',
+    styleUrls: ['./edit-knight-personal-info-modal.component.scss'],
+    standalone: false
 })
 export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';

@@ -9,9 +9,10 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
 
 @Component({
-  selector: 'edit-leadership-role-modal',
-  templateUrl: './edit-leadership-role-modal.component.html',
-  styleUrls: ['./edit-leadership-role-modal.component.scss'],
+    selector: 'edit-leadership-role-modal',
+    templateUrl: './edit-leadership-role-modal.component.html',
+    styleUrls: ['./edit-leadership-role-modal.component.scss'],
+    standalone: false
 })
 export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() allKnights: KnightName[] = [];

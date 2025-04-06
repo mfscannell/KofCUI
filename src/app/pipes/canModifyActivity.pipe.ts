@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { PermissionsService } from '../services/permissions.service';
 @Pipe({
-  name: 'canModifyActivity',
-  pure: true
+    name: 'canModifyActivity',
+    pure: true,
+    standalone: false
 })
 export class CanModifyActivityPipe implements PipeTransform {
   constructor(private permissionsService: PermissionsService) {

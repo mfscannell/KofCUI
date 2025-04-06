@@ -12,9 +12,10 @@ import { VolunteerForEventModalComponent } from './volunteer-for-event-modal/vol
 import { KnightName } from 'src/app/models/knightName';
 
 @Component({
-  selector: 'kofc-event-volunteering',
-  templateUrl: './event-volunteering.component.html',
-  styleUrls: ['./event-volunteering.component.scss'],
+    selector: 'kofc-event-volunteering',
+    templateUrl: './event-volunteering.component.html',
+    styleUrls: ['./event-volunteering.component.scss'],
+    standalone: false
 })
 export class EventVolunteeringComponent implements OnInit, OnDestroy {
   @ViewChild(VolunteerForEventModalComponent) volunteerForEventModal: VolunteerForEventModalComponent | undefined;

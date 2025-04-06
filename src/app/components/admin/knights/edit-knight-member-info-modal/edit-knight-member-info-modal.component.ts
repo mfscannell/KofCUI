@@ -13,9 +13,10 @@ import { KnightMemberTypeType } from 'src/app/types/knight-member-type.type';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'edit-knight-member-info-modal',
-  templateUrl: './edit-knight-member-info-modal.component.html',
-  styleUrls: ['./edit-knight-member-info-modal.component.scss'],
+    selector: 'edit-knight-member-info-modal',
+    templateUrl: './edit-knight-member-info-modal.component.html',
+    styleUrls: ['./edit-knight-member-info-modal.component.scss'],
+    standalone: false
 })
 export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';

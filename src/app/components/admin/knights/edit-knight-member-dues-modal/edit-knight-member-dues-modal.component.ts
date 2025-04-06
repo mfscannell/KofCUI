@@ -10,9 +10,10 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { MemberDuesService } from 'src/app/services/memberDues.service';
 
 @Component({
-  selector: 'edit-knight-member-dues-modal',
-  templateUrl: './edit-knight-member-dues-modal.component.html',
-  styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
+    selector: 'edit-knight-member-dues-modal',
+    templateUrl: './edit-knight-member-dues-modal.component.html',
+    styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
+    standalone: false
 })
 export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';

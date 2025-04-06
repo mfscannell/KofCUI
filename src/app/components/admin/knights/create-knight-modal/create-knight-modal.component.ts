@@ -24,9 +24,10 @@ import { KnightMemberTypeType } from 'src/app/types/knight-member-type.type';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
-  selector: 'create-knight-modal',
-  templateUrl: './create-knight-modal.component.html',
-  styleUrls: ['./create-knight-modal.component.scss'],
+    selector: 'create-knight-modal',
+    templateUrl: './create-knight-modal.component.html',
+    styleUrls: ['./create-knight-modal.component.scss'],
+    standalone: false
 })
 export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
-  selector: 'admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+    selector: 'admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss'],
+    standalone: false
 })
 export class AdminComponent implements OnInit {
   constructor(private permissionsService: PermissionsService) {}

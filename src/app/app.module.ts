@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { YouTubePlayerModule } from '@angular/youtube-player';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+//import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -150,7 +150,7 @@ import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pip
       { path: 'admin/assets', component: AssetsComponent, pathMatch: 'full', canActivate: [AssetsGuard] },
       { path: '**', redirectTo: '/' },
     ]),
-    NgbModule,
+    //NgbModule,
     ReactiveFormsModule,
   ],
   providers: [

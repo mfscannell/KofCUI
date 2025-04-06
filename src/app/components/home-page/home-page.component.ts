@@ -7,9 +7,10 @@ import { AssetsService } from 'src/app/services/assets.service';
 import { ConfigsService } from 'src/app/services/configs.service';
 
 @Component({
-  selector: 'app-home-page',
-  templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss'],
+    selector: 'app-home-page',
+    templateUrl: './home-page.component.html',
+    styleUrls: ['./home-page.component.scss'],
+    standalone: false
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   private homePageCarouselImages: EncodedFile[] = [];

@@ -11,9 +11,10 @@ import { AccountsService } from 'src/app/services/accounts.service';
 import { KnightsService } from 'src/app/services/knights.service';
 
 @Component({
-  selector: 'edit-knight-password-modal',
-  templateUrl: './edit-knight-password-modal.component.html',
-  styleUrls: ['./edit-knight-password-modal.component.scss'],
+    selector: 'edit-knight-password-modal',
+    templateUrl: './edit-knight-password-modal.component.html',
+    styleUrls: ['./edit-knight-password-modal.component.scss'],
+    standalone: false
 })
 export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';

@@ -10,9 +10,10 @@ import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/e
 import { KnightName } from 'src/app/models/knightName';
 
 @Component({
-  selector: 'kofc-leadership-roles',
-  templateUrl: './leadership-roles.component.html',
-  styleUrls: ['./leadership-roles.component.scss'],
+    selector: 'kofc-leadership-roles',
+    templateUrl: './leadership-roles.component.html',
+    styleUrls: ['./leadership-roles.component.scss'],
+    standalone: false
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   @ViewChild(EditLeadershipRoleModalComponent) editLeadershipRoleModal: EditLeadershipRoleModalComponent | undefined;

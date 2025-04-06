@@ -21,9 +21,10 @@ import { KnightName } from 'src/app/models/knightName';
 import { WebsiteContent } from 'src/app/models/websiteContent';
 
 @Component({
-  selector: 'kofc-activity-events',
-  templateUrl: './activity-events.component.html',
-  styleUrls: ['./activity-events.component.scss'],
+    selector: 'kofc-activity-events',
+    templateUrl: './activity-events.component.html',
+    styleUrls: ['./activity-events.component.scss'],
+    standalone: false
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityEventModalComponent) editActivityEventModal: EditActivityEventModalComponent | undefined;
