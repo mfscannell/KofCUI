@@ -10,6 +10,8 @@ import { KnightInfo } from '../models/knightInfo';
 import { UpdateKnightMembershipInfoRequest } from '../models/requests/updateKnightMembershipInfoRequest';
 import { CreateKnightRequest } from '../models/requests/createKnightRequest';
 import { KnightName } from '../models/knightName';
+import { PaginationResponse } from '../models/responses/paginationResponse';
+import { FilterKnightRequest } from '../models/requests/filterKnightRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +23,29 @@ export class KnightsService {
     return this.http.get<Knight>(`knights/${knightId}`);
   }
 
-  getAllKnights(): Observable<Knight[]> {
-    return this.http.get<Knight[]>('knights');
+  getAllKnights(filterRequest: FilterKnightRequest): Observable<PaginationResponse<Knight[]>> {
+    const subdirectory = 'knights';
+    let query = '';
+
+    if (filterRequest.skip) {
+      query = query.length ? `${query}&skip=${filterRequest.skip}` : `?skip=${filterRequest.skip}`;
+    }
+
+    if (filterRequest.take) {
+      query = query.length ? `${query}&take=${filterRequest.take}` : `?take=${filterRequest.take}`;
+    }
+
+    if (filterRequest.nameSearch) {
+      query = query.length ? `${query}&nameSearch=${filterRequest.nameSearch}` : `?nameSearch=${filterRequest.nameSearch}`;
+    }
+
+    if (filterRequest.searchDegrees) {
+      query = query.length ? `${query}&degreesSearch=${filterRequest.searchDegrees}` : `?degreesSearch=${filterRequest.searchDegrees}`;
+    }
+
+    console.log(`${subdirectory}${query}`);
+
+    return this.http.get<PaginationResponse<Knight[]>>(`${subdirectory}${query}`);
   }
 
   getAllKnightsNames(context?: {restrictToActiveOnly: boolean}): Observable<KnightName[]> {
