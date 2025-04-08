@@ -1,69 +1,123 @@
 <div class="container d-grid gap-2">
-  <form>
-    <div class="form-floating" *ngIf="knightsLoaded">
-      <input class="form-control" id="name-search" type="text" (input)=searchPartialName($event)/>
-      <label for="name-search" class="col-form-label">Name Search:</label>
+  <form  [formGroup]="searchKnightsForm" (ngSubmit)="onSubmitSearch()">
+    <!-- https://stackoverflow.com/questions/68717954/bootstrap-5-floating-labels-in-an-input-group -->
+    <div class="input-group mb-3">
+      <div class="form-floating">
+        <input class="form-control" id="name-search" type="text" formControlName="nameSearch" autocomplete="off" placeholder="John">
+        <label for="name-search">Name Search:</label>
+      </div>
+      <button class="btn btn-outline-secondary" type="button" id="button-addon2">Clear</button>
+    </div>
+    <div class="form-group row mb-3">
+      <div class="col-12">
+        <button id="searchButton" type="submit" class="btn btn-primary btn-kofc-blue">Search</button>
+      </div>
+    </div>
+    <div class="form-group row mb-3">
+      <div class="col-12">
+        <div class="row bg-light border" *ngFor="let knight of allKnights">
+          <div class="col-12 col-sm-7 pt-2 pb-2">{{knight.firstName}} {{knight.lastName}}</div>
+          <div class="col-2 col-sm-1 pt-2 pb-2">
+            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPersonalInfoModal" (click)="openEditKnightPersonalInfoModal(knight)">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#person"/>
+              </svg>
+            </button>
+          </div>
+          <div class="col-2 col-sm-1 pt-2 pb-2">
+            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
+              </svg>
+            </button>
+          </div>
+          <div class="col-2 col-sm-1 pt-2 pb-2">
+            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
+              </svg>
+            </button>
+          </div>
+          <div class="col-2 col-sm-1 pt-2 pb-2">
+            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
+              </svg>
+            </button>
+          </div>
+          <div class="col-2 col-sm-1 pt-2 pb-2">
+            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
+              <svg class="bi" width="24" height="24" fill="currentColor">
+                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PAGE SIZE -->
+    <div class="row d-flex justify-content-center mb-2">
+      <div class="col-4 col-sm-3 col-md-2 align-self-center">
+        <div class="form-floating">
+          <select class="form-select" id="pageSize" formControlName="pageSize" (change)="changePageSize()">
+            <option *ngFor="let pageSize of pageSizes" [value]="pageSize">{{pageSize}}</option>
+          </select>
+          <label for="pageSize">Page Size</label>
+        </div>
+      </div>
+    </div>
+    <!-- PAGINATION -->
+    <div class="row d-flex justify-content-center mb-2">
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&laquo;&laquo;</button>
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&laquo;</button>
+      </div>
+      <div class="col-4 col-sm-3 col-md-2">
+        <div class="form-floating">
+          <select class="form-select" id="pageSize" formControlName="page" (change)="changePage()">
+            <option *ngFor="let page of pages" [value]="page">{{page}}</option>
+          </select>
+          <label for="pageSize">Page</label>
+        </div>
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&raquo;</button>
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&raquo;&raquo;</button>
+      </div>
+    </div>
+    <!-- <div class="row">
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <select class="form-select" id="pageSize" formControlName="pageSize" (change)="changePageSize()">
+            <option *ngFor="let pageSize of pageSizes" [value]="pageSize">{{pageSize}}</option>
+          </select>
+          <label for="pageSize">Page Size</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-floating mb-3">
+          <select class="form-select" id="pageSize" formControlName="page" (change)="changePage()">
+            <option *ngFor="let page of pages" [value]="page">{{page}}</option>
+          </select>
+          <label for="pageSize">Page</label>
+        </div>
+      </div>
+    </div> -->
+    <div class="form-group row mb-1">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#createKnightModal" (click)="openCreateKnightModal()">Add Knight</button>
+      </div>
+    </div>
+    <div class="form-group row mb-1">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#uploadKnightsModal" (click)="openUploadKnightsModal()">Bulk Upload</button>
+      </div>
     </div>
   </form>
-  <div class="row bg-light border" *ngFor="let knight of displayedKnights | slice: (page-1) * pageSize : page * pageSize">
-    <div class="col-12 col-sm-7 pt-2 pb-2">{{knight.firstName}} {{knight.lastName}}</div>
-    <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPersonalInfoModal" (click)="openEditKnightPersonalInfoModal(knight)">
-        <svg class="bi" width="24" height="24" fill="currentColor">
-          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#person"/>
-        </svg>
-      </button>
-    </div>
-    <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
-        <svg class="bi" width="24" height="24" fill="currentColor">
-          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
-        </svg>
-      </button>
-    </div>
-    <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
-        <svg class="bi" width="24" height="24" fill="currentColor">
-          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
-        </svg>
-      </button>
-    </div>
-    <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
-        <svg class="bi" width="24" height="24" fill="currentColor">
-          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
-        </svg>
-      </button>
-    </div>
-    <div class="col-2 col-sm-1 pt-2 pb-2">
-      <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
-        <svg class="bi" width="24" height="24" fill="currentColor">
-          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-floating float-start me-1">
-      <select class="form-select" id="page-size" [(ngModel)]="pageSize">
-        <option value="2">2</option>
-        <option value="5">5</option>
-      </select>
-      <label for="page-size">Page Size</label>
-    </div>
-    <!-- <ngb-pagination class="float-start ms-1" [collectionSize]="displayedKnights.length" [(page)]="page" [maxSize]="maxSize" [pageSize]="pageSize" [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-    </ngb-pagination> -->
-  </div>
-  <div class="form-group row mb-1">
-    <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#createKnightModal" (click)="openCreateKnightModal()">Add Knight</button>
-    </div>
-  </div>
-  <div class="form-group row mb-1">
-    <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#uploadKnightsModal" (click)="openUploadKnightsModal()">Bulk Upload</button>
-    </div>
-  </div>
   <upload-knights-modal
     class="modal fade"
     id="uploadKnightsModal"

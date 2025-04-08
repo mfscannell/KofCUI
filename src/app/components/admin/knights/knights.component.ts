@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { forkJoin, Subject, Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 import { Knight } from 'src/app/models/knight';
 import { KnightsService } from 'src/app/services/knights.service';
@@ -13,13 +13,18 @@ import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption
 import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { SearchPartialNameEvent } from 'src/app/models/events/searchPartialNameEvent';
 import { CreateKnightModalComponent } from './create-knight-modal/create-knight-modal.component';
 import { EditKnightPasswordModalComponent } from './edit-knight-password-modal/edit-knight-password-modal.component';
 import { EditKnightMemberDuesModalComponent } from './edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
 import { EditKnightMemberInfoModalComponent } from './edit-knight-member-info-modal/edit-knight-member-info-modal.component';
 import { EditKnightActivityInterestsModalComponent } from './edit-knight-activity-interests-modal/edit-knight-activity-interests-modal.component';
 import { EditKnightPersonalInfoModalComponent } from './edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { SearchKnightsFormGroup } from 'src/app/forms/searchKnightsFormGroup';
+import { SearchDegreeFormGroup } from 'src/app/forms/searchDegreesFormGroup';
+import { KnightDegree } from 'src/app/types/knight-degree.type';
+import { PaginationResponse } from 'src/app/models/responses/paginationResponse';
+import { FilterKnightRequest } from 'src/app/models/requests/filterKnightRequest';
 
 @Component({
     selector: 'knights',
@@ -40,13 +45,12 @@ export class KnightsComponent implements OnInit, OnDestroy {
   private knightsSubscription?: Subscription;
   private createKnightSubscription?: Subscription;
   private getFormsSubscription?: Subscription;
+  private getKnightsSubscription?: Subscription;
   private updateKnightPersonalInfoSubscription?: Subscription;
-  knightsLoaded: boolean = false;
-  page = 1;
-  pageSize = 5;
-  maxSize = 10;
-
-  private _search$ = new Subject<void>();
+  public searchKnightsForm: FormGroup<SearchKnightsFormGroup>;
+  public pageSizes = [2, 5];
+  public pages = [1];
+  public totalCount = 0;
 
   public knightActivityInterestsForNewKnight: ActivityInterest[] = [];
   public countryFormOptions: CountryFormOption[] = [];
@@ -75,10 +79,14 @@ export class KnightsComponent implements OnInit, OnDestroy {
     private formsService: FormsService,
     private knightsService: KnightsService,
     private knightActivityInterestsService: KnightActivityInterestsService,
-  ) {}
+  ) {
+    this.searchKnightsForm = this.initSearchKnightsForm();
+  }
 
   ngOnInit() {
-    this.getAllKnights();
+    this.getFormOptions();
+    this.searchKnightsForm.controls.page.patchValue(this.pages[0]);
+    this.getKnights();
   }
 
   ngOnDestroy() {
@@ -94,15 +102,49 @@ export class KnightsComponent implements OnInit, OnDestroy {
       this.getFormsSubscription.unsubscribe();
     }
 
+    if (this.getKnightsSubscription) {
+      this.getKnightsSubscription.unsubscribe();
+    }
+
     if (this.updateKnightPersonalInfoSubscription) {
       this.updateKnightPersonalInfoSubscription.unsubscribe();
     }
   }
 
-  private getAllKnights() {
+  public onSubmitSearch() {
+    this.searchKnightsForm.controls.page.patchValue(this.pages[0]);
+    this.getKnights();
+  }
+
+  private initSearchKnightsForm() : FormGroup<SearchKnightsFormGroup> {
+    return new FormGroup<SearchKnightsFormGroup>({
+      nameSearch: new FormControl<string>('', { nonNullable: true, validators: [] }),
+      page: new FormControl<number>(this.pages[0], { nonNullable: true, validators: [] }),
+      pageSize: new FormControl<number>(this.pageSizes[0], { nonNullable: true, validators: [] }),
+      searchDegrees: new FormArray<FormGroup<SearchDegreeFormGroup>>([
+        new FormGroup<SearchDegreeFormGroup>({
+          degree: new FormControl<KnightDegree>('First', { nonNullable: true, validators: [] }),
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+        }),
+        new FormGroup<SearchDegreeFormGroup>({
+          degree: new FormControl<KnightDegree>('Second', { nonNullable: true, validators: [] }),
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+        }),
+        new FormGroup<SearchDegreeFormGroup>({
+          degree: new FormControl<KnightDegree>('Third', {nonNullable: true, validators: [] }),
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+        }),
+        new FormGroup<SearchDegreeFormGroup>({
+          degree: new FormControl<KnightDegree>('Fourth', {nonNullable: true, validators: [] }),
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+        })
+      ])
+    });
+  }
+
+  private getFormOptions() {
     const formsObserver = {
       next: ([
-        knightsResponse,
         activityCategoriesResponse,
         knightDegreeResponse,
         knightMemberTypeResponse,
@@ -111,7 +153,6 @@ export class KnightsComponent implements OnInit, OnDestroy {
         memberDuesPaymentStatusResponse,
         knightActivityInterests,
       ]: [
-        Knight[],
         GenericFormOption[],
         GenericFormOption[],
         GenericFormOption[],
@@ -127,14 +168,12 @@ export class KnightsComponent implements OnInit, OnDestroy {
         this.countryFormOptions = countryResponse;
         this.memberDuesPaymentStatusFormOptions = memberDuesPaymentStatusResponse;
         this.knightActivityInterestsForNewKnight = knightActivityInterests;
-        this.applySearchFilter(knightsResponse);
       },
       error: (err: ApiResponseError) => this.logError('Error getting Knight Degree Form Options', err),
       complete: () => console.log('Knight Degree Form Options retrieved.'),
     };
 
     this.getFormsSubscription = forkJoin([
-      this.knightsService.getAllKnights(),
       this.formsService.getActivityCategoryFormOptions(),
       this.formsService.getKnightDegreeFormOptions(),
       this.formsService.getKnightMemberTypeFormOptions(),
@@ -145,21 +184,70 @@ export class KnightsComponent implements OnInit, OnDestroy {
     ]).subscribe(formsObserver);
   }
 
-  private applySearchFilter(knights: Knight[]) {
-    this.allKnights = knights;
-    this.displayedKnights = knights;
-    this.displayedKnightsCount = this.allKnights.length;
-    this.knightsLoaded = true;
+  public changePageSize() {
+    this.searchKnightsForm.controls.page.patchValue(1);
+    this.getKnights();
   }
 
-  searchPartialName(event: SearchPartialNameEvent) {
-    const text = (event.target?.value || '').toLowerCase();
-    this.page = 1;
-    this.displayedKnights = this.allKnights.filter(
-      (knight) =>
-        (knight.firstName && knight.firstName.toLowerCase().includes(text)) ||
-        (knight.lastName && knight.lastName.toLowerCase().includes(text)),
-    );
+  public changePage() {
+    this.getKnights();
+  }
+
+  private getKnights() {
+    const filterSearch = this.mapForm();
+    const getKnightsObserver = {
+      next: (knightsResponse: PaginationResponse<Knight[]>) => this.handleGetKnightsResponse(knightsResponse, filterSearch),
+      error: (err: ApiResponseError) => this.logError('Error getting Knight Degree Form Options', err),
+      complete: () => console.log('Knight Degree Form Options retrieved.'),
+    };
+
+    this.knightsService.getAllKnights(filterSearch).subscribe(getKnightsObserver);
+  }
+
+  private handleGetKnightsResponse(knightsResponse: PaginationResponse<Knight[]>, filterSearch: FilterKnightRequest) {
+    this.allKnights = knightsResponse.value;
+    this.totalCount = knightsResponse.count;
+    const numPages = Math.ceil(knightsResponse.count / filterSearch.take);
+    this.pages = new Array(numPages).fill(null).map((_, i) => i + 1);
+    const page = (filterSearch.skip || 0) / filterSearch.take + 1;
+    this.searchKnightsForm.controls.page.patchValue(page);
+  }
+
+  private mapForm(): FilterKnightRequest {
+    const rawForm = this.searchKnightsForm.getRawValue();
+
+    const filterRequest = {
+    } as FilterKnightRequest;
+
+    if (rawForm.nameSearch) {
+      filterRequest.nameSearch = rawForm.nameSearch;
+    }
+
+    let searchDegrees = '';
+
+    this.searchKnightsForm.controls.searchDegrees.controls.forEach((element: FormGroup<SearchDegreeFormGroup>) => {
+      const degree = element.controls.degree.value;
+      const checked = element.controls.selected.value;
+
+      if (checked) {
+        if (searchDegrees) {
+          searchDegrees = searchDegrees + `;${degree}`
+        } else {
+          searchDegrees = degree;
+        }
+      }
+    });
+
+    if (searchDegrees) {
+      filterRequest.searchDegrees = searchDegrees;
+    }
+
+    filterRequest.skip = (this.searchKnightsForm.controls.page.value - 1) * this.searchKnightsForm.controls.pageSize.value;
+    filterRequest.take = this.searchKnightsForm.controls.pageSize.value;
+
+    console.log(filterRequest);
+
+    return filterRequest;
   }
 
   public openEditKnightPersonalInfoModal(knight: Knight) {

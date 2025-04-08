@@ -12,9 +12,6 @@ export class FilterActivityInterestsByCategoryPipe implements PipeTransform {
       return [];
     }
 
-    console.log(`FilterActivitiesPipe:[${activityCategoryValue}]`);
-    console.log(activities);
-
     return activities
         .filter((x) => x.controls.activityCategory.value === activityCategoryValue)
         .sort(function (a, b) {
