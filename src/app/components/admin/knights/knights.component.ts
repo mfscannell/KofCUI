@@ -48,9 +48,13 @@ export class KnightsComponent implements OnInit, OnDestroy {
   private getKnightsSubscription?: Subscription;
   private updateKnightPersonalInfoSubscription?: Subscription;
   public searchKnightsForm: FormGroup<SearchKnightsFormGroup>;
-  public pageSizes = [2, 5];
-  public pages = [1];
-  public totalCount = 0;
+  public pageSizes: number[] = [2, 5];
+  public pages: number[] = [1];
+  public totalCount: number = 0;
+  public disableFirstButton: boolean = true;
+  public disableLastButton: boolean = true;
+  public disablePreviousButton: boolean = true;
+  public disableNextButton: boolean = true;
 
   public knightActivityInterestsForNewKnight: ActivityInterest[] = [];
   public countryFormOptions: CountryFormOption[] = [];
@@ -193,6 +197,40 @@ export class KnightsComponent implements OnInit, OnDestroy {
     this.getKnights();
   }
 
+  public goToFirstPage() {
+    this.searchKnightsForm.controls.page.patchValue(1);
+    this.getKnights();
+  }
+
+  public goToPreviousPage() {
+    const currentPage = this.searchKnightsForm.controls.page.value;
+    let previousPage = currentPage - 1;
+
+    if (previousPage < this.pages[0]) {
+      previousPage = this.pages[0];
+    }
+
+    this.searchKnightsForm.controls.page.patchValue(previousPage);
+    this.getKnights();
+  }
+
+  public goToNextPage() {
+    const currentPage = this.searchKnightsForm.controls.page.value;
+    let nextPage = currentPage + 1;
+
+    if (nextPage > this.pages[this.pages.length - 1]) {
+      nextPage = this.pages[this.pages.length - 1];
+    }
+
+    this.searchKnightsForm.controls.page.patchValue(nextPage);
+    this.getKnights();
+  }
+
+  public goToLastPage() {
+    this.searchKnightsForm.controls.page.patchValue(this.pages[this.pages.length - 1]);
+    this.getKnights();
+  }
+
   private getKnights() {
     const filterSearch = this.mapForm();
     const getKnightsObserver = {
@@ -211,6 +249,14 @@ export class KnightsComponent implements OnInit, OnDestroy {
     this.pages = new Array(numPages).fill(null).map((_, i) => i + 1);
     const page = (filterSearch.skip || 0) / filterSearch.take + 1;
     this.searchKnightsForm.controls.page.patchValue(page);
+    this.checkPaginationButtons();
+  }
+
+  private checkPaginationButtons() {
+    this.disableFirstButton = this.searchKnightsForm.controls.page.value === 1;
+    this.disablePreviousButton = this.searchKnightsForm.controls.page.value === 1;
+    this.disableNextButton = this.searchKnightsForm.controls.page.value === this.pages[this.pages.length - 1];
+    this.disableLastButton = this.searchKnightsForm.controls.page.value === this.pages[this.pages.length - 1];
   }
 
   private mapForm(): FilterKnightRequest {

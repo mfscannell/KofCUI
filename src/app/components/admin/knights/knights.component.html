@@ -69,10 +69,10 @@
     <!-- PAGINATION -->
     <div class="row d-flex justify-content-center mb-2">
       <div class="col-auto">
-        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&laquo;&laquo;</button>
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100" [disabled]="disableFirstButton" (click)="goToFirstPage()">&laquo;&laquo;</button>
       </div>
       <div class="col-auto">
-        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&laquo;</button>
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100" [disabled]="disablePreviousButton" (click)="goToPreviousPage()">&laquo;</button>
       </div>
       <div class="col-4 col-sm-3 col-md-2">
         <div class="form-floating">
@@ -83,30 +83,12 @@
         </div>
       </div>
       <div class="col-auto">
-        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&raquo;</button>
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100" [disabled]="disableNextButton" (click)="goToNextPage()">&raquo;</button>
       </div>
       <div class="col-auto">
-        <button type="button" class="btn btn-primary btn-kofc-blue h-100">&raquo;&raquo;</button>
+        <button type="button" class="btn btn-primary btn-kofc-blue h-100" [disabled]="disableLastButton" (click)="goToLastPage()">&raquo;&raquo;</button>
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="col-6">
-        <div class="form-floating mb-3">
-          <select class="form-select" id="pageSize" formControlName="pageSize" (change)="changePageSize()">
-            <option *ngFor="let pageSize of pageSizes" [value]="pageSize">{{pageSize}}</option>
-          </select>
-          <label for="pageSize">Page Size</label>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-floating mb-3">
-          <select class="form-select" id="pageSize" formControlName="page" (change)="changePage()">
-            <option *ngFor="let page of pages" [value]="page">{{page}}</option>
-          </select>
-          <label for="pageSize">Page</label>
-        </div>
-      </div>
-    </div> -->
     <div class="form-group row mb-1">
       <div class="col-md-12">
         <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#createKnightModal" (click)="openCreateKnightModal()">Add Knight</button>
