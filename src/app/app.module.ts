@@ -63,6 +63,11 @@ import { MeetsPasswordRequrementsPipe } from './pipes/meetsPasswordRequirements.
 import { FilterActivityInterestsByCategoryPipe } from './pipes/filterActivityInterestsByCategory.pipe';
 import { ConvertKnightIdToNamePipe } from './pipes/convertKnightIdToName.pipe';
 import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pipe';
+import { MemberDuesAmountsComponent } from './components/admin/member-dues-amounts/member-dues-amounts.component';
+import { MemberDuesAmountsGuard } from './guards/memberDuesAmounts.guard';
+import { EditMemberDuesAmountsModalComponent } from './components/admin/member-dues-amounts/edit-member-dues-amounts-modal/edit-member-dues-amounts-modal.component';
+import { CanModifyMemberDuesAmountsPipe } from './pipes/canModifyMemberDuesAmounts.pipe';
+import { CurrencyMaskDirective } from './directives/currency-mask.directive';
 
 @NgModule({
   declarations: [
@@ -79,6 +84,8 @@ import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pip
     ActivityCategoriesComponent,
     EditActivityModalComponent,
     KnightsComponent,
+    MemberDuesAmountsComponent,
+    EditMemberDuesAmountsModalComponent,
     CreateKnightModalComponent,
     EditKnightActivityInterestsModalComponent,
     EditKnightMemberDuesModalComponent,
@@ -95,6 +102,7 @@ import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pip
     EmailAboutEventModalComponent,
     EventVolunteeringComponent,
     VolunteerForEventModalComponent,
+    CurrencyMaskDirective,
     ToDisplayDatePipe,
     ConvertKnightIdToNamePipe,
     ToDisplayTimePipe,
@@ -103,6 +111,7 @@ import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pip
     FilterActivityInterestsByCategoryPipe,
     FilterLeadershipRolesPipe,
     CanModifyActivityPipe,
+    CanModifyMemberDuesAmountsPipe,
     IsEndDateAfterStartDatePipe,
     FilterAdministrativeDivisionsPipe,
     MeetsPasswordRequrementsPipe
@@ -128,6 +137,7 @@ import { IsEndDateAfterStartDatePipe } from './pipes/isEndDateAfterStartDate.pip
         canActivate: [ActivitiesGuard],
       },
       { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },
+      { path: 'admin/memberDuesAmounts', component: MemberDuesAmountsComponent, pathMatch: 'full', canActivate: [MemberDuesAmountsGuard] },
       {
         path: 'admin/leadershipRoles',
         component: LeadershipRolesComponent,
