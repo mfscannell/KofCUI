@@ -260,4 +260,49 @@ export class PermissionsService {
 
     return false;
   }
+
+  canActivateMemberDuesAmounts() {
+    const roles = this.accountsService.getRoles();
+
+    if (
+      roles.includes(this.adminRole) ||
+      roles.includes(this.grandKnightRole) ||
+      roles.includes(this.deputyGrandKnightRole) ||
+      roles.includes(this.financialSecretaryRole)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  canAddMemberDuesAmounts() {
+    const roles = this.accountsService.getRoles();
+
+    if (
+      roles.includes(this.adminRole) ||
+      roles.includes(this.grandKnightRole) ||
+      roles.includes(this.deputyGrandKnightRole) ||
+      roles.includes(this.financialSecretaryRole)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  canEditMemberDuesAmounts() {
+    const roles = this.accountsService.getRoles();
+
+    if (
+      roles.includes(this.adminRole) ||
+      roles.includes(this.grandKnightRole) ||
+      roles.includes(this.deputyGrandKnightRole) ||
+      roles.includes(this.financialSecretaryRole)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 }

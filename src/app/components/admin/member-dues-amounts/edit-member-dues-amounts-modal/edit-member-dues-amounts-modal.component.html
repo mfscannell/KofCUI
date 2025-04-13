@@ -1,0 +1,66 @@
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    <form [formGroup]="editMemberDuesAmountsForm" (ngSubmit)="onSubmitEditMemberDuesAmounts()">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+        <button #cancelEditMemberDuesModal type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal" (click)="cancelModal()">
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-floating mb-3" *ngIf="modalAction === 'Create'">
+            <input type="number" step="1" class="form-control" formControlName="year" id="year" autocomplete="off" placeholder="2025">
+            <label for="year">Year</label>
+          </div>
+          <div class="row mb-3" *ngIf="modalAction === 'Edit'">
+            <div class="col-12">
+              Year: {{editMemberDuesAmountsForm.controls.year.value}}
+            </div>
+          </div>
+          <!-- PAYING -->
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="paying-currency">$</span>
+            <div class="form-floating">
+              <input 
+              type="text" 
+              currencyMask 
+              [preValue]="editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value" 
+              [control]="editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount"
+              class="form-control" 
+              formControlName="memberClassPayingDuesAmount" 
+              id="memberClassPayingDuesAmount" 
+              autocomplete="off" 
+              placeholder="35.00">
+              <label for="memberClassPayingDuesAmount">Paying Members</label>
+            </div>
+          </div>
+          <!-- HONORARY LIFE -->
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="honorary-life-currency">$</span>
+            <div class="form-floating">
+              <input 
+              type="text" 
+              currencyMask 
+              [preValue]="editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value" 
+              [control]="editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount"
+              class="form-control" 
+              formControlName="memberClassHonoraryLifeDuesAmount" 
+              id="memberClassHonoraryLifeDuesAmount" 
+              autocomplete="off" 
+              placeholder="0.00">
+              <label for="memberClassHonoraryLifeDuesAmount">Honorary Life</label>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <div class="container">
+          <div class="row" *ngIf="errorSaving">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

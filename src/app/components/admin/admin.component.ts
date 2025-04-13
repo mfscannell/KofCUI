@@ -16,6 +16,10 @@ export class AdminComponent implements OnInit {
     return this.permissionsService.canActivateKnights();
   }
 
+  canActivateMemberDuesAmounts() {
+    return this.permissionsService.canActivateMemberDuesAmounts();
+  }
+
   canActivateLeadershipRoles() {
     return this.permissionsService.canActivateLeadershipRoles();
   }
