@@ -5,9 +5,9 @@ import * as _ from "lodash";
 import { LeadershipRole } from 'src/app/models/leadershipRole';
 import { KnightsService } from 'src/app/services/knights.service';
 import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
-import { LeadershipRoleCategoryEnums } from 'src/app/enums/leadershipRoleCategoryEnums';
 import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/edit-leadership-role-modal.component';
 import { KnightName } from 'src/app/models/knightName';
+import { LeadershipRoleCategory } from 'src/app/types/leadership-role-category.type';
 
 @Component({
     selector: 'kofc-leadership-roles',
@@ -20,7 +20,7 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
 
   public allKnights: KnightName[] = [];
   public leadershipRoles: LeadershipRole[] = [];
-  public leadershipRoleCategories: LeadershipRoleCategoryEnums[] = Object.values(LeadershipRoleCategoryEnums);
+  public leadershipRoleCategories: LeadershipRoleCategory[] = ['Admin', 'Officer', 'Director'];
   private knightsSubscription?: Subscription;
   private leadershipRolesSubscription?: Subscription;
 

@@ -11,8 +11,21 @@ import { UpdateMemberDuesAmountsRequest } from "../models/requests/updateMemberD
 export class MemberDuesAmountsService {
   constructor(private http: HttpClient) {}
 
-  getMemberDuesAmounts(fromYear: number, toYear: number): Observable<MemberDuesAmounts[]> {
-    return this.http.get<MemberDuesAmounts[]>(`memberDuesAmounts?fromYear=${fromYear}&toYear=${toYear}`);
+  getMemberDuesAmounts(fromYear?: number, toYear?: number): Observable<MemberDuesAmounts[]> {
+    let questionMarkAdded = false;
+    let route = 'memberDuesAmounts';
+
+    if (fromYear) {
+      route = questionMarkAdded ? `${route}&fromYear=${fromYear}` : `${route}?fromYear=${fromYear}`;
+      questionMarkAdded = true;
+    }
+
+    if (toYear) {
+      route = questionMarkAdded ? `${route}&toYear=${toYear}` : `${route}?toYear=${toYear}`;
+      questionMarkAdded = true;
+    }
+
+    return this.http.get<MemberDuesAmounts[]>(route);
   }
 
   createMemberDuesAmounts(request: CreateMemberDuesAmountsRequest): Observable<MemberDuesAmounts> {

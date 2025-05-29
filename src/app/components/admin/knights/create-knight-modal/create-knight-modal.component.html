@@ -103,7 +103,7 @@
                 <label for="knightInfo_degree">Degree</label>
               </div>
               <div class="form-floating mb-3">
-                <input type="date" formControlName="firstDegreeDate" id="firstDegreeDate" class="form-control" min="1900-01-01" max="2050-12-31" />
+                <input type="date" formControlName="firstDegreeDate" id="firstDegreeDate" class="form-control" min="1900-01-01" max="2050-12-31" (change)="onChangeFirstDegreeDate()" />
                 <label for="firstDegreeDate">First Degree Date</label>
               </div>
               <div class="form-floating mb-3">
@@ -142,23 +142,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
-                <div class="form-group mb-3">
-                  <div class="col-12">
-                    <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
-                  </div>
-                </div>
-                <div formArrayName="{{getFormArrayName(activityCategoryFormOption)}}">
-                  <div *ngFor="let activityInterestControl of getActivityInterestsFormArray(createKnightForm, getFormArrayName(activityCategoryFormOption)).controls; let i = index" [formGroupName]="i">
-                    <div class="form-group mb-3">
-                      <label class="col-5 col-md-3 form-label">{{getActivityName(activityInterestControl)}}</label>
-                    <div class="col-7 col-md-9">
-                      <input type="checkbox" class="form-check-input" formControlName="interested" id="interested">
-                    </div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
           <!-- MEMBER DUES -->
@@ -166,13 +149,14 @@
             <div formArrayName="memberDues">
               <div *ngFor="let memberDue of createKnightForm.controls.memberDues.controls; let i = index" [formGroupName]="i">
                 <div class="form-floating mb-3">
-                  <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
+                  <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus" (change)="onChangeMemberDuesPaidStatus(i)">
                     <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
                   </select>
-                  <label for="stateCode">{{memberDue.controls.year.value}}</label>
+                  <label for="stateCode">{{memberDue.controls.year.value}} (Due: ${{memberDue.controls.amountDue.value}})</label>
                 </div>
               </div>
             </div>
+            <div>NOTE: Member dues amounts only exist from {{oldestMemberDuesAmountsYear}} - {{newestMemberDuesAmountsYear}}</div>
           </div>
         </div>
         <div class="modal-footer">

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CreateAddressFormGroup } from 'src/app/forms/createAddressFormGroup';
@@ -8,10 +8,11 @@ import { EditActivityInterestsFormGroup } from 'src/app/forms/editActivityIntere
 import { EditKnightMemberInfoFormGroup } from 'src/app/forms/editKnightMemberInfoFormGroup';
 import { MemberDueFormGroup } from 'src/app/forms/memberDueFormGroup';
 import { ActivityInterest } from 'src/app/models/activityInterest';
+import { CreateKnightMemberDuesPaidStatusRequest } from 'src/app/models/requests/createKnightMemberDuesPaidStatusRequest';
 import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { Knight } from 'src/app/models/knight';
-import { MemberDues } from 'src/app/models/memberDues';
+import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
 import { CreateActivityInterestRequest } from 'src/app/models/requests/createActivityInterestRequest';
 import { CreateKnightInfoRequest } from 'src/app/models/requests/createKnightInfoRequest';
 import { CreateKnightRequest } from 'src/app/models/requests/createKnightRequest';
@@ -22,6 +23,7 @@ import { KnightDegree } from 'src/app/types/knight-degree.type';
 import { KnightMemberClassType } from 'src/app/types/knight-member-class.type';
 import { KnightMemberTypeType } from 'src/app/types/knight-member-type.type';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { MemberDuesPaidStatus } from 'src/app/types/knight-member-dues-paid-status.type';
 
 @Component({
     selector: 'create-knight-modal',
@@ -37,6 +39,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   @Input() knightDegreeFormOptions: GenericFormOption[] = [];
   @Input() knightActivityInterestsForNewKnight: ActivityInterest[] = [];
   @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
+  @Input() memberDuesAmounts: MemberDuesAmounts[] = [];
   @Output() createKnightChanges = new EventEmitter<Knight>();
   @ViewChild('cancelCreateKnightModal', { static: false })
   cancelCreateKnightModal: ElementRef | undefined;
@@ -47,16 +50,26 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   public selectedCountry: string = '';
 
   private createKnightSubscription?: Subscription;
+  public oldestMemberDuesAmountsYear: number = 0;
+  public newestMemberDuesAmountsYear: number = 0;
 
   constructor(private knightsService: KnightsService) {
     this.createKnightForm = this.initCreateKnightForm();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   ngOnDestroy() {}
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.memberDuesAmounts.currentValue.length) {
+      const oldestYear = this.memberDuesAmounts.reduce((r, e) => r.year < e.year ? r : e);
+      this.oldestMemberDuesAmountsYear = oldestYear.year;
+
+      const newestYear = this.memberDuesAmounts.reduce((r, e) => r.year > e.year ? r : e);
+      this.newestMemberDuesAmountsYear = newestYear.year;
+    }
   }
 
   public resetForm() {
@@ -102,7 +115,15 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       }),
     });
 
-    this.updateFormWithMemberDuesForCreateKnightForm(createKnightForm);
+    if (this.memberDuesAmounts.length) {
+      const oldestYear = this.memberDuesAmounts.reduce((r, e) => r.year < e.year ? r : e);
+      this.oldestMemberDuesAmountsYear = oldestYear.year;
+
+      const newestYear = this.memberDuesAmounts.reduce((r, e) => r.year > e.year ? r : e);
+      this.newestMemberDuesAmountsYear = newestYear.year;
+    }
+
+    this.updateFormWithMemberDuesForCreateKnightForm(createKnightForm, this.oldestMemberDuesAmountsYear, this.newestMemberDuesAmountsYear);
 
     return createKnightForm;
   }
@@ -163,15 +184,62 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
     return formGroups;
   }
 
-  private updateFormWithMemberDuesForCreateKnightForm(form: FormGroup<CreateKnightFormGroup>) {
-    const thisYear = new Date().getFullYear();
-    const startYear = thisYear - 9;
-    const endYear = thisYear + 1;
+  public onChangeFirstDegreeDate() {
+    const firstDegreeDate = this.createKnightForm.controls.knightInfo.controls.firstDegreeDate.value;
+    console.log(firstDegreeDate);
+    const firstDegreeYear = DateTimeFormatter.getYear(firstDegreeDate);
+    console.log(firstDegreeYear);
 
+    if (firstDegreeYear) {
+      const startYear = firstDegreeYear > this.oldestMemberDuesAmountsYear ? firstDegreeYear : this.oldestMemberDuesAmountsYear;
+      const endYear = firstDegreeYear > this.newestMemberDuesAmountsYear ? firstDegreeYear : this.newestMemberDuesAmountsYear;
+
+      this.createKnightForm.controls.memberDues = new FormArray<FormGroup<MemberDueFormGroup>>([]);
+
+      this.updateFormWithMemberDuesForCreateKnightForm(this.createKnightForm, startYear, endYear);
+    }
+  };
+
+  public onChangeMemberDuesPaidStatus(i: number) {
+    console.log(`onChangeMemberDuesPaidStatus ${i}`);
+    const knightMemberDues = this.createKnightForm.controls.memberDues.at(i);
+
+    if (knightMemberDues.get('paidStatus')?.value === 'HonoraryLife'){
+      this.createKnightForm.controls.memberDues.at(i).get('amountDue')?.setValue(0);
+    } else {
+      if (this.memberDuesAmounts.length) {
+        const filteredMemberDuesAmounts = this.memberDuesAmounts.filter(x => x.year === knightMemberDues.get('year')?.value);
+
+        if (filteredMemberDuesAmounts.length) {
+          const amount = filteredMemberDuesAmounts[0].memberClassPayingDuesAmount;
+          this.createKnightForm.controls.memberDues.at(i).get('amountDue')?.setValue(amount);
+        } else {
+          this.createKnightForm.controls.memberDues.at(i).get('amountDue')?.setValue(0);
+        }
+      } else {
+        this.createKnightForm.controls.memberDues.at(i).get('amountDue')?.setValue(0);
+      }
+    }
+
+    console.log(this.createKnightForm);
+  }
+
+  private updateFormWithMemberDuesForCreateKnightForm(form: FormGroup<CreateKnightFormGroup>, startYear: number, endYear: number) {
+    console.log(`updateMemberDuesArray ${startYear} ${endYear}`);
     for (let year = startYear; year <= endYear; year++) {
+      let amountDue = 0;
+
+      if (this.memberDuesAmounts.length) {
+        const filteredMemberDuesAmounts = this.memberDuesAmounts.filter(x => x.year === year);
+
+        if (filteredMemberDuesAmounts.length) {
+          amountDue = filteredMemberDuesAmounts[0].memberClassPayingDuesAmount;
+        }
+      }
       const memberDueFormGroup = new FormGroup<MemberDueFormGroup>({
         year: new FormControl<number>(year, { nonNullable: true }),
-        paidStatus: new FormControl<string>('Unpaid', { nonNullable: true }),
+        amountDue: new FormControl<number>(amountDue, { nonNullable: true }),
+        paidStatus: new FormControl<MemberDuesPaidStatus>('Unpaid', { nonNullable: true }),
       });
 
       form.controls.memberDues.controls.push(memberDueFormGroup);
@@ -216,10 +284,10 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       memberType: rawForm.knightInfo.memberType,
       memberClass: rawForm.knightInfo.memberClass,
     };
-    const _memberDues: MemberDues[] = rawForm?.memberDues?.map(function (md: MemberDues): MemberDues {
-      const memberDues: MemberDues = {
-        year: md.year,
-        paidStatus: md.paidStatus,
+    const createMemberDuesRequest: CreateKnightMemberDuesPaidStatusRequest[] = this.createKnightForm.controls.memberDues.controls.map(function (md: FormGroup<MemberDueFormGroup>): CreateKnightMemberDuesPaidStatusRequest {
+      const memberDues: CreateKnightMemberDuesPaidStatusRequest = {
+        year: md.controls.year.value,
+        paidStatus: md.controls.paidStatus.value
       };
 
       return memberDues;
@@ -241,7 +309,7 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
       homeAddress: homeAddress,
       knightInfo: knightInfo,
       activityInterests: _activityInterests,
-      memberDues: _memberDues,
+      memberDues: createMemberDuesRequest,
     };
 
     console.log('Mapped Knight:');

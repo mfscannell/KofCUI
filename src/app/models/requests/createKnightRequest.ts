@@ -1,4 +1,4 @@
-import { MemberDues } from "../memberDues";
+import { CreateKnightMemberDuesPaidStatusRequest } from "./createKnightMemberDuesPaidStatusRequest";
 import { CreateActivityInterestRequest } from "./createActivityInterestRequest";
 import { CreateKnightInfoRequest } from "./createKnightInfoRequest";
 import { CreateStreetAddressRequest } from "./createStreetAddressRequest";
@@ -14,5 +14,5 @@ export interface CreateKnightRequest {
   homeAddress: CreateStreetAddressRequest;
   knightInfo: CreateKnightInfoRequest;
   activityInterests: CreateActivityInterestRequest[];
-  memberDues: MemberDues[];
+  memberDues: CreateKnightMemberDuesPaidStatusRequest[];
 }

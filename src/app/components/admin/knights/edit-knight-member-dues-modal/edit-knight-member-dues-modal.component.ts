@@ -5,9 +5,11 @@ import { EditMemberDuesFormGroup } from 'src/app/forms/editMemberDuesFormGroup';
 import { MemberDueFormGroup } from 'src/app/forms/memberDueFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { MemberDues } from 'src/app/models/memberDues';
+import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
 import { UpdateKnightMemberDuesRequest } from 'src/app/models/requests/updateKnightMemberDuesRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { MemberDuesService } from 'src/app/services/memberDues.service';
+import { MemberDuesPaidStatus } from 'src/app/types/knight-member-dues-paid-status.type';
 
 @Component({
     selector: 'edit-knight-member-dues-modal',
@@ -19,6 +21,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   @Input() modalHeaderText: string = '';
   @Input() knightId: string = '';
   @Input() memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
+  @Input() memberDuesAmounts: MemberDuesAmounts[] = [];
   @Output() editKnightMemberDuesChanges = new EventEmitter<MemberDues[]>();
   @ViewChild('closeModal', { static: false }) closeModal: ElementRef | undefined;
 
@@ -57,7 +60,8 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
       memberDues.forEach((memberDue: MemberDues) => {
         const memberDueFormGroup = new FormGroup<MemberDueFormGroup>({
           year: new FormControl<number>(memberDue.year, { nonNullable: true }),
-          paidStatus: new FormControl<string>(memberDue.paidStatus, { nonNullable: true }),
+          amountDue: new FormControl<number>(memberDue.amountDue, { nonNullable: true }),
+          paidStatus: new FormControl<MemberDuesPaidStatus>(memberDue.paidStatus, { nonNullable: true }),
         });
 
         this.editKnightMemberDuesForm.controls.memberDues.controls.push(memberDueFormGroup);
@@ -82,6 +86,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
     const mappedMemberDues: MemberDues[] = this.editKnightMemberDuesForm.controls.memberDues.controls.map((memberDueFormGroup: FormGroup<MemberDueFormGroup>) => {
       const memberDues: MemberDues = {
         year: memberDueFormGroup.controls.year.value,
+        amountDue: memberDueFormGroup.controls.amountDue.value,
         paidStatus: memberDueFormGroup.controls.paidStatus.value
       };
 

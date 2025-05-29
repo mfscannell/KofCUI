@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { LeadershipRole } from '../models/leadershipRole';
-import { LeadershipRoleCategoryEnums } from '../enums/leadershipRoleCategoryEnums';
+import { LeadershipRoleCategory } from '../types/leadership-role-category.type';
 @Pipe({
     name: 'filterLeadershipRoles',
     pure: true,
     standalone: false
 })
 export class FilterLeadershipRolesPipe implements PipeTransform {
-  transform(leadershipRoles: LeadershipRole[], leadershipRoleCategory: LeadershipRoleCategoryEnums): LeadershipRole[] {
+  transform(leadershipRoles: LeadershipRole[], leadershipRoleCategory: LeadershipRoleCategory): LeadershipRole[] {
     return leadershipRoles.filter((x) => x.leadershipRoleCategory === leadershipRoleCategory);
   }
 }
