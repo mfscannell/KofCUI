@@ -1,0 +1,1 @@
+export type MemberDuesPaidStatus = 'Unpaid' | 'Paid' | 'HonoraryLife' | 'PartiallyPaid';

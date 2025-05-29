@@ -25,6 +25,8 @@ import { SearchDegreeFormGroup } from 'src/app/forms/searchDegreesFormGroup';
 import { KnightDegree } from 'src/app/types/knight-degree.type';
 import { PaginationResponse } from 'src/app/models/responses/paginationResponse';
 import { FilterKnightRequest } from 'src/app/models/requests/filterKnightRequest';
+import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.service';
+import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
 
 @Component({
     selector: 'knights',
@@ -42,6 +44,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   allKnights: Knight[] = [];
   displayedKnights: Knight[] = [];
   displayedKnightsCount: number = 0;
+  private getKnightSubscription?: Subscription;
   private knightsSubscription?: Subscription;
   private createKnightSubscription?: Subscription;
   private getFormsSubscription?: Subscription;
@@ -63,6 +66,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   public knightMemberTypeFormOptions: GenericFormOption[] = [];
   public knightMemberClassFormOptions: GenericFormOption[] = [];
   public memberDuesPaymentStatusFormOptions: GenericFormOption[] = [];
+  public memberDuesAmounts: MemberDuesAmounts[] = [];
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
 
@@ -82,6 +86,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   constructor(
     private formsService: FormsService,
     private knightsService: KnightsService,
+    private memberDuesAmountsService: MemberDuesAmountsService,
     private knightActivityInterestsService: KnightActivityInterestsService,
   ) {
     this.searchKnightsForm = this.initSearchKnightsForm();
@@ -108,6 +113,10 @@ export class KnightsComponent implements OnInit, OnDestroy {
 
     if (this.getKnightsSubscription) {
       this.getKnightsSubscription.unsubscribe();
+    }
+
+    if (this.getKnightSubscription) {
+      this.getKnightSubscription.unsubscribe();
     }
 
     if (this.updateKnightPersonalInfoSubscription) {
@@ -156,6 +165,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
         countryResponse,
         memberDuesPaymentStatusResponse,
         knightActivityInterests,
+        memberDuesAmounts,
       ]: [
         GenericFormOption[],
         GenericFormOption[],
@@ -164,6 +174,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
         CountryFormOption[],
         GenericFormOption[],
         ActivityInterest[],
+        MemberDuesAmounts[],
       ]) => {
         this.activityCategoryFormOptions = activityCategoriesResponse;
         this.knightDegreeFormOptions = knightDegreeResponse;
@@ -172,6 +183,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
         this.countryFormOptions = countryResponse;
         this.memberDuesPaymentStatusFormOptions = memberDuesPaymentStatusResponse;
         this.knightActivityInterestsForNewKnight = knightActivityInterests;
+        this.memberDuesAmounts = memberDuesAmounts;
       },
       error: (err: ApiResponseError) => this.logError('Error getting Knight Degree Form Options', err),
       complete: () => console.log('Knight Degree Form Options retrieved.'),
@@ -185,6 +197,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
       this.formsService.getCountryFormOptions(),
       this.formsService.getMemberDuesPaymentStatusFormOptions(),
       this.knightActivityInterestsService.getAllIKnightActivityInterestsForNewKnight(),
+      this.memberDuesAmountsService.getMemberDuesAmounts()
     ]).subscribe(formsObserver);
   }
 
@@ -312,6 +325,14 @@ export class KnightsComponent implements OnInit, OnDestroy {
   public openEditKnightMemberDuesModal(knight: Knight) {
     this.knightId = knight.id || '';
     this.editKnightMemberDuesModalHeaderText = `Editing Member Dues for ${knight.firstName} ${knight.lastName}`;
+
+    const observer = {
+      next: (knightResponse: Knight) => this.editKnightMemberDuesModal?.resetForm(knightResponse.memberDues),
+      error: (err: ApiResponseError) => this.logError('Error getting Knight', err),
+      complete: () => console.log('Knight retrieved.'),
+    };
+
+    this.getKnightSubscription = this.knightsService.getKnight(this.knightId).subscribe(observer);
 
     this.editKnightMemberDuesModal?.resetForm(knight.memberDues);
   }

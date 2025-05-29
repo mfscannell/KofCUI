@@ -115,6 +115,7 @@
     [knightDegreeFormOptions]="knightDegreeFormOptions"
     [knightActivityInterestsForNewKnight]="knightActivityInterestsForNewKnight"
     [memberDuesPaymentStatusFormOptions]="memberDuesPaymentStatusFormOptions"
+    [memberDuesAmounts]="memberDuesAmounts"
     (createKnightChanges)="addKnightToAllKnights($event)"></create-knight-modal>
   <edit-knight-personal-info-modal
     class="modal fade"
@@ -133,6 +134,7 @@
     class="modal fade"
     id="editKnightMemberDuesModal"
     [memberDuesPaymentStatusFormOptions]="memberDuesPaymentStatusFormOptions"
+    [memberDuesAmounts]="memberDuesAmounts"
     [modalHeaderText]="editKnightMemberDuesModalHeaderText"
     [knightId]="knightId"
     (editKnightMemberDuesChanges)="updateKnightMemberDuesInList($event)"></edit-knight-member-dues-modal>

@@ -1,4 +1,7 @@
+import { MemberDuesPaidStatus } from "../types/knight-member-dues-paid-status.type";
+
 export interface MemberDues {
   year: number;
-  paidStatus: string;
+  amountDue: number;
+  paidStatus: MemberDuesPaidStatus;
 }
