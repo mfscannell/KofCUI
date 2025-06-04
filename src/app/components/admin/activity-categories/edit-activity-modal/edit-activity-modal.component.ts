@@ -1,7 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { EditActivityCoordinatorFormGroup } from 'src/app/forms/editActivityCoordinatorFormGroup';
 import { EditActivityModelFormGroup } from 'src/app/forms/editActivityModelFormGroup';
 import { Activity } from 'src/app/models/activity';
@@ -11,6 +10,7 @@ import { CreateActivityRequest } from 'src/app/models/requests/createActivityReq
 import { UpdateActivityRequest } from 'src/app/models/requests/updateActivityRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { ActivitiesService } from 'src/app/services/activities.service';
+import { ModalActionType } from 'src/app/types/modal-action.type';
 
 @Component({
     selector: 'edit-activity-modal',
@@ -25,7 +25,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   @Input() allKnights: KnightName[] = [];
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
   @Input() modalHeaderText: string = '';
-  @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
+  @Input() modalAction: ModalActionType = 'Create';
   @Output() createActivityChanges = new EventEmitter<Activity>();
   @Output() editActivityChanges = new EventEmitter<Activity>();
 
@@ -124,10 +124,10 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
       return;
     }
 
-    if (this.modalAction === ModalActionEnums.Edit) {
+    if (this.modalAction === 'Edit') {
       const updatedActivity = this.mapFormToUpdateActivityRequest();
       this.updateActivity(updatedActivity);
-    } else if (this.modalAction === ModalActionEnums.Create) {
+    } else if (this.modalAction === 'Create') {
       const newActivity = this.mapFormToCreateActivityRequest();
       this.createActivity(newActivity);
     }

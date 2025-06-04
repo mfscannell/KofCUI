@@ -1,4 +1,3 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,7 +9,6 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpConfigInterceptor } from './interceptors/httpConfig.interceptor';
 
 import { ActivityCategoriesComponent } from 'src/app/components/admin/activity-categories/activity-categories.component';
 import { NavMenuComponent } from 'src/app/components/nav-menu/nav-menu.component';
@@ -164,8 +162,6 @@ import { CurrencyMaskDirective } from './directives/currency-mask.directive';
     ReactiveFormsModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
-    provideHttpClient(withInterceptorsFromDi()),
   ],
 })
 export class AppModule {}

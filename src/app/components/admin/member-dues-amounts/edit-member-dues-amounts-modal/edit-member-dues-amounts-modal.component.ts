@@ -1,13 +1,13 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { EditMemberDuesAmountsFormGroup } from 'src/app/forms/editMemberDuesAmountsFormGroup';
 import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
 import { CreateMemberDuesAmountsRequest } from 'src/app/models/requests/createMemberDuesAmountsRequest';
 import { UpdateMemberDuesAmountsRequest } from 'src/app/models/requests/updateMemberDuesAmountsRequest';
 import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.service';
+import { ModalActionType } from 'src/app/types/modal-action.type';
 
 @Component({
   selector: 'edit-member-dues-amounts-modal',
@@ -18,7 +18,7 @@ import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.ser
 export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
   @ViewChild('cancelEditMemberDuesModal', { static: false }) cancelEditMemberDuesModal: ElementRef | undefined;
   @Input() modalHeaderText: string = '';
-  @Input() modalAction: ModalActionEnums = ModalActionEnums.Create;
+  @Input() modalAction: ModalActionType = 'Create';
   @Output() createMemberDuesAmountsChanges = new EventEmitter<MemberDuesAmounts>();
   @Output() editMemberDuesAmountsChanges = new EventEmitter<MemberDuesAmounts>();
   
@@ -68,10 +68,10 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.modalAction === ModalActionEnums.Edit) {
+    if (this.modalAction === 'Edit') {
       const updatedMemberDuesAmounts = this.mapFormToUpdateMemberDuesAmountsRequest();
       this.updateMemberDuesAmounts(updatedMemberDuesAmounts);
-    } else if (this.modalAction === ModalActionEnums.Create) {
+    } else if (this.modalAction === 'Create') {
       const newMemberDuesAmounts = this.mapFormToCreateMemberDuesAmountsRequest();
       this.createMemberDuesAmounts(newMemberDuesAmounts);
     }

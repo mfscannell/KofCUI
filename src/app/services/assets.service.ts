@@ -1,23 +1,48 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { EncodedFile } from '../models/encodedFile';
 import { DeleteHomePageCarouselImageResponse } from '../models/responses/deleteHomePageCarouselImageResponse';
+import { environment } from 'src/environments/environment';
+import { TenantService } from './tenant.service';
+import { AccountsService } from './accounts.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssetsService {
   private homePageCarouselImages: EncodedFile[] = [];
-  constructor(private http: HttpClient) {}
+  private baseUrl = environment.baseUrl;
+  
+  constructor(
+    private http: HttpClient, 
+    private tenantService: TenantService, 
+    private accountsService: AccountsService) {}
 
   uploadHomePageImage(image: FormData): Observable<EncodedFile> {
-    return this.http.post<EncodedFile>('assets/homePageCarouselImage', image);
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.post<EncodedFile>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/assets/homePageCarouselImage`, 
+      image, 
+      { headers: httpHeaders });
   }
 
   deleteHomePageCarouselImage(image: string): Observable<DeleteHomePageCarouselImageResponse> {
-    return this.http.delete<DeleteHomePageCarouselImageResponse>(`assets/homePageCarouselImage/${image}`);
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    
+    return this.http.delete<DeleteHomePageCarouselImageResponse>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/assets/homePageCarouselImage/${image}`, 
+      { headers: httpHeaders });
   }
 
   removeHomePageCarouselImage(index: number) {

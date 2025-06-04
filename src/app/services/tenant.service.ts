@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 export class TenantService {
   constructor() {}
 
-  getTenantId() {
+  public getTenantId(): string {
     const tenantName = location.host.split('.')[0];
     let tenantId = '';
     const tenant = environment.tenants.find((t) => t.tenantName === tenantName);
@@ -20,14 +20,14 @@ export class TenantService {
     return tenantId;
   }
 
-  goingToBasePage() {
+  public goingToBasePage(): boolean {
     const domains = location.host.split('.');
     const usingBasePage = domains.length === environment.numDomains - 1;
 
     return usingBasePage;
   }
 
-  tenantExists() {
+  public tenantExists(): boolean {
     const domains = location.host.split('.');
     let tenantExists = false;
 

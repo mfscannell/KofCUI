@@ -1,7 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { EditActivityEventFormGroup } from 'src/app/forms/editActivityEventFormGroup';
 import { EditAddressFormGroup } from 'src/app/forms/editAddressFormGroup';
 import { EditEventVolunteersFormGroup } from 'src/app/forms/editEventVolunteersFormGroup';
@@ -20,6 +19,7 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { StreetAddress } from 'src/app/models/streetAddress';
 import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
+import { ModalActionType } from 'src/app/types/modal-action.type';
 import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
 
 @Component({
@@ -29,7 +29,7 @@ import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
     standalone: false
 })
 export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() editModalAction: ModalActionEnums = ModalActionEnums.Create;
+  @Input() editModalAction: ModalActionType = 'Create';
   @Input() modalHeaderText: string = '';
   @Input() countryFormOptions: CountryFormOption[] = [];
   @Input() councilTimeZone: string = '';
@@ -141,11 +141,11 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
   }
 
   public onSubmitEditActivityEvent() {
-    if (this.editModalAction === ModalActionEnums.Edit) {
+    if (this.editModalAction === 'Edit') {
       const updateActivityEventRequest = this.mapFormToActivityEvent();
 
       this.updateActivityEvent(updateActivityEventRequest);
-    } else if (this.editModalAction === ModalActionEnums.Create) {
+    } else if (this.editModalAction === 'Create') {
       const createActivityEventRequest = this.mapFormToCreateActivityEventRequest();
 
       this.createActivityEvent(createActivityEventRequest);

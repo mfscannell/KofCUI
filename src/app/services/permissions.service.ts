@@ -19,19 +19,19 @@ export class PermissionsService {
 
   constructor(private accountsService: AccountsService) {}
 
-  canActivateAccount() {
+  public canActivateAccount(): boolean {
     const token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
   }
 
-  canActivateAdmin() {
+  public canActivateAdmin(): boolean {
     const token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
   }
 
-  canActivateKnights() {
+  public canActivateKnights(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -46,7 +46,7 @@ export class PermissionsService {
     return false;
   }
 
-  canActivateLeadershipRoles() {
+  public canActivateLeadershipRoles(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -60,7 +60,7 @@ export class PermissionsService {
     return false;
   }
 
-  canActivateActivities() {
+  public canActivateActivities(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -91,7 +91,7 @@ export class PermissionsService {
     return isActivityCoordinator;
   }
 
-  canAddActivity() {
+  public canAddActivity(): boolean {
     const roles = this.accountsService.getRoles();
 
     return (
@@ -106,7 +106,7 @@ export class PermissionsService {
     );
   }
 
-  canEditActivity(activityId?: string) {
+  public canEditActivity(activityId?: string): boolean {
     const roles = this.accountsService.getRoles();
 
     return (
@@ -122,8 +122,8 @@ export class PermissionsService {
     );
   }
 
-  canActivateActiviyEvents() {
-    //TODO need to edit
+  public canActivateActiviyEvents(): boolean {
+    //TODO MFS need to edit
     // let token = this.accountsService.getToken();
 
     // return token !== undefined && token !== '';
@@ -157,13 +157,13 @@ export class PermissionsService {
     return isActivityCoordinator;
   }
 
-  canActivateEventVolunteering() {
+  public canActivateEventVolunteering(): boolean {
     const token = this.accountsService.getToken();
 
     return token !== undefined && token !== '';
   }
 
-  canAddEvent(activities: Activity[]) {
+  public canAddEvent(activities: Activity[]): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -190,7 +190,7 @@ export class PermissionsService {
     return isActivityCoordinator;
   }
 
-  canEditEvent(activityId: string) {
+  public canEditEvent(activityId: string): boolean {
     const roles = this.accountsService.getRoles();
 
     return (
@@ -206,7 +206,7 @@ export class PermissionsService {
     );
   }
 
-  filterActivitiesByEventCreation(activities: Activity[]) {
+  public filterActivitiesByEventCreation(activities: Activity[]): Activity[] {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -233,7 +233,7 @@ export class PermissionsService {
     return filteredActivities;
   }
 
-  canActivateConfigs() {
+  public canActivateConfigs(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -247,7 +247,7 @@ export class PermissionsService {
     return false;
   }
 
-  canActivateAssets() {
+  public canActivateAssets(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -261,7 +261,7 @@ export class PermissionsService {
     return false;
   }
 
-  canActivateMemberDuesAmounts() {
+  public canActivateMemberDuesAmounts(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -276,7 +276,7 @@ export class PermissionsService {
     return false;
   }
 
-  canAddMemberDuesAmounts() {
+  public canAddMemberDuesAmounts(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
@@ -291,7 +291,7 @@ export class PermissionsService {
     return false;
   }
 
-  canEditMemberDuesAmounts() {
+  public canEditMemberDuesAmounts(): boolean {
     const roles = this.accountsService.getRoles();
 
     if (
