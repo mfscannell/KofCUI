@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Knight } from 'src/app/models/knight';
 import { UpdateKnightPasswordRequest } from '../models/requests/updateKnightPasswordRequest';
@@ -12,18 +12,43 @@ import { CreateKnightRequest } from '../models/requests/createKnightRequest';
 import { KnightName } from '../models/knightName';
 import { PaginationResponse } from '../models/responses/paginationResponse';
 import { FilterKnightRequest } from '../models/requests/filterKnightRequest';
+import { environment } from 'src/environments/environment';
+import { TenantService } from './tenant.service';
+import { AccountsService } from './accounts.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KnightsService {
-  constructor(private http: HttpClient) {}
+  private baseUrl = environment.baseUrl;
+  
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService, 
+    private accountsService: AccountsService) {}
 
-  getKnight(knightId: string): Observable<Knight> {
-    return this.http.get<Knight>(`knights/${knightId}`);
+  public getKnight(knightId: string): Observable<Knight> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    
+    return this.http.get<Knight>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights/${knightId}`, 
+      { headers: httpHeaders });
   }
 
-  getAllKnights(filterRequest: FilterKnightRequest): Observable<PaginationResponse<Knight[]>> {
+  public getAllKnights(filterRequest: FilterKnightRequest): Observable<PaginationResponse<Knight[]>> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
     const subdirectory = 'knights';
     let query = '';
 
@@ -45,10 +70,19 @@ export class KnightsService {
 
     console.log(`${subdirectory}${query}`);
 
-    return this.http.get<PaginationResponse<Knight[]>>(`${subdirectory}${query}`);
+    return this.http.get<PaginationResponse<Knight[]>>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights${query}`, 
+      { headers: httpHeaders });
   }
 
-  getAllKnightsNames(context?: {restrictToActiveOnly: boolean}): Observable<KnightName[]> {
+  public getAllKnightsNames(context?: {restrictToActiveOnly: boolean}): Observable<KnightName[]> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
     let queryString = 'knights/namesOnly';
     let queryStringContainsParam = false;
 
@@ -62,27 +96,85 @@ export class KnightsService {
       queryStringContainsParam = true;
     }
 
-    return this.http.get<KnightName[]>(queryString);
+    return this.http.get<KnightName[]>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/${queryString}`, 
+      { headers: httpHeaders });
   }
 
-  createKnightAndActivityInterest(knight: CreateKnightRequest): Observable<Knight> {
-    return this.http.post<Knight>('knights/withAllActivities', knight);
+  public createKnightAndActivityInterest(knight: CreateKnightRequest): Observable<Knight> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.post<Knight>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights/withAllActivities`, 
+      knight, 
+      { headers: httpHeaders });
   }
 
-  createKnights(knights: CreateKnightRequest[]): Observable<Knight[]> {
-    return this.http.post<Knight[]>('knights/multiple', knights);
+  public createKnights(knights: CreateKnightRequest[]): Observable<Knight[]> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.post<Knight[]>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights/multiple`, 
+      knights, 
+      { headers: httpHeaders });
   }
 
-  updateKnightPersonalInfo(knight: UpdateKnightPersonalInfoRequest): Observable<Knight> {
-    return this.http.put<Knight>(`knights/personalInfo`, knight);
+  public updateKnightPersonalInfo(knight: UpdateKnightPersonalInfoRequest): Observable<Knight> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put<Knight>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights/personalInfo`, 
+      knight, 
+      { headers: httpHeaders });
   }
 
-  updateKnightMembershipInfo(
+  public updateKnightMembershipInfo(
     updateKnightMembershipInfoRequest: UpdateKnightMembershipInfoRequest,
   ): Observable<KnightInfo> {
-    return this.http.put<KnightInfo>(`knights/knightMembershipInfo`, updateKnightMembershipInfoRequest);
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put<KnightInfo>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights/knightMembershipInfo`, 
+      updateKnightMembershipInfoRequest, 
+      { headers: httpHeaders });
   }
-  updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<KnightUser> {
-    return this.http.put<KnightUser>(`knights/${request?.knightId}/password`, request);
+
+  public updateKnightPassword(request: UpdateKnightPasswordRequest): Observable<KnightUser> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.accountsService.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put<KnightUser>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/knights/${request?.knightId}/password`, 
+      request, 
+      { headers: httpHeaders });
   }
 }

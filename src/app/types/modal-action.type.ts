@@ -1,0 +1,1 @@
+export type ModalActionType = 'Create' | 'Edit';

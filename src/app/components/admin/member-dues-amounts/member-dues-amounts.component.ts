@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { forkJoin, Subscription } from 'rxjs';
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { GetMemberDuesAmountsFormGroup } from 'src/app/forms/getMemberDuesAmountsFormGroup';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
@@ -10,6 +9,7 @@ import { FormsService } from 'src/app/services/forms.service';
 import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.service';
 import { EditMemberDuesAmountsModalComponent } from './edit-member-dues-amounts-modal/edit-member-dues-amounts-modal.component';
 import _ from 'lodash';
+import { ModalActionType } from 'src/app/types/modal-action.type';
 
 @Component({
   selector: 'member-dues-amounts',
@@ -23,7 +23,7 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
   private getMemberDuesAmountsSubscription?: Subscription;
   public memberDuesAmounts: MemberDuesAmounts[] = [];
 
-  public modalAction: ModalActionEnums = ModalActionEnums.Create;
+  public modalAction: ModalActionType = 'Create';
   public modalHeaderText: string = '';
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
@@ -68,13 +68,13 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
 
   public openEditMemberDuesAmountsForYear(memberDuesAmountsForYear: MemberDuesAmounts) {
     this.modalHeaderText = 'Editing Member Dues Amounts';
-    this.modalAction = ModalActionEnums.Edit;
+    this.modalAction = 'Edit';
     this.editMemberDuesAmountsModal?.resetForm(memberDuesAmountsForYear);
   }
 
   public openCreateMemberDuesAmountsModal(): void {
     this.modalHeaderText = 'Creating Member Dues Amounts';
-    this.modalAction = ModalActionEnums.Create;
+    this.modalAction = 'Create';
     this.editMemberDuesAmountsModal?.resetForm();
   }
 

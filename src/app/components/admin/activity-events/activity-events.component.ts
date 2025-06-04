@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { ActivityEvent } from 'src/app/models/activityEvent';
 import { ActivityEventsService } from 'src/app/services/activityEvents.service';
 
@@ -19,6 +18,7 @@ import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption
 import { EditActivityEventModalComponent } from './edit-activity-event-modal/edit-activity-event-modal.component';
 import { KnightName } from 'src/app/models/knightName';
 import { WebsiteContent } from 'src/app/models/websiteContent';
+import { ModalActionType } from 'src/app/types/modal-action.type';
 
 @Component({
     selector: 'kofc-activity-events',
@@ -50,7 +50,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   public countryFormOptions: CountryFormOption[] = [];
   public activityCategoryFormOptions: GenericFormOption[] = [];
   public editModalHeaderText: string = '';
-  public editModalAction: ModalActionEnums = ModalActionEnums.Create;
+  public editModalAction: ModalActionType = 'Create';
 
   constructor(
     private activityEventsService: ActivityEventsService,
@@ -190,14 +190,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
   public openCreateActivityEventModal() {
     this.activityEventToEdit = undefined;
-    this.editModalAction = ModalActionEnums.Create;
+    this.editModalAction = 'Create';
     this.editModalHeaderText = 'Adding Activity Event';
     this.editActivityEventModal?.resetForm();
   }
 
   public openEditActivityEventModal(activityEvent: ActivityEvent) {
     this.activityEventToEdit = activityEvent;
-    this.editModalAction = ModalActionEnums.Edit;
+    this.editModalAction = 'Edit';
     this.editModalHeaderText = 'Editing Activity Event';
     this.editActivityEventModal?.resetForm(activityEvent);
   }

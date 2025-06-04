@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 import * as _ from "lodash";
 
-import { ModalActionEnums } from 'src/app/enums/modalActionEnums';
 import { Activity } from 'src/app/models/activity';
 import { ActivitiesService } from 'src/app/services/activities.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
@@ -12,6 +11,7 @@ import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
 import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
 import { EditActivityModalComponent } from './edit-activity-modal/edit-activity-modal.component';
 import { KnightName } from 'src/app/models/knightName';
+import { ModalActionType } from 'src/app/types/modal-action.type';
 
 @Component({
     selector: 'activity-categories',
@@ -28,7 +28,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   activities: Activity[] = [];
   closeModalResult = '';
 
-  modalAction: ModalActionEnums = ModalActionEnums.Create;
+  modalAction: ModalActionType = 'Create';
   modalHeaderText: string = '';
   activity: Activity | undefined;
   errorSaving: boolean = false;
@@ -83,14 +83,14 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   openCreateActivityModal() {
     this.modalHeaderText = 'Creating Activity';
-    this.modalAction = ModalActionEnums.Create;
+    this.modalAction = 'Create';
     this.editActivityModal?.resetForm();
   }
 
   openEditActivityModal(activity: Activity) {
     this.modalHeaderText = 'Editing Activity';
     this.activity = activity;
-    this.modalAction = ModalActionEnums.Edit;
+    this.modalAction = 'Edit';
     this.editActivityModal?.resetForm(this.activity);
   }
 

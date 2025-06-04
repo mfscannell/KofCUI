@@ -1,13 +1,15 @@
 import { Observable, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { LogInRequest } from '../models/requests/logInRequest';
 import { LogInResponse } from '../models/responses/logInResponse';
 import { ChangePassWordRequest } from '../models/requests/changePasswordRequest';
 import { ChangePasswordResponse } from '../models/responses/changePasswordResponse';
 import { PasswordRequirements } from '../models/responses/passwordRequirements';
+import { environment } from 'src/environments/environment';
+import { TenantService } from './tenant.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +19,25 @@ export class AccountsService {
   currentUser = this.currentUserSource.asObservable();
 
   private loggedInUser?: LogInResponse;
+  private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService) {}
 
-  login(loginRequest: LogInRequest) {
-    return this.http.post<LogInResponse>('accounts/login', loginRequest).pipe(
+  public login(loginRequest: LogInRequest) {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.post<LogInResponse>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/accounts/login`, 
+      loginRequest,
+      { headers: httpHeaders }).pipe(
       map((response: LogInResponse) => {
         this.loggedInUser = response;
         this.currentUserSource.next(response);
@@ -29,12 +45,33 @@ export class AccountsService {
     );
   }
 
-  changePassword(changePasswordRequest: ChangePassWordRequest): Observable<ChangePasswordResponse> {
-    return this.http.put<ChangePasswordResponse>('accounts/changePassword', changePasswordRequest);
+  public changePassword(changePasswordRequest: ChangePassWordRequest): Observable<ChangePasswordResponse> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put<ChangePasswordResponse>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/accounts/changePassword`,
+      changePasswordRequest,
+      { headers: httpHeaders });
   }
 
-  getPasswordRequirements(): Observable<PasswordRequirements> {
-    return this.http.get<PasswordRequirements>('accounts/passwordRequirements');
+  public getPasswordRequirements(): Observable<PasswordRequirements> {
+    const tenantId = this.tenantService.getTenantId();
+    const token = this.getToken();
+    const httpHeaders: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<PasswordRequirements>(
+      `${this.baseUrl}/api/${tenantId}/v1.0/accounts/passwordRequirements`, 
+      { headers: httpHeaders });
   }
 
   logout() {
@@ -54,7 +91,7 @@ export class AccountsService {
     return this.loggedInUser?.knight?.id;
   }
 
-  getToken() {
+  public getToken() {
     let token = '';
 
     if (this.loggedInUser) {

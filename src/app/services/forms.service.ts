@@ -1,8 +1,10 @@
 import { Observable, shareReplay } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CountryFormOption } from '../models/inputOptions/countryFormOption';
 import { GenericFormOption } from '../models/inputOptions/genericFormOption';
+import { environment } from 'src/environments/environment';
+import { AccountsService } from './accounts.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,72 +17,138 @@ export class FormsService {
   private knightMemberClassFormOptions?: Observable<GenericFormOption[]>;
   private memberDuesPaymentStatusFormOptions?: Observable<GenericFormOption[]>;
   private timeZoneFormOptions?: Observable<GenericFormOption[]>;
+  private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient, 
+    private accountsService: AccountsService) {}
 
-  getCountryFormOptions(): Observable<CountryFormOption[]> {
+  public getCountryFormOptions(): Observable<CountryFormOption[]> {
     if (!this.countryFormOptions) {
       console.log('no country form options.');
-      this.countryFormOptions = this.http.get<CountryFormOption[]>('forms/countryFormOptions').pipe(shareReplay());
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.countryFormOptions = this.http.get<CountryFormOption[]>(
+        `${this.baseUrl}/api/v1.0/forms/countryFormOptions`, 
+        { headers: httpHeaders }).pipe(shareReplay());
     }
 
     return this.countryFormOptions;
   }
 
-  getActivityCategoryFormOptions(): Observable<GenericFormOption[]> {
+  public getActivityCategoryFormOptions(): Observable<GenericFormOption[]> {
     if (!this.activityCategoryFormOptions) {
       console.log('no activity category form options');
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
       this.activityCategoryFormOptions = this.http
-        .get<GenericFormOption[]>('forms/activityCategoryFormOptions')
+        .get<GenericFormOption[]>(
+          `${this.baseUrl}/api/v1.0/forms/activityCategoryFormOptions`, 
+          { headers: httpHeaders })
         .pipe(shareReplay());
     }
 
     return this.activityCategoryFormOptions;
   }
 
-  getKnightDegreeFormOptions(): Observable<GenericFormOption[]> {
+  public getKnightDegreeFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightDegreeFormOptions) {
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
       this.knightDegreeFormOptions = this.http
-        .get<GenericFormOption[]>('forms/knightDegreeFormOptions')
+        .get<GenericFormOption[]>(
+          `${this.baseUrl}/api/v1.0/forms/knightDegreeFormOptions`, 
+          { headers: httpHeaders })
         .pipe(shareReplay());
     }
 
     return this.knightDegreeFormOptions;
   }
 
-  getKnightMemberTypeFormOptions(): Observable<GenericFormOption[]> {
+  public getKnightMemberTypeFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightMemberTypeFormOptions) {
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
       this.knightMemberTypeFormOptions = this.http
-        .get<GenericFormOption[]>('forms/knightMemberTypeFormOptions')
+        .get<GenericFormOption[]>(
+          `${this.baseUrl}/api/v1.0/forms/knightMemberTypeFormOptions`, 
+          { headers: httpHeaders })
         .pipe(shareReplay());
     }
 
     return this.knightMemberTypeFormOptions;
   }
 
-  getKnightMemberClassFormOptions(): Observable<GenericFormOption[]> {
+  public getKnightMemberClassFormOptions(): Observable<GenericFormOption[]> {
     if (!this.knightMemberClassFormOptions) {
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
       this.knightMemberClassFormOptions = this.http
-        .get<GenericFormOption[]>('forms/knightMemberClassFormOptions')
+        .get<GenericFormOption[]>(
+          `${this.baseUrl}/api/v1.0/forms/knightMemberClassFormOptions`, 
+          { headers: httpHeaders })
         .pipe(shareReplay());
     }
 
     return this.knightMemberClassFormOptions;
   }
 
-  getMemberDuesPaymentStatusFormOptions(): Observable<GenericFormOption[]> {
+  public getMemberDuesPaymentStatusFormOptions(): Observable<GenericFormOption[]> {
     if (!this.memberDuesPaymentStatusFormOptions) {
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
       this.memberDuesPaymentStatusFormOptions = this.http
-        .get<GenericFormOption[]>('forms/memberDuesPaymentStatusFormOptions')
+        .get<GenericFormOption[]>(
+          `${this.baseUrl}/api/v1.0/forms/memberDuesPaymentStatusFormOptions`, 
+          { headers: httpHeaders })
         .pipe(shareReplay());
     }
 
     return this.memberDuesPaymentStatusFormOptions;
   }
 
-  getTimeZoneFormOptions(): Observable<GenericFormOption[]> {
+  public getTimeZoneFormOptions(): Observable<GenericFormOption[]> {
     if (!this.timeZoneFormOptions) {
-      this.timeZoneFormOptions = this.http.get<GenericFormOption[]>('forms/allTimeZoneFormOptions').pipe(shareReplay());
+      const token = this.accountsService.getToken();
+      const httpHeaders: HttpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.timeZoneFormOptions = this.http.get<GenericFormOption[]>(
+        `${this.baseUrl}/api/v1.0/forms/allTimeZoneFormOptions`, 
+        { headers: httpHeaders }).pipe(shareReplay());
     }
 
     return this.timeZoneFormOptions;

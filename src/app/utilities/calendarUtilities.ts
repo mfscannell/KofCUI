@@ -20,9 +20,9 @@ export class CalendarUtilities {
   ];
   //year:  number 2021 for 2021
   //month:  number 1 for January
-  static getCalendar(year: number, month: number) {
+  static getCalendar(year: number, month: number): Month {
     const numDaysInMonth = DateTimeFormatter.getDaysInMonth(year, month);
-    const weeks: Week[] = [new Week()];
+    const weeks: Week[] = [{days: []} as Week];
 
     for (let dayOfMonth = 1; dayOfMonth <= numDaysInMonth; dayOfMonth++) {
       if (dayOfMonth === 1) {
@@ -32,33 +32,35 @@ export class CalendarUtilities {
           // if first day is not Sunday
           //push blank days in front of first day of month
           for (let i = 0; i < dayOfWeek; i++) {
-            weeks[weeks.length - 1].days.push(new Day());
+            weeks[weeks.length - 1].days.push({dayOfMonth: 0} as Day);
           }
         }
       }
 
       weeks[weeks.length - 1].days.push(
-        new Day({
+        {
           dayOfMonth: dayOfMonth,
-        }),
+        } as Day,
       );
 
-      if (weeks[weeks.length - 1].isCompleteWeek() && dayOfMonth < numDaysInMonth) {
-        weeks.push(new Week());
+      if (weeks[weeks.length - 1].days.length === 7 && dayOfMonth < numDaysInMonth) {
+        weeks.push({days: []} as Week);
       }
 
-      if (dayOfMonth === numDaysInMonth && !weeks[weeks.length - 1].isCompleteWeek()) {
+      if (dayOfMonth === numDaysInMonth && weeks[weeks.length - 1].days.length != 7) {
         for (let i = weeks[weeks.length - 1].days.length; i < 7; i++) {
-          weeks[weeks.length - 1].days.push(new Day());
+          weeks[weeks.length - 1].days.push({dayOfMonth: 0} as Day);
         }
       }
     }
 
-    return new Month({
+    const monthObj: Month = {
       monthOfYear: month,
       year: year,
-      weeks: weeks,
-    });
+      weeks: weeks
+    };
+
+    return monthObj;
   }
 
   /// month1BasedIndex: 1 for January

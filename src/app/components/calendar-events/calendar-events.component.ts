@@ -19,14 +19,14 @@ export class CalendarEventsComponent implements OnInit {
   currentYear: number = new Date().getFullYear();
   currentMonth: number = new Date().getMonth() + 1;
   currentMonthName: string = CalendarUtilities.getNameOfMonth(this.currentMonth);
-  calendarMonth: Month = new Month();
+  calendarMonth: Month = {} as Month;
   modalHeaderText: string | undefined;
 
   constructor(private activityEventsService: ActivityEventsService) {}
 
   ngOnInit() {
     this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
-    this.calendarMonth.addEventsToMonth(this.upcomingEvents);
+    this.addEventsToMonth(this.upcomingEvents);
 
     this.getAllUpcomingEvents();
   }
@@ -59,7 +59,7 @@ export class CalendarEventsComponent implements OnInit {
 
   private setEventsForCalendar(upcomingEvents: UpcomingEvent[]) {
     this.upcomingEvents = upcomingEvents;
-    this.calendarMonth.addEventsToMonth(this.upcomingEvents);
+    this.addEventsToMonth(this.upcomingEvents);
   }
 
   navigateToNextMonth() {
@@ -72,7 +72,7 @@ export class CalendarEventsComponent implements OnInit {
 
     this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
     this.currentMonthName = CalendarUtilities.getNameOfMonth(this.currentMonth);
-    this.calendarMonth.addEventsToMonth(this.upcomingEvents);
+    this.addEventsToMonth(this.upcomingEvents);
   }
 
   navigateToPreviousMonth() {
@@ -85,7 +85,7 @@ export class CalendarEventsComponent implements OnInit {
 
     this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);
     this.currentMonthName = CalendarUtilities.getNameOfMonth(this.currentMonth);
-    this.calendarMonth.addEventsToMonth(this.upcomingEvents);
+    this.addEventsToMonth(this.upcomingEvents);
   }
 
   viewUpcomingEvents(dayOfMonth: number) {
@@ -105,7 +105,25 @@ export class CalendarEventsComponent implements OnInit {
     this.modalHeaderText = `Events for ${dateString}`;
   }
 
-  logError(message: string, err: unknown) {
+  private addEventsToMonth(upcomingEvents: UpcomingEvent[]) {
+    const eventsInMonth = upcomingEvents.filter(
+      (event) =>
+        DateTimeFormatter.getMonth(event.startDateTime) === this.calendarMonth.monthOfYear &&
+        DateTimeFormatter.getYear(event.startDateTime) === this.calendarMonth.year,
+    );
+
+    eventsInMonth.forEach((event) => {
+      this.calendarMonth.weeks.forEach((week) => {
+        week.days.forEach((day) => {
+          if (DateTimeFormatter.getDay(event.startDateTime) === day.dayOfMonth) {
+            day.events.push(event);
+          }
+        });
+      });
+    });
+  }
+
+  private logError(message: string, err: unknown) {
     console.error(message);
     console.error(err);
   }
