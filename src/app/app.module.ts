@@ -66,6 +66,7 @@ import { MemberDuesAmountsGuard } from './guards/memberDuesAmounts.guard';
 import { EditMemberDuesAmountsModalComponent } from './components/admin/member-dues-amounts/edit-member-dues-amounts-modal/edit-member-dues-amounts-modal.component';
 import { CanModifyMemberDuesAmountsPipe } from './pipes/canModifyMemberDuesAmounts.pipe';
 import { CurrencyMaskDirective } from './directives/currency-mask.directive';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -162,6 +163,7 @@ import { CurrencyMaskDirective } from './directives/currency-mask.directive';
     ReactiveFormsModule,
   ],
   providers: [
+    provideHttpClient(),
   ],
 })
 export class AppModule {}
