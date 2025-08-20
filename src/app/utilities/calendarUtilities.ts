@@ -32,7 +32,7 @@ export class CalendarUtilities {
           // if first day is not Sunday
           //push blank days in front of first day of month
           for (let i = 0; i < dayOfWeek; i++) {
-            weeks[weeks.length - 1].days.push({dayOfMonth: 0} as Day);
+            weeks[weeks.length - 1].days.push({dayOfMonth: 0, events: []} as Day);
           }
         }
       }
@@ -40,6 +40,7 @@ export class CalendarUtilities {
       weeks[weeks.length - 1].days.push(
         {
           dayOfMonth: dayOfMonth,
+          events: []
         } as Day,
       );
 
@@ -49,7 +50,7 @@ export class CalendarUtilities {
 
       if (dayOfMonth === numDaysInMonth && weeks[weeks.length - 1].days.length != 7) {
         for (let i = weeks[weeks.length - 1].days.length; i < 7; i++) {
-          weeks[weeks.length - 1].days.push({dayOfMonth: 0} as Day);
+          weeks[weeks.length - 1].days.push({dayOfMonth: 0, events: []} as Day);
         }
       }
     }
