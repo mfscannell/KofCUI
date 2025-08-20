@@ -12,6 +12,6 @@ export const environment = {
       tenantId: '5678',
     },
   ],
-  baseUrl: 'http://localhost:5000/',
+  baseUrl: 'http://localhost:5000',
   apiBaseUrl: 'http://localhost:5000/api/',
 };

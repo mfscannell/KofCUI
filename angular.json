@@ -60,6 +60,18 @@
               "sourceMap": true,
               "namedChunks": true
             },
+            "localdocker": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.localdocker.ts"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -98,6 +110,9 @@
             },
             "localnondocker": {
               "buildTarget": "kofCUI:build:localnondocker"
+            },
+            "localdocker": {
+              "buildTarget": "kofCUI:build:localdocker"
             },
             "production": {
               "buildTarget": "kofCUI:build:production"
