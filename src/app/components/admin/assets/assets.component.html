@@ -1,9 +1,9 @@
 <div class="container">
   <div class="row" *ngIf="showErrorMessage">
-    <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+    <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
   </div>
   <div class="row" *ngIf="showSuccessMessage">
-    <div class="col-12 alert alert-success">Successfully saved asset.</div>
+    <div class="col-12 alert alert-success" role="alert">Successfully saved asset.</div>
   </div>
 
 
@@ -60,7 +60,7 @@
             <div class="modal-footer">
               <div class="container">
                 <div class="row" *ngIf="errorSaving">
-                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                  <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
                 </div>
               </div>
               <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-primary btn-kofc-blue" [disabled]="!formData">Save</button>
@@ -90,7 +90,7 @@
             <div class="modal-footer">
               <div class="container">
                 <div class="row" *ngIf="errorSaving">
-                  <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                  <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
                 </div>
               </div>
               <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-danger">Confirm</button>

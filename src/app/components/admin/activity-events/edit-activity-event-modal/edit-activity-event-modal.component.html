@@ -185,7 +185,7 @@
       <div class="modal-footer">
         <div class="container">
           <div class="row" *ngIf="errorSaving">
-            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+            <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
