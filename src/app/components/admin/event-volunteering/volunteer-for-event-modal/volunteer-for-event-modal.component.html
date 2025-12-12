@@ -11,13 +11,19 @@
       <div class="modal-body">
         <div class="row mb-1">
           <div class="col-12">
-            <h5 *ngIf="!activityEvent?.canceled">{{activityEvent.eventName}}</h5>
-            <h5 *ngIf="activityEvent?.canceled">{{activityEvent.eventName}} (CANCELED)</h5>
+            @if (!activityEvent.canceled) {
+              <h5>{{activityEvent.eventName}}</h5>
+            }
+            @if (activityEvent.canceled) {
+              <h5>{{activityEvent.eventName}} (CANCELED)</h5>
+            }
           </div>
         </div>
-        <div class="row mb-1" *ngIf="activityEvent?.canceled">
-          <div class="col-12">Reason for cancelation: {{activityEvent.canceledReason}}</div>
-        </div>
+        @if (activityEvent.canceled) {
+          <div class="row mb-1">
+            <div class="col-12">Reason for cancelation: {{activityEvent.canceledReason}}</div>
+          </div>
+        }
         <div class="row mb-1">
           <div class="col-12">
             {{activityEvent.eventDescription}}
@@ -50,35 +56,45 @@
           <div class="row mb-1">
             <h5>Volunteers</h5>
           </div>
-          <div *ngFor="let volunteerSignUpRole of volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls; let i = index">
-            <div [formGroup]="volunteerSignUpRole">
-              <div class="form-group row">
-                <div class="col-12 mb-1"> {{ activityEvent.volunteerSignUpRoles[i] | toNumVolunteersNeeded }} {{activityEvent.volunteerSignUpRoles[i].startDateTime | toDisplayTime }} - {{activityEvent.volunteerSignUpRoles[i].endDateTime | toDisplayTime }} </div>
-              </div>
-              <div class="form-group row mb-3">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" formControlName="volunteerForRole" id="volunteerRole-volunteerFor">
-                  <label class="form-check-label" for="volunteerRole_volunteerFor">Volunteer for Role?</label>
+          @for (volunteerSignUpRole of volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls; track volunteerSignUpRole; let i = $index) {
+            <div>
+              <div [formGroup]="volunteerSignUpRole">
+                <div class="form-group row">
+                  <div class="col-12 mb-1"> {{ activityEvent.volunteerSignUpRoles[i] | toNumVolunteersNeeded }} {{activityEvent.volunteerSignUpRoles[i].startDateTime | toDisplayTime }} - {{activityEvent.volunteerSignUpRoles[i].endDateTime | toDisplayTime }} </div>
                 </div>
-              </div>
-              <div *ngFor="let eventVolunteer of activityEvent.volunteerSignUpRoles[i].eventVolunteers">
                 <div class="form-group row mb-3">
-                  <div class="col-12">
-                    {{eventVolunteer.knightId | convertKnightIdToName:allKnights}}
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" formControlName="volunteerForRole" id="volunteerRole-volunteerFor">
+                    <label class="form-check-label" for="volunteerRole_volunteerFor">Volunteer for Role?</label>
                   </div>
                 </div>
+                @for (eventVolunteer of activityEvent.volunteerSignUpRoles[i].eventVolunteers; track eventVolunteer) {
+                  <div>
+                    <div class="form-group row mb-3">
+                      <div class="col-12">
+                        {{eventVolunteer.knightId | convertKnightIdToName:allKnights}}
+                      </div>
+                    </div>
+                  </div>
+                }
+                @if (i !== volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls.length-1) {
+                  <hr class="my-12"/>
+                }
               </div>
-              <hr *ngIf="i !== volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls.length-1" class="my-12"/>
             </div>
-          </div>
+          }
         </div>
       </div>
       <!-- MODAL FOOTER -->
       <div class="modal-footer">
         <div class="container">
-          <div class="row" *ngIf="errorSaving">
-            <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-          </div>
+          @if (errorSaving) {
+            <div class="row">
+              @for (errorMessage of errorMessages; track errorMessage) {
+                <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+              }
+            </div>
+          }
         </div>
         <button type="submit" class="btn btn-primary btn-kofc-blue" aria-label="Save">Save</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Cancel">Cancel</button>

@@ -21,8 +21,12 @@
               <input type="text" class="form-control" formControlName="activityName" id="activity-name" autocomplete="off" placeholder="Pancake Breakfast">
               <label for="activity-name">Activity Name</label>
               <small class="kofc-error-message">
-                <div *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.required">Activity Name is Required.</div>
-                <div *ngIf="editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.maxlength">Activity Name shall be no more than {{editActivityForm.controls.activityName.errors?.maxlength.requiredLength}} characters long.</div>
+                @if (editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.required) {
+                  <div>Activity Name is Required.</div>
+                }
+                @if (editActivityForm.controls.activityName.touched && editActivityForm.controls.activityName.errors?.maxlength) {
+                  <div>Activity Name shall be no more than {{editActivityForm.controls.activityName.errors?.maxlength.requiredLength}} characters long.</div>
+                }
               </small>
             </div>
 
@@ -32,32 +36,42 @@
             </div>
             <div class="form-floating mb-1">
               <select class="form-select" id="activity-category" formControlName="activityCategory">
-                <option *ngFor="let activityCategoryInputOption of activityCategoryFormOptions" [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
+                @for (activityCategoryInputOption of activityCategoryFormOptions; track activityCategoryInputOption) {
+                  <option [value]="activityCategoryInputOption.value">{{activityCategoryInputOption.displayName}}</option>
+                }
               </select>
               <label for="activity-category">Activity Category</label>
-              <small id="activity-category-required-error-message" class="form-text kofc-error-text" *ngIf="editActivityForm.controls.activityCategory.touched && editActivityForm.controls.activityCategory.errors?.required">Activity Category is required.</small>
-              <small id="activity-category-spacer" class="kofc-error-spacer" *ngIf="!editActivityForm.controls.activityCategory.touched || editActivityForm.controls.activityCategory.valid"></small>
+              @if (editActivityForm.controls.activityCategory.touched && editActivityForm.controls.activityCategory.errors?.required) {
+                <small id="activity-category-required-error-message" class="form-text kofc-error-text">Activity Category is required.</small>
+              }
+              @if (!editActivityForm.controls.activityCategory.touched || editActivityForm.controls.activityCategory.valid) {
+                <small id="activity-category-spacer" class="kofc-error-spacer"></small>
+              }
             </div>
           </div>
           <!-- COORDINATORS -->
           <div class="tab-pane fade" id="coordinators-tab-pane" role="tabpanel" aria-labelledby="coordinators-tab" tabindex="0">
             <div formArrayName="activityCoordinatorsList">
-              <div *ngFor="let coordinator of editActivityForm.controls.activityCoordinatorsList.controls; let i = index;">
-                <div class="form-group row mb-3" [formGroup]="coordinator">
-                  <div class="col-8 col-md-10">
-                    <select class="form-select" id="activity-coordinator-knight-id" formControlName="knightId">
-                      <option *ngFor="let knight of allKnights" [value]="knight.id" [attr.id]="knight.firstName + '-' + knight.lastName">{{knight.firstName}} {{knight.lastName}}</option>
-                    </select>
-                  </div>
-                  <div class="col-4 col-md-2">
-                    <button [attr.id]="'delete-coordinator-' + i" type="button" class="btn btn-danger" aria-label="Delete activity coordinator" (click)="deleteActivityCoordinator(i)">
-                      <svg class="bi" width="24" height="24" fill="currentColor">
-                        <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                      </svg>
-                    </button>
+              @for (coordinator of editActivityForm.controls.activityCoordinatorsList.controls; track coordinator; let i = $index) {
+                <div>
+                  <div class="form-group row mb-3" [formGroup]="coordinator">
+                    <div class="col-8 col-md-10">
+                      <select class="form-select" id="activity-coordinator-knight-id" formControlName="knightId">
+                        @for (knight of allKnights; track knight) {
+                          <option [value]="knight.id" [attr.id]="knight.firstName + '-' + knight.lastName">{{knight.firstName}} {{knight.lastName}}</option>
+                        }
+                      </select>
+                    </div>
+                    <div class="col-4 col-md-2">
+                      <button [attr.id]="'delete-coordinator-' + i" type="button" class="btn btn-danger" aria-label="Delete activity coordinator" (click)="deleteActivityCoordinator(i)">
+                        <svg class="bi" width="24" height="24" fill="currentColor">
+                          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
             </div>
             <div class="form-group mb-3">
               <button id="add-activity-coordinator" type="button" class="btn btn-primary btn-kofc-blue" (click)="addActivityCoordinator()">Add Coordinator</button>
@@ -75,13 +89,15 @@
                   <h5>Notes From Prior Events</h5>
                 </div>
               </div>
-              <div *ngFor="let eventNote of activity?.activityEventNotes">
-                <div class="form-group row mb-3">
-                  <div class="col-12">
-                    {{ eventNote.startDateTime | toDisplayDate }} - {{eventNote.notes}}
+              @for (eventNote of activity?.activityEventNotes; track eventNote) {
+                <div>
+                  <div class="form-group row mb-3">
+                    <div class="col-12">
+                      {{ eventNote.startDateTime | toDisplayDate }} - {{eventNote.notes}}
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>
@@ -89,9 +105,13 @@
       <!-- FOOTER -->
       <div class="modal-footer">
         <div class="container">
-          <div class="row" *ngIf="errorSaving">
-            <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-          </div>
+          @if (errorSaving) {
+            <div class="row">
+              @for (errorMessage of errorMessages; track errorMessage) {
+                <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+              }
+            </div>
+          }
         </div>
         <button id="save-activity" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
         <button id="cancel-change-to-activity" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>

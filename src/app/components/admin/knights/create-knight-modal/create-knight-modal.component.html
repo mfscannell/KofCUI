@@ -6,6 +6,13 @@
       </button>
     </div>
     <div class="modal-body">
+      <div class="container">
+        @if (memberDuesAmounts.length == 0) {
+          <div class="row">
+            <div class="col-12 alert alert-warning" role="alert">No member dues are setup yet.  Please set those up prior to adding or editing knights.</div>
+          </div>
+        }
+      </div>
       <form [formGroup]="createKnightForm" (ngSubmit)="onSubmitCreateKnight()">
         <nav class="tabbable">
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -46,7 +53,7 @@
               <input type="text" class="form-control" formControlName="cellPhoneNumber" id="cellPhoneNumber" autocomplete="off" placeholder="John">
               <label for="cellPhoneNumber">Cell Phone</label>
             </div>
-    
+
             <div class="form-group mb-3">
               <div class="col-12">
                 <h5 class="text-decoration-underline fw-bold">Home Address</h5>
@@ -55,7 +62,9 @@
             <div class="panel-body" formGroupName="homeAddress">
               <div class="form-floating mb-3">
                 <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
-                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+                  @for (country of countryFormOptions; track country) {
+                    <option [value]="country.value">{{country.displayName}}</option>
+                  }
                 </select>
                 <label for="countryCode">Country</label>
               </div>
@@ -73,7 +82,9 @@
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select" id="stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of countryFormOptions | filterAdministrativeDivisions:selectedCountry" [value]="state.value">{{state.displayName}}</option>
+                  @for (state of countryFormOptions | filterAdministrativeDivisions:selectedCountry; track state) {
+                    <option [value]="state.value">{{state.displayName}}</option>
+                  }
                 </select>
                 <label for="stateCode">State</label>
               </div>
@@ -98,7 +109,9 @@
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select" id="knightInfo_degree" formControlName="degree">
-                  <option *ngFor="let knightDegreeInputOption of knightDegreeFormOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+                  @for (knightDegreeInputOption of knightDegreeFormOptions; track knightDegreeInputOption) {
+                    <option [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+                  }
                 </select>
                 <label for="knightInfo_degree">Degree</label>
               </div>
@@ -112,13 +125,17 @@
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select" id="knightInfo_memberType" formControlName="memberType">
-                  <option *ngFor="let knightMemberTypeFormOption of knightMemberTypeFormOptions" [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
+                  @for (knightMemberTypeFormOption of knightMemberTypeFormOptions; track knightMemberTypeFormOption) {
+                    <option [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
+                  }
                 </select>
                 <label for="knightInfo_memberType">Member Type</label>
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select" id="knightInfo_memberClass" formControlName="memberClass">
-                  <option *ngFor="let knightMemberClassFormOption of knightMemberClassFormOptions" [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
+                  @for (knightMemberClassFormOption of knightMemberClassFormOptions; track knightMemberClassFormOption) {
+                    <option [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
+                  }
                 </select>
                 <label for="knightInfo_memberClass">Member Class</label>
               </div>
@@ -127,43 +144,55 @@
           <!-- ACTIVITIES -->
           <div class="tab-pane fade" id="activities-tab-pane" role="tabpanel" aria-labelledby="activities-tab" tabindex="0">
             <div formGroupName="activityInterests">
-              <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions; let i = index;">
-                <div class="form-group row mb-1">
-                  <div class="col-12">
-                    <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
-                  </div>
-                </div>
-                <div formArrayName="activityInterests">
-                  <div *ngFor="let activityInterestGroup of createKnightForm.controls.activityInterests.controls.activityInterests.controls | filterActivityInterestsByCategoryPipe:activityCategoryFormOption.value; let j = index;" [formGroup]="activityInterestGroup">
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" role="switch" formControlName="interested" id="interested-{{i}}-{{j}}">
-                      <label class="form-check-label" for="allowChangeActivitySubscription">{{activityInterestGroup.controls.activityName.value}}</label>
+              @for (activityCategoryFormOption of activityCategoryFormOptions; track activityCategoryFormOption; let i = $index) {
+                <div>
+                  <div class="form-group row mb-1">
+                    <div class="col-12">
+                      <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
                     </div>
                   </div>
+                  <div formArrayName="activityInterests">
+                    @for (activityInterestGroup of createKnightForm.controls.activityInterests.controls.activityInterests.controls | filterActivityInterestsByCategoryPipe:activityCategoryFormOption.value; track activityInterestGroup; let j = $index) {
+                      <div [formGroup]="activityInterestGroup">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" role="switch" formControlName="interested" id="interested-{{i}}-{{j}}">
+                          <label class="form-check-label" for="allowChangeActivitySubscription">{{activityInterestGroup.controls.activityName.value}}</label>
+                        </div>
+                      </div>
+                    }
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
           <!-- MEMBER DUES -->
           <div class="tab-pane fade" id="member-dues-tab-pane" role="tabpanel" aria-labelledby="member-dues-tab" tabindex="0">
             <div formArrayName="memberDues">
-              <div *ngFor="let memberDue of createKnightForm.controls.memberDues.controls; let i = index" [formGroupName]="i">
-                <div class="form-floating mb-3">
-                  <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus" (change)="onChangeMemberDuesPaidStatus(i)">
-                    <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
-                  </select>
-                  <label for="stateCode">{{memberDue.controls.year.value}} (Due: ${{memberDue.controls.amountDue.value}})</label>
+              @for (memberDue of createKnightForm.controls.memberDues.controls; track memberDue; let i = $index) {
+                <div [formGroupName]="i">
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus" (change)="onChangeMemberDuesPaidStatus(i)">
+                      @for (memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions; track memberDuesPaymentStatusInputOption) {
+                        <option [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
+                      }
+                    </select>
+                    <label for="stateCode">{{memberDue.controls.year.value}} (Due: ${{memberDue.controls.amountDue.value}})</label>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
             <div>NOTE: Member dues amounts only exist from {{oldestMemberDuesAmountsYear}} - {{newestMemberDuesAmountsYear}}</div>
           </div>
         </div>
         <div class="modal-footer">
           <div class="container">
-              <div class="row" *ngIf="errorSaving">
-                <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
               </div>
+            }
           </div>
           <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
           <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

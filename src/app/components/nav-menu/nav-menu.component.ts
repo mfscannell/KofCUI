@@ -64,6 +64,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     console.log('nav menu getWebsiteContent');
     const observer = {
       next: (websiteContent: WebsiteContent) => { 
+        console.log(websiteContent);
         this.externalLinks = websiteContent.externalLinks;
       },
       error: (err: ApiResponseError) => this.logError('Menu Error getting website content', err),

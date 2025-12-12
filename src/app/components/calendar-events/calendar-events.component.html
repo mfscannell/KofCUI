@@ -34,40 +34,45 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='let week of calendarMonth.weeks'>
-            <td *ngFor='let dayOfWeek of week.days'>
-    
-    
-              <div *ngIf='dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length > 0' role='button' data-bs-toggle="modal" data-bs-target="#viewUpcomingEventsModal" (click)="viewUpcomingEvents(dayOfWeek.dayOfMonth)">
-                <div class="divBtn divCenter">
-                  {{dayOfWeek.dayOfMonth}}
-                </div>
-                <div *ngIf='dayOfWeek.events.length > 0'>
-                  <button type="button" class="btn btn-primary btn-kofc-blue d-none d-md-block">Events</button>
-                </div>
-              </div>
-    
-    
-              <div *ngIf='dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length === 0'>
-                <div class="divCenter">
-                  {{dayOfWeek.dayOfMonth}}
-                </div>
-                <div>
-                  <button type="button" disabled class="btn btn-light noEventBtn d-none d-md-block">Events</button>
-                </div>
-              </div>
-    
-    
-    
-              <div *ngIf='dayOfWeek.dayOfMonth === 0'>
-                <div *ngIf='dayOfWeek.events.length === 0'>
-                  <button type="button" disabled class="btn btn-light noEventBtn d-none d-md-block">Events</button>
-                </div>
-              </div>
-    
-    
-            </td>
-          </tr>
+          @for (week of calendarMonth.weeks; track week) {
+            <tr>
+              @for (dayOfWeek of week.days; track dayOfWeek) {
+                <td>
+                  @if (dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length > 0) {
+                    <div role='button' data-bs-toggle="modal" data-bs-target="#viewUpcomingEventsModal" (click)="viewUpcomingEvents(dayOfWeek.dayOfMonth)">
+                      <div class="divBtn divCenter">
+                        {{dayOfWeek.dayOfMonth}}
+                      </div>
+                      @if (dayOfWeek.events.length > 0) {
+                        <div>
+                          <button type="button" class="btn btn-primary btn-kofc-blue d-none d-md-block">Events</button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  @if (dayOfWeek.dayOfMonth > 0 && dayOfWeek.events.length === 0) {
+                    <div>
+                      <div class="divCenter">
+                        {{dayOfWeek.dayOfMonth}}
+                      </div>
+                      <div>
+                        <button type="button" disabled class="btn btn-light noEventBtn d-none d-md-block">Events</button>
+                      </div>
+                    </div>
+                  }
+                  @if (dayOfWeek.dayOfMonth === 0) {
+                    <div>
+                      @if (dayOfWeek.events.length === 0) {
+                        <div>
+                          <button type="button" disabled class="btn btn-light noEventBtn d-none d-md-block">Events</button>
+                        </div>
+                      }
+                    </div>
+                  }
+                </td>
+              }
+            </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -78,28 +83,32 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-            <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-            </button>
+          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+          </button>
         </div>
         <div class="modal-body">
-          <div *ngFor='let upcomingEvent of upcomingEventsOnDate; let i=index'>
-            <h5>
-              {{upcomingEvent.eventName}}
-            </h5>
-            <h6>
-              {{ upcomingEvent.startDateTime | toDisplayTime }} - {{ upcomingEvent.endDateTime | toDisplayTime }}
-            </h6>
-            <h6>
-              {{upcomingEvent?.locationAddress?.addressName}}
-            </h6>
-            <h6>
-              {{upcomingEvent?.locationAddress?.address1}} {{upcomingEvent?.locationAddress?.city}}, {{upcomingEvent?.locationAddress?.stateCode}}
-            </h6>
+          @for (upcomingEvent of upcomingEventsOnDate; track upcomingEvent; let i = $index) {
             <div>
-              {{upcomingEvent.eventDescription}}
+              <h5>
+                {{upcomingEvent.eventName}}
+              </h5>
+              <h6>
+                {{ upcomingEvent.startDateTime | toDisplayTime }} - {{ upcomingEvent.endDateTime | toDisplayTime }}
+              </h6>
+              <h6>
+                {{upcomingEvent?.locationAddress?.addressName}}
+              </h6>
+              <h6>
+                {{upcomingEvent?.locationAddress?.address1}} {{upcomingEvent?.locationAddress?.city}}, {{upcomingEvent?.locationAddress?.stateCode}}
+              </h6>
+              <div>
+                {{upcomingEvent.eventDescription}}
+              </div>
+              @if (i !== upcomingEvents.length-1) {
+                <hr class="my-12"/>
+              }
             </div>
-            <hr *ngIf="i !== upcomingEvents.length-1" class="my-12"/>
-          </div>
+          }
         </div>
         <div class="modal-footer">
           <button id="closeUpcomingEventsModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

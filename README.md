@@ -53,6 +53,22 @@ npm install -g @angular/cli@latest
 Then create a new project:
 ng new TestAngularUI
 
+### Common Issues
+Could not find a declaration file for module rxjs
+`npm install typescript@latest rxjs@latest`
+`rm -rf node_modules package-lock.json`
+`npm install`
+Check tsconfig.json or tsconfig.app.json.  Change `moduleResolution` value to `node`
+```javascript
+{
+  "compilerOptions": {
+    // ... other options
+    "moduleResolution": "node"
+  }
+}
+```
+Restart TypeScript service Ctrl+Shift+P and type "Restart TS" or "Restart Typescript service"
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

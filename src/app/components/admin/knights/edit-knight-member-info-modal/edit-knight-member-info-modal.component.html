@@ -21,7 +21,9 @@
 
         <div class="form-floating mb-3">
           <select class="form-select" id="degree" formControlName="degree">
-            <option *ngFor="let knightDegreeInputOption of knightDegreeFormOptions" [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+            @for (knightDegreeInputOption of knightDegreeFormOptions; track knightDegreeInputOption) {
+              <option [value]="knightDegreeInputOption.value">{{knightDegreeInputOption.displayName}}</option>
+            }
           </select>
           <label for="degree">Degree</label>
         </div>
@@ -37,27 +39,35 @@
 
         <div class="form-floating mb-3">
           <select class="form-select" id="memberType" formControlName="memberType">
-            <option *ngFor="let knightMemberTypeFormOption of knightMemberTypeFormOptions" [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
+            @for (knightMemberTypeFormOption of knightMemberTypeFormOptions; track knightMemberTypeFormOption) {
+              <option [value]="knightMemberTypeFormOption.value">{{knightMemberTypeFormOption.displayName}}</option>
+            }
           </select>
           <label for="memberType">Member Type</label>
         </div>
 
         <div class="form-floating mb-3">
           <select class="form-select" id="memberClass" formControlName="memberClass">
-            <option *ngFor="let knightMemberClassFormOption of knightMemberClassFormOptions" [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
+            @for (knightMemberClassFormOption of knightMemberClassFormOptions; track knightMemberClassFormOption) {
+              <option [value]="knightMemberClassFormOption.value">{{knightMemberClassFormOption.displayName}}</option>
+            }
           </select>
           <label for="memberClass">Member Class</label>
         </div>
 
         <div class="modal-footer">
           <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
+              </div>
+            }
           </div>
           <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </div>
+        </div>
       </form>
     </div>
   </div>

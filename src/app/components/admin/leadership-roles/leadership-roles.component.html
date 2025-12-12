@@ -1,39 +1,43 @@
 <div class="container">
   <div class="accordion" id="accordionExample">
-    <div class="accordion-item" *ngFor="let leadershipRoleCategory of leadershipRoleCategories; let i = index">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-'+i"  aria-expanded="true" [attr.aria-controls]="'collapse-'+i">
-          {{ leadershipRoleCategory }}
-        </button>
-      </h2>
-      <div id="collapse-{{i}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-          <div class="container">
-            <div class="row" *ngFor='let leadershipRole of leadershipRoles | filterLeadershipRoles:leadershipRoleCategory'>
-              <div class="col-9 col-md-6">
-                {{leadershipRole.title}}
-              </div>
-              <div class="col-3 col-md-4">
-                <div class="btn-toolbar text-center mt-1">
-                  <button type="button" class="btn btn-primary btn-kofc-blue me-1" data-bs-toggle="modal" data-bs-target="#editLeadershipRoleModal" (click)="openEditLeadershipRoleModal(leadershipRole)">
-                    <svg class="bi" width="20" height="20" fill="currentColor">
-                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
-                    </svg>
-                  </button>
+    @for (leadershipRoleCategory of leadershipRoleCategories; track leadershipRoleCategory; let i = $index) {
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse-'+i"  aria-expanded="true" [attr.aria-controls]="'collapse-'+i">
+            {{ leadershipRoleCategory }}
+          </button>
+        </h2>
+        <div id="collapse-{{i}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="container">
+              @for (leadershipRole of leadershipRoles | filterLeadershipRoles:leadershipRoleCategory; track leadershipRole) {
+                <div class="row">
+                  <div class="col-9 col-md-6">
+                    {{leadershipRole.title}}
+                  </div>
+                  <div class="col-3 col-md-4">
+                    <div class="btn-toolbar text-center mt-1">
+                      <button type="button" class="btn btn-primary btn-kofc-blue me-1" data-bs-toggle="modal" data-bs-target="#editLeadershipRoleModal" (click)="openEditLeadershipRoleModal(leadershipRole)">
+                        <svg class="bi" width="20" height="20" fill="currentColor">
+                          <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>
       </div>
-    </div>
+    }
   </div>
   <!-- LEADERSHIP ROLE MODAL -->
   <edit-leadership-role-modal
     #editLeadershipRoleModal
     id="editLeadershipRoleModal"
-    class="modal fade" 
-    [allKnights]="allKnights" 
-    (editLeadershipRoleChanges)="updateLeadershipRoleInList($event)"></edit-leadership-role-modal>
+    class="modal fade"
+    [allKnights]="allKnights"
+  (editLeadershipRoleChanges)="updateLeadershipRoleInList($event)"></edit-leadership-role-modal>
   <div class="row" id="leadershipRolesSpacer"></div>
 </div>

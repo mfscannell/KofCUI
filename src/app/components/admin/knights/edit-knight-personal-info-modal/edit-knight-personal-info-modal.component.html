@@ -48,7 +48,9 @@
         <div class="panel-body" formGroupName="homeAddress">
           <div class="form-floating mb-3">
             <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
-              <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+              @for (country of countryFormOptions; track country) {
+                <option [value]="country.value">{{country.displayName}}</option>
+              }
             </select>
             <label for="countryCode">Country</label>
           </div>
@@ -66,7 +68,9 @@
           </div>
           <div class="form-floating mb-3">
             <select class="form-select" id="stateCode" formControlName="stateCode">
-              <option *ngFor="let state of countryFormOptions | filterAdministrativeDivisions:selectedCountry" [value]="state.value">{{state.displayName}}</option>
+              @for (state of countryFormOptions | filterAdministrativeDivisions:selectedCountry; track state) {
+                <option [value]="state.value">{{state.displayName}}</option>
+              }
             </select>
             <label for="stateCode">State</label>
           </div>
@@ -78,13 +82,17 @@
 
         <div class="modal-footer">
           <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
+              </div>
+            }
           </div>
           <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </div>
+        </div>
       </form>
     </div>
   </div>

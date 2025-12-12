@@ -18,21 +18,29 @@
             <input type="checkbox" class="form-check-input" formControlName="occupied" id="occupied">
           </div>
         </div>
-        <div class="form-floating mb-3" *ngIf="editLeadershipRoleForm.controls['occupied'].value">
-          <select class="form-select" id="leadershipRoleOccupier" formControlName="knightId">
-            <option *ngFor="let knight of allKnights" [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
-          </select>
-          <label for="leadershipRoleOccupier">Occupier</label>
-        </div>
+        @if (editLeadershipRoleForm.controls['occupied'].value) {
+          <div class="form-floating mb-3">
+            <select class="form-select" id="leadershipRoleOccupier" formControlName="knightId">
+              @for (knight of allKnights; track knight) {
+                <option [value]="knight.id">{{knight.firstName}} {{knight.lastName}}</option>
+              }
+            </select>
+            <label for="leadershipRoleOccupier">Occupier</label>
+          </div>
+        }
         <div class="modal-footer">
           <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
+              </div>
+            }
           </div>
           <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
-          </div>
+        </div>
       </form>
     </div>
   </div>

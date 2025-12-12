@@ -1,28 +1,44 @@
 <div class="container">
-  <div class="row" *ngIf="canActivateKnights()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/knights" routerLinkActiver="active">Knights Roster</a>
-  </div>
-  <div class="row" *ngIf="canActivateMemberDuesAmounts()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/memberDuesAmounts" routerLinkActiver="active">Member Dues Amounts</a>
-  </div>
-  <div class="row" *ngIf="canActivateLeadershipRoles()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/leadershipRoles" routerLinkActiver="active">Leadership Roles</a>
-  </div>
-  <div class="row" *ngIf="canActivateActivities()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/activities" routerLinkActiver="active">Activities</a>
-  </div>
-  <div class="row" *ngIf="canActivateActiviyEvents()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/activityEvents" routerLinkActiver="active">Events</a>
-  </div>
-  <div class="row" *ngIf="canActivateEventVolunteering()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/eventVolunteering" routerLinkActiver="active">Volunteer</a>
-  </div>
-  <div class="row" *ngIf="canActivateConfigs()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/configSettings" routerLinkActiver="active">Configuration</a>
-  </div>
-  <div class="row" *ngIf="canActivateAssets()">
-    <a class="nav-link nav-link-kofc-blue" routerLink="/admin/assets" routerLinkActiver="active">Assets</a>
-  </div>
+  @if (canActivateKnights()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/knights" routerLinkActiver="active">Knights Roster</a>
+    </div>
+  }
+  @if (canActivateMemberDuesAmounts()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/memberDuesAmounts" routerLinkActiver="active">Member Dues Amounts</a>
+    </div>
+  }
+  @if (canActivateLeadershipRoles()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/leadershipRoles" routerLinkActiver="active">Leadership Roles</a>
+    </div>
+  }
+  @if (canActivateActivities()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/activities" routerLinkActiver="active">Activities</a>
+    </div>
+  }
+  @if (canActivateActiviyEvents()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/activityEvents" routerLinkActiver="active">Events</a>
+    </div>
+  }
+  @if (canActivateEventVolunteering()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/eventVolunteering" routerLinkActiver="active">Volunteer</a>
+    </div>
+  }
+  @if (canActivateConfigs()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/configSettings" routerLinkActiver="active">Configuration</a>
+    </div>
+  }
+  @if (canActivateAssets()) {
+    <div class="row">
+      <a class="nav-link nav-link-kofc-blue" routerLink="/admin/assets" routerLinkActiver="active">Assets</a>
+    </div>
+  }
   <div id="adminSpacer"></div>
 </div>
 

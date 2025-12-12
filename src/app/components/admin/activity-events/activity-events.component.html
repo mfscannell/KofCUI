@@ -18,7 +18,9 @@
   </div>
   <div class="row">
     <small class="kofc-error-message">
-      <div *ngIf="endDate | isEndDateAfterStartDate:startDate">End date must be after start date</div>
+      @if (endDate | isEndDateAfterStartDate:startDate) {
+        <div>End date must be after start date</div>
+      }
     </small>
   </div>
   <div class="row">
@@ -33,48 +35,58 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let activityEvent of activityEvents">
-            <td *ngIf="activityEvent.canceled">{{activityEvent.eventName}} (CANCELED)</td>
-            <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
-            <td>{{ activityEvent.startDateTime | toDisplayDate }}</td>
-            <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" aria-label="Send email about event" data-bs-toggle="modal" data-bs-target="#sendEmailModal" (click)="openSendEmailModal(activityEvent)">
-                <svg class="bi" width="24" height="24" fill="currentColor">
-                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
-                </svg>
-              </button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" aria-label="Edit activity event" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openEditActivityEventModal(activityEvent)" *ngIf="canEditEvent(activityEvent.activityId)">
-                <svg class="bi" width="24" height="24" fill="currentColor">
-                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
-                </svg>
-              </button>
-            </td>
-          </tr>
+          @for (activityEvent of activityEvents; track activityEvent) {
+            <tr>
+              @if (activityEvent.canceled) {
+                <td>{{activityEvent.eventName}} (CANCELED)</td>
+              }
+              @if (!activityEvent.canceled) {
+                <td>{{activityEvent.eventName}}</td>
+              }
+              <td>{{ activityEvent.startDateTime | toDisplayDate }}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-kofc-blue" aria-label="Send email about event" data-bs-toggle="modal" data-bs-target="#sendEmailModal" (click)="openSendEmailModal(activityEvent)">
+                  <svg class="bi" width="24" height="24" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#envelope"/>
+                  </svg>
+                </button>
+              </td>
+              <td>
+                @if (canEditEvent(activityEvent.activityId)) {
+                  <button type="button" class="btn btn-primary btn-kofc-blue" aria-label="Edit activity event" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openEditActivityEventModal(activityEvent)">
+                    <svg class="bi" width="24" height="24" fill="currentColor">
+                      <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#pencil"/>
+                    </svg>
+                  </button>
+                }
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
   </div>
-  <div class="row" *ngIf="canAddEvent()">
-    <div class="col-md-12">
-      <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openCreateActivityEventModal()">Add</button>
+  @if (canAddEvent()) {
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editActivityEventModal" (click)="openCreateActivityEventModal()">Add</button>
+      </div>
     </div>
-  </div>
+  }
   <!-- SEND EMAIL MODAL -->
-  <email-about-event-modal 
-    class="modal fade" 
-    id="sendEmailModal" 
-    tabindex="-1" 
-    aria-labelledby="sendEmailModalLabel" 
+  <email-about-event-modal
+    class="modal fade"
+    id="sendEmailModal"
+    tabindex="-1"
+    aria-labelledby="sendEmailModalLabel"
     aria-hidden="true"
-    [activityEvent]="activityEventToEmailAbout"></email-about-event-modal>
+  [activityEvent]="activityEventToEmailAbout"></email-about-event-modal>
   <edit-activity-event-modal
     #editActivityEventModal
-    class="modal fade" 
-    id="editActivityEventModal" 
-    tabindex="-1" 
-    aria-labelledby="sendEmailModalLabel" 
+    class="modal fade"
+    id="editActivityEventModal"
+    tabindex="-1"
+    aria-labelledby="sendEmailModalLabel"
     aria-hidden="true"
     [editModalAction]="editModalAction"
     [modalHeaderText]="editModalHeaderText"
@@ -84,6 +96,6 @@
     [selectableActivities]="selectableActivities"
     [allKnights]="allKnights"
     (createActivityEventChanges)="appendActivityEventToList($event)"
-    (updateActivityEventChanges)="updateActivityEventInList($event)"></edit-activity-event-modal>
+  (updateActivityEventChanges)="updateActivityEventInList($event)"></edit-activity-event-modal>
   <div id="activityEventSpacer"></div>
 </div>

@@ -7,30 +7,38 @@
     </div>
     <div class="modal-body">
       <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditKnightActivityInterests()">
-        <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions; let i = index;">
-          <div class="form-group row mb-1">
-            <div class="col-12">
-              <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
-            </div>
-          </div>
-          <div formArrayName="activityInterests">
-            <div *ngFor="let activityInterestGroup of editKnightActivityInterestsForm.controls.activityInterests.controls | filterActivityInterestsByCategoryPipe:activityCategoryFormOption.value; let j = index;" [formGroup]="activityInterestGroup">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" formControlName="interested" id="interested-{{i}}-{{j}}">
-                <label class="form-check-label" for="allowChangeActivitySubscription">{{activityInterestGroup.controls.activityName.value}}</label>
+        @for (activityCategoryFormOption of activityCategoryFormOptions; track activityCategoryFormOption; let i = $index) {
+          <div>
+            <div class="form-group row mb-1">
+              <div class="col-12">
+                <h5 class="text-decoration-underline fw-bold">{{activityCategoryFormOption.displayName}}</h5>
               </div>
             </div>
+            <div formArrayName="activityInterests">
+              @for (activityInterestGroup of editKnightActivityInterestsForm.controls.activityInterests.controls | filterActivityInterestsByCategoryPipe:activityCategoryFormOption.value; track activityInterestGroup; let j = $index) {
+                <div [formGroup]="activityInterestGroup">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" formControlName="interested" id="interested-{{i}}-{{j}}">
+                    <label class="form-check-label" for="allowChangeActivitySubscription">{{activityInterestGroup.controls.activityName.value}}</label>
+                  </div>
+                </div>
+              }
+            </div>
           </div>
-        </div>
+        }
         <div class="modal-footer">
           <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
+              </div>
+            }
           </div>
           <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </div>
+        </div>
       </form>
     </div>
   </div>

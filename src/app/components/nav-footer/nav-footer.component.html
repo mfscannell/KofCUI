@@ -5,16 +5,20 @@
         &copy; COPYRIGHT 2022, KNIGHTS OF COLUMBUS COUNCIL 6673.  ALL RIGHTS RESERVED.
       </div>
       <div class="col-12 col-sm-4 mt-1 mb-1">
-        <a *ngIf="facebookUrl" href="{{facebookUrl}}" aria-label="Council Facebook Link" class="btn-link-kofc-blue footer-link" target="_blank" rel="noopener noreferrer">
-          <svg class="bi" width="24" height="24" fill="currentColor">
-            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#facebook"/>
-          </svg>
-        </a>
-        <a *ngIf="twitterUrl" href="{{twitterUrl}}" aria-label="Council Twitter Link" class="btn-link-kofc-blue footer-link" target="_blank" rel="noopener noreferrer">
-          <svg class="bi" width="24" height="24" fill="currentColor">
-            <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#twitter"/>
-          </svg>
-        </a>
+        @if (facebookUrl) {
+          <a href="{{facebookUrl}}" aria-label="Council Facebook Link" class="btn-link-kofc-blue footer-link" target="_blank" rel="noopener noreferrer">
+            <svg class="bi" width="24" height="24" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#facebook"/>
+            </svg>
+          </a>
+        }
+        @if (twitterUrl) {
+          <a href="{{twitterUrl}}" aria-label="Council Twitter Link" class="btn-link-kofc-blue footer-link" target="_blank" rel="noopener noreferrer">
+            <svg class="bi" width="24" height="24" fill="currentColor">
+              <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#twitter"/>
+            </svg>
+          </a>
+        }
       </div>
     </div>
   </div>

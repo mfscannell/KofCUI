@@ -1,10 +1,16 @@
 <div class="container">
-  <div class="row" *ngIf="showErrorMessage">
-    <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-  </div>
-  <div class="row" *ngIf="showSuccessMessage">
-    <div class="col-12 alert alert-success" role="alert">Successfully saved asset.</div>
-  </div>
+  @if (showErrorMessage) {
+    <div class="row">
+      @for (errorMessage of errorMessages; track errorMessage) {
+        <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+      }
+    </div>
+  }
+  @if (showSuccessMessage) {
+    <div class="row">
+      <div class="col-12 alert alert-success" role="alert">Successfully saved asset.</div>
+    </div>
+  }
 
 
 
@@ -20,18 +26,20 @@
           <div class="row mb-1">
             <div class="col-12">It is recommended that all images are the same dimensions and have a minimum width of 2,000 pixels.</div>
           </div>
-          <div class="row mb-1" *ngFor="let homePageImage of homePageCarouselImageSources; let i = index;">
-            <div class="col-8 col-sm-6 col-md-4">
-              <img [src]="homePageImage" class="img-fluid img-kofc-preview">
+          @for (homePageImage of homePageCarouselImageSources; track homePageImage; let i = $index) {
+            <div class="row mb-1">
+              <div class="col-8 col-sm-6 col-md-4">
+                <img [src]="homePageImage" class="img-fluid img-kofc-preview">
+              </div>
+              <div class="col-4 col-sm-6 col-md-8">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" (click)="openConfirmDeleteHomePageCarouselImage(i)">
+                  <svg class="bi" width="24" height="24" fill="currentColor">
+                    <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div class="col-4 col-sm-6 col-md-8">
-              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" (click)="openConfirmDeleteHomePageCarouselImage(i)">
-                <svg class="bi" width="24" height="24" fill="currentColor">
-                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+          }
           <div class="form-group row mb-1">
             <div class="col-12">
               <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editAssetModal" (click)="openUploadHomePageCarouselImageModal()">Upload</button>
@@ -59,9 +67,13 @@
             </div>
             <div class="modal-footer">
               <div class="container">
-                <div class="row" *ngIf="errorSaving">
-                  <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-                </div>
+                @if (errorSaving) {
+                  <div class="row">
+                    @for (errorMessage of errorMessages; track errorMessage) {
+                      <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                    }
+                  </div>
+                }
               </div>
               <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-primary btn-kofc-blue" [disabled]="!formData">Save</button>
               <button id="cancelUploadHomePageCarouselImage" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -89,9 +101,13 @@
             </div>
             <div class="modal-footer">
               <div class="container">
-                <div class="row" *ngIf="errorSaving">
-                  <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-                </div>
+                @if (errorSaving) {
+                  <div class="row">
+                    @for (errorMessage of errorMessages; track errorMessage) {
+                      <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                    }
+                  </div>
+                }
               </div>
               <button id="uploadHomePageCarouselImage" type="submit" class="btn btn-danger">Confirm</button>
               <button id="cancelUploadHomePageCarouselImage" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
