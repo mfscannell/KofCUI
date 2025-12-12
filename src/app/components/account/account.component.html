@@ -67,16 +67,20 @@
             <h4 class="text-decoration-underline">Interests</h4>
           </div>
         </div>
-        <div *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
-          <div class="row">
-            <h6 class="text-decoration-underline">{{activityCategoryFormOption.displayName}}</h6>
-          </div>
-          <div class="row" *ngFor="let interestedActivity of filterActivitiesInterestedInCategory(activityCategoryFormOption.value)">
-            <div class="col-12 ms-2">
-              {{interestedActivity.activityName}}
+        @for (activityCategoryFormOption of activityCategoryFormOptions; track activityCategoryFormOption) {
+          <div>
+            <div class="row">
+              <h6 class="text-decoration-underline">{{activityCategoryFormOption.displayName}}</h6>
             </div>
+            @for (interestedActivity of filterActivitiesInterestedInCategory(activityCategoryFormOption.value); track interestedActivity) {
+              <div class="row">
+                <div class="col-12 ms-2">
+                  {{interestedActivity.activityName}}
+                </div>
+              </div>
+            }
           </div>
-        </div>
+        }
 
         <div class="row mb-2">
           <div class="col-12">
@@ -156,7 +160,9 @@
             <div formGroupName="homeAddress">
               <div class="form-floating mb-3">
                 <select class="form-select" id="countryCode" formControlName="countryCode" (change)="enableDisableAdministrativeDivisions()">
-                  <option *ngFor="let country of countryFormOptions" [value]="country.value">{{country.displayName}}</option>
+                  @for (country of countryFormOptions; track country) {
+                    <option [value]="country.value">{{country.displayName}}</option>
+                  }
                 </select>
                 <label for="countryCode">Country</label>
               </div>
@@ -174,7 +180,9 @@
               </div>
               <div class="form-floating mb-3">
                 <select class="form-select" id="stateCode" formControlName="stateCode">
-                  <option *ngFor="let state of filterAdministrativeDivisionsByCountry()" [value]="state.value">{{state.displayName}}</option>
+                  @for (state of filterAdministrativeDivisionsByCountry(); track state) {
+                    <option [value]="state.value">{{state.displayName}}</option>
+                  }
                 </select>
                 <label for="stateCode">State</label>
               </div>
@@ -185,9 +193,13 @@
             </div>
             <div class="modal-footer">
               <div class="container">
-                  <div class="row" *ngIf="errorSaving">
-                    <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                @if (errorSaving) {
+                  <div class="row">
+                    @for (errorMessage of errorMessages; track errorMessage) {
+                      <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                    }
                   </div>
+                }
               </div>
               <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
               <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -208,26 +220,32 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="editKnightActivityInterestsForm" (ngSubmit)="onSubmitEditActivityInterests()">
-            <div class="form-group row mb-1" *ngFor="let activityCategoryFormOption of activityCategoryFormOptions">
-              <div class="container">
-                <h4 class="col-12 col-form-label text-decoration-underline">{{activityCategoryFormOption.displayName}}</h4>
-              </div>
-              <div class="container">
-                <ng-container *ngFor="let activity of filterActivitiesByCategory(activityCategoryFormOption.value)">
-                  <div class="form-group row mb-1">
-                    <label class="col-6 col-sm-5 col-lg-4 form-label">{{activity.activityName}}</label>
-                    <div class="col-6 col-sm-7 col-lg-8">
-                      <input class="form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+            @for (activityCategoryFormOption of activityCategoryFormOptions; track activityCategoryFormOption) {
+              <div class="form-group row mb-1">
+                <div class="container">
+                  <h4 class="col-12 col-form-label text-decoration-underline">{{activityCategoryFormOption.displayName}}</h4>
+                </div>
+                <div class="container">
+                  @for (activity of filterActivitiesByCategory(activityCategoryFormOption.value); track activity) {
+                    <div class="form-group row mb-1">
+                      <label class="col-6 col-sm-5 col-lg-4 form-label">{{activity.activityName}}</label>
+                      <div class="col-6 col-sm-7 col-lg-8">
+                        <input class="form-check-input" type="checkbox" id="interested" [checked]="activity.interested" (change)="toggleInterestCheckbox($event, activity)">
+                      </div>
                     </div>
-                  </div>
-                </ng-container>
+                  }
+                </div>
               </div>
-            </div>
+            }
             <div class="modal-footer">
               <div class="container">
-                  <div class="row" *ngIf="errorSaving">
-                    <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                @if (errorSaving) {
+                  <div class="row">
+                    @for (errorMessage of errorMessages; track errorMessage) {
+                      <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                    }
                   </div>
+                }
               </div>
               <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
               <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -266,108 +284,148 @@
                 <input type="password" autocomplete="off" class="form-control" formControlName="confirmPassword" id="confirmPassword">
               </div>
             </div>
-        
-            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
-              <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && !hasRequiredLength()" class="alert alert-danger d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
-              </svg>
-              <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && hasRequiredLength()" class="alert alert-success d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
-              </svg>
-              <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
-            </div>
-        
-            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
-              <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && !hasDistinctCharacters()" class="alert alert-danger d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
-              </svg>
-              <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && hasDistinctCharacters()" class="alert alert-success d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
-              </svg>
-              <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
-            </div>
-        
-            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
-              <div>At least one upper case character required.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && !hasUpperCase() && passwordRequirements.requireUppercase" class="alert alert-danger d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
-              </svg>
-              <div>At least one upper case character required.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && hasUpperCase() && passwordRequirements.requireUppercase" class="alert alert-success d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
-              </svg>
-              <div>At least one upper case character required.</div>
-            </div>
-        
-            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
-              <div>At least one lower case character required.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && !hasLowerCase() && passwordRequirements.requireLowercase" class="alert alert-danger d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
-              </svg>
-              <div>At least one lower case character required.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && hasLowerCase() && passwordRequirements.requireLowercase" class="alert alert-success d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
-              </svg>
-              <div>At least one lower case character required.</div>
-            </div>
-        
-            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
-              <div>At least one digit 0-9 required.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && !hasDigit() && passwordRequirements.requireDigit" class="alert alert-danger d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
-              </svg>
-              <div>At least one digit 0-9 required.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && hasDigit() && passwordRequirements.requireDigit" class="alert alert-success d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
-              </svg>
-              <div>At least one digit 0-9 required.</div>
-            </div>
-        
-            <div *ngIf="!isPasswordDirty()" class="alert alert-secondary d-flex" role="alert">
-              <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && !hasAllowedSpecialCharacter() && passwordRequirements.requireNonAlphanumeric" class="alert alert-danger d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
-              </svg>
-              <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
-            </div>
-            <div *ngIf="isPasswordDirty() && hasAllowedSpecialCharacter() && passwordRequirements.requireNonAlphanumeric" class="alert alert-success d-flex" role="alert">
-              <svg class="bi me-2" width="20" height="20" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
-              </svg>
-              <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
-            </div>
-        
+
+            @if (!isPasswordDirty()) {
+              <div class="alert alert-secondary d-flex" role="alert">
+                <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && !hasRequiredLength()) {
+              <div class="alert alert-danger d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+                </svg>
+                <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && hasRequiredLength()) {
+              <div class="alert alert-success d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+                </svg>
+                <div>Password shall be at least {{passwordRequirements.requiredLength}} characters long.</div>
+              </div>
+            }
+
+            @if (!isPasswordDirty()) {
+              <div class="alert alert-secondary d-flex" role="alert">
+                <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && !hasDistinctCharacters()) {
+              <div class="alert alert-danger d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+                </svg>
+                <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && hasDistinctCharacters()) {
+              <div class="alert alert-success d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+                </svg>
+                <div>At least {{passwordRequirements.requiredUniqueChars}} unique characters.</div>
+              </div>
+            }
+
+            @if (!isPasswordDirty()) {
+              <div class="alert alert-secondary d-flex" role="alert">
+                <div>At least one upper case character required.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && !hasUpperCase() && passwordRequirements.requireUppercase) {
+              <div class="alert alert-danger d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+                </svg>
+                <div>At least one upper case character required.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && hasUpperCase() && passwordRequirements.requireUppercase) {
+              <div class="alert alert-success d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+                </svg>
+                <div>At least one upper case character required.</div>
+              </div>
+            }
+
+            @if (!isPasswordDirty()) {
+              <div class="alert alert-secondary d-flex" role="alert">
+                <div>At least one lower case character required.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && !hasLowerCase() && passwordRequirements.requireLowercase) {
+              <div class="alert alert-danger d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+                </svg>
+                <div>At least one lower case character required.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && hasLowerCase() && passwordRequirements.requireLowercase) {
+              <div class="alert alert-success d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+                </svg>
+                <div>At least one lower case character required.</div>
+              </div>
+            }
+
+            @if (!isPasswordDirty()) {
+              <div class="alert alert-secondary d-flex" role="alert">
+                <div>At least one digit 0-9 required.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && !hasDigit() && passwordRequirements.requireDigit) {
+              <div class="alert alert-danger d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+                </svg>
+                <div>At least one digit 0-9 required.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && hasDigit() && passwordRequirements.requireDigit) {
+              <div class="alert alert-success d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+                </svg>
+                <div>At least one digit 0-9 required.</div>
+              </div>
+            }
+
+            @if (!isPasswordDirty()) {
+              <div class="alert alert-secondary d-flex" role="alert">
+                <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && !hasAllowedSpecialCharacter() && passwordRequirements.requireNonAlphanumeric) {
+              <div class="alert alert-danger d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill"/>
+                </svg>
+                <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
+              </div>
+            }
+            @if (isPasswordDirty() && hasAllowedSpecialCharacter() && passwordRequirements.requireNonAlphanumeric) {
+              <div class="alert alert-success d-flex" role="alert">
+                <svg class="bi me-2" width="20" height="20" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#check-circle-fill"/>
+                </svg>
+                <div>At least one non-alphanumeric character {{passwordRequirements.allowedNonAlphanumericCharacters}}.</div>
+              </div>
+            }
+
             <div class="modal-footer">
               <div class="container">
-                  <div class="row" *ngIf="errorSaving">
-                    <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+                @if (errorSaving) {
+                  <div class="row">
+                    @for (errorMessage of errorMessages; track errorMessage) {
+                      <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                    }
                   </div>
+                }
               </div>
               <button id="saveKnight" type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
               <button id="cancelEditKnight" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

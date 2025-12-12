@@ -15,44 +15,46 @@
     </div>
     <div class="form-group row mb-3">
       <div class="col-12">
-        <div class="row bg-light border" *ngFor="let knight of allKnights">
-          <div class="col-12 col-sm-7 pt-2 pb-2">{{knight.firstName}} {{knight.lastName}}</div>
-          <div class="col-2 col-sm-1 pt-2 pb-2">
-            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPersonalInfoModal" (click)="openEditKnightPersonalInfoModal(knight)">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#person"/>
-              </svg>
-            </button>
+        @for (knight of allKnights; track knight) {
+          <div class="row bg-light border">
+            <div class="col-12 col-sm-7 pt-2 pb-2">{{knight.firstName}} {{knight.lastName}}</div>
+            <div class="col-2 col-sm-1 pt-2 pb-2">
+              <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPersonalInfoModal" (click)="openEditKnightPersonalInfoModal(knight)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#person"/>
+                </svg>
+              </button>
+            </div>
+            <div class="col-2 col-sm-1 pt-2 pb-2">
+              <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
+                </svg>
+              </button>
+            </div>
+            <div class="col-2 col-sm-1 pt-2 pb-2">
+              <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
+                </svg>
+              </button>
+            </div>
+            <div class="col-2 col-sm-1 pt-2 pb-2">
+              <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
+                </svg>
+              </button>
+            </div>
+            <div class="col-2 col-sm-1 pt-2 pb-2">
+              <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
+                </svg>
+              </button>
+            </div>
           </div>
-          <div class="col-2 col-sm-1 pt-2 pb-2">
-            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberInfoModal" (click)="openEditKnightMemberInfoModal(knight)">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#info"/>
-              </svg>
-            </button>
-          </div>
-          <div class="col-2 col-sm-1 pt-2 pb-2">
-            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightActivityInterestsModal"  (click)="openEditKnightActivityInterestsModal(knight)">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#exclamation"/>
-              </svg>
-            </button>
-          </div>
-          <div class="col-2 col-sm-1 pt-2 pb-2">
-            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightMemberDuesModal" (click)="openEditKnightMemberDuesModal(knight)">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#currency-dollar"/>
-              </svg>
-            </button>
-          </div>
-          <div class="col-2 col-sm-1 pt-2 pb-2">
-            <button type="button" class="btn btn-primary btn-sm btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#editKnightPasswordModal" (click)="openEditKnightPassword(knight)">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#lock"/>
-              </svg>
-            </button>
-          </div>
-        </div>
+        }
       </div>
     </div>
     <!-- PAGE SIZE -->
@@ -60,7 +62,9 @@
       <div class="col-4 col-sm-3 col-md-2 align-self-center">
         <div class="form-floating">
           <select class="form-select" id="pageSize" formControlName="pageSize" (change)="changePageSize()">
-            <option *ngFor="let pageSize of pageSizes" [value]="pageSize">{{pageSize}}</option>
+            @for (pageSize of pageSizes; track pageSize) {
+              <option [value]="pageSize">{{pageSize}}</option>
+            }
           </select>
           <label for="pageSize">Page Size</label>
         </div>
@@ -77,7 +81,9 @@
       <div class="col-4 col-sm-3 col-md-2">
         <div class="form-floating">
           <select class="form-select" id="pageSize" formControlName="page" (change)="changePage()">
-            <option *ngFor="let page of pages" [value]="page">{{page}}</option>
+            @for (page of pages; track page) {
+              <option [value]="page">{{page}}</option>
+            }
           </select>
           <label for="pageSize">Page</label>
         </div>
@@ -104,7 +110,7 @@
     class="modal fade"
     id="uploadKnightsModal"
     [showModal]="showUploadKnightsModal"
-    (uploadKnightsChanges)="addKnights($event)"></upload-knights-modal>
+  (uploadKnightsChanges)="addKnights($event)"></upload-knights-modal>
   <create-knight-modal
     class="modal fade"
     id="createKnightModal"
@@ -116,20 +122,20 @@
     [knightActivityInterestsForNewKnight]="knightActivityInterestsForNewKnight"
     [memberDuesPaymentStatusFormOptions]="memberDuesPaymentStatusFormOptions"
     [memberDuesAmounts]="memberDuesAmounts"
-    (createKnightChanges)="addKnightToAllKnights($event)"></create-knight-modal>
+  (createKnightChanges)="addKnightToAllKnights($event)"></create-knight-modal>
   <edit-knight-personal-info-modal
     class="modal fade"
     id="editKnightPersonalInfoModal"
     [modalHeaderText]="editKnightPersonalInfoModalHeaderText"
     [countryFormOptions]="countryFormOptions"
-    (editKnightPersonalInfoChanges)="updateKnightPersonalInfoInList($event)"></edit-knight-personal-info-modal>
+  (editKnightPersonalInfoChanges)="updateKnightPersonalInfoInList($event)"></edit-knight-personal-info-modal>
   <edit-knight-activity-interests-modal
     class="modal fade"
     id="editKnightActivityInterestsModal"
     [modalHeaderText]="editKnightActivityInterestsModalHeaderText"
     [knightId]="knightId"
     [activityCategoryFormOptions]="activityCategoryFormOptions"
-    (editKnightActivityInterestsChanges)="updateKnightActivityInterestsInList($event)"></edit-knight-activity-interests-modal>
+  (editKnightActivityInterestsChanges)="updateKnightActivityInterestsInList($event)"></edit-knight-activity-interests-modal>
   <edit-knight-member-dues-modal
     class="modal fade"
     id="editKnightMemberDuesModal"
@@ -137,22 +143,22 @@
     [memberDuesAmounts]="memberDuesAmounts"
     [modalHeaderText]="editKnightMemberDuesModalHeaderText"
     [knightId]="knightId"
-    (editKnightMemberDuesChanges)="updateKnightMemberDuesInList($event)"></edit-knight-member-dues-modal>
+  (editKnightMemberDuesChanges)="updateKnightMemberDuesInList($event)"></edit-knight-member-dues-modal>
   <edit-knight-password-modal
     class="modal fade"
     id="editKnightPasswordModal"
     [modalHeaderText]="editKnightPasswordModalText"
     [knightsFullName]="knightFullName"
     [knightId]="knightId"
-    (editKnightPasswordChanges)="updateKnightUserInList($event)"></edit-knight-password-modal>
-  <edit-knight-member-info-modal 
-    class="modal fade" 
+  (editKnightPasswordChanges)="updateKnightUserInList($event)"></edit-knight-password-modal>
+  <edit-knight-member-info-modal
+    class="modal fade"
     id="editKnightMemberInfoModal"
     [knightId]="knightId"
     [modalHeaderText]="editKnightMemberInfoModalHeaderText"
     [knightDegreeFormOptions]="knightDegreeFormOptions"
     [knightMemberTypeFormOptions]="knightMemberTypeFormOptions"
     [knightMemberClassFormOptions]="knightMemberClassFormOptions"
-    (editKnightMemberInfoChanges)="updateKnightMemberInfoInList($event)"></edit-knight-member-info-modal>
+  (editKnightMemberInfoChanges)="updateKnightMemberInfoInList($event)"></edit-knight-member-info-modal>
   <div id="knightsSpacer"></div>
 </div>

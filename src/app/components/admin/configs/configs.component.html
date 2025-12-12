@@ -1,16 +1,22 @@
 <div class="container">
-  <div class="row" *ngIf="showSaveMessage && success">
-    <div class="col-12 alert alert-success" role="alert">
-      Successfully saved settings.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showSaveMessage = false;"></button>
+  @if (showSaveMessage && success) {
+    <div class="row">
+      <div class="col-12 alert alert-success" role="alert">
+        Successfully saved settings.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showSaveMessage = false;"></button>
+      </div>
     </div>
-  </div>
-  <div class="row" *ngIf="showSaveMessage && !success">
-    <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">
-      {{errorMessage}}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showSaveMessage = false;"></button>
+  }
+  @if (showSaveMessage && !success) {
+    <div class="row">
+      @for (errorMessage of errorMessages; track errorMessage) {
+        <div class="col-12 alert alert-danger" role="alert">
+          {{errorMessage}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="showSaveMessage = false;"></button>
+        </div>
+      }
     </div>
-  </div>
+  }
   <form [formGroup]="editConfigsForm" (ngSubmit)="onSubmitEditConfigSettings()">
     <div class="form-floating mb-3">
       <input type="text" class="form-control" formControlName="facebookUrl" id="facebookUrl" autocomplete="off" placeholder="https://facebook.com">
@@ -22,7 +28,9 @@
     </div>
     <div class="form-floating mb-3">
       <select class="form-select" id="councilTimeZone" formControlName="councilTimeZone">
-        <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{timeZone.displayName}}</option>
+        @for (timeZone of timeZones; track timeZone) {
+          <option [value]="timeZone.value">{{timeZone.displayName}}</option>
+        }
       </select>
       <label for="councilTimeZone">Council Time Zone</label>
     </div>
@@ -34,25 +42,27 @@
       <small id="emailHelp" class="form-text text-muted">Disabling results in all users being subscribed to all activities.</small>
     </div>
     <div formArrayName="externalLinksList">
-      <div *ngFor="let externalLink of editConfigsForm.controls.externalLinksList.controls; let i = index;">
-        <div class="form-group row mb-3" [formGroupName]="i">
-          <div class="form-floating mb-3 col-5">
-            <input type="text" class="form-control" formControlName="websiteName" id="websiteName-{{i}}" autocomplete="off" placeholder="Google">
-            <label for="websiteName">Website Name</label>
-          </div>
-          <div class="form-floating mb-3 col-5">
-            <input type="text" class="form-control" formControlName="url" id="url-{{i}}" autocomplete="off" placeholder="https://google.com">
-            <label for="websiteName">URL</label>
-          </div>
-          <div class="col-4 col-md-2">
-            <button type="button" class="btn btn-danger" (click)="deleteExternalLink(i)">
-              <svg class="bi" width="24" height="24" fill="currentColor">
-                <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
-              </svg>
-            </button>
+      @for (externalLink of editConfigsForm.controls.externalLinksList.controls; track externalLink; let i = $index) {
+        <div>
+          <div class="form-group row mb-3" [formGroupName]="i">
+            <div class="form-floating mb-3 col-5">
+              <input type="text" class="form-control" formControlName="websiteName" id="websiteName-{{i}}" autocomplete="off" placeholder="Google">
+              <label for="websiteName">Website Name</label>
+            </div>
+            <div class="form-floating mb-3 col-5">
+              <input type="text" class="form-control" formControlName="url" id="url-{{i}}" autocomplete="off" placeholder="https://google.com">
+              <label for="websiteName">URL</label>
+            </div>
+            <div class="col-4 col-md-2">
+              <button type="button" class="btn btn-danger" (click)="deleteExternalLink(i)">
+                <svg class="bi" width="24" height="24" fill="currentColor">
+                  <use xlink:href="assets/icons/bootstrap-icons/bootstrap-icons.svg#trash"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
     <div class="form-group mb-3">
       <button type="button" class="btn btn-primary btn-kofc-blue" (click)="addExternalLink()">Add External Link</button>
@@ -65,28 +75,28 @@
   </form>
   <!-- EDIT CONFIGS MODAL -->
   <!-- <div class="modal fade" id="editConfigsModal" tabindex="-1" aria-labelledby="editConfigsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
-          <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="container">
-            <div class="row" *ngIf="success">
-              <div class="col-12 alert alert-success">Successfully saved settings.</div>
-            </div>
-            <div class="row" *ngIf="!success">
-              <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{modalHeaderText}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row" *ngIf="success">
+            <div class="col-12 alert alert-success">Successfully saved settings.</div>
+          </div>
+          <div class="row" *ngIf="!success">
+            <div class="col-12 alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button id="closeChangeToActivity" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-         </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeChangeToActivity" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
-  </div> -->
-  <div id="configsSpacer"></div>
+  </div>
+</div> -->
+<div id="configsSpacer"></div>
 </div>

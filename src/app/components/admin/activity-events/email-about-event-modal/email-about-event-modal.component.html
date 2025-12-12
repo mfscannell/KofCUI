@@ -25,9 +25,13 @@
         </div>
         <div class="modal-footer">
           <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
+              </div>
+            }
           </div>
           <button id="saveActivityCategory" type="submit" class="btn btn-primary btn-kofc-blue">Send</button>
           <button id="cancelActivityCategoryChanges" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

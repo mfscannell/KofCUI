@@ -12,7 +12,9 @@
       <button type="submit" class="btn btn-primary btn-kofc-blue w-100">Sign in</button>
     </div>
     <div class="form-group mb-3">
-      <div class="alert alert-danger" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+      @for (errorMessage of errorMessages; track errorMessage) {
+        <div class="alert alert-danger">{{errorMessage}}</div>
+      }
     </div>
   </form>
   <div id="loginSpacer"></div>

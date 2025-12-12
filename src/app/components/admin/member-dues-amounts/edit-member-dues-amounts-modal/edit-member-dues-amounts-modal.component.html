@@ -8,28 +8,32 @@
       </div>
       <div class="modal-body">
 
-          <div class="form-floating mb-3" *ngIf="modalAction === 'Create'">
+        @if (modalAction === 'Create') {
+          <div class="form-floating mb-3">
             <input type="number" step="1" class="form-control" formControlName="year" id="year" autocomplete="off" placeholder="2025">
             <label for="year">Year</label>
           </div>
-          <div class="row mb-3" *ngIf="modalAction === 'Edit'">
+        }
+        @if (modalAction === 'Edit') {
+          <div class="row mb-3">
             <div class="col-12">
               Year: {{editMemberDuesAmountsForm.controls.year.value}}
             </div>
           </div>
-          <!-- PAYING -->
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="paying-currency">$</span>
-            <div class="form-floating">
-              <input 
-              type="text" 
-              currencyMask 
-              [preValue]="editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value" 
+        }
+        <!-- PAYING -->
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="paying-currency">$</span>
+          <div class="form-floating">
+            <input
+              type="text"
+              currencyMask
+              [preValue]="editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value"
               [control]="editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount"
-              class="form-control" 
-              formControlName="memberClassPayingDuesAmount" 
-              id="memberClassPayingDuesAmount" 
-              autocomplete="off" 
+              class="form-control"
+              formControlName="memberClassPayingDuesAmount"
+              id="memberClassPayingDuesAmount"
+              autocomplete="off"
               placeholder="35.00">
               <label for="memberClassPayingDuesAmount">Paying Members</label>
             </div>
@@ -38,29 +42,33 @@
           <div class="input-group mb-3">
             <span class="input-group-text" id="honorary-life-currency">$</span>
             <div class="form-floating">
-              <input 
-              type="text" 
-              currencyMask 
-              [preValue]="editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value" 
-              [control]="editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount"
-              class="form-control" 
-              formControlName="memberClassHonoraryLifeDuesAmount" 
-              id="memberClassHonoraryLifeDuesAmount" 
-              autocomplete="off" 
-              placeholder="0.00">
-              <label for="memberClassHonoraryLifeDuesAmount">Honorary Life</label>
+              <input
+                type="text"
+                currencyMask
+                [preValue]="editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value"
+                [control]="editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount"
+                class="form-control"
+                formControlName="memberClassHonoraryLifeDuesAmount"
+                id="memberClassHonoraryLifeDuesAmount"
+                autocomplete="off"
+                placeholder="0.00">
+                <label for="memberClassHonoraryLifeDuesAmount">Honorary Life</label>
+              </div>
             </div>
           </div>
-      </div>
-      <div class="modal-footer">
-        <div class="container">
-          <div class="row" *ngIf="errorSaving">
-            <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
+          <div class="modal-footer">
+            <div class="container">
+              @if (errorSaving) {
+                <div class="row">
+                  @for (errorMessage of errorMessages; track errorMessage) {
+                    <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                  }
+                </div>
+              }
+            </div>
+            <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
           </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelModal()">Cancel</button>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
+    </div>

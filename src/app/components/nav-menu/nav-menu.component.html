@@ -28,33 +28,41 @@
           Links
         </a>
         <ul class="dropdown-menu">
-          <li *ngFor="let extLink of externalLinks" class="nav-link-kofc-blue">
-            <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}" target="_blank">{{extLink.websiteName}}</a>
-          </li>
+          @for (extLink of externalLinks; track extLink.url) {
+            <li class="nav-link-kofc-blue">
+              <a class="dropdown-item nav-link-kofc-blue" href="{{extLink.url}}" target="_blank">{{extLink.websiteName}}</a>
+            </li>
+          }
         </ul>
       </li>
-      <li class="nav-item active d-none d-md-inline" *ngIf="(accountsService.currentUser | async) as user">
-        <a class="nav-link nav-link-kofc-white" routerLink="/admin" routerLinkActiver="active">Admin</a>
-      </li>
-      <li #accountDropDown class="nav-item dropdown d-none d-md-inline" *ngIf="(accountsService.currentUser | async) === null">
-        <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm1" role="button" data-bs-toggle="dropdown">Welcome</button>
-        <ul class="dropdown-menu">
-          <li class="nav-link">
-            <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToLogin();">Sign in</button>
-          </li>
-        </ul>
-      </li>
-      <li #accountLogOutDropDown class="nav-item active d-none d-md-inline" *ngIf="(accountsService.currentUser | async) as user">
-        <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm2" data-bs-toggle="dropdown">Welcome {{user.knight?.firstName | titlecase}}</button>
-        <ul class="dropdown-menu">
-          <li class="nav-link">
-            <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="logout();">Log out</button>
-          </li>
-          <li class="nav-link">
-            <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToAccountClick();">Sign in</button>
-          </li>
-        </ul>
-      </li>
+      @if ((accountsService.currentUser | async); as user) {
+        <li class="nav-item active d-none d-md-inline">
+          <a class="nav-link nav-link-kofc-white" routerLink="/admin" routerLinkActiver="active">Admin</a>
+        </li>
+      }
+      @if ((accountsService.currentUser | async) === null) {
+        <li #accountDropDown class="nav-item dropdown d-none d-md-inline">
+          <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm1" role="button" data-bs-toggle="dropdown">Welcome</button>
+          <ul class="dropdown-menu">
+            <li class="nav-link">
+              <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToLogin();">Sign in</button>
+            </li>
+          </ul>
+        </li>
+      }
+      @if ((accountsService.currentUser | async); as user) {
+        <li #accountLogOutDropDown class="nav-item active d-none d-md-inline">
+          <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm2" data-bs-toggle="dropdown">Welcome {{user.knight?.firstName | titlecase}}</button>
+          <ul class="dropdown-menu">
+            <li class="nav-link">
+              <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="logout();">Log out</button>
+            </li>
+            <li class="nav-link">
+              <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="navigateToAccountClick();">Sign in</button>
+            </li>
+          </ul>
+        </li>
+      }
     </ul>
   </div>
 </nav>
@@ -63,18 +71,28 @@
   <div class="offcanvas-header">
     <div class="container">
       <div class="row">
-        <h5 class="offcanvas-title nav-link-kofc-white" id="leftOffCanvasLabel" *ngIf="!(accountsService.currentUser | async)">Welcome</h5>
-        <h5 class="offcanvas-title nav-link-kofc-white" id="leftOffCanvasLabel" *ngIf="(accountsService.currentUser | async) as user">Welcome {{user.knight?.firstName}}</h5>
+        @if (!(accountsService.currentUser | async)) {
+          <h5 class="offcanvas-title nav-link-kofc-white" id="leftOffCanvasLabel">Welcome</h5>
+        }
+        @if ((accountsService.currentUser | async); as user) {
+          <h5 class="offcanvas-title nav-link-kofc-white" id="leftOffCanvasLabel">Welcome {{user.knight?.firstName}}</h5>
+        }
       </div>
-      <div class="row" *ngIf="!(accountsService.currentUser | async)">
-        <button type="button" class="btn btn-kofc-yellow" id="sideSignIn" role="button" (click)="toggleCollapseMenu(); navigateToLogin();">Sign In</button>
-      </div>
-      <div class="row mb-2" *ngIf="(accountsService.currentUser | async) as user">
-        <button type="button" class="btn btn-kofc-yellow" id="sideNavigateToAccount" role="button" (click)="toggleCollapseMenu(); navigateToAccountClick();">Account</button>
-      </div>
-      <div class="row" *ngIf="(accountsService.currentUser | async) as user">
-        <button type="button" class="btn btn-kofc-yellow" id="sideLogout" role="button" (click)="toggleCollapseMenu(); logout();">Log Out</button>
-      </div>
+      @if (!(accountsService.currentUser | async)) {
+        <div class="row">
+          <button type="button" class="btn btn-kofc-yellow" id="sideSignIn" role="button" (click)="toggleCollapseMenu(); navigateToLogin();">Sign In</button>
+        </div>
+      }
+      @if ((accountsService.currentUser | async); as user) {
+        <div class="row mb-2">
+          <button type="button" class="btn btn-kofc-yellow" id="sideNavigateToAccount" role="button" (click)="toggleCollapseMenu(); navigateToAccountClick();">Account</button>
+        </div>
+      }
+      @if ((accountsService.currentUser | async); as user) {
+        <div class="row">
+          <button type="button" class="btn btn-kofc-yellow" id="sideLogout" role="button" (click)="toggleCollapseMenu(); logout();">Log Out</button>
+        </div>
+      }
     </div>
   </div>
   <div class="offcanvas-body">

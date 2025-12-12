@@ -25,24 +25,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let activityEvent of activityEvents">
-            <td *ngIf="activityEvent.canceled">{{activityEvent.eventName}} (CANCELED)</td>
-            <td *ngIf="!activityEvent.canceled">{{activityEvent.eventName}}</td>
-            <td>{{ activityEvent.startDateTime | toDisplayDate }}</td>
-            <td>
-              <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#volunteerForEventModal" (click)="openVolunteerForActivityEventModal(activityEvent)">
-                Volunteer
-              </button>
-            </td>
-          </tr>
+          @for (activityEvent of activityEvents; track activityEvent) {
+            <tr>
+              @if (activityEvent.canceled) {
+                <td>{{activityEvent.eventName}} (CANCELED)</td>
+              }
+              @if (!activityEvent.canceled) {
+                <td>{{activityEvent.eventName}}</td>
+              }
+              <td>{{ activityEvent.startDateTime | toDisplayDate }}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-kofc-blue" data-bs-toggle="modal" data-bs-target="#volunteerForEventModal" (click)="openVolunteerForActivityEventModal(activityEvent)">
+                  Volunteer
+                </button>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
   </div>
   <volunteer-for-event-modal
-    class="modal fade" id="volunteerForEventModal" 
+    class="modal fade" id="volunteerForEventModal"
     [allKnights]="allKnights"
     [knightId]="knightId"
-    (editLeadershipRoleChanges)="updateActivityEventInList($event)"></volunteer-for-event-modal>
+  (editLeadershipRoleChanges)="updateActivityEventInList($event)"></volunteer-for-event-modal>
   <div id="activityEventSpacer"></div>
 </div>

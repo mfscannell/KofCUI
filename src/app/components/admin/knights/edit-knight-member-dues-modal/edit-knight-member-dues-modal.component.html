@@ -8,24 +8,32 @@
     <div class="modal-body">
       <form [formGroup]="editKnightMemberDuesForm" (ngSubmit)="onSubmitEditKnightMemberInfo()">
         <div formArrayName="memberDues">
-          <div *ngFor="let memberDue of editKnightMemberDuesForm.controls.memberDues.controls; let i = index;">
-            <div class="form-floating mb-3" [formGroup]="memberDue">
-              <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
-                <option *ngFor="let memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions" [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
-              </select>
-              <label for="stateCode">{{memberDue.controls.year.value}}</label>
+          @for (memberDue of editKnightMemberDuesForm.controls.memberDues.controls; track memberDue; let i = $index) {
+            <div>
+              <div class="form-floating mb-3" [formGroup]="memberDue">
+                <select class="form-select" id="'paidStatus_'+{{i}}" formControlName="paidStatus">
+                  @for (memberDuesPaymentStatusInputOption of memberDuesPaymentStatusFormOptions; track memberDuesPaymentStatusInputOption) {
+                    <option [value]="memberDuesPaymentStatusInputOption.value">{{memberDuesPaymentStatusInputOption.displayName}}</option>
+                  }
+                </select>
+                <label for="stateCode">{{memberDue.controls.year.value}}</label>
+              </div>
             </div>
-          </div>
+          }
         </div>
         <div class="modal-footer">
           <div class="container">
-            <div class="row" *ngIf="errorSaving">
-              <div class="col-12 alert alert-danger" role="alert" *ngFor="let errorMessage of errorMessages">{{errorMessage}}</div>
-            </div>
+            @if (errorSaving) {
+              <div class="row">
+                @for (errorMessage of errorMessages; track errorMessage) {
+                  <div class="col-12 alert alert-danger" role="alert">{{errorMessage}}</div>
+                }
+              </div>
+            }
           </div>
           <button type="submit" class="btn btn-primary btn-kofc-blue">Save</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </div>
+        </div>
       </form>
     </div>
   </div>
