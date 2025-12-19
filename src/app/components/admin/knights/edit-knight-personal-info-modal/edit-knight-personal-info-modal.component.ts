@@ -80,7 +80,6 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
       emailAddress: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
       cellPhoneNumber: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(31)] }),
       homeAddress: new FormGroup<EditAddressFormGroup>({
-        id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
         addressName: new FormControl<string>('', { nonNullable: true }),
         address1: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
         address2: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
@@ -149,7 +148,6 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
     console.log('mapFormToKnightPersonalInfo');
     console.log(rawForm);
     const homeAddress: StreetAddress = {
-      id: rawForm.homeAddress.id,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,
