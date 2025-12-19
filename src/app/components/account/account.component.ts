@@ -220,7 +220,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   private mapEditKnightFormToKnight(): UpdateKnightPersonalInfoRequest {
     const rawForm = this.editKnightPersonalInfoForm.getRawValue();
     const homeAddress: StreetAddress = {
-      id: rawForm.homeAddress.id,
       addressName: rawForm.homeAddress.addressName,
       address1: rawForm.homeAddress.address1,
       address2: rawForm.homeAddress.address2,

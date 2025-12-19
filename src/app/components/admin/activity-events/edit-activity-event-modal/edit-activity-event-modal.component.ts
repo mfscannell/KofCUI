@@ -222,7 +222,6 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
       endDateTime:
         DateTimeFormatter.DateAndTimeToIso8601DateTime(this.editActivityEventForm.controls.startDate.value, this.editActivityEventForm.controls.endTime.value) || '1999-01-01T00:00',
       locationAddress: {
-        id: this.editActivityEventForm.controls.locationAddress.controls.id.value,
         addressName: this.editActivityEventForm.controls.locationAddress.controls.addressName.value,
         address1: this.editActivityEventForm.controls.locationAddress.controls.address1.value,
         address2: this.editActivityEventForm.controls.locationAddress.controls.address2.value,
@@ -313,7 +312,6 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
       endDate: new FormControl<string>('', { nonNullable: true }),
       endTime: new FormControl<string>('', { nonNullable: true }),
       locationAddress: new FormGroup<EditAddressFormGroup>({
-        id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
         addressName: new FormControl<string>('', { nonNullable: true }),
         address1: new FormControl<string>('', { nonNullable: true }),
         address2: new FormControl<string>('', { nonNullable: true }),

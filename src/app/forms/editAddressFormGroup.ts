@@ -1,7 +1,6 @@
 import { FormControl } from "@angular/forms";
 
 export interface EditAddressFormGroup {
-  id: FormControl<string>;
   addressName: FormControl<string>;
   address1: FormControl<string>;
   address2: FormControl<string>;
