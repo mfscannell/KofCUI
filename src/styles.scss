@@ -2,70 +2,64 @@
 
 /* Importing Bootstrap SCSS file. */
 @use 'bootstrap/scss/bootstrap';
+@use 'variables';
 
+/* Accordions */
 .accordion-button:not(.collapsed) {
-  color: #000000;
-  background-color: #fbda8a !important;
+  color: black;
+  background-color: variables.$knight-yellow-accordion-expanded !important;
 }
 
 /* Buttons */
 .btn-kofc-blue {
-  background-color: #112866;
-  border-color: #112866;
+  background-color: variables.$knight-blue;
+  border-color: variables.$knight-blue;
   color: white;
 }
 
 .btn-kofc-blue:disabled
 .btn-kofc-blue[disabled] {
-  background-color: #112866;
-  border-color: #112866;
+  background-color: variables.$knight-blue;
+  border-color: variables.$knight-blue;
   color: white;
 }
 
 .btn-kofc-blue:hover {
-  background-color: #142f77;
-  border-color: #142f77;
+  background-color: variables.$knight-blue-hover;
+  border-color: variables.$knight-blue-hover;
   color: #dddddd;
 }
 
 .btn-kofc-blue:focus {
-  background-color: #112866;
-  border-color: #112866;
+  background-color: variables.$knight-blue;
+  border-color: variables.$knight-blue;
   color: white;
 }
 
 .btn-kofc-yellow {
-  background-color: #f7b718;
-  border-color: #f7b718;
-  color: #112866;
+  background-color: variables.$knight-yellow;
+  border-color: variables.$knight-yellow;
+  color: variables.$knight-blue;
 }
 
 .btn-kofc-yellow:hover {
-  background-color: #f8bf31;
-  border-color: #f8bf31;
+  background-color: variables.$knight-yellow-hover;
+  border-color: variables.$knight-yellow-hover;
   color: #0d1f50;
 }
 
 .btn-link-kofc-blue {
-  color: rgb(17, 40, 102) !important;
-}
-
-.nav-item-kofc-blue {
-  color: #112866;
-}
-
-.nav-item-kofc-blue:active {
-  color: #495057;
+  color: variables.$knight-blue !important;
 }
 
 /* Navigation Links */
 .nav-link-kofc-blue {
-  color: #112866;
+  color: variables.$knight-blue;
 }
 
 .nav-link-kofc-blue:hover {
-  background-color: #112866;
-  color: rgb(255, 255, 255) !important;
+  background-color: variables.$knight-blue;
+  color: white !important;
 }
 
 .nav-link-kofc-white {
@@ -73,7 +67,7 @@
 }
 
 .nav-link-kofc-white:hover {
-  color: #dddddd;
+  color: variables.$white-hover;
 }
 
 .nav-link-kofc-white:focus {
@@ -82,13 +76,13 @@
 
 /* Page Links */
 .page-link {
-  color: #112866;
+  color: variables.$knight-blue;
 }
 
 .page-item.active .page-link {
   color: white;
-  background-color: #112866;
-  border-color: #112866;
+  background-color: variables.$knight-blue;
+  border-color: variables.$knight-blue;
 }
 
 .text-area-height-200 {
@@ -106,15 +100,15 @@
 }
 
 input.ng-touched.ng-invalid {
-  border-color: #dc3545;
+  border-color: variables.$knight-red-error;
 }
 
 select.ng-touched.ng-invalid {
-  border-color: #dc3545;
+  border-color: variables.$knight-red-error;
 }
 
 small.kofc-error-text {
-  color: #dc3545;
+  color: variables.$knight-red-error;
 }
 
 small.kofc-error-spacer {
@@ -124,7 +118,7 @@ small.kofc-error-spacer {
 }
 
 .kofc-error-message {
-  color: #dc3545;
+  color: variables.$knight-red-error;
   height: 19px;
   width: 100%;
   display: block;
