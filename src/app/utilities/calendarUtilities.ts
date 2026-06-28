@@ -1,6 +1,6 @@
-import { Day } from 'src/app/models/calendar/day';
-import { Month } from 'src/app/models/calendar/month';
-import { Week } from 'src/app/models/calendar/week';
+import { Day } from '@app/models/calendar/day';
+import { Month } from '@app/models/calendar/month';
+import { Week } from '@app/models/calendar/week';
 import { DateTimeFormatter } from './dateTimeFormatter';
 
 export class CalendarUtilities {

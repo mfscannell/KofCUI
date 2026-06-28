@@ -2,14 +2,14 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Activity } from 'src/app/models/activity';
+import { Activity } from '@app/models/activity';
 import { SendEmailRequest } from '../models/requests/sendEmailRequest';
 import { SendEmailResponse } from '../models/responses/sendEmailResponse';
 import { CreateActivityRequest } from '../models/requests/createActivityRequest';
 import { UpdateActivityRequest } from '../models/requests/updateActivityRequest';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root',

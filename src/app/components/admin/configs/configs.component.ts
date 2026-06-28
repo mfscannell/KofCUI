@@ -1,21 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
-import { ConfigsService } from 'src/app/services/configs.service';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { FormsService } from 'src/app/services/forms.service';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { TenantConfig } from 'src/app/models/tenantConfig';
-import { ExternalLink } from 'src/app/models/externalLink';
-import { ConfigsFormGroup } from 'src/app/forms/configsFormGroup';
-import { ExternalLinksFormGroup } from 'src/app/forms/externalLinksFormGroup';
+import { ConfigsService } from '@app/services/configs.service';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { FormsService } from '@app/services/forms.service';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { TenantConfig } from '@app/models/tenantConfig';
+import { ExternalLink } from '@app/models/externalLink';
+import { ConfigsFormGroup } from '@app/forms/configsFormGroup';
+import { ExternalLinksFormGroup } from '@app/forms/externalLinksFormGroup';
 
 @Component({
-    selector: 'kofc-configs',
-    templateUrl: './configs.component.html',
-    styleUrls: ['./configs.component.scss'],
-    standalone: false
+  selector: 'kofc-configs',
+  templateUrl: './configs.component.html',
+  styleUrls: ['./configs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllConfigsSubscription?: Subscription;
@@ -49,7 +50,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       twitterUrl: new FormControl<string>('', { nonNullable: true }),
       councilTimeZone: new FormControl<string>('', { nonNullable: true }),
       allowChangeActivitySubscription: new FormControl<boolean>(false, { nonNullable: true }),
-      externalLinksList: new FormArray<FormGroup<ExternalLinksFormGroup>>([])
+      externalLinksList: new FormArray<FormGroup<ExternalLinksFormGroup>>([]),
     });
   }
 
@@ -93,17 +94,17 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       facebookUrl: this.tenantConfigs.facebookUrl,
       twitterUrl: this.tenantConfigs.twitterUrl,
       councilTimeZone: this.tenantConfigs.councilTimeZone,
-      allowChangeActivitySubscription: this.tenantConfigs.allowChangeActivitySubscription
+      allowChangeActivitySubscription: this.tenantConfigs.allowChangeActivitySubscription,
     });
 
     this.tenantConfigs.externalLinks.forEach((externalLink) => {
       const externalLinkFormGroup = new FormGroup<ExternalLinksFormGroup>({
-        websiteName: new FormControl<string>(externalLink.websiteName, { nonNullable: true}),
-        url: new FormControl<string>(externalLink.url, { nonNullable: true}),
+        websiteName: new FormControl<string>(externalLink.websiteName, { nonNullable: true }),
+        url: new FormControl<string>(externalLink.url, { nonNullable: true }),
       });
 
       this.editConfigsForm.controls.externalLinksList.push(externalLinkFormGroup);
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -136,9 +137,9 @@ export class ConfigsComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
   }
 
@@ -170,12 +171,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   mapFormToConfigSettings(): TenantConfig {
     const rawForm = this.editConfigsForm.getRawValue();
 
-    const externalLinks = rawForm?.externalLinksList.map(function (
-      externalLinkForm: ExternalLink
-    ) {
+    const externalLinks = rawForm?.externalLinksList.map(function (externalLinkForm: ExternalLink) {
       const externalLink: ExternalLink = {
         websiteName: externalLinkForm.websiteName,
-        url: externalLinkForm.url
+        url: externalLinkForm.url,
       };
       return externalLink;
     });
@@ -186,7 +185,7 @@ export class ConfigsComponent implements OnInit, OnDestroy {
       twitterUrl: rawForm.twitterUrl,
       councilTimeZone: rawForm.councilTimeZone,
       allowChangeActivitySubscription: rawForm.allowChangeActivitySubscription,
-      externalLinks: externalLinks
+      externalLinks: externalLinks,
     };
 
     console.log(configSettings);

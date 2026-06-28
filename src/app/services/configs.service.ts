@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { TenantConfig } from '../models/tenantConfig';
 import { WebsiteContent } from '../models/websiteContent';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 

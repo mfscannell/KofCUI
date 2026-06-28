@@ -1,19 +1,30 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditMemberDuesAmountsFormGroup } from 'src/app/forms/editMemberDuesAmountsFormGroup';
-import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
-import { CreateMemberDuesAmountsRequest } from 'src/app/models/requests/createMemberDuesAmountsRequest';
-import { UpdateMemberDuesAmountsRequest } from 'src/app/models/requests/updateMemberDuesAmountsRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.service';
-import { ModalActionType } from 'src/app/types/modal-action.type';
+import { EditMemberDuesAmountsFormGroup } from '@app/forms/editMemberDuesAmountsFormGroup';
+import { MemberDuesAmounts } from '@app/models/memberDuesAmounts';
+import { CreateMemberDuesAmountsRequest } from '@app/models/requests/createMemberDuesAmountsRequest';
+import { UpdateMemberDuesAmountsRequest } from '@app/models/requests/updateMemberDuesAmountsRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { MemberDuesAmountsService } from '@app/services/memberDuesAmounts.service';
+import { ModalActionType } from '@app/types/modal-action.type';
 
 @Component({
   selector: 'edit-member-dues-amounts-modal',
   templateUrl: './edit-member-dues-amounts-modal.component.html',
   styleUrls: ['./edit-member-dues-amounts-modal.component.scss'],
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
   @ViewChild('cancelEditMemberDuesModal', { static: false }) cancelEditMemberDuesModal: ElementRef | undefined;
@@ -21,7 +32,7 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
   @Input() modalAction: ModalActionType = 'Create';
   @Output() createMemberDuesAmountsChanges = new EventEmitter<MemberDuesAmounts>();
   @Output() editMemberDuesAmountsChanges = new EventEmitter<MemberDuesAmounts>();
-  
+
   public editMemberDuesAmountsForm: FormGroup<EditMemberDuesAmountsFormGroup>;
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
@@ -33,8 +44,7 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
     this.editMemberDuesAmountsForm = this.initForm();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnDestroy(): void {
     if (this.createMemberDuesAmountsSubscription) {
@@ -64,7 +74,7 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
   }
 
   public onSubmitEditMemberDuesAmounts() {
-    if(!this.editMemberDuesAmountsForm.valid) {
+    if (!this.editMemberDuesAmountsForm.valid) {
       return;
     }
 
@@ -80,67 +90,80 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
   private initForm(): FormGroup<EditMemberDuesAmountsFormGroup> {
     const thisYear = new Date().getFullYear();
     return new FormGroup<EditMemberDuesAmountsFormGroup>({
-      year: new FormControl<number>(thisYear, { nonNullable: true}),
-      memberClassPayingDuesAmount: new FormControl<string>('0.00', { nonNullable: true}),
-      memberClassHonoraryLifeDuesAmount: new FormControl<string>('0.00', { nonNullable: true})
+      year: new FormControl<number>(thisYear, { nonNullable: true }),
+      memberClassPayingDuesAmount: new FormControl<string>('0.00', { nonNullable: true }),
+      memberClassHonoraryLifeDuesAmount: new FormControl<string>('0.00', { nonNullable: true }),
     });
   }
 
   private patchForm(memberDuesAmounts: MemberDuesAmounts) {
     const payingCents = memberDuesAmounts.memberClassPayingDuesAmount * 100;
-    const honoraryLifeCents = memberDuesAmounts.memberClassHonoraryLifeDuesAmount * 100
+    const honoraryLifeCents = memberDuesAmounts.memberClassHonoraryLifeDuesAmount * 100;
 
-    this.editMemberDuesAmountsForm.patchValue({
-      year: memberDuesAmounts.year,
-      memberClassPayingDuesAmount: payingCents.toString(),
-      memberClassHonoraryLifeDuesAmount: honoraryLifeCents.toString()
-    }, {
-      emitEvent: true
-    });
+    this.editMemberDuesAmountsForm.patchValue(
+      {
+        year: memberDuesAmounts.year,
+        memberClassPayingDuesAmount: payingCents.toString(),
+        memberClassHonoraryLifeDuesAmount: honoraryLifeCents.toString(),
+      },
+      {
+        emitEvent: true,
+      },
+    );
   }
 
   private mapFormToCreateMemberDuesAmountsRequest(): CreateMemberDuesAmountsRequest {
     const request: CreateMemberDuesAmountsRequest = {
       year: this.editMemberDuesAmountsForm.controls.year.value,
-      memberClassHonoraryLifeDuesAmount: Number(this.editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value),
-      memberClassPayingDuesAmount: Number(this.editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value)
+      memberClassHonoraryLifeDuesAmount: Number(
+        this.editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value,
+      ),
+      memberClassPayingDuesAmount: Number(this.editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value),
     } as CreateMemberDuesAmountsRequest;
 
     console.log(request);
 
-    return request
+    return request;
   }
 
   private mapFormToUpdateMemberDuesAmountsRequest(): UpdateMemberDuesAmountsRequest {
     const request: UpdateMemberDuesAmountsRequest = {
       year: this.editMemberDuesAmountsForm.controls.year.value,
-      memberClassHonoraryLifeDuesAmount: Number(this.editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value),
-      memberClassPayingDuesAmount: Number(this.editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value)
+      memberClassHonoraryLifeDuesAmount: Number(
+        this.editMemberDuesAmountsForm.controls.memberClassHonoraryLifeDuesAmount.value,
+      ),
+      memberClassPayingDuesAmount: Number(this.editMemberDuesAmountsForm.controls.memberClassPayingDuesAmount.value),
     } as UpdateMemberDuesAmountsRequest;
 
     console.log(request);
 
-    return request
+    return request;
   }
 
   private updateMemberDuesAmounts(request: UpdateMemberDuesAmountsRequest) {
     const activityObserver = {
-      next: (updatedMemberDuesAmounts: MemberDuesAmounts) => this.passBackUpdatedMemberDuesAmounts(updatedMemberDuesAmounts),
+      next: (updatedMemberDuesAmounts: MemberDuesAmounts) =>
+        this.passBackUpdatedMemberDuesAmounts(updatedMemberDuesAmounts),
       error: (err: ApiResponseError) => this.logError('Error updating member dues amounts', err),
       complete: () => console.log('Member dues amounts updated.'),
     };
 
-    this.updateMemberDuesAmountsSubscription = this.memberDuesAmountsService.updateMemberDuesAmounts(request).subscribe(activityObserver);
+    this.updateMemberDuesAmountsSubscription = this.memberDuesAmountsService
+      .updateMemberDuesAmounts(request)
+      .subscribe(activityObserver);
   }
 
   private createMemberDuesAmounts(request: CreateMemberDuesAmountsRequest) {
     const activityObserver = {
-      next: (createdMemberDuesAmounts: MemberDuesAmounts) => this.passBackCreatedMemberDuesAmounts(createdMemberDuesAmounts),
+      next: (createdMemberDuesAmounts: MemberDuesAmounts) =>
+        this.passBackCreatedMemberDuesAmounts(createdMemberDuesAmounts),
       error: (err: ApiResponseError) => this.logError('Error creating member dues amounts', err),
       complete: () => console.log('Member dues amounts created.'),
     };
 
-    this.createMemberDuesAmountsSubscription = this.memberDuesAmountsService.createMemberDuesAmounts(request).subscribe(activityObserver);
+    this.createMemberDuesAmountsSubscription = this.memberDuesAmountsService
+      .createMemberDuesAmounts(request)
+      .subscribe(activityObserver);
   }
 
   private passBackUpdatedMemberDuesAmounts(updatedMemberDuesAmounts: MemberDuesAmounts) {
@@ -172,9 +195,9 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

@@ -10,13 +10,13 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { ActivityCategoriesComponent } from 'src/app/components/admin/activity-categories/activity-categories.component';
-import { NavMenuComponent } from 'src/app/components/nav-menu/nav-menu.component';
+import { ActivityCategoriesComponent } from '@app/components/admin/activity-categories/activity-categories.component';
+import { NavMenuComponent } from '@app/components/nav-menu/nav-menu.component';
 
-import { AdminComponent } from 'src/app/components/admin/admin.component';
-import { KnightsComponent } from 'src/app/components/admin/knights/knights.component';
-import { UploadKnightsModalComponent } from 'src/app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
-import { HomePageComponent } from 'src/app/components/home-page/home-page.component';
+import { AdminComponent } from '@app/components/admin/admin.component';
+import { KnightsComponent } from '@app/components/admin/knights/knights.component';
+import { UploadKnightsModalComponent } from '@app/components/admin/knights/upload-knights-modal/upload-knights-modal.component';
+import { HomePageComponent } from '@app/components/home-page/home-page.component';
 import { LeadershipRolesComponent } from './components/admin/leadership-roles/leadership-roles.component';
 import { ActivityEventsComponent } from './components/admin/activity-events/activity-events.component';
 import { OurCouncilComponent } from './components/our-council/our-council.component';
@@ -66,7 +66,7 @@ import { MemberDuesAmountsGuard } from './guards/memberDuesAmounts.guard';
 import { EditMemberDuesAmountsModalComponent } from './components/admin/member-dues-amounts/edit-member-dues-amounts-modal/edit-member-dues-amounts-modal.component';
 import { CanModifyMemberDuesAmountsPipe } from './pipes/canModifyMemberDuesAmounts.pipe';
 import { CurrencyMaskDirective } from './directives/currency-mask.directive';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -113,7 +113,7 @@ import { provideHttpClient } from '@angular/common/http';
     CanModifyMemberDuesAmountsPipe,
     IsEndDateAfterStartDatePipe,
     FilterAdministrativeDivisionsPipe,
-    MeetsPasswordRequrementsPipe
+    MeetsPasswordRequrementsPipe,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -136,7 +136,12 @@ import { provideHttpClient } from '@angular/common/http';
         canActivate: [ActivitiesGuard],
       },
       { path: 'admin/knights', component: KnightsComponent, pathMatch: 'full', canActivate: [KnightsGuard] },
-      { path: 'admin/memberDuesAmounts', component: MemberDuesAmountsComponent, pathMatch: 'full', canActivate: [MemberDuesAmountsGuard] },
+      {
+        path: 'admin/memberDuesAmounts',
+        component: MemberDuesAmountsComponent,
+        pathMatch: 'full',
+        canActivate: [MemberDuesAmountsGuard],
+      },
       {
         path: 'admin/leadershipRoles',
         component: LeadershipRolesComponent,
@@ -162,8 +167,6 @@ import { provideHttpClient } from '@angular/common/http';
     //NgbModule,
     ReactiveFormsModule,
   ],
-  providers: [
-    provideHttpClient(),
-  ],
+  providers: [provideHttpClient(withXhr())],
 })
 export class AppModule {}

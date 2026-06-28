@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { MemberDues } from '../models/memberDues';
 import { UpdateKnightMemberDuesRequest } from '../models/requests/updateKnightMemberDuesRequest';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 

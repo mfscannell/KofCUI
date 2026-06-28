@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { EncodedFile } from '../models/encodedFile';
 import { DeleteHomePageCarouselImageResponse } from '../models/responses/deleteHomePageCarouselImageResponse';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 

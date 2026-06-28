@@ -1,17 +1,18 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ExternalLink } from 'src/app/models/externalLink';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { WebsiteContent } from 'src/app/models/websiteContent';
-import { AccountsService } from 'src/app/services/accounts.service';
-import { ConfigsService } from 'src/app/services/configs.service';
+import { ExternalLink } from '@app/models/externalLink';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { WebsiteContent } from '@app/models/websiteContent';
+import { AccountsService } from '@app/services/accounts.service';
+import { ConfigsService } from '@app/services/configs.service';
 
 @Component({
-    selector: 'nav-menu',
-    templateUrl: './nav-menu.component.html',
-    styleUrls: ['./nav-menu.component.scss'],
-    standalone: false
+  selector: 'nav-menu',
+  templateUrl: './nav-menu.component.html',
+  styleUrls: ['./nav-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
   @ViewChild('menuCollapseButton', { static: false }) menuCollapseButton: ElementRef | undefined;
@@ -63,7 +64,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private getWebsiteContent() {
     console.log('nav menu getWebsiteContent');
     const observer = {
-      next: (websiteContent: WebsiteContent) => { 
+      next: (websiteContent: WebsiteContent) => {
         console.log(websiteContent);
         this.externalLinks = websiteContent.externalLinks;
       },
@@ -87,9 +88,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
   }
 }

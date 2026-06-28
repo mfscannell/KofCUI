@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { forkJoin, Subscription } from 'rxjs';
 
-import { Knight } from 'src/app/models/knight';
-import { KnightsService } from 'src/app/services/knights.service';
-import { KnightUser } from 'src/app/models/knightUser';
-import { ActivityInterest } from 'src/app/models/activityInterest';
-import { MemberDues } from 'src/app/models/memberDues';
-import { KnightInfo } from 'src/app/models/knightInfo';
-import { FormsService } from 'src/app/services/forms.service';
-import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { Knight } from '@app/models/knight';
+import { KnightsService } from '@app/services/knights.service';
+import { KnightUser } from '@app/models/knightUser';
+import { ActivityInterest } from '@app/models/activityInterest';
+import { MemberDues } from '@app/models/memberDues';
+import { KnightInfo } from '@app/models/knightInfo';
+import { FormsService } from '@app/services/forms.service';
+import { CountryFormOption } from '@app/models/inputOptions/countryFormOption';
+import { KnightActivityInterestsService } from '@app/services/knightActivityInterests.service';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
 import { CreateKnightModalComponent } from './create-knight-modal/create-knight-modal.component';
 import { EditKnightPasswordModalComponent } from './edit-knight-password-modal/edit-knight-password-modal.component';
 import { EditKnightMemberDuesModalComponent } from './edit-knight-member-dues-modal/edit-knight-member-dues-modal.component';
@@ -20,27 +20,36 @@ import { EditKnightMemberInfoModalComponent } from './edit-knight-member-info-mo
 import { EditKnightActivityInterestsModalComponent } from './edit-knight-activity-interests-modal/edit-knight-activity-interests-modal.component';
 import { EditKnightPersonalInfoModalComponent } from './edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { SearchKnightsFormGroup } from 'src/app/forms/searchKnightsFormGroup';
-import { SearchDegreeFormGroup } from 'src/app/forms/searchDegreesFormGroup';
-import { KnightDegree } from 'src/app/types/knight-degree.type';
-import { PaginationResponse } from 'src/app/models/responses/paginationResponse';
-import { FilterKnightRequest } from 'src/app/models/requests/filterKnightRequest';
-import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.service';
-import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
+import { SearchKnightsFormGroup } from '@app/forms/searchKnightsFormGroup';
+import { SearchDegreeFormGroup } from '@app/forms/searchDegreesFormGroup';
+import { KnightDegree } from '@app/types/knight-degree.type';
+import { PaginationResponse } from '@app/models/responses/paginationResponse';
+import { FilterKnightRequest } from '@app/models/requests/filterKnightRequest';
+import { MemberDuesAmountsService } from '@app/services/memberDuesAmounts.service';
+import { MemberDuesAmounts } from '@app/models/memberDuesAmounts';
 
 @Component({
-    selector: 'knights',
-    templateUrl: './knights.component.html',
-    styleUrls: ['./knights.component.scss'],
-    standalone: false
+  selector: 'knights',
+  templateUrl: './knights.component.html',
+  styleUrls: ['./knights.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class KnightsComponent implements OnInit, OnDestroy {
   @ViewChild(CreateKnightModalComponent) createKnightModal: CreateKnightModalComponent | undefined;
   @ViewChild(EditKnightPasswordModalComponent) editKnightPasswordModal: EditKnightPasswordModalComponent | undefined;
-  @ViewChild(EditKnightMemberDuesModalComponent) editKnightMemberDuesModal: EditKnightMemberDuesModalComponent | undefined;
-  @ViewChild(EditKnightMemberInfoModalComponent) editKnightMemberInfoModal: EditKnightMemberInfoModalComponent | undefined;
-  @ViewChild(EditKnightActivityInterestsModalComponent) editKnightActivityInterestsModal: EditKnightActivityInterestsModalComponent | undefined;
-  @ViewChild(EditKnightPersonalInfoModalComponent) editKnightPersonalInfoModal: EditKnightPersonalInfoModalComponent | undefined;
+  @ViewChild(EditKnightMemberDuesModalComponent) editKnightMemberDuesModal:
+    | EditKnightMemberDuesModalComponent
+    | undefined;
+  @ViewChild(EditKnightMemberInfoModalComponent) editKnightMemberInfoModal:
+    | EditKnightMemberInfoModalComponent
+    | undefined;
+  @ViewChild(EditKnightActivityInterestsModalComponent) editKnightActivityInterestsModal:
+    | EditKnightActivityInterestsModalComponent
+    | undefined;
+  @ViewChild(EditKnightPersonalInfoModalComponent) editKnightPersonalInfoModal:
+    | EditKnightPersonalInfoModalComponent
+    | undefined;
   allKnights: Knight[] = [];
   displayedKnights: Knight[] = [];
   displayedKnightsCount: number = 0;
@@ -129,7 +138,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
     this.getKnights();
   }
 
-  private initSearchKnightsForm() : FormGroup<SearchKnightsFormGroup> {
+  private initSearchKnightsForm(): FormGroup<SearchKnightsFormGroup> {
     return new FormGroup<SearchKnightsFormGroup>({
       nameSearch: new FormControl<string>('', { nonNullable: true, validators: [] }),
       page: new FormControl<number>(this.pages[0], { nonNullable: true, validators: [] }),
@@ -137,21 +146,21 @@ export class KnightsComponent implements OnInit, OnDestroy {
       searchDegrees: new FormArray<FormGroup<SearchDegreeFormGroup>>([
         new FormGroup<SearchDegreeFormGroup>({
           degree: new FormControl<KnightDegree>('First', { nonNullable: true, validators: [] }),
-          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] }),
         }),
         new FormGroup<SearchDegreeFormGroup>({
           degree: new FormControl<KnightDegree>('Second', { nonNullable: true, validators: [] }),
-          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] }),
         }),
         new FormGroup<SearchDegreeFormGroup>({
-          degree: new FormControl<KnightDegree>('Third', {nonNullable: true, validators: [] }),
-          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
+          degree: new FormControl<KnightDegree>('Third', { nonNullable: true, validators: [] }),
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] }),
         }),
         new FormGroup<SearchDegreeFormGroup>({
-          degree: new FormControl<KnightDegree>('Fourth', {nonNullable: true, validators: [] }),
-          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] })
-        })
-      ])
+          degree: new FormControl<KnightDegree>('Fourth', { nonNullable: true, validators: [] }),
+          selected: new FormControl<boolean>(true, { nonNullable: true, validators: [] }),
+        }),
+      ]),
     });
   }
 
@@ -197,7 +206,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
       this.formsService.getCountryFormOptions(),
       this.formsService.getMemberDuesPaymentStatusFormOptions(),
       this.knightActivityInterestsService.getAllIKnightActivityInterestsForNewKnight(),
-      this.memberDuesAmountsService.getMemberDuesAmounts()
+      this.memberDuesAmountsService.getMemberDuesAmounts(),
     ]).subscribe(formsObserver);
   }
 
@@ -247,7 +256,8 @@ export class KnightsComponent implements OnInit, OnDestroy {
   private getKnights() {
     const filterSearch = this.mapForm();
     const getKnightsObserver = {
-      next: (knightsResponse: PaginationResponse<Knight[]>) => this.handleGetKnightsResponse(knightsResponse, filterSearch),
+      next: (knightsResponse: PaginationResponse<Knight[]>) =>
+        this.handleGetKnightsResponse(knightsResponse, filterSearch),
       error: (err: ApiResponseError) => this.logError('Error getting Knight Degree Form Options', err),
       complete: () => console.log('Knight Degree Form Options retrieved.'),
     };
@@ -275,8 +285,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
   private mapForm(): FilterKnightRequest {
     const rawForm = this.searchKnightsForm.getRawValue();
 
-    const filterRequest = {
-    } as FilterKnightRequest;
+    const filterRequest = {} as FilterKnightRequest;
 
     if (rawForm.nameSearch) {
       filterRequest.nameSearch = rawForm.nameSearch;
@@ -290,7 +299,7 @@ export class KnightsComponent implements OnInit, OnDestroy {
 
       if (checked) {
         if (searchDegrees) {
-          searchDegrees = searchDegrees + `;${degree}`
+          searchDegrees = searchDegrees + `;${degree}`;
         } else {
           searchDegrees = degree;
         }
@@ -301,7 +310,8 @@ export class KnightsComponent implements OnInit, OnDestroy {
       filterRequest.searchDegrees = searchDegrees;
     }
 
-    filterRequest.skip = (this.searchKnightsForm.controls.page.value - 1) * this.searchKnightsForm.controls.pageSize.value;
+    filterRequest.skip =
+      (this.searchKnightsForm.controls.page.value - 1) * this.searchKnightsForm.controls.pageSize.value;
     filterRequest.take = this.searchKnightsForm.controls.pageSize.value;
 
     console.log(filterRequest);

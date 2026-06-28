@@ -8,25 +8,27 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditAddressFormGroup } from 'src/app/forms/editAddressFormGroup';
-import { EditKnightPersonalInfoFormGroup } from 'src/app/forms/editKnightPersonalInfoFormGroup';
-import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { Knight } from 'src/app/models/knight';
-import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { StreetAddress } from 'src/app/models/streetAddress';
-import { KnightsService } from 'src/app/services/knights.service';
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { EditAddressFormGroup } from '@app/forms/editAddressFormGroup';
+import { EditKnightPersonalInfoFormGroup } from '@app/forms/editKnightPersonalInfoFormGroup';
+import { CountryFormOption } from '@app/models/inputOptions/countryFormOption';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { Knight } from '@app/models/knight';
+import { UpdateKnightPersonalInfoRequest } from '@app/models/requests/updateKnightPersonalInfoRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { StreetAddress } from '@app/models/streetAddress';
+import { KnightsService } from '@app/services/knights.service';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
 
 @Component({
-    selector: 'edit-knight-personal-info-modal',
-    templateUrl: './edit-knight-personal-info-modal.component.html',
-    styleUrls: ['./edit-knight-personal-info-modal.component.scss'],
-    standalone: false
+  selector: 'edit-knight-personal-info-modal',
+  templateUrl: './edit-knight-personal-info-modal.component.html',
+  styleUrls: ['./edit-knight-personal-info-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -55,8 +57,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
     this.enableDisableAdministrativeDivisions();
   }
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(knight: Knight) {
     this.editKnightPersonalInfoForm = this.initForm();
@@ -68,15 +69,20 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
 
   private initForm(): FormGroup<EditKnightPersonalInfoFormGroup> {
     const today = new Date();
-    
+
     return new FormGroup<EditKnightPersonalInfoFormGroup>({
       id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
-      firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(63)] }),
+      firstName: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.maxLength(63)],
+      }),
       middleName: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
       lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
       nameSuffix: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(7)] }),
       dateOfBirth: new FormControl<string>(
-        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()), {nonNullable: true }),
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+        { nonNullable: true },
+      ),
       emailAddress: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(63)] }),
       cellPhoneNumber: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(31)] }),
       homeAddress: new FormGroup<EditAddressFormGroup>({
@@ -106,7 +112,7 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
   }
 
   public filterAdministrativeDivisionsByCountry(): GenericFormOption[] {
-    const countryCode = this.editKnightPersonalInfoForm.controls.homeAddress.controls.countryCode.value;  //this.getCountryCode();
+    const countryCode = this.editKnightPersonalInfoForm.controls.homeAddress.controls.countryCode.value; //this.getCountryCode();
     this.selectedCountry = countryCode;
 
     const filteredCountryFormOptions = this.countryFormOptions.filter((cfo) => cfo.value === countryCode);
@@ -193,9 +199,9 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

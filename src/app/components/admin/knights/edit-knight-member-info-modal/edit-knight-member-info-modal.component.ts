@@ -1,22 +1,34 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditKnightMemberInfoFormGroup } from 'src/app/forms/editKnightMemberInfoFormGroup';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { KnightInfo } from 'src/app/models/knightInfo';
-import { UpdateKnightMembershipInfoRequest } from 'src/app/models/requests/updateKnightMembershipInfoRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { KnightsService } from 'src/app/services/knights.service';
-import { KnightDegree } from 'src/app/types/knight-degree.type';
-import { KnightMemberClassType } from 'src/app/types/knight-member-class.type';
-import { KnightMemberTypeType } from 'src/app/types/knight-member-type.type';
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { EditKnightMemberInfoFormGroup } from '@app/forms/editKnightMemberInfoFormGroup';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { KnightInfo } from '@app/models/knightInfo';
+import { UpdateKnightMembershipInfoRequest } from '@app/models/requests/updateKnightMembershipInfoRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { KnightsService } from '@app/services/knights.service';
+import { KnightDegree } from '@app/types/knight-degree.type';
+import { KnightMemberClassType } from '@app/types/knight-member-class.type';
+import { KnightMemberTypeType } from '@app/types/knight-member-type.type';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
 
 @Component({
-    selector: 'edit-knight-member-info-modal',
-    templateUrl: './edit-knight-member-info-modal.component.html',
-    styleUrls: ['./edit-knight-member-info-modal.component.scss'],
-    standalone: false
+  selector: 'edit-knight-member-info-modal',
+  templateUrl: './edit-knight-member-info-modal.component.html',
+  styleUrls: ['./edit-knight-member-info-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -41,8 +53,7 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
 
   ngOnDestroy(): void {}
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(knightInfo: KnightInfo) {
     this.errorSaving = false;
@@ -58,8 +69,14 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
       memberNumber: new FormControl<number>(0, { nonNullable: true }),
       mailReturned: new FormControl<boolean>(false, { nonNullable: true }),
       degree: new FormControl<KnightDegree>('First', { nonNullable: true }),
-      firstDegreeDate: new FormControl<string>(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()), { nonNullable: true }),
-      reentryDate: new FormControl<string>(DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()), { nonNullable: true }),
+      firstDegreeDate: new FormControl<string>(
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+        { nonNullable: true },
+      ),
+      reentryDate: new FormControl<string>(
+        DateTimeFormatter.ToIso8601Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+        { nonNullable: true },
+      ),
       memberType: new FormControl<KnightMemberTypeType>('Associate', { nonNullable: true }),
       memberClass: new FormControl<KnightMemberClassType>('Paying', { nonNullable: true }),
     });
@@ -129,9 +146,9 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

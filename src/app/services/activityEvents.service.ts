@@ -2,12 +2,12 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { ActivityEvent } from 'src/app/models/activityEvent';
+import { ActivityEvent } from '@app/models/activityEvent';
 import { UpcomingEvent } from '../models/upcomingEvent';
 import { VolunteerForActivityEventRequest } from '../models/requests/volunteerForActivityEventRequest';
 import { EventVolunteer } from '../models/eventVolunteer';
 import { CreateActivityEventRequest } from '../models/requests/createActivityEventRequest';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 

@@ -1,4 +1,4 @@
-import { Week } from 'src/app/models/calendar/week';
+import { Week } from '@app/models/calendar/week';
 
 export interface Month {
   weeks: Week[];

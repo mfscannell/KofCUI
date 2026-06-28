@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { PermissionsService } from 'src/app/services/permissions.service';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { PermissionsService } from '@app/services/permissions.service';
 
 @Component({
-    selector: 'admin',
-    templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.scss'],
-    standalone: false
+  selector: 'admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AdminComponent implements OnInit {
   constructor(private permissionsService: PermissionsService) {}

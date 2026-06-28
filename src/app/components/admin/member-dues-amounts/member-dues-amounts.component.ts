@@ -1,24 +1,27 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { forkJoin, Subscription } from 'rxjs';
-import { GetMemberDuesAmountsFormGroup } from 'src/app/forms/getMemberDuesAmountsFormGroup';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { FormsService } from 'src/app/services/forms.service';
-import { MemberDuesAmountsService } from 'src/app/services/memberDuesAmounts.service';
+import { GetMemberDuesAmountsFormGroup } from '@app/forms/getMemberDuesAmountsFormGroup';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { MemberDuesAmounts } from '@app/models/memberDuesAmounts';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { FormsService } from '@app/services/forms.service';
+import { MemberDuesAmountsService } from '@app/services/memberDuesAmounts.service';
 import { EditMemberDuesAmountsModalComponent } from './edit-member-dues-amounts-modal/edit-member-dues-amounts-modal.component';
 import _ from 'lodash';
-import { ModalActionType } from 'src/app/types/modal-action.type';
+import { ModalActionType } from '@app/types/modal-action.type';
 
 @Component({
   selector: 'member-dues-amounts',
   templateUrl: './member-dues-amounts.component.html',
   styleUrls: ['./member-dues-amounts.component.scss'],
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
-  @ViewChild(EditMemberDuesAmountsModalComponent) editMemberDuesAmountsModal: EditMemberDuesAmountsModalComponent | undefined;
+  @ViewChild(EditMemberDuesAmountsModalComponent) editMemberDuesAmountsModal:
+    | EditMemberDuesAmountsModalComponent
+    | undefined;
   private getDataSubscription?: Subscription;
   private getMemberDuesAmountsSubscription?: Subscription;
   public memberDuesAmounts: MemberDuesAmounts[] = [];
@@ -35,11 +38,12 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
 
   constructor(
     private memberDuesAmountsService: MemberDuesAmountsService,
-    private formsService: FormsService) {
-      this.toYear = new Date().getFullYear() + 1;
-      this.fromYear = this.toYear - 10;
-      this.getMemberDuesAmountsFormGroup = this.initForm();
-    }
+    private formsService: FormsService,
+  ) {
+    this.toYear = new Date().getFullYear() + 1;
+    this.fromYear = this.toYear - 10;
+    this.getMemberDuesAmountsFormGroup = this.initForm();
+  }
 
   ngOnInit() {
     this.getFormOptions();
@@ -57,9 +61,9 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
 
   private initForm(): FormGroup<GetMemberDuesAmountsFormGroup> {
     return new FormGroup<GetMemberDuesAmountsFormGroup>({
-      fromYear: new FormControl<number>(this.fromYear, {nonNullable: true}),
-      toYear: new FormControl<number>(this.toYear, {nonNullable: true})
-    })
+      fromYear: new FormControl<number>(this.fromYear, { nonNullable: true }),
+      toYear: new FormControl<number>(this.toYear, { nonNullable: true }),
+    });
   }
 
   public onSubmitSearch() {
@@ -81,7 +85,7 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
   public addMemberDuesAmountsToList(memberDuesAmounts: MemberDuesAmounts): void {
     let newList = _.cloneDeep(this.memberDuesAmounts) as MemberDuesAmounts[];
     newList.push(memberDuesAmounts);
-    newList = newList.sort((a, b) => a.year > b.year ? -1 : a.year < b.year ? 1 : 0);
+    newList = newList.sort((a, b) => (a.year > b.year ? -1 : a.year < b.year ? 1 : 0));
     this.memberDuesAmounts = newList;
   }
 
@@ -97,42 +101,42 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
   }
 
   private getFormOptions() {
-      const getDataObserver = {
-        next: ([memberDuesAmounts, memberClassFormOptions]: [MemberDuesAmounts[], GenericFormOption[]]) => {
-          this.memberDuesAmounts = memberDuesAmounts;
-          this.memberClassFormOptions = memberClassFormOptions;
-        },
-        error: (err: ApiResponseError) => this.logError('Error getting Activity Form Options', err),
-        complete: () => console.log('Activity Form Options retrieved.'),
-      };
+    const getDataObserver = {
+      next: ([memberDuesAmounts, memberClassFormOptions]: [MemberDuesAmounts[], GenericFormOption[]]) => {
+        this.memberDuesAmounts = memberDuesAmounts;
+        this.memberClassFormOptions = memberClassFormOptions;
+      },
+      error: (err: ApiResponseError) => this.logError('Error getting Activity Form Options', err),
+      complete: () => console.log('Activity Form Options retrieved.'),
+    };
 
-      const fromYear = this.getMemberDuesAmountsFormGroup.controls.fromYear.value;
-      const toYear = this.getMemberDuesAmountsFormGroup.controls.toYear.value;
-  
-      this.getDataSubscription = forkJoin([
-        this.memberDuesAmountsService.getMemberDuesAmounts(fromYear, toYear),
-        this.formsService.getKnightMemberClassFormOptions(),
-      ]).subscribe(getDataObserver);
+    const fromYear = this.getMemberDuesAmountsFormGroup.controls.fromYear.value;
+    const toYear = this.getMemberDuesAmountsFormGroup.controls.toYear.value;
+
+    this.getDataSubscription = forkJoin([
+      this.memberDuesAmountsService.getMemberDuesAmounts(fromYear, toYear),
+      this.formsService.getKnightMemberClassFormOptions(),
+    ]).subscribe(getDataObserver);
+  }
+
+  private logError(message: string, err: ApiResponseError) {
+    console.error(message);
+    console.error(err);
+
+    this.errorMessages = [];
+    const problemDetails = err.error;
+
+    if (problemDetails.detail) {
+      this.errorMessages.push(err.error.detail);
     }
 
-    private logError(message: string, err: ApiResponseError) {
-      console.error(message);
-      console.error(err);
-  
-      this.errorMessages = [];
-      const problemDetails = err.error;
-  
-      if (problemDetails.detail) {
-        this.errorMessages.push(err.error.detail);
-      }
-  
-      for (const key in problemDetails.errors) {
-        const errorsArray = problemDetails.errors[key];
-        errorsArray.forEach(error => {
-          this.errorMessages.push(error);
-        })
-      }
-  
-      this.errorSaving = true;
+    for (const key in problemDetails.errors) {
+      const errorsArray = problemDetails.errors[key];
+      errorsArray.forEach((error) => {
+        this.errorMessages.push(error);
+      });
     }
+
+    this.errorSaving = true;
+  }
 }

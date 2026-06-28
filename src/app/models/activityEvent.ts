@@ -1,5 +1,5 @@
-import { StreetAddress } from 'src/app/models/streetAddress';
-import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
+import { StreetAddress } from '@app/models/streetAddress';
+import { VolunteerSignUpRole } from '@app/models/volunteerSignUpRole';
 
 export interface ActivityEvent {
   id: string;

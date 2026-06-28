@@ -2,9 +2,9 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { LeadershipRole } from 'src/app/models/leadershipRole';
+import { LeadershipRole } from '@app/models/leadershipRole';
 import { UpdateLeadershipRoleRequest } from '../models/requests/updateLeadershipRoleRequest';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 

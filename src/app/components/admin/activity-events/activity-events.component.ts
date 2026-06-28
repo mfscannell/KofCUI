@@ -1,30 +1,31 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
-import { ActivityEvent } from 'src/app/models/activityEvent';
-import { ActivityEventsService } from 'src/app/services/activityEvents.service';
+import { ActivityEvent } from '@app/models/activityEvent';
+import { ActivityEventsService } from '@app/services/activityEvents.service';
 
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { KnightsService } from 'src/app/services/knights.service';
-import { Activity } from 'src/app/models/activity';
-import { ActivitiesService } from 'src/app/services/activities.service';
-import { PermissionsService } from 'src/app/services/permissions.service';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { KnightsService } from '@app/services/knights.service';
+import { Activity } from '@app/models/activity';
+import { ActivitiesService } from '@app/services/activities.service';
+import { PermissionsService } from '@app/services/permissions.service';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ConfigsService } from 'src/app/services/configs.service';
-import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { FormsService } from 'src/app/services/forms.service';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { ConfigsService } from '@app/services/configs.service';
+import { CountryFormOption } from '@app/models/inputOptions/countryFormOption';
+import { FormsService } from '@app/services/forms.service';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
 import { EditActivityEventModalComponent } from './edit-activity-event-modal/edit-activity-event-modal.component';
-import { KnightName } from 'src/app/models/knightName';
-import { WebsiteContent } from 'src/app/models/websiteContent';
-import { ModalActionType } from 'src/app/types/modal-action.type';
+import { KnightName } from '@app/models/knightName';
+import { WebsiteContent } from '@app/models/websiteContent';
+import { ModalActionType } from '@app/types/modal-action.type';
 
 @Component({
-    selector: 'kofc-activity-events',
-    templateUrl: './activity-events.component.html',
-    styleUrls: ['./activity-events.component.scss'],
-    standalone: false
+  selector: 'kofc-activity-events',
+  templateUrl: './activity-events.component.html',
+  styleUrls: ['./activity-events.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityEventModalComponent) editActivityEventModal: EditActivityEventModalComponent | undefined;
@@ -180,7 +181,7 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
       this.formsService.getCountryFormOptions(),
       this.configsService.getWebsiteContent(),
       this.activitiesService.getAllActivities(),
-      this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}),
+      this.knightsService.getAllKnightsNames({ restrictToActiveOnly: true }),
     ]).subscribe(formsObserver);
   }
 
@@ -230,9 +231,9 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

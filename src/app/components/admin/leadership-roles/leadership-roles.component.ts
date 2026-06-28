@@ -1,19 +1,20 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
-import { LeadershipRole } from 'src/app/models/leadershipRole';
-import { KnightsService } from 'src/app/services/knights.service';
-import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
+import { LeadershipRole } from '@app/models/leadershipRole';
+import { KnightsService } from '@app/services/knights.service';
+import { LeadershipRolesService } from '@app/services/leadershipRoles.service';
 import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/edit-leadership-role-modal.component';
-import { KnightName } from 'src/app/models/knightName';
-import { LeadershipRoleCategory } from 'src/app/types/leadership-role-category.type';
+import { KnightName } from '@app/models/knightName';
+import { LeadershipRoleCategory } from '@app/types/leadership-role-category.type';
 
 @Component({
-    selector: 'kofc-leadership-roles',
-    templateUrl: './leadership-roles.component.html',
-    styleUrls: ['./leadership-roles.component.scss'],
-    standalone: false
+  selector: 'kofc-leadership-roles',
+  templateUrl: './leadership-roles.component.html',
+  styleUrls: ['./leadership-roles.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   @ViewChild(EditLeadershipRoleModalComponent) editLeadershipRoleModal: EditLeadershipRoleModalComponent | undefined;
@@ -50,7 +51,9 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
       error: (err: unknown) => console.log(`${err}`),
       complete: () => console.log('Knights loaded.'),
     };
-    this.knightsSubscription = this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}).subscribe(knightsObserver);
+    this.knightsSubscription = this.knightsService
+      .getAllKnightsNames({ restrictToActiveOnly: true })
+      .subscribe(knightsObserver);
   }
 
   private loadAllKnights(knights: KnightName[]) {

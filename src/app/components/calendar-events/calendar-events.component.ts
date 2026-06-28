@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Month } from 'src/app/models/calendar/month';
-import { UpcomingEvent } from 'src/app/models/upcomingEvent';
-import { ActivityEventsService } from 'src/app/services/activityEvents.service';
-import { CalendarUtilities } from 'src/app/utilities/calendarUtilities';
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
+import { Month } from '@app/models/calendar/month';
+import { UpcomingEvent } from '@app/models/upcomingEvent';
+import { ActivityEventsService } from '@app/services/activityEvents.service';
+import { CalendarUtilities } from '@app/utilities/calendarUtilities';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
 
 @Component({
-    selector: 'kofc-calendar-events',
-    templateUrl: './calendar-events.component.html',
-    styleUrls: ['./calendar-events.component.scss'],
-    standalone: false
+  selector: 'kofc-calendar-events',
+  templateUrl: './calendar-events.component.html',
+  styleUrls: ['./calendar-events.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class CalendarEventsComponent implements OnInit {
   getAllUpcomingEventsSubscription?: Subscription;

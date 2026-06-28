@@ -1,6 +1,6 @@
 import { StreetAddress } from './streetAddress';
-import { KnightInfo } from 'src/app/models/knightInfo';
-import { ActivityInterest } from 'src/app/models/activityInterest';
+import { KnightInfo } from '@app/models/knightInfo';
+import { ActivityInterest } from '@app/models/activityInterest';
 import { KnightUser } from './knightUser';
 import { MemberDues } from './memberDues';
 

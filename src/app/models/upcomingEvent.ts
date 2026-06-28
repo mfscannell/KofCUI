@@ -1,4 +1,4 @@
-import { StreetAddress } from 'src/app/models/streetAddress';
+import { StreetAddress } from '@app/models/streetAddress';
 
 export interface UpcomingEvent {
   activityEventId: string;

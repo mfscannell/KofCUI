@@ -1,21 +1,22 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { ActivityEvent } from 'src/app/models/activityEvent';
-import { ActivityEventsService } from 'src/app/services/activityEvents.service';
+import { ActivityEvent } from '@app/models/activityEvent';
+import { ActivityEventsService } from '@app/services/activityEvents.service';
 
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { KnightsService } from 'src/app/services/knights.service';
-import { AccountsService } from 'src/app/services/accounts.service';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { KnightsService } from '@app/services/knights.service';
+import { AccountsService } from '@app/services/accounts.service';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { VolunteerForEventModalComponent } from './volunteer-for-event-modal/volunteer-for-event-modal.component';
-import { KnightName } from 'src/app/models/knightName';
+import { KnightName } from '@app/models/knightName';
 
 @Component({
-    selector: 'kofc-event-volunteering',
-    templateUrl: './event-volunteering.component.html',
-    styleUrls: ['./event-volunteering.component.scss'],
-    standalone: false
+  selector: 'kofc-event-volunteering',
+  templateUrl: './event-volunteering.component.html',
+  styleUrls: ['./event-volunteering.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EventVolunteeringComponent implements OnInit, OnDestroy {
   @ViewChild(VolunteerForEventModalComponent) volunteerForEventModal: VolunteerForEventModalComponent | undefined;
@@ -90,7 +91,9 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
       complete: () => console.log('All knights loaded.'),
     };
 
-    this.getAllKnightsSubscription = this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}).subscribe(knightsObserver);
+    this.getAllKnightsSubscription = this.knightsService
+      .getAllKnightsNames({ restrictToActiveOnly: true })
+      .subscribe(knightsObserver);
   }
 
   public openVolunteerForActivityEventModal(activityEvent: ActivityEvent) {
@@ -121,9 +124,9 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

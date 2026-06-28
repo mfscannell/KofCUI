@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LogInRequest } from 'src/app/models/requests/logInRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { AccountsService } from 'src/app/services/accounts.service';
+import { LogInRequest } from '@app/models/requests/logInRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { AccountsService } from '@app/services/accounts.service';
 
 @Component({
-    selector: 'kofc-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  selector: 'kofc-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: UntypedFormGroup;
@@ -76,9 +77,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorLoggingIn = true;

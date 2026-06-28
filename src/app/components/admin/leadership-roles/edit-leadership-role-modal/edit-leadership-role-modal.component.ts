@@ -1,18 +1,30 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { LeadershipRoleFormGroup } from 'src/app/forms/leadershipRoleFormGroup';
-import { KnightName } from 'src/app/models/knightName';
-import { LeadershipRole } from 'src/app/models/leadershipRole';
-import { UpdateLeadershipRoleRequest } from 'src/app/models/requests/updateLeadershipRoleRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { LeadershipRolesService } from 'src/app/services/leadershipRoles.service';
+import { LeadershipRoleFormGroup } from '@app/forms/leadershipRoleFormGroup';
+import { KnightName } from '@app/models/knightName';
+import { LeadershipRole } from '@app/models/leadershipRole';
+import { UpdateLeadershipRoleRequest } from '@app/models/requests/updateLeadershipRoleRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { LeadershipRolesService } from '@app/services/leadershipRoles.service';
 
 @Component({
-    selector: 'edit-leadership-role-modal',
-    templateUrl: './edit-leadership-role-modal.component.html',
-    styleUrls: ['./edit-leadership-role-modal.component.scss'],
-    standalone: false
+  selector: 'edit-leadership-role-modal',
+  templateUrl: './edit-leadership-role-modal.component.html',
+  styleUrls: ['./edit-leadership-role-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() allKnights: KnightName[] = [];
@@ -33,8 +45,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
     console.log('EditLeadershipRoleModalComponent ngOnInit');
   }
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   ngOnChanges() {
     console.log('EditLeadershipRoleModalComponent ngOnChanges');
@@ -59,11 +70,11 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
 
   private initForm(): FormGroup<LeadershipRoleFormGroup> {
     return new FormGroup<LeadershipRoleFormGroup>({
-      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', {nonNullable: true}),
-      title: new FormControl<string>('', {nonNullable: true}),
-      occupied: new FormControl<boolean>(false, {nonNullable: true}),
-      knightId: new FormControl<string | undefined>(undefined, {nonNullable: true}),
-      leadershipRoleCategory: new FormControl<string>('', {nonNullable: true}),
+      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
+      title: new FormControl<string>('', { nonNullable: true }),
+      occupied: new FormControl<boolean>(false, { nonNullable: true }),
+      knightId: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      leadershipRoleCategory: new FormControl<string>('', { nonNullable: true }),
     });
   }
 
@@ -74,7 +85,7 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
     const updatedLeadershipRole: UpdateLeadershipRoleRequest = {
       id: rawForm.id,
       knightId: rawForm.occupied ? rawForm.knightId : undefined,
-      occupied: rawForm.occupied
+      occupied: rawForm.occupied,
     };
 
     this.updateLeadershipRole(updatedLeadershipRole);
@@ -117,9 +128,9 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

@@ -1,18 +1,19 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { EncodedFile } from 'src/app/models/encodedFile';
-import { AssetsService } from 'src/app/services/assets.service';
+import { EncodedFile } from '@app/models/encodedFile';
+import { AssetsService } from '@app/services/assets.service';
 import { UntypedFormGroup } from '@angular/forms';
-import { DeleteHomePageCarouselImageResponse } from 'src/app/models/responses/deleteHomePageCarouselImageResponse';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { WebsiteContent } from 'src/app/models/websiteContent';
-import { ConfigsService } from 'src/app/services/configs.service';
+import { DeleteHomePageCarouselImageResponse } from '@app/models/responses/deleteHomePageCarouselImageResponse';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { WebsiteContent } from '@app/models/websiteContent';
+import { ConfigsService } from '@app/services/configs.service';
 
 @Component({
-    selector: 'app-assets',
-    templateUrl: './assets.component.html',
-    styleUrls: ['./assets.component.scss'],
-    standalone: false
+  selector: 'app-assets',
+  templateUrl: './assets.component.html',
+  styleUrls: ['./assets.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AssetsComponent implements OnInit, OnDestroy {
   showErrorMessage: boolean = false;
@@ -34,7 +35,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
   indexToDelete: number = -1;
   private deleteHomePageImageSubscription?: Subscription;
 
-  constructor(public assetsService: AssetsService, private configsService: ConfigsService) {
+  constructor(
+    public assetsService: AssetsService,
+    private configsService: ConfigsService,
+  ) {
     this.uploadImageForm = new UntypedFormGroup({});
     this.deleteImageForm = new UntypedFormGroup({});
   }
@@ -90,7 +94,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   private getWebsiteContent() {
     const observer = {
-      next: (websiteContent: WebsiteContent) => { 
+      next: (websiteContent: WebsiteContent) => {
         this.homePageCarouselImages = websiteContent.homePageCarouselImages;
         this.homePageCarouselImageSources = websiteContent.homePageCarouselImages.map((image) => {
           return `data:${image.fileType};${image.encoding},${image.data}`;
@@ -156,9 +160,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;
