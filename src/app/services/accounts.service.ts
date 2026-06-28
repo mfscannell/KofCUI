@@ -8,7 +8,7 @@ import { LogInResponse } from '../models/responses/logInResponse';
 import { ChangePassWordRequest } from '../models/requests/changePasswordRequest';
 import { ChangePasswordResponse } from '../models/responses/changePasswordResponse';
 import { PasswordRequirements } from '../models/responses/passwordRequirements';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 
 @Injectable({

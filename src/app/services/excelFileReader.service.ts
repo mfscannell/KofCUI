@@ -1,9 +1,9 @@
 import * as XLSX from 'xlsx';
 import { Injectable } from '@angular/core';
 
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { KnightMemberTypeEnumMapper } from 'src/app/utilities/knightMemberTypeEnumMapper';
-import { KnightMemberClassEnumMapper } from 'src/app/utilities/knightMemberClassEnumMapper';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { KnightMemberTypeEnumMapper } from '@app/utilities/knightMemberTypeEnumMapper';
+import { KnightMemberClassEnumMapper } from '@app/utilities/knightMemberClassEnumMapper';
 import { KnightExcelUpload } from '../models/fileModels/knightExcelUpload';
 import { CreateKnightRequest } from '../models/requests/createKnightRequest';
 import { CreateKnightInfoRequest } from '../models/requests/createKnightInfoRequest';

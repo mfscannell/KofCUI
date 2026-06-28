@@ -4,7 +4,7 @@ import { MemberDuesAmounts } from "../models/memberDuesAmounts";
 import { Observable } from "rxjs";
 import { CreateMemberDuesAmountsRequest } from "../models/requests/createMemberDuesAmountsRequest";
 import { UpdateMemberDuesAmountsRequest } from "../models/requests/updateMemberDuesAmountsRequest";
-import { environment } from "src/environments/environment";
+import { environment } from "@env/environment";
 import { TenantService } from "./tenant.service";
 import { AccountsService } from "./accounts.service";
 

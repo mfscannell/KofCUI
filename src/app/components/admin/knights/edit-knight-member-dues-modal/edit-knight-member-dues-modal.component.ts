@@ -1,21 +1,33 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditMemberDuesFormGroup } from 'src/app/forms/editMemberDuesFormGroup';
-import { MemberDueFormGroup } from 'src/app/forms/memberDueFormGroup';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { MemberDues } from 'src/app/models/memberDues';
-import { MemberDuesAmounts } from 'src/app/models/memberDuesAmounts';
-import { UpdateKnightMemberDuesRequest } from 'src/app/models/requests/updateKnightMemberDuesRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { MemberDuesService } from 'src/app/services/memberDues.service';
-import { MemberDuesPaidStatus } from 'src/app/types/knight-member-dues-paid-status.type';
+import { EditMemberDuesFormGroup } from '@app/forms/editMemberDuesFormGroup';
+import { MemberDueFormGroup } from '@app/forms/memberDueFormGroup';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { MemberDues } from '@app/models/memberDues';
+import { MemberDuesAmounts } from '@app/models/memberDuesAmounts';
+import { UpdateKnightMemberDuesRequest } from '@app/models/requests/updateKnightMemberDuesRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { MemberDuesService } from '@app/services/memberDues.service';
+import { MemberDuesPaidStatus } from '@app/types/knight-member-dues-paid-status.type';
 
 @Component({
-    selector: 'edit-knight-member-dues-modal',
-    templateUrl: './edit-knight-member-dues-modal.component.html',
-    styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
-    standalone: false
+  selector: 'edit-knight-member-dues-modal',
+  templateUrl: './edit-knight-member-dues-modal.component.html',
+  styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -39,8 +51,7 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
 
   ngOnDestroy() {}
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(memberDues: MemberDues[]): void {
     this.editKnightMemberDuesForm = this.initForm();
@@ -83,15 +94,17 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   }
 
   private mapFormToUpdateKnightMemberDuesRequest(): UpdateKnightMemberDuesRequest {
-    const mappedMemberDues: MemberDues[] = this.editKnightMemberDuesForm.controls.memberDues.controls.map((memberDueFormGroup: FormGroup<MemberDueFormGroup>) => {
-      const memberDues: MemberDues = {
-        year: memberDueFormGroup.controls.year.value,
-        amountDue: memberDueFormGroup.controls.amountDue.value,
-        paidStatus: memberDueFormGroup.controls.paidStatus.value
-      };
+    const mappedMemberDues: MemberDues[] = this.editKnightMemberDuesForm.controls.memberDues.controls.map(
+      (memberDueFormGroup: FormGroup<MemberDueFormGroup>) => {
+        const memberDues: MemberDues = {
+          year: memberDueFormGroup.controls.year.value,
+          amountDue: memberDueFormGroup.controls.amountDue.value,
+          paidStatus: memberDueFormGroup.controls.paidStatus.value,
+        };
 
-      return memberDues;
-    });
+        return memberDues;
+      },
+    );
     const request: UpdateKnightMemberDuesRequest = {
       knightId: this.knightId,
       memberDues: mappedMemberDues,
@@ -122,9 +135,9 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

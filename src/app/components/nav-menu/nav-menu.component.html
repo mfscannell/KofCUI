@@ -52,7 +52,7 @@
       }
       @if ((accountsService.currentUser | async); as user) {
         <li #accountLogOutDropDown class="nav-item active d-none d-md-inline">
-          <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm2" data-bs-toggle="dropdown">Welcome {{user.knight?.firstName | titlecase}}</button>
+          <button type="button" class="btn btn-kofc-yellow dropdown-toggle" id="dropdownForm2" data-bs-toggle="dropdown">Welcome {{$safeNavigationMigration(user.knight?.firstName) | titlecase}}</button>
           <ul class="dropdown-menu">
             <li class="nav-link">
               <button type="button" class="btn btn-kofc-blue w-100 btn-kofc-blue" (click)="logout();">Log out</button>

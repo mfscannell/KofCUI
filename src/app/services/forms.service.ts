@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CountryFormOption } from '../models/inputOptions/countryFormOption';
 import { GenericFormOption } from '../models/inputOptions/genericFormOption';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { AccountsService } from './accounts.service';
 
 @Injectable({

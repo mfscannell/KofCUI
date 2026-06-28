@@ -1,28 +1,29 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
-import { ActivityInterest } from 'src/app/models/activityInterest';
-import { Knight } from 'src/app/models/knight';
-import { KnightsService } from 'src/app/services/knights.service';
-import { DateTimeFormatter } from 'src/app/utilities/dateTimeFormatter';
-import { AccountsService } from 'src/app/services/accounts.service';
-import { ChangePasswordResponse } from 'src/app/models/responses/changePasswordResponse';
-import { CountryFormOption } from 'src/app/models/inputOptions/countryFormOption';
-import { FormsService } from 'src/app/services/forms.service';
+import { ActivityInterest } from '@app/models/activityInterest';
+import { Knight } from '@app/models/knight';
+import { KnightsService } from '@app/services/knights.service';
+import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { AccountsService } from '@app/services/accounts.service';
+import { ChangePasswordResponse } from '@app/models/responses/changePasswordResponse';
+import { CountryFormOption } from '@app/models/inputOptions/countryFormOption';
+import { FormsService } from '@app/services/forms.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { UpdateKnightPersonalInfoRequest } from 'src/app/models/requests/updateKnightPersonalInfoRequest';
-import { StreetAddress } from 'src/app/models/streetAddress';
-import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
-import { PasswordRequirements } from 'src/app/models/responses/passwordRequirements';
-import { ChangePassWordRequest } from 'src/app/models/requests/changePasswordRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { ToggleInterestInActivityEvent } from 'src/app/models/events/toggleInterestInActivityEvent';
+import { UpdateKnightPersonalInfoRequest } from '@app/models/requests/updateKnightPersonalInfoRequest';
+import { StreetAddress } from '@app/models/streetAddress';
+import { KnightActivityInterestsService } from '@app/services/knightActivityInterests.service';
+import { PasswordRequirements } from '@app/models/responses/passwordRequirements';
+import { ChangePassWordRequest } from '@app/models/requests/changePasswordRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { ToggleInterestInActivityEvent } from '@app/models/events/toggleInterestInActivityEvent';
 
 @Component({
-    selector: 'kofc-account',
-    templateUrl: './account.component.html',
-    styleUrls: ['./account.component.scss'],
-    standalone: false
+  selector: 'kofc-account',
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';
@@ -304,8 +305,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   private handleUpdateActivityInterests(response: ActivityInterest[]) {
     if (this.knight) {
       response.forEach((kai) => {
-        const indexOfActivity = this.allActivities.findIndex(ai => ai.activityId === kai.activityId);
-  
+        const indexOfActivity = this.allActivities.findIndex((ai) => ai.activityId === kai.activityId);
+
         if (indexOfActivity > -1) {
           this.allActivities[indexOfActivity].interested = kai.interested;
 
@@ -489,9 +490,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
   }
 }

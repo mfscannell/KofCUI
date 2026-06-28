@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Knight } from 'src/app/models/knight';
+import { Knight } from '@app/models/knight';
 import { UpdateKnightPasswordRequest } from '../models/requests/updateKnightPasswordRequest';
 import { KnightUser } from '../models/knightUser';
 import { UpdateKnightPersonalInfoRequest } from '../models/requests/updateKnightPersonalInfoRequest';
@@ -12,7 +12,7 @@ import { CreateKnightRequest } from '../models/requests/createKnightRequest';
 import { KnightName } from '../models/knightName';
 import { PaginationResponse } from '../models/responses/paginationResponse';
 import { FilterKnightRequest } from '../models/requests/filterKnightRequest';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 

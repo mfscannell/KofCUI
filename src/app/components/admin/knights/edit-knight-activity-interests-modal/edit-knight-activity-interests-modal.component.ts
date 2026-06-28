@@ -1,19 +1,31 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditActivityInterestFormGroup } from 'src/app/forms/editActivityInterestFormGroup';
-import { EditActivityInterestsFormGroup } from 'src/app/forms/editActivityInterestsFormGroup';
-import { ActivityInterest } from 'src/app/models/activityInterest';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { UpdateKnightActivityInterestsRequest } from 'src/app/models/requests/updateKnightActivityInterestsRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { KnightActivityInterestsService } from 'src/app/services/knightActivityInterests.service';
+import { EditActivityInterestFormGroup } from '@app/forms/editActivityInterestFormGroup';
+import { EditActivityInterestsFormGroup } from '@app/forms/editActivityInterestsFormGroup';
+import { ActivityInterest } from '@app/models/activityInterest';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { UpdateKnightActivityInterestsRequest } from '@app/models/requests/updateKnightActivityInterestsRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { KnightActivityInterestsService } from '@app/services/knightActivityInterests.service';
 
 @Component({
-    selector: 'edit-knight-activity-interests-modal',
-    templateUrl: './edit-knight-activity-interests-modal.component.html',
-    styleUrls: ['./edit-knight-activity-interests-modal.component.scss'],
-    standalone: false
+  selector: 'edit-knight-activity-interests-modal',
+  templateUrl: './edit-knight-activity-interests-modal.component.html',
+  styleUrls: ['./edit-knight-activity-interests-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -40,8 +52,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
     }
   }
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(knightActivityInterests: ActivityInterest[]): void {
     this.activityInterests = knightActivityInterests;
@@ -62,10 +73,10 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
 
     knightActivityInterests.forEach((interest: ActivityInterest) => {
       const activityInterestFormGroup = new FormGroup<EditActivityInterestFormGroup>({
-        activityId: new FormControl<string>(interest.activityId, { nonNullable: true}),
-        activityName: new FormControl<string>(interest.activityName, { nonNullable: true}),
-        activityCategory: new FormControl<string>(interest.activityCategory, { nonNullable: true}),
-        interested: new FormControl<boolean>(interest.interested, { nonNullable: true}),
+        activityId: new FormControl<string>(interest.activityId, { nonNullable: true }),
+        activityName: new FormControl<string>(interest.activityName, { nonNullable: true }),
+        activityCategory: new FormControl<string>(interest.activityCategory, { nonNullable: true }),
+        interested: new FormControl<boolean>(interest.interested, { nonNullable: true }),
       });
       this.editKnightActivityInterestsForm.controls.activityInterests.controls.push(activityInterestFormGroup);
     });
@@ -105,7 +116,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
     this.editKnightActivityInterestsForm.controls.activityInterests.controls.forEach((formGroup) => {
       request.activityInterests.push({
         activityId: formGroup.controls.activityId.value,
-        interested: formGroup.controls.interested.value
+        interested: formGroup.controls.interested.value,
       } as ActivityInterest);
     });
 
@@ -114,7 +125,7 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
 
   private passBackResponse(response: ActivityInterest[]) {
     response.forEach((kai) => {
-      const indexOfActivity = this.activityInterests.findIndex(ai => ai.activityId === kai.activityId);
+      const indexOfActivity = this.activityInterests.findIndex((ai) => ai.activityId === kai.activityId);
 
       if (indexOfActivity > -1) {
         this.activityInterests[indexOfActivity].interested = kai.interested;
@@ -141,9 +152,9 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

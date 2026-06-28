@@ -8,22 +8,24 @@ import {
   OnInit,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 
-import { Knight } from 'src/app/models/knight';
-import { KnightsService } from 'src/app/services/knights.service';
-import { ExcelFileReader } from 'src/app/services/excelFileReader.service';
+import { Knight } from '@app/models/knight';
+import { KnightsService } from '@app/services/knights.service';
+import { ExcelFileReader } from '@app/services/excelFileReader.service';
 import { Subscription } from 'rxjs';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { UploadFileEvent } from 'src/app/models/events/uploadFileEvent';
-import { CreateKnightRequest } from 'src/app/models/requests/createKnightRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { UploadFileEvent } from '@app/models/events/uploadFileEvent';
+import { CreateKnightRequest } from '@app/models/requests/createKnightRequest';
 
 @Component({
-    selector: 'upload-knights-modal',
-    templateUrl: './upload-knights-modal.component.html',
-    styleUrls: ['./upload-knights-modal.component.scss'],
-    standalone: false
+  selector: 'upload-knights-modal',
+  templateUrl: './upload-knights-modal.component.html',
+  styleUrls: ['./upload-knights-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() showModal: boolean = false;
@@ -110,9 +112,9 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

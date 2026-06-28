@@ -1,23 +1,24 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
-import { Activity } from 'src/app/models/activity';
-import { ActivitiesService } from 'src/app/services/activities.service';
-import { PermissionsService } from 'src/app/services/permissions.service';
-import { FormsService } from 'src/app/services/forms.service';
-import { KnightsService } from 'src/app/services/knights.service';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
+import { Activity } from '@app/models/activity';
+import { ActivitiesService } from '@app/services/activities.service';
+import { PermissionsService } from '@app/services/permissions.service';
+import { FormsService } from '@app/services/forms.service';
+import { KnightsService } from '@app/services/knights.service';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
 import { EditActivityModalComponent } from './edit-activity-modal/edit-activity-modal.component';
-import { KnightName } from 'src/app/models/knightName';
-import { ModalActionType } from 'src/app/types/modal-action.type';
+import { KnightName } from '@app/models/knightName';
+import { ModalActionType } from '@app/types/modal-action.type';
 
 @Component({
-    selector: 'activity-categories',
-    templateUrl: './activity-categories.component.html',
-    styleUrls: ['./activity-categories.component.scss'],
-    standalone: false
+  selector: 'activity-categories',
+  templateUrl: './activity-categories.component.html',
+  styleUrls: ['./activity-categories.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityModalComponent) editActivityModal: EditActivityModalComponent | undefined;
@@ -65,7 +66,11 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
   private getFormOptions() {
     const getDataObserver = {
-      next: ([activities, activityCategoryFormOptions, allKnights]: [Activity[], GenericFormOption[], KnightName[]]) => {
+      next: ([activities, activityCategoryFormOptions, allKnights]: [
+        Activity[],
+        GenericFormOption[],
+        KnightName[],
+      ]) => {
         this.activities = activities;
         this.activityCategoryFormOptions = activityCategoryFormOptions;
         this.allKnights = allKnights;
@@ -77,7 +82,7 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
     this.getDataSubscription = forkJoin([
       this.activitiesService.getAllActivities(),
       this.formsService.getActivityCategoryFormOptions(),
-      this.knightsService.getAllKnightsNames({restrictToActiveOnly: true}),
+      this.knightsService.getAllKnightsNames({ restrictToActiveOnly: true }),
     ]).subscribe(getDataObserver);
   }
 
@@ -126,9 +131,9 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

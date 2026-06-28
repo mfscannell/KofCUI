@@ -1,6 +1,6 @@
-import { KnightDegree } from "src/app/types/knight-degree.type";
-import { KnightMemberClassType } from "src/app/types/knight-member-class.type";
-import { KnightMemberTypeType } from "src/app/types/knight-member-type.type";
+import { KnightDegree } from "@app/types/knight-degree.type";
+import { KnightMemberClassType } from "@app/types/knight-member-class.type";
+import { KnightMemberTypeType } from "@app/types/knight-member-type.type";
 
 export interface CreateKnightInfoRequest {
   memberNumber: number;

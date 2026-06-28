@@ -1,22 +1,34 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditActivityCoordinatorFormGroup } from 'src/app/forms/editActivityCoordinatorFormGroup';
-import { EditActivityModelFormGroup } from 'src/app/forms/editActivityModelFormGroup';
-import { Activity } from 'src/app/models/activity';
-import { GenericFormOption } from 'src/app/models/inputOptions/genericFormOption';
-import { KnightName } from 'src/app/models/knightName';
-import { CreateActivityRequest } from 'src/app/models/requests/createActivityRequest';
-import { UpdateActivityRequest } from 'src/app/models/requests/updateActivityRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { ActivitiesService } from 'src/app/services/activities.service';
-import { ModalActionType } from 'src/app/types/modal-action.type';
+import { EditActivityCoordinatorFormGroup } from '@app/forms/editActivityCoordinatorFormGroup';
+import { EditActivityModelFormGroup } from '@app/forms/editActivityModelFormGroup';
+import { Activity } from '@app/models/activity';
+import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
+import { KnightName } from '@app/models/knightName';
+import { CreateActivityRequest } from '@app/models/requests/createActivityRequest';
+import { UpdateActivityRequest } from '@app/models/requests/updateActivityRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { ActivitiesService } from '@app/services/activities.service';
+import { ModalActionType } from '@app/types/modal-action.type';
 
 @Component({
-    selector: 'edit-activity-modal',
-    templateUrl: './edit-activity-modal.component.html',
-    styleUrls: ['./edit-activity-modal.component.scss'],
-    standalone: false
+  selector: 'edit-activity-modal',
+  templateUrl: './edit-activity-modal.component.html',
+  styleUrls: ['./edit-activity-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('closeEditActivityModal', { static: false }) cancelEditActivityModal: ElementRef | undefined;
@@ -53,8 +65,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
     }
   }
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(activity?: Activity) {
     this.informationTab?.nativeElement.click();
@@ -70,8 +81,11 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
   private initForm(): FormGroup<EditActivityModelFormGroup> {
     return new FormGroup<EditActivityModelFormGroup>({
-      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', {nonNullable: true}),
-      activityName: new FormControl<string>('', { nonNullable:true, validators: [Validators.required, Validators.maxLength(127)] }),
+      id: new FormControl<string>('00000000-0000-0000-0000-000000000000', { nonNullable: true }),
+      activityName: new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.maxLength(127)],
+      }),
       activityDescription: new FormControl<string>('', { nonNullable: true, validators: [Validators.maxLength(255)] }),
       activityCategory: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
       activityCoordinatorsList: new FormArray<FormGroup<EditActivityCoordinatorFormGroup>>([]),
@@ -97,7 +111,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public deleteActivityCoordinator(roleIndex: number) {
-    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as FormArray<FormGroup<EditActivityCoordinatorFormGroup>>;
+    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as FormArray<
+      FormGroup<EditActivityCoordinatorFormGroup>
+    >;
 
     activityCoordinators.removeAt(roleIndex);
   }
@@ -107,7 +123,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
       knightId: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
     });
 
-    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as FormArray<FormGroup<EditActivityCoordinatorFormGroup>>;
+    const activityCoordinators = this.editActivityForm.controls['activityCoordinatorsList'] as FormArray<
+      FormGroup<EditActivityCoordinatorFormGroup>
+    >;
 
     activityCoordinators.push(activityCoordinator);
   }
@@ -120,7 +138,7 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   public onSubmitEditActivity() {
-    if(!this.editActivityForm.valid) {
+    if (!this.editActivityForm.valid) {
       return;
     }
 
@@ -135,9 +153,11 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
   private mapFormToCreateActivityRequest(): CreateActivityRequest {
     console.log(this.editActivityForm);
-    const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map((activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
-      return activityCoordinatorFormGroup.controls.knightId.value;
-    });
+    const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map(
+      (activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
+        return activityCoordinatorFormGroup.controls.knightId.value;
+      },
+    );
     const activity: CreateActivityRequest = {
       activityName: this.editActivityForm.controls.activityName.value,
       activityDescription: this.editActivityForm.controls.activityDescription.value,
@@ -152,9 +172,11 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
   }
 
   private mapFormToUpdateActivityRequest(): UpdateActivityRequest {
-    const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map((activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
-      return activityCoordinatorFormGroup.controls.knightId.value;
-    });
+    const activityCoordinators = this.editActivityForm.controls.activityCoordinatorsList.controls.map(
+      (activityCoordinatorFormGroup: FormGroup<EditActivityCoordinatorFormGroup>) => {
+        return activityCoordinatorFormGroup.controls.knightId.value;
+      },
+    );
     const activity: UpdateActivityRequest = {
       activityId: this.editActivityForm.controls.id.value,
       activityName: this.editActivityForm.controls.activityName.value,
@@ -216,9 +238,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

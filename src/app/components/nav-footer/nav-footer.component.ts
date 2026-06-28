@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { WebsiteContent } from 'src/app/models/websiteContent';
-import { ConfigsService } from 'src/app/services/configs.service';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { WebsiteContent } from '@app/models/websiteContent';
+import { ConfigsService } from '@app/services/configs.service';
 
 @Component({
-    selector: 'nav-footer',
-    templateUrl: './nav-footer.component.html',
-    styleUrls: ['./nav-footer.component.scss'],
-    standalone: false
+  selector: 'nav-footer',
+  templateUrl: './nav-footer.component.html',
+  styleUrls: ['./nav-footer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class NavFooterComponent implements OnInit, OnDestroy {
   private getWebsiteContentSubscription?: Subscription;
@@ -32,7 +33,7 @@ export class NavFooterComponent implements OnInit, OnDestroy {
   private getWebsiteContent() {
     console.log('nav footer getWebsiteContent');
     const observer = {
-      next: (websiteContent: WebsiteContent) => { 
+      next: (websiteContent: WebsiteContent) => {
         this.facebookUrl = websiteContent.facebookUrl;
         this.twitterUrl = websiteContent.twitterUrl;
       },
@@ -59,9 +60,9 @@ export class NavFooterComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

@@ -1,6 +1,6 @@
 # Stage 1: Compile and Build angular codebase
 # Use official node image as the base image
-FROM node:22.12-alpine as build
+FROM node:26-alpine as build
 
 ARG RUN_CONFIG
 

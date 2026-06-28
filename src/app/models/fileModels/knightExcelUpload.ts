@@ -1,4 +1,4 @@
-import { KnightDegree } from 'src/app/types/knight-degree.type';
+import { KnightDegree } from '@app/types/knight-degree.type';
 
 export interface KnightExcelUpload {
   'First Name': string;

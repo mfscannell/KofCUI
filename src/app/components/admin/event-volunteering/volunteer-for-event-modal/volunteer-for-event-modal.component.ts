@@ -1,22 +1,34 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import {  FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditVolunteerForEventFormGroup } from 'src/app/forms/editVolunteerForEventFormGroup';
-import { EditVolunteerForRoleFormGroup } from 'src/app/forms/editVolunteerForRoleFormGroup';
-import { ActivityEvent } from 'src/app/models/activityEvent';
-import { EventVolunteer } from 'src/app/models/eventVolunteer';
-import { KnightName } from 'src/app/models/knightName';
-import { VolunteerForActivityEventRequest } from 'src/app/models/requests/volunteerForActivityEventRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { StreetAddress } from 'src/app/models/streetAddress';
-import { VolunteerSignUpRole } from 'src/app/models/volunteerSignUpRole';
-import { ActivityEventsService } from 'src/app/services/activityEvents.service';
+import { EditVolunteerForEventFormGroup } from '@app/forms/editVolunteerForEventFormGroup';
+import { EditVolunteerForRoleFormGroup } from '@app/forms/editVolunteerForRoleFormGroup';
+import { ActivityEvent } from '@app/models/activityEvent';
+import { EventVolunteer } from '@app/models/eventVolunteer';
+import { KnightName } from '@app/models/knightName';
+import { VolunteerForActivityEventRequest } from '@app/models/requests/volunteerForActivityEventRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { StreetAddress } from '@app/models/streetAddress';
+import { VolunteerSignUpRole } from '@app/models/volunteerSignUpRole';
+import { ActivityEventsService } from '@app/services/activityEvents.service';
 
 @Component({
-    selector: 'volunteer-for-event-modal',
-    templateUrl: './volunteer-for-event-modal.component.html',
-    styleUrls: ['./volunteer-for-event-modal.component.scss'],
-    standalone: false
+  selector: 'volunteer-for-event-modal',
+  templateUrl: './volunteer-for-event-modal.component.html',
+  styleUrls: ['./volunteer-for-event-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnChanges {
   public activityEvent: ActivityEvent = {
@@ -39,9 +51,9 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
       city: '',
       stateCode: '',
       postalCode: '',
-      countryCode: ''
+      countryCode: '',
     } as StreetAddress,
-    volunteerSignUpRoles: []
+    volunteerSignUpRoles: [],
   } as ActivityEvent;
   @Input() allKnights: KnightName[] = [];
   @Input() knightId: string = '';
@@ -62,8 +74,7 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
   ngOnDestroy() {}
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(activityEvent: ActivityEvent) {
     this.activityEvent = activityEvent;
@@ -75,18 +86,18 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
   private initForm(): FormGroup<EditVolunteerForEventFormGroup> {
     return new FormGroup<EditVolunteerForEventFormGroup>({
-      volunteerSignUpRoles: new FormArray<FormGroup<EditVolunteerForRoleFormGroup>>([])
+      volunteerSignUpRoles: new FormArray<FormGroup<EditVolunteerForRoleFormGroup>>([]),
     });
   }
 
   private patchForm(activityEvent: ActivityEvent) {
     activityEvent.volunteerSignUpRoles.forEach((role: VolunteerSignUpRole) => {
-      const knightVolunteeringForRole = role.eventVolunteers.some(ev => ev.knightId === this.knightId);
+      const knightVolunteeringForRole = role.eventVolunteers.some((ev) => ev.knightId === this.knightId);
       const volunteerSignUpRoleFormGroup = new FormGroup<EditVolunteerForRoleFormGroup>({
         volunteerRoleId: new FormControl<string>(role.id, { nonNullable: true }),
-        roleTitle: new FormControl<string>(role.roleTitle, { nonNullable: true}),
+        roleTitle: new FormControl<string>(role.roleTitle, { nonNullable: true }),
         numVolunteersNeeded: new FormControl<number>(role.numberOfVolunteersNeeded, { nonNullable: true }),
-        volunteerForRole: new FormControl<boolean>(knightVolunteeringForRole, { nonNullable: true})
+        volunteerForRole: new FormControl<boolean>(knightVolunteeringForRole, { nonNullable: true }),
       });
 
       this.volunteerForActivityEventForm.controls.volunteerSignUpRoles.controls.push(volunteerSignUpRoleFormGroup);
@@ -122,7 +133,9 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
       complete: () => console.log('Activity Event updated.'),
     };
 
-    this.updateVolunteerForActivityEventSubscription = this.activityEventsService.volunteerForActivityEvent(request).subscribe(activityEventObserver);
+    this.updateVolunteerForActivityEventSubscription = this.activityEventsService
+      .volunteerForActivityEvent(request)
+      .subscribe(activityEventObserver);
   }
 
   private mapFormToVolunteerForActivityEventRequest(): VolunteerForActivityEventRequest {
@@ -149,16 +162,21 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
   private passBack(activityEvent: ActivityEvent, eventVolunteersResponse: EventVolunteer[]) {
     activityEvent.volunteerSignUpRoles.forEach((existingRole: VolunteerSignUpRole) => {
-      const knightUnVolunteered = existingRole.eventVolunteers.some(ev => ev.knightId === this.knightId) && 
-      !eventVolunteersResponse.some(ev => ev.volunteerSignUpRoleId === existingRole.id && ev.knightId === this.knightId);
+      const knightUnVolunteered =
+        existingRole.eventVolunteers.some((ev) => ev.knightId === this.knightId) &&
+        !eventVolunteersResponse.some(
+          (ev) => ev.volunteerSignUpRoleId === existingRole.id && ev.knightId === this.knightId,
+        );
 
       if (knightUnVolunteered) {
-        existingRole.eventVolunteers = existingRole.eventVolunteers.filter(ev => ev.knightId !== this.knightId);
+        existingRole.eventVolunteers = existingRole.eventVolunteers.filter((ev) => ev.knightId !== this.knightId);
       } else {
-        const foundEventVolunteer = eventVolunteersResponse.find(ev => ev.volunteerSignUpRoleId === existingRole.id);
+        const foundEventVolunteer = eventVolunteersResponse.find((ev) => ev.volunteerSignUpRoleId === existingRole.id);
 
         if (foundEventVolunteer) {
-          const foundIndex = existingRole.eventVolunteers.findIndex(ev => ev.knightId === foundEventVolunteer.knightId);
+          const foundIndex = existingRole.eventVolunteers.findIndex(
+            (ev) => ev.knightId === foundEventVolunteer.knightId,
+          );
 
           if (foundIndex > -1) {
             existingRole.eventVolunteers[foundIndex] = foundEventVolunteer;
@@ -190,9 +208,9 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

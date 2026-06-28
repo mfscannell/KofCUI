@@ -1,20 +1,32 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { EditKnightPasswordFormGroup } from 'src/app/forms/editKnightPasswordFormGroup';
+import { EditKnightPasswordFormGroup } from '@app/forms/editKnightPasswordFormGroup';
 
-import { KnightUser } from 'src/app/models/knightUser';
-import { UpdateKnightPasswordRequest } from 'src/app/models/requests/updateKnightPasswordRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { PasswordRequirements } from 'src/app/models/responses/passwordRequirements';
-import { AccountsService } from 'src/app/services/accounts.service';
-import { KnightsService } from 'src/app/services/knights.service';
+import { KnightUser } from '@app/models/knightUser';
+import { UpdateKnightPasswordRequest } from '@app/models/requests/updateKnightPasswordRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { PasswordRequirements } from '@app/models/responses/passwordRequirements';
+import { AccountsService } from '@app/services/accounts.service';
+import { KnightsService } from '@app/services/knights.service';
 
 @Component({
-    selector: 'edit-knight-password-modal',
-    templateUrl: './edit-knight-password-modal.component.html',
-    styleUrls: ['./edit-knight-password-modal.component.scss'],
-    standalone: false
+  selector: 'edit-knight-password-modal',
+  templateUrl: './edit-knight-password-modal.component.html',
+  styleUrls: ['./edit-knight-password-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -60,15 +72,14 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
     }
   }
 
-  ngOnChanges() {
-  }
+  ngOnChanges() {}
 
   public resetForm(knightUser?: KnightUser) {
     this.errorSaving = false;
     this.errorMessages = [];
     this.editKnightPasswordForm = this.initForm();
     this.editKnightPasswordForm.markAsPristine();
-      this.editKnightPasswordForm.markAsUntouched();
+    this.editKnightPasswordForm.markAsUntouched();
 
     if (knightUser) {
       this.patchForm(knightUser);
@@ -158,9 +169,9 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

@@ -1,17 +1,27 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ActivityEvent } from 'src/app/models/activityEvent';
-import { SendEmailRequest } from 'src/app/models/requests/sendEmailRequest';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { SendEmailResponse } from 'src/app/models/responses/sendEmailResponse';
-import { ActivitiesService } from 'src/app/services/activities.service';
+import { ActivityEvent } from '@app/models/activityEvent';
+import { SendEmailRequest } from '@app/models/requests/sendEmailRequest';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { SendEmailResponse } from '@app/models/responses/sendEmailResponse';
+import { ActivitiesService } from '@app/services/activities.service';
 
 @Component({
-    selector: 'email-about-event-modal',
-    templateUrl: './email-about-event-modal.component.html',
-    styleUrls: ['./email-about-event-modal.component.scss'],
-    standalone: false
+  selector: 'email-about-event-modal',
+  templateUrl: './email-about-event-modal.component.html',
+  styleUrls: ['./email-about-event-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityEvent?: ActivityEvent;
@@ -91,9 +101,9 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

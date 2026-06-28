@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { EncodedFile } from 'src/app/models/encodedFile';
-import { ApiResponseError } from 'src/app/models/responses/apiResponseError';
-import { WebsiteContent } from 'src/app/models/websiteContent';
-import { AssetsService } from 'src/app/services/assets.service';
-import { ConfigsService } from 'src/app/services/configs.service';
+import { EncodedFile } from '@app/models/encodedFile';
+import { ApiResponseError } from '@app/models/responses/apiResponseError';
+import { WebsiteContent } from '@app/models/websiteContent';
+import { AssetsService } from '@app/services/assets.service';
+import { ConfigsService } from '@app/services/configs.service';
 
 @Component({
-    selector: 'app-home-page',
-    templateUrl: './home-page.component.html',
-    styleUrls: ['./home-page.component.scss'],
-    standalone: false
+  selector: 'app-home-page',
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   private homePageCarouselImages: EncodedFile[] = [];
@@ -21,7 +22,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   constructor(
     public assetsService: AssetsService,
-    private configsService: ConfigsService
+    private configsService: ConfigsService,
   ) {}
 
   ngOnInit() {
@@ -37,7 +38,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   private getWebsiteContent() {
     console.log('homePage getWebsiteContent');
     const observer = {
-      next: (websiteContent: WebsiteContent) => { 
+      next: (websiteContent: WebsiteContent) => {
         this.homePageCarouselImages = websiteContent.homePageCarouselImages;
         this.homePageCarouselImagesSources = this.homePageCarouselImages.map((image) => {
           return `data:${image.fileType};${image.encoding},${image.data}`;
@@ -66,9 +67,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
     for (const key in problemDetails.errors) {
       const errorsArray = problemDetails.errors[key];
-      errorsArray.forEach(error => {
+      errorsArray.forEach((error) => {
         this.errorMessages.push(error);
-      })
+      });
     }
 
     this.errorSaving = true;

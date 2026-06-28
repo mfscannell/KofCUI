@@ -1,13 +1,13 @@
-
-import { Component, Inject, OnInit, DOCUMENT } from '@angular/core';
+import { Component, Inject, OnInit, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
 import { TenantService } from './services/tenant.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   constructor(
