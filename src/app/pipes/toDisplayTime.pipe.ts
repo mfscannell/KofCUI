@@ -1,9 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTimeFormatter } from '../utilities/dateTimeFormatter';
 @Pipe({
-    name: 'toDisplayTime',
-    pure: true,
-    standalone: false
+  name: 'toDisplayTime',
+  pure: true,
 })
 export class ToDisplayTimePipe implements PipeTransform {
   transform(dateTime: string | undefined): string {

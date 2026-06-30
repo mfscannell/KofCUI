@@ -5,7 +5,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   templateUrl: './our-council.component.html',
   styleUrls: ['./our-council.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
 })
 export class OurCouncilComponent implements OnInit {
   constructor() {}

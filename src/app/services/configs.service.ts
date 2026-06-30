@@ -1,5 +1,5 @@
 import { Observable, shareReplay } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { TenantConfig } from '../models/tenantConfig';
@@ -8,18 +8,14 @@ import { environment } from '@env/environment';
 import { TenantService } from './tenant.service';
 import { AccountsService } from './accounts.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ConfigsService {
   private websiteContent?: Observable<WebsiteContent>;
   private isWebSiteContentStale: boolean = true;
   private baseUrl = environment.baseUrl;
-
-  constructor(
-    private http: HttpClient, 
-    private tenantService: TenantService, 
-    private accountsService: AccountsService) {}
+  private http = inject(HttpClient); 
+  private tenantService = inject(TenantService); 
+  private accountsService = inject(AccountsService);
 
   public getAllConfig(): Observable<TenantConfig> {
     const tenantId = this.tenantService.getTenantId();

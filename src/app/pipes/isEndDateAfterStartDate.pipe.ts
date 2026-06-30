@@ -1,9 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTimeFormatter } from '../utilities/dateTimeFormatter';
 @Pipe({
-    name: 'isEndDateAfterStartDate',
-    pure: true,
-    standalone: false
+  name: 'isEndDateAfterStartDate',
+  pure: true,
 })
 export class IsEndDateAfterStartDatePipe implements PipeTransform {
   transform(startDate: string, endDate: string, startTime?: string, endTime?: string): boolean {

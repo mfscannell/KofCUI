@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EncodedFile } from '@app/models/encodedFile';
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { WebsiteContent } from '@app/models/websiteContent';
-import { AssetsService } from '@app/services/assets.service';
 import { ConfigsService } from '@app/services/configs.service';
 
 @Component({
@@ -11,7 +10,6 @@ import { ConfigsService } from '@app/services/configs.service';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
 })
 export class HomePageComponent implements OnInit, OnDestroy {
   private homePageCarouselImages: EncodedFile[] = [];
@@ -19,11 +17,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
   private getWebsiteContentSubscription?: Subscription;
   private errorSaving: boolean = false;
   private errorMessages: string[] = [];
+  private configsService = inject(ConfigsService);
 
-  constructor(
-    public assetsService: AssetsService,
-    private configsService: ConfigsService,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.getWebsiteContent();

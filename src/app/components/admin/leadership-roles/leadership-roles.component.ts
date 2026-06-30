@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -8,13 +8,14 @@ import { LeadershipRolesService } from '@app/services/leadershipRoles.service';
 import { EditLeadershipRoleModalComponent } from './edit-leadership-role-modal/edit-leadership-role-modal.component';
 import { KnightName } from '@app/models/knightName';
 import { LeadershipRoleCategory } from '@app/types/leadership-role-category.type';
+import { FilterLeadershipRolesPipe } from '../../../pipes/filterLeadershipRoles.pipe';
 
 @Component({
   selector: 'kofc-leadership-roles',
   templateUrl: './leadership-roles.component.html',
   styleUrls: ['./leadership-roles.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [EditLeadershipRoleModalComponent, FilterLeadershipRolesPipe],
 })
 export class LeadershipRolesComponent implements OnInit, OnDestroy {
   @ViewChild(EditLeadershipRoleModalComponent) editLeadershipRoleModal: EditLeadershipRoleModalComponent | undefined;
@@ -24,11 +25,10 @@ export class LeadershipRolesComponent implements OnInit, OnDestroy {
   public leadershipRoleCategories: LeadershipRoleCategory[] = ['Admin', 'Officer', 'Director'];
   private knightsSubscription?: Subscription;
   private leadershipRolesSubscription?: Subscription;
+  private knightsService = inject(KnightsService);
+  private leadershipRolesService = inject(LeadershipRolesService);
 
-  constructor(
-    private knightsService: KnightsService,
-    private leadershipRolesService: LeadershipRolesService,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.getAllActiveKnightsNames();

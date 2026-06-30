@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EncodedFile } from '@app/models/encodedFile';
 import { AssetsService } from '@app/services/assets.service';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeleteHomePageCarouselImageResponse } from '@app/models/responses/deleteHomePageCarouselImageResponse';
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { WebsiteContent } from '@app/models/websiteContent';
@@ -13,7 +13,7 @@ import { ConfigsService } from '@app/services/configs.service';
   templateUrl: './assets.component.html',
   styleUrls: ['./assets.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class AssetsComponent implements OnInit, OnDestroy {
   showErrorMessage: boolean = false;
@@ -34,11 +34,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
   fileNameToDelete: string = '';
   indexToDelete: number = -1;
   private deleteHomePageImageSubscription?: Subscription;
+  public assetsService = inject(AssetsService);
+  private configsService = inject(ConfigsService);
 
-  constructor(
-    public assetsService: AssetsService,
-    private configsService: ConfigsService,
-  ) {
+  constructor() {
     this.uploadImageForm = new UntypedFormGroup({});
     this.deleteImageForm = new UntypedFormGroup({});
   }

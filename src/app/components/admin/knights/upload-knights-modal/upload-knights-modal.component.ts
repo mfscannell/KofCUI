@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { Knight } from '@app/models/knight';
 import { KnightsService } from '@app/services/knights.service';
@@ -25,7 +26,7 @@ import { CreateKnightRequest } from '@app/models/requests/createKnightRequest';
   templateUrl: './upload-knights-modal.component.html',
   styleUrls: ['./upload-knights-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() showModal: boolean = false;
@@ -39,8 +40,9 @@ export class UploadKnightsModalComponent implements OnInit, OnDestroy, OnChanges
   createKnightsSubscription?: Subscription;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
+  private knightsService = inject(KnightsService);
 
-  constructor(private knightsService: KnightsService) {
+  constructor() {
     this.uploadKnightsForm = new UntypedFormGroup({});
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { WebsiteContent } from '@app/models/websiteContent';
@@ -9,7 +9,6 @@ import { ConfigsService } from '@app/services/configs.service';
   templateUrl: './nav-footer.component.html',
   styleUrls: ['./nav-footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
 })
 export class NavFooterComponent implements OnInit, OnDestroy {
   private getWebsiteContentSubscription?: Subscription;
@@ -17,8 +16,9 @@ export class NavFooterComponent implements OnInit, OnDestroy {
   public twitterUrl: string = '';
   public errorMessages: string[] = [];
   public errorSaving: boolean = false;
+  private configsService = inject(ConfigsService);
 
-  constructor(private configsService: ConfigsService) {}
+  constructor() {}
 
   ngOnInit() {
     this.getWebsiteContent();

@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditActivityInterestFormGroup } from '@app/forms/editActivityInterestFormGroup';
 import { EditActivityInterestsFormGroup } from '@app/forms/editActivityInterestsFormGroup';
@@ -19,13 +20,14 @@ import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
 import { UpdateKnightActivityInterestsRequest } from '@app/models/requests/updateKnightActivityInterestsRequest';
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { KnightActivityInterestsService } from '@app/services/knightActivityInterests.service';
+import { FilterActivityInterestsByCategoryPipe } from '../../../../pipes/filterActivityInterestsByCategory.pipe';
 
 @Component({
   selector: 'edit-knight-activity-interests-modal',
   templateUrl: './edit-knight-activity-interests-modal.component.html',
   styleUrls: ['./edit-knight-activity-interests-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, FilterActivityInterestsByCategoryPipe],
 })
 export class EditKnightActivityInterestsModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -39,8 +41,9 @@ export class EditKnightActivityInterestsModalComponent implements OnInit, OnDest
   public errorMessages: string[] = [];
   private updateKnightActivityInterestsSubscription?: Subscription;
   private activityInterests: ActivityInterest[] = [];
+  private knightActivityInterestsService = inject(KnightActivityInterestsService);
 
-  constructor(private knightActivityInterestsService: KnightActivityInterestsService) {
+  constructor() {
     this.editKnightActivityInterestsForm = this.initForm();
   }
 

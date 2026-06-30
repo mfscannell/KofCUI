@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditAddressFormGroup } from '@app/forms/editAddressFormGroup';
 import { EditKnightPersonalInfoFormGroup } from '@app/forms/editKnightPersonalInfoFormGroup';
@@ -22,13 +23,14 @@ import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { StreetAddress } from '@app/models/streetAddress';
 import { KnightsService } from '@app/services/knights.service';
 import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { FilterAdministrativeDivisionsPipe } from '../../../../pipes/filterAdministrativeDivisions.pipe';
 
 @Component({
   selector: 'edit-knight-personal-info-modal',
   templateUrl: './edit-knight-personal-info-modal.component.html',
   styleUrls: ['./edit-knight-personal-info-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, FilterAdministrativeDivisionsPipe],
 })
 export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -42,8 +44,9 @@ export class EditKnightPersonalInfoModalComponent implements OnInit, OnDestroy, 
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightPersonalInfoSubscription?: Subscription;
+  private knightsService = inject(KnightsService);
 
-  constructor(private knightsService: KnightsService) {
+  constructor() {
     this.editKnightPersonalInfoForm = this.initForm();
   }
 
