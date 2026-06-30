@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -18,6 +19,8 @@ import {
   UntypedFormArray,
   UntypedFormControl,
   UntypedFormGroup,
+  FormsModule,
+  ReactiveFormsModule,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditActivityEventFormGroup } from '@app/forms/editActivityEventFormGroup';
@@ -40,13 +43,14 @@ import { VolunteerSignUpRole } from '@app/models/volunteerSignUpRole';
 import { ActivityEventsService } from '@app/services/activityEvents.service';
 import { ModalActionType } from '@app/types/modal-action.type';
 import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { FilterAdministrativeDivisionsPipe } from '../../../../pipes/filterAdministrativeDivisions.pipe';
 
 @Component({
   selector: 'edit-activity-event-modal',
   templateUrl: './edit-activity-event-modal.component.html',
   styleUrls: ['./edit-activity-event-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, FilterAdministrativeDivisionsPipe],
 })
 export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() editModalAction: ModalActionType = 'Create';
@@ -67,8 +71,9 @@ export class EditActivityEventModalComponent implements OnInit, OnDestroy, OnCha
 
   private createActivityEventSubscription?: Subscription;
   private updateActivityEventSubscription?: Subscription;
+  private activityEventsService = inject(ActivityEventsService);
 
-  constructor(private activityEventsService: ActivityEventsService) {
+  constructor() {
     this.editActivityEventForm = this.initForm();
     console.log(this.editActivityEventForm);
     this.enableDisableAdministrativeDivisions();

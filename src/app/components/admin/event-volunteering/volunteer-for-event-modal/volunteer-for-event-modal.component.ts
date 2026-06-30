@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditVolunteerForEventFormGroup } from '@app/forms/editVolunteerForEventFormGroup';
 import { EditVolunteerForRoleFormGroup } from '@app/forms/editVolunteerForRoleFormGroup';
@@ -22,13 +23,24 @@ import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { StreetAddress } from '@app/models/streetAddress';
 import { VolunteerSignUpRole } from '@app/models/volunteerSignUpRole';
 import { ActivityEventsService } from '@app/services/activityEvents.service';
+import { ToDisplayDatePipe } from '../../../../pipes/toDisplayDate.pipe';
+import { ConvertKnightIdToNamePipe } from '../../../../pipes/convertKnightIdToName.pipe';
+import { ToDisplayTimePipe } from '../../../../pipes/toDisplayTime.pipe';
+import { ToNumVolunteersNeededPipe } from '../../../../pipes/toNumVolunteersNeeded.pipe';
 
 @Component({
   selector: 'volunteer-for-event-modal',
   templateUrl: './volunteer-for-event-modal.component.html',
   styleUrls: ['./volunteer-for-event-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    ToDisplayDatePipe,
+    ConvertKnightIdToNamePipe,
+    ToDisplayTimePipe,
+    ToNumVolunteersNeededPipe,
+  ],
 })
 export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnChanges {
   public activityEvent: ActivityEvent = {
@@ -65,8 +77,9 @@ export class VolunteerForEventModalComponent implements OnInit, OnDestroy, OnCha
   public errorMessages: string[] = [];
 
   private updateVolunteerForActivityEventSubscription?: Subscription;
+  private activityEventsService = inject(ActivityEventsService);
 
-  constructor(private activityEventsService: ActivityEventsService) {
+  constructor() {
     this.volunteerForActivityEventForm = this.initForm();
   }
 

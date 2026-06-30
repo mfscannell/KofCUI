@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditMemberDuesFormGroup } from '@app/forms/editMemberDuesFormGroup';
 import { MemberDueFormGroup } from '@app/forms/memberDueFormGroup';
@@ -27,7 +28,7 @@ import { MemberDuesPaidStatus } from '@app/types/knight-member-dues-paid-status.
   templateUrl: './edit-knight-member-dues-modal.component.html',
   styleUrls: ['./edit-knight-member-dues-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -42,8 +43,9 @@ export class EditKnightMemberDuesModalComponent implements OnInit, OnDestroy, On
   public errorMessages: string[] = [];
 
   private updateKnightMemberDuesSubscription?: Subscription;
+  private memberDuesService = inject(MemberDuesService);
 
-  constructor(private memberDuesService: MemberDuesService) {
+  constructor() {
     this.editKnightMemberDuesForm = this.initForm();
   }
 

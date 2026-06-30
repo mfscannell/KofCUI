@@ -1,12 +1,21 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { PasswordRequirements } from '../models/responses/passwordRequirements';
 @Pipe({
-    name: 'meetsPasswordRequrements',
-    pure: true,
-    standalone: false
+  name: 'meetsPasswordRequrements',
+  pure: true,
 })
 export class MeetsPasswordRequrementsPipe implements PipeTransform {
-  transform(password: string, passwordRequirement: 'requireUppercase' | 'requireLowercase' | 'requireDigit' | 'requiredUniqueChars' | 'requiredLength' | 'requireNonAlphanumeric', passwordRequirements?: PasswordRequirements): boolean {
+  transform(
+    password: string,
+    passwordRequirement:
+      | 'requireUppercase'
+      | 'requireLowercase'
+      | 'requireDigit'
+      | 'requiredUniqueChars'
+      | 'requiredLength'
+      | 'requireNonAlphanumeric',
+    passwordRequirements?: PasswordRequirements,
+  ): boolean {
     switch (passwordRequirement) {
       case 'requireUppercase': {
         const hasUpper = /[A-Z]/.test(password);

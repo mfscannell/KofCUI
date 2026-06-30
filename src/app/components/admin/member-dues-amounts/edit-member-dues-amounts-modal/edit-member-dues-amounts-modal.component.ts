@@ -8,8 +8,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditMemberDuesAmountsFormGroup } from '@app/forms/editMemberDuesAmountsFormGroup';
 import { MemberDuesAmounts } from '@app/models/memberDuesAmounts';
@@ -18,13 +19,14 @@ import { UpdateMemberDuesAmountsRequest } from '@app/models/requests/updateMembe
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { MemberDuesAmountsService } from '@app/services/memberDuesAmounts.service';
 import { ModalActionType } from '@app/types/modal-action.type';
+import { CurrencyMaskDirective } from '../../../../directives/currency-mask.directive';
 
 @Component({
   selector: 'edit-member-dues-amounts-modal',
   templateUrl: './edit-member-dues-amounts-modal.component.html',
   styleUrls: ['./edit-member-dues-amounts-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, CurrencyMaskDirective],
 })
 export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
   @ViewChild('cancelEditMemberDuesModal', { static: false }) cancelEditMemberDuesModal: ElementRef | undefined;
@@ -39,8 +41,9 @@ export class EditMemberDuesAmountsModalComponent implements OnInit, OnDestroy {
 
   private createMemberDuesAmountsSubscription?: Subscription;
   private updateMemberDuesAmountsSubscription?: Subscription;
+  private memberDuesAmountsService = inject(MemberDuesAmountsService);
 
-  constructor(private memberDuesAmountsService: MemberDuesAmountsService) {
+  constructor() {
     this.editMemberDuesAmountsForm = this.initForm();
   }
 

@@ -10,8 +10,17 @@ import {
   SimpleChanges,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CreateAddressFormGroup } from '@app/forms/createAddressFormGroup';
 import { CreateKnightFormGroup } from '@app/forms/createKnightFormGroup';
@@ -36,13 +45,15 @@ import { KnightMemberClassType } from '@app/types/knight-member-class.type';
 import { KnightMemberTypeType } from '@app/types/knight-member-type.type';
 import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
 import { MemberDuesPaidStatus } from '@app/types/knight-member-dues-paid-status.type';
+import { FilterActivityInterestsByCategoryPipe } from '../../../../pipes/filterActivityInterestsByCategory.pipe';
+import { FilterAdministrativeDivisionsPipe } from '../../../../pipes/filterAdministrativeDivisions.pipe';
 
 @Component({
   selector: 'create-knight-modal',
   templateUrl: './create-knight-modal.component.html',
   styleUrls: ['./create-knight-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, FilterActivityInterestsByCategoryPipe, FilterAdministrativeDivisionsPipe],
 })
 export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityCategoryFormOptions: GenericFormOption[] = [];
@@ -65,8 +76,9 @@ export class CreateKnightModalComponent implements OnInit, OnDestroy, OnChanges 
   private createKnightSubscription?: Subscription;
   public oldestMemberDuesAmountsYear: number = 0;
   public newestMemberDuesAmountsYear: number = 0;
+  private knightsService = inject(KnightsService);
 
-  constructor(private knightsService: KnightsService) {
+  constructor() {
     this.createKnightForm = this.initCreateKnightForm();
   }
 

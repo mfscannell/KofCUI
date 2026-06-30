@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { ActivityEvent } from '@app/models/activityEvent';
@@ -10,13 +10,15 @@ import { AccountsService } from '@app/services/accounts.service';
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { VolunteerForEventModalComponent } from './volunteer-for-event-modal/volunteer-for-event-modal.component';
 import { KnightName } from '@app/models/knightName';
+import { FormsModule } from '@angular/forms';
+import { ToDisplayDatePipe } from '../../../pipes/toDisplayDate.pipe';
 
 @Component({
   selector: 'kofc-event-volunteering',
   templateUrl: './event-volunteering.component.html',
   styleUrls: ['./event-volunteering.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, VolunteerForEventModalComponent, ToDisplayDatePipe],
 })
 export class EventVolunteeringComponent implements OnInit, OnDestroy {
   @ViewChild(VolunteerForEventModalComponent) volunteerForEventModal: VolunteerForEventModalComponent | undefined;
@@ -33,12 +35,11 @@ export class EventVolunteeringComponent implements OnInit, OnDestroy {
   public knightId: string = '';
   errorSaving: boolean = false;
   errorMessages: string[] = [];
+  private accountsService = inject(AccountsService);
+  private activityEventsService = inject(ActivityEventsService);
+  private knightsService = inject(KnightsService);
 
-  constructor(
-    private accountsService: AccountsService,
-    private activityEventsService: ActivityEventsService,
-    private knightsService: KnightsService,
-  ) {
+  constructor() {
     const initialDate = new Date();
     initialDate.setMonth(initialDate.getMonth() - 3);
     const finalDate = new Date(initialDate);

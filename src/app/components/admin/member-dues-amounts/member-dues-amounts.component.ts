@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin, Subscription } from 'rxjs';
 import { GetMemberDuesAmountsFormGroup } from '@app/forms/getMemberDuesAmountsFormGroup';
 import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
@@ -10,13 +10,21 @@ import { MemberDuesAmountsService } from '@app/services/memberDuesAmounts.servic
 import { EditMemberDuesAmountsModalComponent } from './edit-member-dues-amounts-modal/edit-member-dues-amounts-modal.component';
 import _ from 'lodash';
 import { ModalActionType } from '@app/types/modal-action.type';
+import { CurrencyPipe } from '@angular/common';
+import { CanModifyMemberDuesAmountsPipe } from '../../../pipes/canModifyMemberDuesAmounts.pipe';
 
 @Component({
   selector: 'member-dues-amounts',
   templateUrl: './member-dues-amounts.component.html',
   styleUrls: ['./member-dues-amounts.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    EditMemberDuesAmountsModalComponent,
+    CurrencyPipe,
+    CanModifyMemberDuesAmountsPipe,
+  ],
 })
 export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
   @ViewChild(EditMemberDuesAmountsModalComponent) editMemberDuesAmountsModal:
@@ -35,11 +43,10 @@ export class MemberDuesAmountsComponent implements OnInit, OnDestroy {
   private fromYear: number = 0;
   private toYear: number = 0;
   public getMemberDuesAmountsFormGroup: FormGroup<GetMemberDuesAmountsFormGroup>;
+  private memberDuesAmountsService = inject(MemberDuesAmountsService);
+  private formsService = inject(FormsService);
 
-  constructor(
-    private memberDuesAmountsService: MemberDuesAmountsService,
-    private formsService: FormsService,
-  ) {
+  constructor() {
     this.toYear = new Date().getFullYear() + 1;
     this.fromYear = this.toYear - 10;
     this.getMemberDuesAmountsFormGroup = this.initForm();

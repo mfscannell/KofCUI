@@ -16,7 +16,7 @@ import { TenantService } from './tenant.service';
 })
 export class AccountsService {
   private currentUserSource = new ReplaySubject<LogInResponse | null>(1);
-  currentUser = this.currentUserSource.asObservable();
+  public currentUser = this.currentUserSource.asObservable();
 
   private loggedInUser?: LogInResponse;
   private baseUrl = environment.baseUrl;

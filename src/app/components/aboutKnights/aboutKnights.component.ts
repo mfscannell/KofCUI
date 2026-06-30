@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { YouTubePlayer } from '@angular/youtube-player';
 
 @Component({
   selector: 'kofc-aboutKnights',
   templateUrl: './aboutKnights.component.html',
   styleUrls: ['./aboutKnights.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [YouTubePlayer],
 })
 export class AboutKnightsComponent implements OnInit {
   //safeUrl: SafeResourceUrl;

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
 import { ActivityInterest } from '@app/models/activityInterest';
 import { Knight } from '@app/models/knight';
@@ -8,7 +8,7 @@ import { AccountsService } from '@app/services/accounts.service';
 import { ChangePasswordResponse } from '@app/models/responses/changePasswordResponse';
 import { CountryFormOption } from '@app/models/inputOptions/countryFormOption';
 import { FormsService } from '@app/services/forms.service';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateKnightPersonalInfoRequest } from '@app/models/requests/updateKnightPersonalInfoRequest';
 import { StreetAddress } from '@app/models/streetAddress';
 import { KnightActivityInterestsService } from '@app/services/knightActivityInterests.service';
@@ -17,13 +17,14 @@ import { ChangePassWordRequest } from '@app/models/requests/changePasswordReques
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
 import { ToggleInterestInActivityEvent } from '@app/models/events/toggleInterestInActivityEvent';
+import { ToDisplayDatePipe } from '../../pipes/toDisplayDate.pipe';
 
 @Component({
   selector: 'kofc-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, ToDisplayDatePipe],
 })
 export class AccountComponent implements OnInit, OnDestroy {
   active = 'accountHome';
@@ -68,17 +69,16 @@ export class AccountComponent implements OnInit, OnDestroy {
     allowedNonAlphanumericCharacters: '`~!@#$%^&*()-_=+[{]}\\|;:\'",<.>/?',
   };
   public editAccountSecurityForm: UntypedFormGroup;
+  private formsService = inject(FormsService);
+  private knightsService = inject(KnightsService);
+  private knightActivityInterestsService = inject(KnightActivityInterestsService);
+  private accountsService = inject(AccountsService);
 
   disableDegreeSelect() {
     return true;
   }
 
-  constructor(
-    private formsService: FormsService,
-    private knightsService: KnightsService,
-    private knightActivityInterestsService: KnightActivityInterestsService,
-    private accountsService: AccountsService,
-  ) {
+  constructor() {
     this.editKnightPersonalInfoForm = this.initEditPersonalInfoForm();
     this.editKnightActivityInterestsForm = new UntypedFormGroup({});
     this.editAccountSecurityForm = this.initEditSecurityForm();

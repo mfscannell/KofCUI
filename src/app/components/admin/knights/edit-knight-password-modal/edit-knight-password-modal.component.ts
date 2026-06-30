@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditKnightPasswordFormGroup } from '@app/forms/editKnightPasswordFormGroup';
 
@@ -20,13 +21,14 @@ import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { PasswordRequirements } from '@app/models/responses/passwordRequirements';
 import { AccountsService } from '@app/services/accounts.service';
 import { KnightsService } from '@app/services/knights.service';
+import { MeetsPasswordRequrementsPipe } from '../../../../pipes/meetsPasswordRequirements.pipe';
 
 @Component({
   selector: 'edit-knight-password-modal',
   templateUrl: './edit-knight-password-modal.component.html',
   styleUrls: ['./edit-knight-password-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, MeetsPasswordRequrementsPipe],
 })
 export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -50,11 +52,10 @@ export class EditKnightPasswordModalComponent implements OnInit, OnDestroy, OnCh
   private getPasswordRequirementsSubscription?: Subscription;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
+  private knightsService = inject(KnightsService);
+  private accountsService = inject(AccountsService);
 
-  constructor(
-    private knightsService: KnightsService,
-    private accountsService: AccountsService,
-  ) {
+  constructor() {
     this.editKnightPasswordForm = this.initForm();
   }
 

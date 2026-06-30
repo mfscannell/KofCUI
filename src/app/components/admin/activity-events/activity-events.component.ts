@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 
 import { ActivityEvent } from '@app/models/activityEvent';
@@ -9,7 +9,7 @@ import { KnightsService } from '@app/services/knights.service';
 import { Activity } from '@app/models/activity';
 import { ActivitiesService } from '@app/services/activities.service';
 import { PermissionsService } from '@app/services/permissions.service';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, FormsModule } from '@angular/forms';
 import { ConfigsService } from '@app/services/configs.service';
 import { CountryFormOption } from '@app/models/inputOptions/countryFormOption';
 import { FormsService } from '@app/services/forms.service';
@@ -19,13 +19,22 @@ import { EditActivityEventModalComponent } from './edit-activity-event-modal/edi
 import { KnightName } from '@app/models/knightName';
 import { WebsiteContent } from '@app/models/websiteContent';
 import { ModalActionType } from '@app/types/modal-action.type';
+import { EmailAboutEventModalComponent } from './email-about-event-modal/email-about-event-modal.component';
+import { ToDisplayDatePipe } from '../../../pipes/toDisplayDate.pipe';
+import { IsEndDateAfterStartDatePipe } from '../../../pipes/isEndDateAfterStartDate.pipe';
 
 @Component({
   selector: 'kofc-activity-events',
   templateUrl: './activity-events.component.html',
   styleUrls: ['./activity-events.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [
+    FormsModule,
+    EmailAboutEventModalComponent,
+    EditActivityEventModalComponent,
+    ToDisplayDatePipe,
+    IsEndDateAfterStartDatePipe,
+  ],
 })
 export class ActivityEventsComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityEventModalComponent) editActivityEventModal: EditActivityEventModalComponent | undefined;
@@ -52,15 +61,14 @@ export class ActivityEventsComponent implements OnInit, OnDestroy {
   public activityCategoryFormOptions: GenericFormOption[] = [];
   public editModalHeaderText: string = '';
   public editModalAction: ModalActionType = 'Create';
+  private activityEventsService = inject(ActivityEventsService);
+  private activitiesService = inject(ActivitiesService);
+  private knightsService = inject(KnightsService);
+  private permissionsService = inject(PermissionsService);
+  private configsService = inject(ConfigsService);
+  private formsService = inject(FormsService);
 
-  constructor(
-    private activityEventsService: ActivityEventsService,
-    private activitiesService: ActivitiesService,
-    private knightsService: KnightsService,
-    private permissionsService: PermissionsService,
-    private configsService: ConfigsService,
-    private formsService: FormsService,
-  ) {
+  constructor() {
     const initialDate = new Date();
     initialDate.setMonth(initialDate.getMonth() - 3);
     const finalDate = new Date(initialDate);

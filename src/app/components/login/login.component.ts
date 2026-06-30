@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LogInRequest } from '@app/models/requests/logInRequest';
@@ -11,18 +11,16 @@ import { AccountsService } from '@app/services/accounts.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: UntypedFormGroup;
   public errorMessages: string[] = [];
   private logInSubscription?: Subscription;
   public errorLoggingIn: boolean = false;
+  private accountsService = inject(AccountsService);
 
-  constructor(
-    private accountsService: AccountsService,
-    private router: Router,
-  ) {
+  constructor(private router: Router) {
     this.loginForm = new UntypedFormGroup({
       username: new UntypedFormControl(),
       password: new UntypedFormControl(),

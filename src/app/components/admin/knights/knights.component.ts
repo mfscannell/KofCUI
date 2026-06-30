@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 
 import { forkJoin, Subscription } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { EditKnightMemberDuesModalComponent } from './edit-knight-member-dues-mo
 import { EditKnightMemberInfoModalComponent } from './edit-knight-member-info-modal/edit-knight-member-info-modal.component';
 import { EditKnightActivityInterestsModalComponent } from './edit-knight-activity-interests-modal/edit-knight-activity-interests-modal.component';
 import { EditKnightPersonalInfoModalComponent } from './edit-knight-personal-info-modal/edit-knight-personal-info-modal.component';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchKnightsFormGroup } from '@app/forms/searchKnightsFormGroup';
 import { SearchDegreeFormGroup } from '@app/forms/searchDegreesFormGroup';
 import { KnightDegree } from '@app/types/knight-degree.type';
@@ -27,13 +27,24 @@ import { PaginationResponse } from '@app/models/responses/paginationResponse';
 import { FilterKnightRequest } from '@app/models/requests/filterKnightRequest';
 import { MemberDuesAmountsService } from '@app/services/memberDuesAmounts.service';
 import { MemberDuesAmounts } from '@app/models/memberDuesAmounts';
+import { UploadKnightsModalComponent } from './upload-knights-modal/upload-knights-modal.component';
 
 @Component({
   selector: 'knights',
   templateUrl: './knights.component.html',
   styleUrls: ['./knights.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    UploadKnightsModalComponent,
+    CreateKnightModalComponent,
+    EditKnightPersonalInfoModalComponent,
+    EditKnightActivityInterestsModalComponent,
+    EditKnightMemberDuesModalComponent,
+    EditKnightPasswordModalComponent,
+    EditKnightMemberInfoModalComponent,
+  ],
 })
 export class KnightsComponent implements OnInit, OnDestroy {
   @ViewChild(CreateKnightModalComponent) createKnightModal: CreateKnightModalComponent | undefined;
@@ -91,13 +102,12 @@ export class KnightsComponent implements OnInit, OnDestroy {
   public editKnightActivityInterestsModalHeaderText: string = '';
 
   public showUploadKnightsModal: boolean = false;
+  private formsService = inject(FormsService);
+  private knightsService = inject(KnightsService);
+  private memberDuesAmountsService = inject(MemberDuesAmountsService);
+  private knightActivityInterestsService = inject(KnightActivityInterestsService);
 
-  constructor(
-    private formsService: FormsService,
-    private knightsService: KnightsService,
-    private memberDuesAmountsService: MemberDuesAmountsService,
-    private knightActivityInterestsService: KnightActivityInterestsService,
-  ) {
+  constructor() {
     this.searchKnightsForm = this.initSearchKnightsForm();
   }
 

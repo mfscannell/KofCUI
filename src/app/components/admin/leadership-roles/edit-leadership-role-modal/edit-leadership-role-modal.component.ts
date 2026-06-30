@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LeadershipRoleFormGroup } from '@app/forms/leadershipRoleFormGroup';
 import { KnightName } from '@app/models/knightName';
@@ -24,7 +25,7 @@ import { LeadershipRolesService } from '@app/services/leadershipRoles.service';
   templateUrl: './edit-leadership-role-modal.component.html',
   styleUrls: ['./edit-leadership-role-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() allKnights: KnightName[] = [];
@@ -35,8 +36,9 @@ export class EditLeadershipRoleModalComponent implements OnInit, OnDestroy, OnCh
   public errorMessages: string[] = [];
   public leadershipRole?: LeadershipRole;
   private updateLeadershipRoleSubscription?: Subscription;
+  private leadershipRolesService = inject(LeadershipRolesService);
 
-  constructor(private leadershipRolesService: LeadershipRolesService) {
+  constructor() {
     console.log('EditLeadershipRoleModalComponent constructor');
     this.editLeadershipRoleForm = this.initForm();
   }

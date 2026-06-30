@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { forkJoin, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -12,13 +12,15 @@ import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
 import { EditActivityModalComponent } from './edit-activity-modal/edit-activity-modal.component';
 import { KnightName } from '@app/models/knightName';
 import { ModalActionType } from '@app/types/modal-action.type';
+import { FilterActivitiesByCategoryPipe } from '../../../pipes/filterActivitiesByCategory.pipe';
+import { CanModifyActivityPipe } from '../../../pipes/canModifyActivity.pipe';
 
 @Component({
   selector: 'activity-categories',
   templateUrl: './activity-categories.component.html',
   styleUrls: ['./activity-categories.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [EditActivityModalComponent, FilterActivitiesByCategoryPipe, CanModifyActivityPipe],
 })
 export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   @ViewChild(EditActivityModalComponent) editActivityModal: EditActivityModalComponent | undefined;
@@ -34,13 +36,12 @@ export class ActivityCategoriesComponent implements OnInit, OnDestroy {
   activity: Activity | undefined;
   errorSaving: boolean = false;
   errorMessages: string[] = [];
+  private formsService = inject(FormsService);
+  private activitiesService = inject(ActivitiesService);
+  private knightsService = inject(KnightsService);
+  private permissionsService = inject(PermissionsService);
 
-  constructor(
-    private formsService: FormsService,
-    private activitiesService: ActivitiesService,
-    private knightsService: KnightsService,
-    private permissionsService: PermissionsService,
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.getFormOptions();

@@ -1,17 +1,18 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Month } from '@app/models/calendar/month';
 import { UpcomingEvent } from '@app/models/upcomingEvent';
 import { ActivityEventsService } from '@app/services/activityEvents.service';
 import { CalendarUtilities } from '@app/utilities/calendarUtilities';
 import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
+import { ToDisplayTimePipe } from '../../pipes/toDisplayTime.pipe';
 
 @Component({
   selector: 'kofc-calendar-events',
   templateUrl: './calendar-events.component.html',
   styleUrls: ['./calendar-events.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [ToDisplayTimePipe],
 })
 export class CalendarEventsComponent implements OnInit {
   getAllUpcomingEventsSubscription?: Subscription;
@@ -22,8 +23,9 @@ export class CalendarEventsComponent implements OnInit {
   currentMonthName: string = CalendarUtilities.getNameOfMonth(this.currentMonth);
   calendarMonth: Month = {} as Month;
   modalHeaderText: string | undefined;
+  private activityEventsService = inject(ActivityEventsService);
 
-  constructor(private activityEventsService: ActivityEventsService) {}
+  constructor() {}
 
   ngOnInit() {
     this.calendarMonth = CalendarUtilities.getCalendar(this.currentYear, this.currentMonth);

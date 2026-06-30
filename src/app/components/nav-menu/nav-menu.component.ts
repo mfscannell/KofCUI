@@ -1,18 +1,19 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ExternalLink } from '@app/models/externalLink';
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { WebsiteContent } from '@app/models/websiteContent';
 import { AccountsService } from '@app/services/accounts.service';
 import { ConfigsService } from '@app/services/configs.service';
+import { AsyncPipe, CommonModule, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [CommonModule, AsyncPipe, TitleCasePipe, RouterLink ],
 })
 export class NavMenuComponent implements OnInit, OnDestroy {
   @ViewChild('menuCollapseButton', { static: false }) menuCollapseButton: ElementRef | undefined;
@@ -23,12 +24,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   public externalLinks: ExternalLink[] = [];
   public errorMessages: string[] = [];
   public errorLoggingIn: boolean = false;
+  private configsService = inject(ConfigsService);
+  public accountsService = inject(AccountsService);
 
-  constructor(
-    private configsService: ConfigsService,
-    public accountsService: AccountsService,
-    private router: Router,
-  ) {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.getWebsiteContent();

@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ConfigsService } from '@app/services/configs.service';
 import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
@@ -16,7 +16,7 @@ import { ExternalLinksFormGroup } from '@app/forms/externalLinksFormGroup';
   templateUrl: './configs.component.html',
   styleUrls: ['./configs.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class ConfigsComponent implements OnInit, OnDestroy {
   private getAllConfigsSubscription?: Subscription;
@@ -30,11 +30,10 @@ export class ConfigsComponent implements OnInit, OnDestroy {
   success: boolean = true;
   errorMessages: string[] = [];
   modalHeaderText: string = '';
+  private configsService = inject(ConfigsService);
+  private formsService = inject(FormsService);
 
-  constructor(
-    private configsService: ConfigsService,
-    private formsService: FormsService,
-  ) {
+  constructor() {
     this.editConfigsForm = this.initForm();
   }
 

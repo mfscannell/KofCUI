@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditActivityCoordinatorFormGroup } from '@app/forms/editActivityCoordinatorFormGroup';
 import { EditActivityModelFormGroup } from '@app/forms/editActivityModelFormGroup';
@@ -22,13 +23,14 @@ import { UpdateActivityRequest } from '@app/models/requests/updateActivityReques
 import { ApiResponseError } from '@app/models/responses/apiResponseError';
 import { ActivitiesService } from '@app/services/activities.service';
 import { ModalActionType } from '@app/types/modal-action.type';
+import { ToDisplayDatePipe } from '../../../../pipes/toDisplayDate.pipe';
 
 @Component({
   selector: 'edit-activity-modal',
   templateUrl: './edit-activity-modal.component.html',
   styleUrls: ['./edit-activity-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule, ToDisplayDatePipe],
 })
 export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('closeEditActivityModal', { static: false }) cancelEditActivityModal: ElementRef | undefined;
@@ -48,8 +50,9 @@ export class EditActivityModalComponent implements OnInit, OnDestroy, OnChanges 
 
   private updateActivitySubscription?: Subscription;
   private createActivitySubscription?: Subscription;
+  private activitiesService = inject(ActivitiesService);
 
-  constructor(private activitiesService: ActivitiesService) {
+  constructor() {
     this.editActivityForm = this.initForm();
   }
 

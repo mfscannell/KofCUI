@@ -9,8 +9,9 @@ import {
   Output,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EditKnightMemberInfoFormGroup } from '@app/forms/editKnightMemberInfoFormGroup';
 import { GenericFormOption } from '@app/models/inputOptions/genericFormOption';
@@ -28,7 +29,7 @@ import { DateTimeFormatter } from '@app/utilities/dateTimeFormatter';
   templateUrl: './edit-knight-member-info-modal.component.html',
   styleUrls: ['./edit-knight-member-info-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() modalHeaderText: string = '';
@@ -44,8 +45,9 @@ export class EditKnightMemberInfoModalComponent implements OnInit, OnDestroy, On
   public errorSaving: boolean = false;
   public errorMessages: string[] = [];
   private updateKnightMembershipInfoSubscription?: Subscription;
+  private knightsService = inject(KnightsService);
 
-  constructor(private knightsService: KnightsService) {
+  constructor() {
     this.editKnightMemberInfoForm = this.initForm();
   }
 

@@ -7,8 +7,9 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActivityEvent } from '@app/models/activityEvent';
 import { SendEmailRequest } from '@app/models/requests/sendEmailRequest';
@@ -21,7 +22,7 @@ import { ActivitiesService } from '@app/services/activities.service';
   templateUrl: './email-about-event-modal.component.html',
   styleUrls: ['./email-about-event-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activityEvent?: ActivityEvent;
@@ -31,8 +32,9 @@ export class EmailAboutEventModalComponent implements OnInit, OnDestroy, OnChang
   public errorMessages: string[] = [];
 
   private activitiesSubscription?: Subscription;
+  private activitiesService = inject(ActivitiesService);
 
-  constructor(private activitiesService: ActivitiesService) {
+  constructor() {
     this.sendEmailForm = this.initForm();
   }
 
